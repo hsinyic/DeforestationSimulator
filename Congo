@@ -1,7 +1,7 @@
-var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
+/*var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
 Map.setCenter(15.46875, -1.09857, 6);
 Map.addLayer(countries, {'color': 'FF0000'});
-/*Wait a minute you have the whole thing in red here....*/
+*//*Wait a minute you have the whole thing in red here....*/
 
 
 var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
