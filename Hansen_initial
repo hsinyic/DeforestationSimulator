@@ -1,0 +1,1 @@
+Map.addLayer(ee.Image('UMD/hansen/global_forest_change_2013'));
