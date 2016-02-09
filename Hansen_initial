@@ -1,1 +1,22 @@
 Map.addLayer(ee.Image('UMD/hansen/global_forest_change_2013'));
+/*Map.addLayer(ee.Image('UMD/hansen/global_forest_change_2013'),
+             {bands: ['loss', 'treecover2000', 'gain'], gain: [255, 1, 255]});
+*/
+/*Map.addLayer(ee.Image('UMD/hansen/global_forest_change_2013'),
+             {bands: ['treecover2000']}); 
+*/
+Map.addLayer(ee.Image('UMD/hansen/global_forest_change_2013'),
+             {bands: ['treecover2000'], palette: '000000, 00FF00'});
+
+ee.Image('UMD/hansen/global_forest_change_2013').select(['treecover2000']);
+Map.addLayer(ee.Image('UMD/hansen/global_forest_change_2013')
+  .mask(ee.Image('UMD/hansen/global_forest_change_2013').select(['treecover2000'])),
+    {bands: ['treecover2000'], palette: '000000, 00FF00', min: [0], max: [100]});
+    
+    
+var forestChangeImage = ee.Image('UMD/hansen/global_forest_change_2013');
+var forestBand = forestChangeImage.select(['treecover2000']);
+
+Map.addLayer(forestBand.mask(forestBand),
+    {palette: '000000, 00FF00', min: [0], max: [100]});
+
