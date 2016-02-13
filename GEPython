@@ -1,7 +1,7 @@
-ee.Image({
+Map.addLayer(ee.Image({
   "type": "Invocation", 
   "arguments": {
     "value": 1
   }, 
   "functionName": "Image.constant"
-})
+}))
