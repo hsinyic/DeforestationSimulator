@@ -1,0 +1,30 @@
+// Create the primary collection.
+var primaryFeatures = ee.FeatureCollection([
+  ee.Feature(null, {foo: 0, label: 'a'}),
+  ee.Feature(null, {foo: 1, label: 'b'}),
+  ee.Feature(null, {foo: 1, label: 'c'}),
+  ee.Feature(null, {foo: 2, label: 'd'}),
+]);
+
+// Create the secondary collection.
+var secondaryFeatures = ee.FeatureCollection([
+  ee.Feature(null, {bar: 1, label: 'e'}),
+  ee.Feature(null, {bar: 1, label: 'f'}),
+  ee.Feature(null, {bar: 2, label: 'g'}),
+  ee.Feature(null, {bar: 3, label: 'h'}),
+]);
+
+// Use an equals filter to specify how the collections match.
+var toyFilter = ee.Filter.equals({
+  leftField: 'foo',
+  rightField: 'bar'
+});
+
+// Define the join.
+var innerJoin = ee.Join.inner('primary', 'secondary');
+
+// Apply the join.
+var toyJoin = innerJoin.apply(primaryFeatures, secondaryFeatures, toyFilter);
+
+// Print the result.
+print('Inner join toy example:', toyJoin);
