@@ -1,0 +1,6 @@
+// Load a Fusion Table from the ID using the FeatureCollection constructor.
+var fc = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45');
+
+Map.addLayer(fc, {min: 0, max: 100000, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']});
+
+
