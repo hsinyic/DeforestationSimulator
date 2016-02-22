@@ -14,8 +14,7 @@ var popImage = counties
 Map.setCenter(-99.976, 40.38, 5);
 Map.addLayer(popImage, {min: 0, max: 100000, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']});
     
-// Load a Fusion Table from the ID using the FeatureCollection constructor.
-var fc = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45');
+
 
 
 
