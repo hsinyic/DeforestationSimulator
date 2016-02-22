@@ -1,8 +1,5 @@
-
-
 // Load a Fusion Table from the ID using the FeatureCollection constructor.
 var fc = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45');
-var fc2 = ee.FeatureCollection('ft:1cPAMSapBQfSH3xLnWaEBkO_5Y3xivO59k4FhcWON');
 
 var popImage = fc
   .filter(ee.Filter.neq('cat', null))
@@ -13,14 +10,4 @@ var popImage = fc
 
 Map.addLayer(popImage, {min: 0, max: 200, palette: ['0000FF']});
 
-
-
-var popImage2 = fc2
-  .filter(ee.Filter.neq('cat', null))
-  .reduceToImage({
-    properties: ['cat'],
-    reducer: ee.Reducer.first()
-});
-
-Map.addLayer(popImage2, {min: 0, max: 200, palette: [ '00FF00']});
 
