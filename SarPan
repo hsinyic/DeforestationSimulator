@@ -22,5 +22,5 @@ var popImage2 = fc2
     reducer: ee.Reducer.first()
 });
 
-Map.addLayer(popImage2, {min: 0, max: 200, palette: ['0000FF']});
+Map.addLayer(popImage2, {min: 0, max: 200, palette: [ '00FF00']});
 
