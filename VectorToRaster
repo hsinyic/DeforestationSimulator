@@ -1,6 +1,9 @@
 // Load a collection of US counties with census data properties.
 var counties = ee.FeatureCollection('ft:1S4EB6319wWW2sWQDPhDvmSBIVrD3iEmCLYB7nMM');
 //Nothing comes out of it yet. 
+Map.addLayer(counties);
+
+
 
 // Make an image out of the population attribute and display it.
 var popImage = counties
