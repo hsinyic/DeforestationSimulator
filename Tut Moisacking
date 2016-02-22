@@ -1,0 +1,10 @@
+// Load three NAIP quarter quads in the same location, different times.
+var naip2004_2012 = ee.ImageCollection('USDA/NAIP/DOQQ')
+  .filterBounds(ee.Geometry.Point(-71.08841, 42.39823))
+  .filterDate('2004-07-01', '2012-12-31')
+  .select(['R', 'G', 'B']);
+
+// Temporally composite the images with a maximum value function.
+var composite = naip2004_2012.max();
+Map.setCenter(-71.12532, 42.3712, 12);
+Map.addLayer(composite, {}, 'max value composite');
