@@ -1,0 +1,3 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var image = ee.Image("UMD/hansen/global_forest_change_2015");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
