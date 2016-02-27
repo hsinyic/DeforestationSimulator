@@ -14,16 +14,14 @@ var gfcImage = ee.Image('UMD/hansen/global_forest_change_2013');
 var forest2000 = gfcImage.select(['treecover2000'])
 
 // Hic sunt dracones ...
-// The idea was to convert vector map to image
-
 var palmsImage = combined.reduceToImage(['cartodb_id'],ee.Reducer.count());
 var forestWithoutPalms = forest2000.where(palmsImage.gt(0), 0);
 
 
 // Zoom to Congo
 centerMap(13.46875, -5.09857, 8);
-addToMap(forest2000)
-addToMap(forestWithoutPalms)
-addToMap(combined)
+addToMap(forest2000)/*just the hansen dataset*/
+addToMap(forestWithoutPalms) /*take out the region with oil palm*/
+addToMap(combined) /**/
 addToMap(oilPalm)
 
