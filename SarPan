@@ -15,7 +15,7 @@ var popImage = fc
 });
 
 // Load forest
-var gfcImage = ee.Image('UMD/hansen/global_forest_change_2013');
+var gfcImage = ee.Image('UMD/hansen/global_forest_change_2015');
 var forest2000 = gfcImage.select(['treecover2000'])
 
 
