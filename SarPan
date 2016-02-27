@@ -24,3 +24,4 @@ var popImage = fc
 Map.addLayer(popImage, {min: 0, max: 200, palette: ['0000FF']});
 
 
+
