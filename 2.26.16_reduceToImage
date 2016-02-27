@@ -1,6 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var fusionTable = ee.FeatureCollection("ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Exclude palms and fiber from forest
 
 // Load up the oil palm concessions
