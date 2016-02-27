@@ -22,6 +22,6 @@ var forestWithoutPalms = forest2000.where(palmsImage.gt(0), 0);
 centerMap(13.46875, -5.09857, 8);
 addToMap(forest2000)/*just the hansen dataset*/
 addToMap(forestWithoutPalms) /*take out the region with oil palm*/
-addToMap(combined) /**/
-addToMap(oilPalm)
+addToMap(combined) /*oilpalm and fiber*/
+addToMap(oilPalm) /*original oilpalm*/
 
