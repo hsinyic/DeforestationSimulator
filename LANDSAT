@@ -1,4 +1,0 @@
-var imageCollection = ee.ImageCollection("LANDSAT/LE7_L1T_32DAY_EVI"),
-    imageCollection2 = ee.ImageCollection("MODIS/MYD09GA_EVI");
-    
-    
