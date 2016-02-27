@@ -2,6 +2,8 @@
 var l8_sr = ee.ImageCollection("LANDSAT/LC8_SR"),
     l8_toa = ee.ImageCollection("LANDSAT/LC8_L1T_TOA");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+// https://groups.google.com/forum/#!topic/google-earth-engine-developers/dZbvEhsmLnE
+
 Map.setCenter(-52.98, 47.43, 11)
 
 //Map.addLayer(l8_sr.count())
