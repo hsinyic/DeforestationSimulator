@@ -1,24 +1,19 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var image = ee.Image("UMD/hansen/global_forest_change_2015");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-
 
 // Load a Fusion Table from the ID using the FeatureCollection constructor.
-var fc = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45'); /*Sar_Pan: Malaysia*/
+var op = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45'); /*Sar_Pan: Malaysia*/
 
 // Load forest
 var gfcImage = ee.Image('UMD/hansen/global_forest_change_2015');
 var forest2000 = gfcImage.select(['treecover2000'])
 
 
-var palmsImage = fc.reduceToImage(['cat'],ee.Reducer.count());
+var palmsImage = op.reduceToImage(['cat'],ee.Reducer.count());
 var forestWithoutPalms = forest2000.where(palmsImage.gt(0), 0);
 
 
 
 /*
-var palmsImage = fc
+var palmsImage = op
   .filter(ee.Filter.neq('cat', null))
   .reduceToImage({
     properties: ['cat'],
@@ -28,6 +23,7 @@ var palmsImage = fc
 
 /*Map.addLayer(palmsImage, {min: 0, max: 200, palette: ['0000FF']});
 */
+addToMap(forest2000)
 addToMap(forestWithoutPalms)
 addToMap(palmsImage)
 
