@@ -12,11 +12,22 @@ var gfcImage = ee.Image('UMD/hansen/global_forest_change_2015');
 var forest2000 = gfcImage.select(['treecover2000'])
 
 
-var palmsImage = combined.reduceToImage(['cat'],ee.Reducer.count());
+var palmsImage = fc.reduceToImage(['cat'],ee.Reducer.count());
 var forestWithoutPalms = forest2000.where(palmsImage.gt(0), 0);
 
 
-Map.addLayer(palmsImage, {min: 0, max: 200, palette: ['0000FF']});
 
+/*
+var palmsImage = fc
+  .filter(ee.Filter.neq('cat', null))
+  .reduceToImage({
+    properties: ['cat'],
+    reducer: ee.Reducer.first()
+});
+*/
 
+/*Map.addLayer(palmsImage, {min: 0, max: 200, palette: ['0000FF']});
+*/
+addToMap(forestWithoutPalms)
+addToMap(palmsImage)
 
