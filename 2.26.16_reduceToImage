@@ -1,0 +1,32 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var fusionTable = ee.FeatureCollection("ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Exclude palms and fiber from forest
+
+// Load up the oil palm concessions
+var oilPalm = ee.FeatureCollection('ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw', 'geometry');
+
+// Load up the fiber concessions
+var fiber = ee.FeatureCollection('ft:1uqBi75K8AtJa3q4C-DuKUPYRMGvFHtp0c7E-VTA', 'geometry');
+
+// Merge fibre and palms
+var combined = oilPalm.merge(fiber);
+
+// Load forest
+var gfcImage = ee.Image('UMD/hansen/global_forest_change_2013');
+var forest2000 = gfcImage.select(['treecover2000'])
+
+// Hic sunt dracones ...
+// The idea was to convert vector map to image
+
+var palmsImage = combined.reduceToImage(['cartodb_id'],ee.Reducer.count());
+var forestWithoutPalms = forest2000.where(palmsImage.gt(0), 0);
+
+
+// Zoom to Congo
+centerMap(13.46875, -5.09857, 8);
+addToMap(forest2000)
+addToMap(forestWithoutPalms)
+addToMap(combined)
+addToMap(oilPalm)
+
