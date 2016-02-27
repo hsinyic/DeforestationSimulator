@@ -16,6 +16,8 @@ var forest2000 = gfcImage.select(['treecover2000'])
 // Hic sunt dracones ...
 var palmsImage = combined.reduceToImage(['cartodb_id'],ee.Reducer.count());
 var forestWithoutPalms = forest2000.where(palmsImage.gt(0), 0);
+// He did not merge the layers, 
+// instead his vector layer has numerous entries in attribute table 
 
 
 // Zoom to Congo
