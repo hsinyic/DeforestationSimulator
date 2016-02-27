@@ -20,7 +20,5 @@ var forest2000 = gfcImage.select(['treecover2000'])
 
 
 Map.addLayer(popImage, {min: 0, max: 200, palette: ['0000FF']});
-Map.addLayer(gfcImage, {min: 0, max: 200, palette: ['0000FF']});
-
 
 
