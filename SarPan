@@ -1,6 +1,9 @@
 
 // Load a Fusion Table from the ID using the FeatureCollection constructor.
 var op = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45'); /*Sar_Pan: Malaysia*/
+var op2 = ee.FeatureCollection('ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw'); /*Sar_Pan: Malaysia*/
+
+
 
 // Load forest
 var gfcImage = ee.Image('UMD/hansen/global_forest_change_2015');
@@ -8,6 +11,9 @@ var forest2000 = gfcImage.select(['treecover2000'])
 
 
 var palmsImage = op.reduceToImage(['cat'],ee.Reducer.count());
+var palmsImage2 = op2.reduceToImage(['cartodb_id'],ee.Reducer.count());
+
+
 var forestWithoutPalms = forest2000.where(palmsImage.gt(0), 0);
 
 
@@ -23,7 +29,11 @@ var palmsImage = op
 
 /*Map.addLayer(palmsImage, {min: 0, max: 200, palette: ['0000FF']});
 */
+centerMap(13.46875, -5.09857, 8);
 addToMap(forest2000)
 addToMap(forestWithoutPalms)
-addToMap(palmsImage)
+// addToMap(palmsImage)
+addToMap(op)
+addToMap(op2)
+
 
