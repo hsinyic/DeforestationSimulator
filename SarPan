@@ -7,16 +7,18 @@ var image = ee.Image("UMD/hansen/global_forest_change_2015");
 // Load a Fusion Table from the ID using the FeatureCollection constructor.
 var fc = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45'); /*Sar_Pan: Malaysia*/
 
+// Load forest
+var gfcImage = ee.Image('UMD/hansen/global_forest_change_2015');
+var forest2000 = gfcImage.select(['treecover2000'])
+
+
+
 var popImage = fc
   .filter(ee.Filter.neq('cat', null))
   .reduceToImage({
     properties: ['cat'],
     reducer: ee.Reducer.first()
 });
-
-// Load forest
-var gfcImage = ee.Image('UMD/hansen/global_forest_change_2015');
-var forest2000 = gfcImage.select(['treecover2000'])
 
 
 Map.addLayer(popImage, {min: 0, max: 200, palette: ['0000FF']});
