@@ -1,0 +1,13 @@
+// Load a landsat image and select three bands.
+var landsat = ee.Image('LANDSAT/LC8_L1T_TOA/LC81230322014135LGN00')
+  .select(['B4', 'B3', 'B2']);
+
+// Create a geometry representing an export region.
+var geometry = ee.Geometry.Rectangle([116.3491, 39.9572, 116.4325, 40.0123]);
+
+// Export the image, specifying scale and region.
+Export.image(landsat, 'exportImageExample', {
+  scale: 30,
+  region: geometry
+});
+      
