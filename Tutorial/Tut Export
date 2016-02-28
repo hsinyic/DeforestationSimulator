@@ -1,6 +1,7 @@
 // Load a landsat image and select three bands.
 var landsat = ee.Image('LANDSAT/LC8_L1T_TOA/LC81230322014135LGN00')
   .select(['B4', 'B3', 'B2']);
+// B4, B3, B2 is the region of the 
 
 // Create a geometry representing an export region.
 var geometry = ee.Geometry.Rectangle([116.3491, 39.9572, 116.4325, 40.0123]);
@@ -12,4 +13,9 @@ Export.image(landsat, 'exportImageExample', {
 });
 
 addToMap(landsat) 
+addToMap(geometry) 
+
+// Since it wasn't explicitly specified, 
+// the CRS of the output will be taken from 
+// the first band of the image to be exported.
 
