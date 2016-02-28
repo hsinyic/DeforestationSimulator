@@ -10,4 +10,6 @@ Export.image(landsat, 'exportImageExample', {
   scale: 30,
   region: geometry
 });
-      
+
+addToMap(landsat) 
+
