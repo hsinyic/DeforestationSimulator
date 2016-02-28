@@ -15,6 +15,14 @@ Export.image(landsat, 'exportImageExample', {
 addToMap(landsat) 
 addToMap(geometry) 
 
+
+Map.addLayer(ee.Image('LC8_L1T/LC80440342014077LGN00'),
+    {'min': 6000, 'max': 18000});
+Map.setCenter(-122.44, 37.77, 12);
+Map.addLayer(ee.ImageCollection('LANDSAT/LC8_L1T'));
+Map.setCenter(-122.44, 37.77, 7);
+
+
 // Since it wasn't explicitly specified, 
 // the CRS of the output will be taken from 
 // the first band of the image to be exported.
