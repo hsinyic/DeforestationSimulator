@@ -12,14 +12,15 @@ Export.image(landsat, 'exportImageExample', {
   region: geometry
 });
 
-addToMap(landsat) 
-addToMap(geometry) 
+addToMap(landsat) /*1*/
+addToMap(geometry) /*2*/
 
 
 Map.addLayer(ee.Image('LC8_L1T/LC80440342014077LGN00'),
-    {'min': 6000, 'max': 18000});
+    {'min': 6000, 'max': 18000}); /*3*/
 Map.setCenter(-122.44, 37.77, 12);
-Map.addLayer(ee.ImageCollection('LANDSAT/LC8_L1T'));
+Map.addLayer(ee.ImageCollection('LANDSAT/LC8_L1T'),
+  {'bands': ['B4', 'B3', 'B2'], 'min': 6000, 'max': 18000}); /*4*/
 Map.setCenter(-122.44, 37.77, 7);
 
 
