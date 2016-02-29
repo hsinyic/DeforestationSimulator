@@ -1,7 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: 0B4A8B */ee.Geometry.MultiPoint(),
-    fusionTable = ee.FeatureCollection("ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw"),
-    fusionTable2 = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw");
+var geometry = /* color: 0B4A8B */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
     
