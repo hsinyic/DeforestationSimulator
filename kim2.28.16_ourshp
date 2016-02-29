@@ -9,14 +9,17 @@ var geometry = /* color: d63000 */ee.Geometry.MultiPoint(),
 // Vector layer with multiple rows in fushion table 
 var countries = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45'); 
 
-// Vector layer with one line in fushion table 
-// var countries = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45'); 
 
 var indonesia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 
 
 // Load up the oil palm concessions.
 var oilPalm = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45', 'geometry');
+
+// var oilPalm = ee.FeatureCollection('ft:1kIBUuiF7pqidZaX9qU-an6nV8hFVLOy-vOrQO5t1', 'geometry');
+
+
+
 
 // Create a feature collection that is just oil palm concessions inside Indonesia.
 var oilPalmInIndonesia = oilPalm.filterBounds(indonesia);
