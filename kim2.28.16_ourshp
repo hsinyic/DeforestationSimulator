@@ -1,19 +1,15 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: ff00ff */ee.Geometry.MultiPoint(),
+var geometry = /* color: 99ffff */ee.Geometry.MultiPoint(),
     fusionTable = ee.FeatureCollection("ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
     
 // Get just the Indonesia feature.
-// Vector layer without multiple rows in fushion table 
+// Vector layer with multiple rows in fushion table 
 var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw'); 
 
 // Vector layer with one line in fushion table 
 // var countries = ee.FeatureCollection('ft:1kIBUuiF7pqidZaX9qU-an6nV8hFVLOy-vOrQO5t1'); 
-
-
-
-
 
 var indonesia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 
