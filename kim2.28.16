@@ -1,9 +1,10 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = /* color: 0B4A8B */ee.Geometry.Polygon(
-        [[[109.2315673828125, -0.24169850190163725],
-          [109.41146850585938, -0.24032522303569523],
-          [109.41696166992188, -0.11398307911293089],
-          [109.2041015625, -0.11672965557718792]]]);
+        [[[109.22882089927202, -0.22109924800017322],
+          [110.02807600996994, -0.3433206508155334],
+          [109.41421499807848, -0.09338383479703502],
+          [109.20135503107304, -0.09613041859835043]]]),
+    fusionTable = ee.FeatureCollection("ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Get just the Indonesia feature.
 var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
@@ -38,5 +39,3 @@ Export.image(opRaster, 'exportImageExample', {
   scale: 30,
   region: geometry
 });
-             
-             
