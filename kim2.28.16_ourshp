@@ -1,3 +1,10 @@
+var geometry = /* color: ffc82d */ee.Geometry.Polygon(
+        [[[109.22882089927202, -0.22109924800017322],
+          [110.02807600996994, -0.3433206508155334],
+          [109.41421499807848, -0.09338383479703502],
+          [109.20135503107304, -0.09613041859835043]]]),
+    fusionTable = ee.FeatureCollection("ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw");
+    
 // Get just the Indonesia feature.
 var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
