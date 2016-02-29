@@ -11,9 +11,9 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 
 // Load up the oil palm concessions.
 //multiple rows 
-// var oilPalm = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45', 'geometry');
-//one row
-var oilPalm = ee.FeatureCollection('ft:1kIBUuiF7pqidZaX9qU-an6nV8hFVLOy-vOrQO5t1', 'geometry');
+var oilPalm = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45', 'geometry');
+//one row -- the second one is downloadable
+// var oilPalm = ee.FeatureCollection('ft:1kIBUuiF7pqidZaX9qU-an6nV8hFVLOy-vOrQO5t1', 'geometry');
 // var oilPalm = ee.FeatureCollection('ft:1lK4FuYO8OObrRQPGc8SsyhYjCtGO-siQLfWchHmf', 'geometry');
 
 
