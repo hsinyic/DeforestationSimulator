@@ -1,24 +1,20 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: d63000 */ee.Geometry.MultiPoint(),
+var geometry = /* color: 0B4A8B */ee.Geometry.MultiPoint(),
     fusionTable = ee.FeatureCollection("ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw"),
     fusionTable2 = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
     
 // Get just the Indonesia feature.
-// Vector layer with multiple rows in fushion table 
-var countries = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45'); 
-
-
+var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 
-
 // Load up the oil palm concessions.
-var oilPalm = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45', 'geometry');
-
-// var oilPalm = ee.FeatureCollection('ft:1kIBUuiF7pqidZaX9qU-an6nV8hFVLOy-vOrQO5t1', 'geometry');
-
-
+//multiple rows 
+// var oilPalm = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45', 'geometry');
+//one row
+var oilPalm = ee.FeatureCollection('ft:1kIBUuiF7pqidZaX9qU-an6nV8hFVLOy-vOrQO5t1', 'geometry');
+// var oilPalm = ee.FeatureCollection('ft:1lK4FuYO8OObrRQPGc8SsyhYjCtGO-siQLfWchHmf', 'geometry');
 
 
 // Create a feature collection that is just oil palm concessions inside Indonesia.
@@ -41,8 +37,8 @@ var opRaster = oilPalmInIndonesia
 });
 //use first and not count 
 
-Map.addLayer(opRaster, {min: 0, max: 1000000, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Raster OP');
-Map.addLayer(oilPalm, {min: 0, max: 1000000, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Vector OP');
+Map.addLayer(opRaster, {min: 0, max: 1, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Raster OP');
+Map.addLayer(oilPalm, {min: 0, max: 1, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Vector OP');
 
 
 
