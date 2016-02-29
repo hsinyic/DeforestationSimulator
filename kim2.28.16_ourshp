@@ -1,5 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: ff0000 */ee.Geometry.MultiPoint(),
+var geometry = /* color: 0000ff */ee.Geometry.MultiPoint(),
     fusionTable = ee.FeatureCollection("ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
@@ -24,9 +24,9 @@ Map.addLayer(coverImage.clip(indonesia),
              
 // Make an image out of the population attribute and display it.
 var opRaster = oilPalmInIndonesia
-  .filter(ee.Filter.neq('cat', null))
+  .filter(ee.Filter.neq('cat_', null))
   .reduceToImage({
-    properties: ['cat'],
+    properties: ['cat_'],
     reducer: ee.Reducer.first()
 });
 
