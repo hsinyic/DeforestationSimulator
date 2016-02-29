@@ -11,7 +11,9 @@ var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omP
 // Vector layer with one line in fushion table 
 // var countries = ee.FeatureCollection('ft:1kIBUuiF7pqidZaX9qU-an6nV8hFVLOy-vOrQO5t1'); 
 
-// Vector layer with one line in fushion table 
+// Vector layer with one line in fushion table, re-dissolve everything
+// var countries = ee.FeatureCollection('ft:1lK4FuYO8OObrRQPGc8SsyhYjCtGO-siQLfWchHmf'); 
+
 
 
 
@@ -39,9 +41,10 @@ var opRaster = oilPalmInIndonesia
     properties: ['cat'],
     reducer: ee.Reducer.first()
 });
+//use first and not count 
 
-Map.addLayer(opRaster, {min: 0, max: 1000000, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']});
-Map.addLayer(oilPalm, {min: 0, max: 1000000, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']});
+Map.addLayer(opRaster, {min: 0, max: 1000000, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Raster OP');
+Map.addLayer(oilPalm, {min: 0, max: 1000000, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Vector OP');
 
 
 
