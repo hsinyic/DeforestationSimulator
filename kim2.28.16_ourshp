@@ -1,5 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: 0B4A8B */ee.Geometry.MultiPoint();
+var geometry = /* color: d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
     
@@ -9,10 +9,12 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 
 // Load up the oil palm concessions.
 //multiple rows 
-var oilPalm = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45', 'geometry');
+// var oilPalm = ee.FeatureCollection('ft:10jB93qe9kDIy6OSg-UMXYrjagAB4gUKhpy6ryt45', 'geometry');
 //one row -- the second one is downloadable
 // var oilPalm = ee.FeatureCollection('ft:1kIBUuiF7pqidZaX9qU-an6nV8hFVLOy-vOrQO5t1', 'geometry');
 // var oilPalm = ee.FeatureCollection('ft:1lK4FuYO8OObrRQPGc8SsyhYjCtGO-siQLfWchHmf', 'geometry');
+
+var oilPalm = ee.FeatureCollection('ft:10tX-aR20k-jOr2IT6A-MR1Br06GABwfUYvxKYMIX', 'geometry');
 
 
 // Create a feature collection that is just oil palm concessions inside Indonesia.
