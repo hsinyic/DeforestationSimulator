@@ -1,7 +1,17 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: d63000 */ee.Geometry.MultiPoint(),
-    Hansen = ee.Image("UMD/hansen/global_forest_change_2015");
+var geometry = /* color: 98ff00 */ee.Geometry.MultiPoint(),
+    Hansen = ee.Image("UMD/hansen/global_forest_change_2015"),
+    geometry2 = /* color: 0B4A8B */ee.Geometry.MultiPoint(),
+    Hansen2 = ee.Image("UMD/hansen/global_forest_change_2015"),
+    OP90 = ee.FeatureCollection("ft:10MTEH3_Isn54RRvSiSjpf1378fbr7TSKaiKYl-W6"),
+    OP00 = ee.FeatureCollection("ft:1pu7hrl_uK4OKKzKI5vr1DsjshK58hErrT3Nv8M1p");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+var geometry = geometry2, Hansen = Hansen2;
+    
+
+
+
+
 // Get just the Malaysia feature.
 
 var treeCover = Hansen.select(['treecover2000']);
