@@ -1,34 +1,24 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = /* color: 98ff00 */ee.Geometry.MultiPoint(),
-    Hansen = ee.Image("UMD/hansen/global_forest_change_2015"),
-    geometry2 = /* color: 0B4A8B */ee.Geometry.MultiPoint(),
-    Hansen2 = ee.Image("UMD/hansen/global_forest_change_2015"),
+    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     OP90 = ee.FeatureCollection("ft:10MTEH3_Isn54RRvSiSjpf1378fbr7TSKaiKYl-W6"),
-    OP00 = ee.FeatureCollection("ft:1pu7hrl_uK4OKKzKI5vr1DsjshK58hErrT3Nv8M1p");
+    OP00 = ee.FeatureCollection("ft:1pu7hrl_uK4OKKzKI5vr1DsjshK58hErrT3Nv8M1p"),
+    OP05 = ee.FeatureCollection("ft:1lNXWu2s8GjIyLifNr1OE8CwC3FvGgCnWLLRe8Ngo"),
+    OP10 = ee.FeatureCollection("ft:1NWWDMO543vxr45_vugNDtjl9FPvZ78zh9VhupSCr"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var geometry = geometry2, Hansen = Hansen2;
-    
-
-
-
-
 // Get just the Malaysia feature.
-
-var treeCover = Hansen.select(['treecover2000']);
-var lossImage = Hansen.select(['loss']);
-var gainImage = Hansen.select(['gain']);
-
-var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
-var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
-
-var oilPalm = ee.FeatureCollection('ft:10tX-aR20k-jOr2IT6A-MR1Br06GABwfUYvxKYMIX', 'geometry');
-
-// Create a feature collection that is just oil palm concessions inside Malaysia.
-var oilPalmInMalaysia = oilPalm.filterBounds(malaysia);
-
-// Get forest cover in Malaysia.
-var gfcImage = ee.Image('UMD/hansen/global_forest_change_2013');
+var lossYear = gfcImage.select(['lossyear']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
 var coverImage = gfcImage.select(['treecover2000']);
+var forest = gfcImage.select(['treecover2000']);
+
+
+//Define country boundary (Malaysia only)
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var oilPalm = ee.FeatureCollection(OP00, 'geometry');
+var oilPalmInMalaysia = oilPalm.filterBounds(malaysia);
 
 Map.addLayer(coverImage.clip(malaysia),
              {'min': 0, 'max': 100, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
@@ -45,6 +35,18 @@ var opRaster = oilPalmInMalaysia
 
 Map.addLayer(opRaster, {min: 0, max: 1, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Raster OP');
 Map.addLayer(oilPalm, {min: 0, max: 1, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Vector OP');
+
+
+//Use lossYear.gte(0) to lte(1)
+var lossInFirstYear = lossYear.gte(0).and(lossYear.lte(2)); 
+var OPAt2001 = opRaster.where(lossInFirstYear.eq(2), 0);
+var vis = {'min': 0, 'max': 100, 'palette': '000000, 00FF00'};
+
+
+Map.addLayer(OPAt2001, {min: 0, max: 2, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'forestAt2001');
+
+
+
 
 
 
