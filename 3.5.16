@@ -64,6 +64,40 @@ for (var i = 2001; i <= 2012; ++i){
 }
 print('collectionFromConstructor: ', Gunarso);
 
+//at time t 
+
+switch (OP00_raster, OP05_raster, LossYear) {
+    case OP05_raster ===1 &OP05_raster===1:
+      if((t.subtract(2012))> LossYear){
+        console.log("a is true");
+      } else if(!a) {
+        console.log("a is false");
+      } else {
+    console.log("a is not true or false");
+        
+      }
+
+        var api = $('#UploadList').data('jsp');
+        api.reinitialise();
+        break;
+    case OP05_raster ===1 &OP05_raster===1:
+        setLayoutState('upload1Row');
+        var api = $('#UploadList').data('jsp');
+        api.reinitialise();
+        break;
+    case OP05_raster ===1 &OP05_raster===1:
+        setLayoutState('upload2Rows');
+        var api = $('#UploadList').data('jsp');
+        api.reinitialise();
+        break;
+    case OP05_raster ===1 &OP05_raster===1:
+        var api = $('#UploadList').data('jsp');
+        api.reinitialise();
+        break;                  
+}
+
+
+
 
 //Year 2000 
 //Assign OP90=1 and OP00=1  as ones with age > 10, mean = 10
