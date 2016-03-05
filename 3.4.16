@@ -11,7 +11,6 @@ var geometry = /* color: 98ff00 */ee.Geometry.MultiPoint(),
 var lossYear = gfcImage.select(['lossyear']);
 var lossImage = gfcImage.select(['loss']);
 var gainImage = gfcImage.select(['gain']);
-var coverImage = gfcImage.select(['treecover2000']);
 var forest = gfcImage.select(['treecover2000']);
 
 
@@ -23,8 +22,8 @@ var oilPalm90 = ee.FeatureCollection(OP00, 'geometry');
 var oilPalmInMalaysia = oilPalm00.filterBounds(malaysia);
 
 Map.addLayer(lossYear.clip(malaysia),
-             {'min': 0, 'max': 100, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
-             'Forest Cover 2000');
+             {'min': 0, 'max': 12, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+             'Forest Lost Year');
              
 // Make an image out of the population attribute and display it.
 var opRaster = oilPalmInMalaysia
@@ -36,7 +35,7 @@ var opRaster = oilPalmInMalaysia
 //use first and not count 
 
 Map.addLayer(opRaster, {min: 0, max: 1, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Raster OP');
-Map.addLayer(oilPalm, {min: 0, max: 1, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Vector OP');
+Map.addLayer(oilPalm00, {min: 0, max: 1, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Vector OP');
 
 
 //Use lossYear.gte(0) to lte(1)
