@@ -1,0 +1,9 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: ffc82d */ee.Geometry.MultiPoint(),
+    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen05 = ee.FeatureCollection("ft:12a-k5uoK8bI9RWsPYlBsrxDQajV4RwS4P_iOC8rP"),
+    Pen00 = ee.FeatureCollection("ft:1eb9ukc3v3tM_xvezzPR8PJdkQKuh977Ej_XxwL_Q"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
