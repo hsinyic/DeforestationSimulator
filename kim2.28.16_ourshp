@@ -1,11 +1,16 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: d63000 */ee.Geometry.MultiPoint();
+var geometry = /* color: d63000 */ee.Geometry.MultiPoint(),
+    Hansen = ee.Image("UMD/hansen/global_forest_change_2015");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Get just the Malaysia feature.
 
-    
-// Get just the Indonesia feature.
+var treeCover = gfcImage.select(['treecover2000']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+
+
 var countries = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw');
-var indonesia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 
 // Load up the oil palm concessions.
 //multiple rows 
@@ -16,20 +21,19 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 
 var oilPalm = ee.FeatureCollection('ft:10tX-aR20k-jOr2IT6A-MR1Br06GABwfUYvxKYMIX', 'geometry');
 
+// Create a feature collection that is just oil palm concessions inside Malaysia.
+var oilPalmInMalaysia = oilPalm.filterBounds(malaysia);
 
-// Create a feature collection that is just oil palm concessions inside Indonesia.
-var oilPalmInIndonesia = oilPalm.filterBounds(indonesia);
-
-// Get forest cover in Indonesia.
+// Get forest cover in Malaysia.
 var gfcImage = ee.Image('UMD/hansen/global_forest_change_2013');
 var coverImage = gfcImage.select(['treecover2000']);
 
-Map.addLayer(coverImage.clip(indonesia),
+Map.addLayer(coverImage.clip(malaysia),
              {'min': 0, 'max': 100, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
              'Forest Cover 2000');
              
 // Make an image out of the population attribute and display it.
-var opRaster = oilPalmInIndonesia
+var opRaster = oilPalmInMalaysia
   // .filter(ee.Filter.neq('cat_', null))
   .reduceToImage({
     properties: ['cat'],
