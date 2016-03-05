@@ -17,10 +17,12 @@ var forest = gfcImage.select(['treecover2000']);
 
 //Define country boundary (Malaysia only)
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
-var oilPalm = ee.FeatureCollection(OP00, 'geometry');
-var oilPalmInMalaysia = oilPalm.filterBounds(malaysia);
+var oilPalm00 = ee.FeatureCollection(OP00, 'geometry');
+var oilPalm90 = ee.FeatureCollection(OP00, 'geometry');
 
-Map.addLayer(coverImage.clip(malaysia),
+var oilPalmInMalaysia = oilPalm00.filterBounds(malaysia);
+
+Map.addLayer(lossYear.clip(malaysia),
              {'min': 0, 'max': 100, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
              'Forest Cover 2000');
              
@@ -43,7 +45,7 @@ var OPAt2001 = opRaster.where(lossInFirstYear.eq(2), 0);
 var vis = {'min': 0, 'max': 100, 'palette': '000000, 00FF00'};
 
 
-Map.addLayer(OPAt2001, {min: 0, max: 2, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'forestAt2001');
+Map.addLayer(OPAt2001, {min: 0, max: 2, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'OPAt2001');
 
 
 
