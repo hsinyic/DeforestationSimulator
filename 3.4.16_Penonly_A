@@ -48,6 +48,8 @@ var OP10_raster = Pen10
     properties: ['cat'],
     reducer: ee.Reducer.first()
 });
+
+//visualize the maps 
 Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Raster OP 2010');
 Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Raster OP 2005');
 Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Raster OP 2000');
