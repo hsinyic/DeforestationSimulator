@@ -1,11 +1,12 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: bf04c2 */ee.Geometry.MultiPoint(),
+var geometry = /* color: d63000 */ee.Geometry.MultiPoint(),
     gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
     Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
     Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
     Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
-    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft");
+    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft"),
+    Pen05_v2 = ee.FeatureCollection("ft:1WFl3go93KXh8Lk8ltOzMK2YBjIlaMeHPst1hod_b");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Get just the Malaysia feature.
 var lossYear = gfcImage.select(['lossyear']);
@@ -43,6 +44,13 @@ var OP05_raster = Pen05
     properties: ['cat'],
     reducer: ee.Reducer.first()
 });
+
+var OP05v2_raster = Pen05_v2
+  .reduceToImage({
+    properties: ['cat'],
+    reducer: ee.Reducer.first()
+});
+
 var OP10_raster = Pen10
   .reduceToImage({
     properties: ['cat'],
@@ -50,6 +58,7 @@ var OP10_raster = Pen10
 });
 Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Raster OP 2010');
 Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Raster OP 2005');
+Map.addLayer(OP05v2_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Raster OP 2005 v2');
 Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Raster OP 2000');
 Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Raster OP 1990');
 
@@ -64,6 +73,27 @@ for (var i = 2001; i <= 2012; ++i){
 }
 print('collectionFromConstructor: ', Gunarso);
 
+
+var OP_decision = {
+  1: {
+    1: 1
+  },
+  1: {
+    0: 1
+  },
+  0: {
+    1: {
+      3: 98
+    }
+  }
+};
+
+console.log(OP_decision[1][2][3]); // 45
+console.log(OP_decision[2][2][3]); // 98
+
+// or
+var A = 1, B = 2, C = 3;
+console.log(OP_decision[A][B][C]); // still 45
 
 //Year 2000 
 //Assign OP90=1 and OP00=1  as ones with age > 10, mean = 10
