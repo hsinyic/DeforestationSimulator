@@ -139,7 +139,7 @@ Map.addLayer(OP0005.clip(malaysia).updateMask(OP0005),
 
 //binary later 
 var loss0 = lossYear.gte(0).and(lossYear.lte(1));
-//does this include 
+
 var loss1 = lossYear.gte(1).and(lossYear.lte(2));
 var loss2 = lossYear.gte(2).and(lossYear.lte(3));
 var loss3 = lossYear.gte(3).and(lossYear.lte(4));
