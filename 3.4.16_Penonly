@@ -74,6 +74,7 @@ for (var i = 2001; i <= 2012; ++i){
 print('collectionFromConstructor: ', Gunarso);
 
 
+var decision_t
 var OP_decision = {
   1: {
     1: 1
@@ -82,9 +83,7 @@ var OP_decision = {
     0: 1
   },
   0: {
-    1: {
-      3: 98
-    }
+    1: decision()
   }
 };
 
