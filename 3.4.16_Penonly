@@ -76,17 +76,29 @@ print('collectionFromConstructor: ', Gunarso);
 
 
 
-var decision = function(OP00_raster, OP05_raster, lossYear) {
-  if(OP00_raster===0 && OP05_raster===0){
-    return OP00_raster;
-  }
-};
+// var decision = function(OP00_raster, OP05_raster, lossYear) {
+//   if(OP00_raster===0 && OP05_raster===0){
+//     return 0;
+//   }
+//   else if(OP00_raster===0 && OP05_raster== NULL){
+//     return 1;
+//   }
+//   else if(OP00_raster===NULL && OP05_raster===0){
+//     return 2;
+//   }
+//   else if (OP00_raster===NULL && OP05_raster===NULL){
+//     return 3;
+//   }
+//   else {
+//     return 4;
+//   }
+// };
 
-var OP0005 = decision(OP00_raster, OP05_raster, lossYear)
+// var OP0005 = decision(OP00_raster, OP05_raster, lossYear)
 
-print(OP0005)
-print(OP00_raster)
-
+// print(OP0005)
+print("OP00_raster", OP00_raster)
+print("OP00_raster get info", OP00_raster.getInfo())
 
 // Map.addLayer(OP0005, {min: 0, max: 3, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Initial Classify');
 
@@ -106,8 +118,8 @@ var lossInFirst5Year = lossYear.gte(0).and(lossYear.lte(5));
 var OPAt2005 = OP00_raster.where(lossInFirst5Year.eq(1), 0);
 
 Map.addLayer(OPAt2005, {min: 0, max: 2, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'OPAt2001');
-print(OPAt2005)
-print(lossInFirst5Year)
+print('OPAt2005', OPAt2005.getInfo())
+print('lossInFirst5Year', lossInFirst5Year.getInfo())
 // Export the image, specifying scale and region.
 Export.image(OPAt2005, 'exportImageExample', {
   scale: 30,
