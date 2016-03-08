@@ -13,7 +13,7 @@ var lossYear = gfcImage.select(['lossyear']);
 var lossImage = gfcImage.select(['loss']);
 var gainImage = gfcImage.select(['gain']);
 var forest = gfcImage.select(['treecover2000']);
-
+print('lossYear', lossYear)
 //Define country boundary (Malaysia only)
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 
@@ -29,33 +29,12 @@ Map.addLayer(forest.clip(malaysia).updateMask(gfcImage.select(['treecover2000'])
 
 
 // Convert our vector map to a raster 
-var OP90_raster = Pen90
-  .reduceToImage({
-    properties: ['cat'],
-    reducer: ee.Reducer.first()
-});
-var OP00_raster = Pen00
-  .reduceToImage({
-    properties: ['cat'],
-    reducer: ee.Reducer.first()
-});
-var OP05_raster = Pen05
-  .reduceToImage({
-    properties: ['cat'],
-    reducer: ee.Reducer.first()
-});
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.mean()});
+var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 
-var OP05v2_raster = Pen05_v2
-  .reduceToImage({
-    properties: ['cat'],
-    reducer: ee.Reducer.first()
-});
 
-var OP10_raster = Pen10
-  .reduceToImage({
-    properties: ['cat'],
-    reducer: ee.Reducer.first()
-});
 Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Raster OP 2010');
 Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Raster OP 2005');
 Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Raster OP 2000');
@@ -70,35 +49,35 @@ for (var i = 2001; i <= 2012; ++i){
   var additional = ee.ImageCollection([i]);
   Gunarso = Gunarso.merge(additional);
 }
-print('collectionFromConstructor: ', Gunarso);
+print('collectionFromConstructor: ', Gunarso.getInfo());
 
 
 
 
 
-// var decision = function(OP00_raster, OP05_raster, lossYear) {
-//   if(OP00_raster===0 && OP05_raster===0){
-//     return 0;
-//   }
-//   else if(OP00_raster===0 && OP05_raster== NULL){
-//     return 1;
-//   }
-//   else if(OP00_raster===NULL && OP05_raster===0){
-//     return 2;
-//   }
-//   else if (OP00_raster===NULL && OP05_raster===NULL){
-//     return 3;
-//   }
-//   else {
-//     return 4;
-//   }
-// };
+var decision = function(OP00_raster, OP05_raster) {
+  if(OP00_raster===0 && OP05_raster===0){
+    return 0;
+  }
+  else if(OP00_raster===0 && OP05_raster== 1){
+    return 1;
+  }
+  else if(OP00_raster===1 && OP05_raster===0){
+    return 2;
+  }
+  else if (OP00_raster===1 && OP05_raster===1){
+    return 3;
+  }
+  else {
+    return 4;
+  }
+};
 
-// var OP0005 = decision(OP00_raster, OP05_raster, lossYear)
+var OP0005 = decision(OP00_raster, OP05_raster);
 
-// print(OP0005)
-print("OP00_raster", OP00_raster)
-print("OP00_raster get info", OP00_raster.getInfo())
+print('OP0005', OP0005);
+print("OP90_raster", OP90_raster);
+print("OP00_raster get info", OP00_raster.getInfo());
 
 // Map.addLayer(OP0005, {min: 0, max: 3, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'Initial Classify');
 
@@ -120,6 +99,7 @@ var OPAt2005 = OP00_raster.where(lossInFirst5Year.eq(1), 0);
 Map.addLayer(OPAt2005, {min: 0, max: 2, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'OPAt2001');
 print('OPAt2005', OPAt2005.getInfo())
 print('lossInFirst5Year', lossInFirst5Year.getInfo())
+
 // Export the image, specifying scale and region.
 Export.image(OPAt2005, 'exportImageExample', {
   scale: 30,
