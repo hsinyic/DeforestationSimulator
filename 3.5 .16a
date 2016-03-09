@@ -1,0 +1,125 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: 98ff00 */ee.Geometry.MultiPoint(),
+    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
+    Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
+    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Get just the Malaysia feature.
+var lossYear = gfcImage.select(['lossyear']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+var forest = gfcImage.select(['treecover2000']);
+
+//Define country boundary (Malaysia only)
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+
+
+//mask out the area where there isn't a "loss year" mark
+Map.addLayer(lossYear.clip(malaysia).updateMask(gfcImage.select(['lossyear'])),
+             {'min': 0, 'max': 12, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+             'Forest Lost Year');
+
+Map.addLayer(forest.clip(malaysia).updateMask(gfcImage.select(['treecover2000'])),
+             {'min': 0, 'max': 100, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+             'Forest Cover 2000');
+
+
+// Convert our vector map to a raster 
+var OP90_raster = Pen90
+  .reduceToImage({
+    properties: ['cat'],
+    reducer: ee.Reducer.first()
+});
+var OP00_raster = Pen00
+  .reduceToImage({
+    properties: ['cat'],
+    reducer: ee.Reducer.first()
+});
+var OP05_raster = Pen05
+  .reduceToImage({
+    properties: ['cat'],
+    reducer: ee.Reducer.first()
+});
+var OP10_raster = Pen10
+  .reduceToImage({
+    properties: ['cat'],
+    reducer: ee.Reducer.first()
+});
+Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Raster OP 2010');
+Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Raster OP 2005');
+Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Raster OP 2000');
+Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Raster OP 1990');
+
+//Create an imagecollection of 2001, 2002, 2003, 2004
+//Each image has bands of OP, Non-OP, and Forest 
+// Create a collection of images, each is 2000,
+// 2001, 2002, 2003...etc 
+var Gunarso = ee.ImageCollection([2000]);
+for (var i = 2001; i <= 2012; ++i){
+  var additional = ee.ImageCollection([i]);
+  Gunarso = Gunarso.merge(additional);
+}
+print('collectionFromConstructor: ', Gunarso);
+
+//at time t 
+
+switch (OP00_raster, OP05_raster, LossYear) {
+    case OP05_raster ===1 &OP05_raster===1:
+      if((t.subtract(2012))> LossYear){
+        console.log("a is true");
+      } else if(!a) {
+        console.log("a is false");
+      } else {
+    console.log("a is not true or false");
+      }
+        var api = $('#UploadList').data('jsp');
+        api.reinitialise();
+        break;
+    case OP05_raster ===1 &OP05_raster===1:
+        setLayoutState('upload1Row');
+        var api = $('#UploadList').data('jsp');
+        api.reinitialise();
+        break;
+    case OP05_raster ===1 &OP05_raster===1:
+        setLayoutState('upload2Rows');
+        var api = $('#UploadList').data('jsp');
+        api.reinitialise();
+        break;
+    case OP05_raster ===1 &OP05_raster===1:
+        var api = $('#UploadList').data('jsp');
+        api.reinitialise();
+        break;                  
+}
+
+
+
+
+//Year 2000 
+//Assign OP90=1 and OP00=1  as ones with age > 10, mean = 10
+var Gunarso2000 = lossYear;
+Gunarso = Gunarso.merge(Gunarso2000);
+
+
+
+var lossInFirst5Year = lossYear.gte(0).and(lossYear.lte(5)); 
+var OPAt2005 = OP00_raster.where(lossInFirst5Year.eq(1), 0);
+var vis = {'min': 0, 'max': 100, 'palette': '000000, 00FF00'};
+
+
+// Map.addLayer(OPAt2005, {min: 0, max: 2, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'OPAt2001');
+
+
+
+
+
+
+// Export the image, specifying scale and region.
+Export.image(OPAt2005, 'exportImageExample', {
+  scale: 30,
+  region: geometry
+});
+
+
