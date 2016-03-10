@@ -76,16 +76,6 @@ print('Gunarso image collection: ', Gunarso);
 //assign all areas that has been oil palm throughout 2000 and 2005 as OP
 //assign all other areas as OTH
 
-/*var cond1 = composite.expression('b("10") > b("20") && b("20") > b("30")'); 
-var cond2 = composite.expression('b("62") > b("70") && b("50") > b("40")'); 
-var cond =  cond1.or(cond2); 
-var output = ee.Image(4).where(cond, 3); 
-
-
-    // "(b('NDVI') <= 0.03) ? 1 \
-    //   : (b('NDVI') <= 0.06) ? 2 \
-    //     : 3"
-*/
 
 
 
@@ -132,8 +122,6 @@ var OP_05_10 = Gunarso.expression(
         'OTH2': Gunarso.select('Color_NonOP2'),
         }
     );
-
-
 
 print('op 1990- 2000',OP_90_00);
 print('op 2000- 2005',OP_00_05);
