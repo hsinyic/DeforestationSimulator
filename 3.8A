@@ -1,5 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: d63000 */ee.Geometry.MultiPoint(),
+var geometry = /* color: 0B4A8B */ee.Geometry.MultiPoint(),
     gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
     Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
@@ -22,9 +22,9 @@ Map.addLayer(lossYear.clip(malaysia).updateMask(gfcImage.select(['lossyear'])),
              {'min': 0, 'max': 12, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
              'Forest Lost Year');
 
-Map.addLayer(forest.clip(malaysia).updateMask(gfcImage.select(['treecover2000'])),
-             {'min': 0, 'max': 100, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
-             'Forest Cover 2000');
+// Map.addLayer(forest.clip(malaysia).updateMask(gfcImage.select(['treecover2000'])),
+//             {'min': 0, 'max': 100, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+//             'Forest Cover 2000');
 
 
 // Convert our vector map to a raster 
@@ -32,11 +32,6 @@ var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.f
 var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-
-
-print('OP00_raster', OP00_raster);
-
-
 
 //var malaysia_raster = malaysia.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 // Map.addLayer(malaysia_raster, {min: 0, max: 256, palette: ['00FFFF']}, 'Malaysia');
@@ -71,6 +66,8 @@ var decision = function(bef, aft, t, p){
   return loss
 }
 */
+
+
 
 
 
@@ -137,7 +134,6 @@ Map.addLayer(OP0005.clip(malaysia).updateMask(OP0005),
 
 //binary later 
 var loss0 = lossYear.gte(0).and(lossYear.lte(1));
-
 var loss1 = lossYear.gte(1).and(lossYear.lte(2));
 var loss2 = lossYear.gte(2).and(lossYear.lte(3));
 var loss3 = lossYear.gte(3).and(lossYear.lte(4));
