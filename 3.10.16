@@ -68,6 +68,7 @@ var OP_00_05 = Gunarso.expression('(OP2000==1 && OP2005==1) ? OP: OTH',
     );
 
 
+
 print('op 2000- 2005',OP_00_05);
 Map.addLayer(OP_00_05.clip(malaysia).updateMask(OP_00_05), 
 {min: 0, max: 12, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 
