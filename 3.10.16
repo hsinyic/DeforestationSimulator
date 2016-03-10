@@ -20,8 +20,7 @@ Map.addLayer(lossYear.clip(malaysia).updateMask(gfcImage.select(['lossyear'])),
              {'min': 0, 'max': 12, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
              'Forest Lost Year');
 
-
-// Convert our vector map to a raster 
+// Convert Gunarso Peninsula ONLY vector map to a raster 
 var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
@@ -32,10 +31,15 @@ var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.f
 // Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Raster OP 2000');
 // Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Raster OP 1990');
 
+//initiate a blank layer for use 
 var blank = lossYear.multiply(0);
+
+//initiate Gunarso image collection 
 var Gunarso = ee.Image([OP90_raster]);
 Gunarso= Gunarso.addBands(OP00_raster).addBands(OP05_raster).
 addBands(OP10_raster).rename(['OP90','OP00','OP05','OP10']);
+
+//Add Hansen yearly loss 
 for (var i = 2000; i < 2012; ++i){
   var LossInYear = lossYear.gte(i-2000).and(lossYear.lte(i+1-2000));
   var Hansenloss = blank.where(LossInYear.eq(1), 1);
@@ -51,7 +55,7 @@ Gunarso = Gunarso.addBands([OP_color, NonOP_color, F_color]);
 
 //Check that Gunarso has 1. All Gunarso OP layers 
 //2. Hansen yearly data 3. Monocrhomatic color layers
-print('collectionFromConstructor_Gunarso: ', Gunarso);
+print('Gunarso image collection: ', Gunarso);
 
 
 
