@@ -1,0 +1,13 @@
+var i=1;
+var j=2;
+
+// var string= ee.String(i);
+
+
+var res =
+String(i) + "<br>" +
+String(j);
+
+print(res);
+
+//altight
