@@ -141,15 +141,15 @@ print('op 2005- 2010',OP_05_10);
 
 
 Map.addLayer(OP_90_00.clip(malaysia).updateMask(OP_90_00), 
-{min: 0, max: 35, palette: ['0000FF', '#00ffff', '#ff510f', 'FF0000']}, 
+{min: 0, max: 30, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 
 'OP_90_00');
 
 Map.addLayer(OP_00_05.clip(malaysia).updateMask(OP_00_05), 
-{min: 0, max: 35, palette: ['0000FF', '#00ffff', '#ff510f', 'FF0000']}, 
+{min: 0, max: 30, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 
 'OP_00_05');
 
 Map.addLayer(OP_05_10.clip(malaysia).updateMask(OP_05_10), 
-{min: 0, max: 35, palette: ['0000FF', '#00ffff', '#ff510f', 'FF0000']}, 
+{min: 0, max: 30, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 
 'OP_05_10');
 
 
