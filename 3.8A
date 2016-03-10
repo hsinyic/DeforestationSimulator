@@ -1,5 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: 98ff00 */ee.Geometry.MultiPoint(),
+var geometry = /* color: d63000 */ee.Geometry.MultiPoint(),
     gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
     Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
@@ -16,8 +16,6 @@ var forest = gfcImage.select(['treecover2000']);
 print('lossYear', lossYear)
 //Define country boundary (Malaysia only)
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
-
-
 
 //mask out the area where there isn't a "loss year" mark
 Map.addLayer(lossYear.clip(malaysia).updateMask(gfcImage.select(['lossyear'])),
