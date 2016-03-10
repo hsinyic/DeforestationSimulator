@@ -54,6 +54,10 @@ Gunarso = Gunarso.addBands([OP_color, NonOP_color, F_color]);
 print('collectionFromConstructor_Gunarso: ', Gunarso);
 
 
+
+//Initial classification:
+//assign all areas that has been oil palm throughout 2000 and 2005 as OP
+//assign all other areas as OTH
 var OP_00_05 = Gunarso.expression('(OP2000==1 && OP2005==1) ? OP: OTH',  
         {
         'OP2000': Gunarso.select('OP00'),
