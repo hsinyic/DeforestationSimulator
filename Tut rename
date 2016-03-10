@@ -1,0 +1,40 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: ffc82d */ee.Geometry.Polygon(
+        [[[-130.16738891601562, 60.2813661514906],
+          [-130.43655395507812, 60.298381644800564],
+          [-130.517578125, 60.22753896185882],
+          [-130.20721435546875, 60.21116886717883]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var fc = ee.FeatureCollection.randomPoints(geometry, 5);
+Map.addLayer(fc);
+           
+var images = ee.ImageCollection('LANDSAT/LC8_L1T_TOA')
+  .filterMetadata("CLOUD_COVER","less_than",85)
+  .filterDate('2015-05-01', '2015-06-15')
+  .filterBounds(geometry);
+
+var ndMn = images.map(function(img) {
+  var nd = img.normalizedDifference(["B5",'B4']);
+  
+// Get the system start time property, and explicitly cast as a number
+// Note this time format is in milliseconds since Jan. 1, 1970
+// But that can be converted to a human-readable date in Excel (or the like)
+// See this StackOverflow answer: 
+// http://stackoverflow.com/questions/2666112/convert-miliseconds-to-date-in-excel
+  var date = ee.Number(img.get('system:time_start'));
+// Add a band to the nd image representing that number
+  nd = nd.addBands(date).rename(['mean_nd', 'date']);
+// Use reduceRegions() as you did, but without the .setOutputs() call
+// on the reducer.
+  var reduced = nd.reduceRegions({
+  collection: fc,
+  reducer: ee.Reducer.mean(),
+  scale: 30});
+  
+  return reduced;
+
+});
+
+console.log(ndMn.flatten());
+console.log(images);
+Export.table(ndMn.flatten());
