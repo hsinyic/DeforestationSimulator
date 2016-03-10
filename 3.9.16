@@ -36,20 +36,36 @@ var blank = lossYear.multiply(0);
 var Gunarso = ee.Image([OP90_raster]);
 Gunarso= Gunarso.addBands(OP00_raster).addBands(OP05_raster).
 addBands(OP10_raster).rename(['OP90','OP00','OP05','OP10']);
-for (var i = 2000; i <= 2012; ++i){
+for (var i = 2000; i < 2012; ++i){
   var LossInYear = lossYear.gte(i-2000).and(lossYear.lte(i+1-2000));
   var Hansenloss = blank.where(LossInYear.eq(1), 1);
   Gunarso = Gunarso.addBands(Hansenloss);
 }
+
+//Initiate monochromatic color layers for use later 
+var OP_color = lossYear.multiply(0).add(4).rename(['Color_OP']); 
+var NonOP_color = lossYear.multiply(0).add(10).rename(['Color_NonOP']); 
+var F_color = lossYear.multiply(0).add(10).rename(['Color_F']); 
+Gunarso = Gunarso.addBands([OP_color, NonOP_color, F_color]);
+
+//Check that Gunarso has 1. All Gunarso OP layers 
+//2. Hansen yearly data 3. Monocrhomatic color layers
 print('collectionFromConstructor_Gunarso: ', Gunarso);
 
 
-var OP_color = lossYear.multiply(0).add(4); 
-var NonOP_color = lossYear.multiply(0).add(10); 
-var F_color = lossYear.multiply(0).add(10); 
+var OP2001 = Gunarso.expression('(OP2000==1 && OP2005==1) ? OP: OTH',  
+        {
+        'OP2000': Gunarso.select('OP00'),
+        'OP2005': Gunarso.select('OP05'),
+        'OP': Gunarso.select('Color_OP'),
+        'OTH': Gunarso.select('Color_NonOP'),
+        }
+    );
 
-
-
+print('op2001',OP2001)
+Map.addLayer(OP2001.clip(malaysia).updateMask(OP2001), 
+{min: 0, max: 12, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 
+'OP2001');
 
 var decision2 = function(bef, aft, hansen, t){
   //bef: nearest gunarso layer in the past 
@@ -106,31 +122,13 @@ var decision = function(bef, aft, t, p){
   return t.add(loss);
 };
 
+
 var OP0005 = decision2(OP00_raster, OP05_raster, lossYear, 2002);
 print('OP0005', OP0005);
 Map.addLayer(OP0005.clip(malaysia).updateMask(OP0005), 
 {min: 0, max: 12, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 
 'Initial Classify');
 
-//binary later 
-var loss0 = lossYear.gte(0).and(lossYear.lte(1));
-var loss1 = lossYear.gte(1).and(lossYear.lte(2));
-var loss2 = lossYear.gte(2).and(lossYear.lte(3));
-var loss3 = lossYear.gte(3).and(lossYear.lte(4));
-var loss_eq = lossYear.where(loss3.add(1).eq(loss1), 3);
-//random statement, but it did create an effect, it seems to take all 
-//loss Year data, and assign the same color 
-
-Map.addLayer(loss0.clip(malaysia).updateMask(loss0), 
-  {min: 0, max: 1, palette: ['0000FF']}, 'Loss0');
-Map.addLayer(loss1.clip(malaysia).updateMask(loss1), 
-  {min: 0, max: 1, palette: ['#d267ff']}, 'Loss1');
-Map.addLayer(loss2.clip(malaysia).updateMask(loss2), 
-  {min: 0, max: 1, palette: ['#ffe14e']}, 'Loss2');
-Map.addLayer(loss3.clip(malaysia).updateMask(loss3), 
-  {min: 0, max: 1, palette: ['#ff1334']}, 'Loss3');
-Map.addLayer(loss_eq.clip(malaysia).updateMask(loss_eq), 
-  {min: 0, max: 2, palette: ['#62ff21']}, 'loss_eq');
 
 //intersect this binary layer with Gunarso 
 var i=0;
