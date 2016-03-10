@@ -39,6 +39,7 @@ addBands(OP10_raster).rename(['OP90','OP00','OP05','OP10']);
 for (var i = 2000; i < 2012; ++i){
   var LossInYear = lossYear.gte(i-2000).and(lossYear.lte(i+1-2000));
   var Hansenloss = blank.where(LossInYear.eq(1), 1);
+  // var Hansenloss = LossInYear.eq(1);
   Gunarso = Gunarso.addBands(Hansenloss);
 }
 
@@ -53,7 +54,7 @@ Gunarso = Gunarso.addBands([OP_color, NonOP_color, F_color]);
 print('collectionFromConstructor_Gunarso: ', Gunarso);
 
 
-var OP2001 = Gunarso.expression('(OP2000==1 && OP2005==1) ? OP: OTH',  
+var OP_00_05 = Gunarso.expression('(OP2000==1 && OP2005==1) ? OP: OTH',  
         {
         'OP2000': Gunarso.select('OP00'),
         'OP2005': Gunarso.select('OP05'),
@@ -62,83 +63,10 @@ var OP2001 = Gunarso.expression('(OP2000==1 && OP2005==1) ? OP: OTH',
         }
     );
 
-print('op2001',OP2001)
-Map.addLayer(OP2001.clip(malaysia).updateMask(OP2001), 
+
+print('op 2000- 2005',OP_00_05);
+Map.addLayer(OP_00_05.clip(malaysia).updateMask(OP_00_05), 
 {min: 0, max: 12, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 
 'OP2001');
-
-var decision2 = function(bef, aft, hansen, t){
-  //bef: nearest gunarso layer in the past 
-  //aft: nearest gunarso layer in the future 
-  //hansen: forest loss year (0-12)
-  //t is the year at which we are making decisions for 
-  // var T= 2012 - t ; //T is goes from 0 to 2012, it is the current year 
-  
-  //@initiate an image where we can then add bands to it 
-  // var Gunarso_test = ee.ImageCollection([T]);
-  // print('Gunarso_test',Gunarso_test);
-  
-  //Analyze property of the input 
-  print('bef',bef);
-  print('hansen',hansen); 
-  
-  
-  
-  // a layer of hansen loss year, but everything in default zero 
-  var p = hansen.multiply(0); 
-
-  //@Conditional statement test 
-  //aft.neq(bef)
-  if(aft==='NULL'){
-    print('hey 1'); 
-    // the bug is that they will always come here, it selects whereever
-    // Hansen has zero values is not defined 
-    p = hansen.add(2);
-  }
-  else if(aft.neq(bef)){ //the program never comes here 
-    print('I am finally here!');
-    p = hansen.add(3);
-  }
-  else{ //the program never comes here either 
-    p = hansen.add(1);
-  }
-  //Conditional test (this is corect) 
-  if(1+2===2){
-    print('oy');
-  }
-  else if(1+4===6){
-    print('oy2');
-  }
-  else if(1+5===10){
-    print('oy3');
-  }
-  else if(1+6===7){
-    print('correct!!!!'); //it did come here 
-  }
-  return p;
-};
-
-var decision = function(bef, aft, t, p){
-  var loss = lossYear.gte(p).and(lossYear.lte(p+1));
-  return t.add(loss);
-};
-
-
-var OP0005 = decision2(OP00_raster, OP05_raster, lossYear, 2002);
-print('OP0005', OP0005);
-Map.addLayer(OP0005.clip(malaysia).updateMask(OP0005), 
-{min: 0, max: 12, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 
-'Initial Classify');
-
-
-//intersect this binary layer with Gunarso 
-var i=0;
-var j=1;
-var lossInFirstIYear = lossYear.gte(i).and(lossYear.lte(i+1)); 
-var OP_2001 = OP05_raster.where(lossInFirstIYear.eq(1), 0);
-Map.addLayer(OP_2001, 
-  {min: 0, max: 2, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'OP_2001');
-print('OPAt2005', OP_2001.getInfo())
-print('lossInFirst5Year', lossInFirstIYear.getInfo())
 
 
