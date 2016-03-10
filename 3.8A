@@ -13,7 +13,7 @@ var lossYear = gfcImage.select(['lossyear']);
 var lossImage = gfcImage.select(['loss']);
 var gainImage = gfcImage.select(['gain']);
 var forest = gfcImage.select(['treecover2000']);
-print('lossYear', lossYear)
+print('lossYear', lossYear);
 //Define country boundary (Malaysia only)
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 
