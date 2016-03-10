@@ -87,7 +87,7 @@ var decision2 = function(bef, aft, hansen, t){
   
   //Analyze property of the input 
   print('bef',bef);
-  print('hansen',hansen);
+  print('hansen',hansen); 
   
   
   // a layer of hansen loss year, but everything in default zero 
