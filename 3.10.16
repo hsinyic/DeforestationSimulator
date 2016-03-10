@@ -58,6 +58,15 @@ print('collectionFromConstructor_Gunarso: ', Gunarso);
 //Initial classification:
 //assign all areas that has been oil palm throughout 2000 and 2005 as OP
 //assign all other areas as OTH
+var i =1;
+var OP_90_00 = Gunarso.expression('(OP1990==1 && OP2000==1) ? OP: OTH',  
+        {
+        'OP1990': Gunarso.select('OP90'),
+        'OP2000': Gunarso.select('OP00'),
+        'OP': Gunarso.select('Color_OP'),
+        'OTH': Gunarso.select('Color_NonOP'),
+        }
+    );
 var OP_00_05 = Gunarso.expression('(OP2000==1 && OP2005==1) ? OP: OTH',  
         {
         'OP2000': Gunarso.select('OP00'),
@@ -66,12 +75,32 @@ var OP_00_05 = Gunarso.expression('(OP2000==1 && OP2005==1) ? OP: OTH',
         'OTH': Gunarso.select('Color_NonOP'),
         }
     );
+var OP_05_10 = Gunarso.expression('(OP2005==1 && OP2010==1) ? OP: OTH',  
+        {
+        'OP2005': Gunarso.select('OP05'),
+        'OP2010': Gunarso.select('OP10'),
+        'OP': Gunarso.select('Color_OP'),
+        'OTH': Gunarso.select('Color_NonOP'),
+        }
+    );
 
 
 
+print('op 1990- 2000',OP_90_00);
 print('op 2000- 2005',OP_00_05);
+print('op 2005- 2010',OP_05_10);
+
+
+Map.addLayer(OP_90_00.clip(malaysia).updateMask(OP_90_00), 
+{min: 0, max: 12, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 
+'OP_90_00');
+
 Map.addLayer(OP_00_05.clip(malaysia).updateMask(OP_00_05), 
 {min: 0, max: 12, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 
-'OP2001');
+'OP_00_05');
+
+Map.addLayer(OP_05_10.clip(malaysia).updateMask(OP_05_10), 
+{min: 0, max: 12, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 
+'OP_05_10');
 
 
