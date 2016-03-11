@@ -1,6 +1,4 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var ndvi2011 = ee.Image("L7_L1T_ANNUAL_NDVI/2012");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 // tenary operator example
 
 
