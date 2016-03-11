@@ -16,7 +16,7 @@ var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 //mask out the area where there isn't a "loss year" mark
 Map.addLayer(lossYear.clip(malaysia).updateMask(gfcImage.select(['lossyear'])),
              {'min': 0, 'max': 12, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
-             'Forest Lost Year');
+             'Hansen Forest Lost Year');
 
 // Convert Gunarso Peninsula ONLY vector map to a raster 
 var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
@@ -24,10 +24,10 @@ var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.f
 var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 
-// Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Raster OP 2010');
-// Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Raster OP 2005');
-// Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Raster OP 2000');
-// Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Raster OP 1990');
+Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Gunarso OP 2010');
+Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Gunarso OP 2005');
+Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Gunarso OP 2000');
+Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Gunarso OP 1990');
 
 
 
@@ -56,8 +56,8 @@ for (var i = 2000; i < 2012; ++i){
   // var Hansenloss = LossInYear.eq(1);
   Gunarso = Gunarso.addBands(Hansenloss);
 }
-var HansenLoss = lossYear.rename(['HansenLoss']); 
-Gunarso = Gunarso.addBands(HansenLoss);
+var OriginalHansenLoss = lossYear.rename(['OriginalHansenLoss']); 
+Gunarso = Gunarso.addBands(OriginalHansenLoss);
 //Initiate monochromatic color layers for use later 
 var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']); 
 var NonOP_color = lossYear.multiply(0).add(10).rename(['Color_NonOP']); 
@@ -143,44 +143,63 @@ Map.addLayer(OP_05_10.clip(malaysia).updateMask(OP_05_10),
 'OP_05_10');
 
 Gunarso = Gunarso.addBands([OP_90_00, OP_00_05, OP_05_10]);
-
+var Gunarso_final =ee.Image([lossYear]);
 
 //for 2000 to 2005 
 var final= ee.Image();
 for (var t = 0; t <= 5; ++t){
   var index = "year_200" +String(t);
+  var test=String(OriginalHansenLoss);
   // print(index);
-  var index= Gunarso.expression(
+  var yearmap= Gunarso.expression(
+    // F classification needs to be split further into OTH and F
+    // if It is 2000= Non-OP and 2005=OP, 
+    // then t < loss year is F , t >=loss year is OP
     "(OP_00_05 == 20)? F \
-    : (OP_00_05 == 1)? OP\
-      : (OP_00_05 == 30)? OP\
-          :(lossYear<= t)? OP \
-            : F",
+      : (OP_00_05 == 1)? OP\
+        : (OP_00_05 == 30)? OP\
+          :(lossYear<= t)? OP_BEF \
+            : OP_AFT",
           {
           'OP_00_05': Gunarso.select('OP_00_05'),
           'OP': Gunarso.select('Color_OP'),
           'F': Gunarso.select('Color_F'),
-          'OTH': Gunarso.select('Color_NonOP'),
-          'OTH2': Gunarso.select('Color_NonOP2'),
-          'lossYear':Gunarso.select('HansenLoss'),
+          'OP_BEF': Gunarso.select('Color_NonOP'),
+          'OP_AFT': Gunarso.select('Color_NonOP2'),
+          'lossYear':Gunarso.select('OriginalHansenLoss'),
           't':t
           }
-      );
-  // print(index);
+      ).rename([index]);
+  Gunarso_final = Gunarso_final.addBands(yearmap);
+  print(index, yearmap)
+ ;
 }
+print(Gunarso_final);
+////////
+//Reference for band range values 
+////////
 
+//  1>> OP before and after 
+// 10>> Non-OP before and  OP after 
+// 20>> Non OP throughout 
+// 30>> OP before and Non-OP after 
+ 
 // var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']); 
 // var NonOP_color = lossYear.multiply(0).add(10).rename(['Color_NonOP']); 
 // var F_color = lossYear.multiply(0).add(20).rename(['Color_F']); 
 // var NonOP2_color = lossYear.multiply(0).add(30).rename(['Color_NonOP2']); 
 
-      // "(OP2005==1 && OP2010==1) ? OP  \ //1
-      // : (OP2005==1 && OP2010==0) ? OTH2 \ //30
-      //   :(OP2005==0 && OP2010==0) ? F \ //20
-      //     : OTH", // (OP2005==0 && OP2010==1) 10
+// "(OP2005==1 && OP2010==1) ? OP  \ //1
+// : (OP2005==1 && OP2010==0) ? OTH2 \ //30
+//   :(OP2005==0 && OP2010==0) ? F \ //20
+//     : OTH", // (OP2005==0 && OP2010==1) 10
+
+//Graph 
+
 for (var t = 0; t <= 5; ++t){
   var index = "year_200" +String(t);
-Map.addLayer(index.clip(malaysia).updateMask(index), 
-{min: 0, max: 30, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 
-index);
+  Map.addLayer(Gunarso_final.select(index).clip(malaysia).updateMask(Gunarso_final.select(index)), {min: 0, max: 30,
+  palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},index);
 }
+
+
