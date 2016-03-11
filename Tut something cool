@@ -1,6 +1,4 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var characters = ee.FeatureCollection("ft:10rQ6_rvU4OgC4bfv6cgm5jqcSRQwSOGXDPhbWmch");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 /*
 Author: Gennadii Donchyts
 License: Apache License, Version 2.0, http://www.apache.org/licenses/LICENSE-2.0 
