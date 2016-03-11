@@ -58,10 +58,11 @@ var OriginalHansenLoss = lossYear.rename(['OriginalHansenLoss']);
 Gunarso = Gunarso.addBands(OriginalHansenLoss);
 //Initiate monochromatic color layers for use later 
 var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']); 
-var NonOP_color = lossYear.multiply(0).add(10).rename(['Color_NonOP']); 
+var OP_BEF_color = lossYear.multiply(0).add(10).rename(['OP_BEF']); 
+var OP_AFT_color = lossYear.multiply(0).add(30).rename(['OP_AFT']); 
 var F_color = lossYear.multiply(0).add(20).rename(['Color_F']); 
-var NonOP2_color = lossYear.multiply(0).add(30).rename(['Color_NonOP2']); 
-Gunarso = Gunarso.addBands([OP_color, NonOP_color, F_color, NonOP2_color]);
+var OTH_color = lossYear.multiply(0).add(40).rename(['Color_OTH']); 
+Gunarso = Gunarso.addBands([OP_color, OP_BEF_color, F_color, OP_AFT_color,OTH_color]);
 
 //Check that Gunarso has 1. All Gunarso OP layers 
 //2. Hansen yearly data 3. Monocrhomatic color layers
@@ -86,8 +87,8 @@ var OP_90_00 = Gunarso.expression(
         'OP2000': Gunarso.select('OP00'),
         'OP': Gunarso.select('Color_OP'),
         'F': Gunarso.select('Color_F'),
-        'OTH': Gunarso.select('Color_NonOP'),
-        'OTH2': Gunarso.select('Color_NonOP2'),
+        'OTH': Gunarso.select('OP_BEF'),
+        'OTH2': Gunarso.select('OP_AFT'),
         }
     ).rename(['OP_90_00']);
 
@@ -101,8 +102,8 @@ var OP_00_05 = Gunarso.expression(
         'OP2005': Gunarso.select('OP05'),
         'OP': Gunarso.select('Color_OP'),
         'F': Gunarso.select('Color_F'),
-        'OTH': Gunarso.select('Color_NonOP'),
-        'OTH2': Gunarso.select('Color_NonOP2'),
+        'OTH': Gunarso.select('OP_BEF'),
+        'OTH2': Gunarso.select('OP_AFT'),
 
         }
     ).rename(['OP_00_05']);
@@ -117,8 +118,8 @@ var OP_05_10 = Gunarso.expression(
         'OP2010': Gunarso.select('OP10'),
         'OP': Gunarso.select('Color_OP'),
         'F': Gunarso.select('Color_F'),
-        'OTH': Gunarso.select('Color_NonOP'),
-        'OTH2': Gunarso.select('Color_NonOP2'),
+        'OTH': Gunarso.select('OP_BEF'),
+        'OTH2': Gunarso.select('OP_AFT'),
         }
     ).rename(['OP_05_10']);
 
@@ -153,7 +154,7 @@ for (var t = 0; t <= 5; ++t){
     // F classification needs to be split further into OTH and F
     // if It is 2000= Non-OP and 2005=OP, 
     // then t < loss year is F , t >=loss year is OP
-    "(OP_00_05 == 20)? F \
+    "(OP_00_05 == 20)? ((lossYear<= t)? OTH: F) \
       : (OP_00_05 == 1)? OP\
         : (OP_00_05 == 30)? OP\
           :(lossYear<= t)? OP_BEF \
@@ -162,8 +163,9 @@ for (var t = 0; t <= 5; ++t){
           'OP_00_05': Gunarso.select('OP_00_05'),
           'OP': Gunarso.select('Color_OP'),
           'F': Gunarso.select('Color_F'),
-          'OP_BEF': Gunarso.select('Color_NonOP'),
-          'OP_AFT': Gunarso.select('Color_NonOP2'),
+          'OP_BEF': Gunarso.select('OP_BEF'),
+          'OP_AFT': Gunarso.select('OP_AFT'),
+          'OTH':Gunarso.select('Color_OTH'),
           'lossYear':Gunarso.select('OriginalHansenLoss'),
           't':t
           }
@@ -183,9 +185,9 @@ print(Gunarso_final);
 // 30>> OP before and Non-OP after 
  
 // var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']); 
-// var NonOP_color = lossYear.multiply(0).add(10).rename(['Color_NonOP']); 
+// var OP_BEF_color = lossYear.multiply(0).add(10).rename(['OP_BEF']); 
 // var F_color = lossYear.multiply(0).add(20).rename(['Color_F']); 
-// var NonOP2_color = lossYear.multiply(0).add(30).rename(['Color_NonOP2']); 
+// var OP_AFT_color = lossYear.multiply(0).add(30).rename(['OP_AFT']); 
 
 // "(OP2005==1 && OP2010==1) ? OP  \ //1
 // : (OP2005==1 && OP2010==0) ? OTH2 \ //30
@@ -195,7 +197,7 @@ print(Gunarso_final);
 //Graph all the layers between 2000 to 2005
 for (var t = 0; t <= 5; ++t){
   var index = "year_200" +String(t);
-  Map.addLayer(Gunarso_final.select(index).clip(malaysia).updateMask(Gunarso_final.select(index)), {min: 0, max: 30,
+  Map.addLayer(Gunarso_final.select(index).clip(malaysia).updateMask(Gunarso_final.select(index)), {min: 0, max: 40,
   palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},index);
 }
 
