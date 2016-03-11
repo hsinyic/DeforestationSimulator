@@ -32,10 +32,8 @@ Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Gunarso OP 199
 
 
 
-//initiate a blank layer for use 
+//initiate a blank layer for use (could be redundant)
 var blank = lossYear.multiply(0);
-
-
 var OP90 = blank.where(OP90_raster.eq(1), 1);
 var OP00 = blank.where(OP00_raster.eq(1), 1);
 var OP05 = blank.where(OP05_raster.eq(1), 1);
@@ -49,7 +47,7 @@ var Gunarso = ee.Image([OP90]);
 Gunarso= Gunarso.addBands(OP00).addBands(OP05).
 addBands(OP10).rename(['OP90','OP00','OP05','OP10']);
 
-//Add Hansen yearly loss 
+//Add Hansen yearly loss (THIS IS REDUNDANT IN RETROSPECT) 
 for (var i = 2000; i < 2012; ++i){
   var LossInYear = lossYear.gte(i-2000).and(lossYear.lte(i+1-2000));
   var Hansenloss = blank.where(LossInYear.eq(1), 1);
@@ -194,8 +192,7 @@ print(Gunarso_final);
 //   :(OP2005==0 && OP2010==0) ? F \ //20
 //     : OTH", // (OP2005==0 && OP2010==1) 10
 
-//Graph 
-
+//Graph all the layers between 2000 to 2005
 for (var t = 0; t <= 5; ++t){
   var index = "year_200" +String(t);
   Map.addLayer(Gunarso_final.select(index).clip(malaysia).updateMask(Gunarso_final.select(index)), {min: 0, max: 30,
