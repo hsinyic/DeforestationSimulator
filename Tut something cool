@@ -1,0 +1,97 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var characters = ee.FeatureCollection("ft:10rQ6_rvU4OgC4bfv6cgm5jqcSRQwSOGXDPhbWmch");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+/*
+Author: Gennadii Donchyts
+License: Apache License, Version 2.0, http://www.apache.org/licenses/LICENSE-2.0 
+*/
+
+/**
+ * Translates and scales polygon geometry.
+ */
+function movePolygon(poly, x, y, sizeX, sizeY) {
+  var coordLists = ee.List(poly.coordinates())
+
+  coordLists = coordLists.map(function(list) {
+    return ee.List(list).map(function(o) {
+      var pt = ee.List(o)
+      return ee.List([
+        ee.Number(pt.get(0)).multiply(sizeX).add(x), 
+        ee.Number(pt.get(1)).multiply(sizeY).add(y)
+      ]);
+    })
+  })
+  
+  return ee.Algorithms.GeometryConstructors.Polygon(coordLists);
+}
+
+/**
+ * Translates and scales MultiPolygon geometry.
+ */
+function moveTo(geom, x, y, sizeX, sizeY) {
+  var geoms = geom.geometries();
+  
+  geoms = geoms.map(function(g) {
+    return movePolygon(ee.Geometry(g), x, y, sizeX, sizeY);
+  })
+  
+  return ee.Algorithms.GeometryConstructors.MultiPolygon(geoms)
+}
+
+/**
+ * Converts character to a geospatial feature.
+ */
+function charToFeature(char) {
+  return ee.Feature(characters.filterMetadata('ascii', 'equals', char.charCodeAt(0)).first());
+}
+
+/**
+ * Converts text string to a feature collection using position, scale and space between characters.
+ */
+function textToFeatureCollection(str, x, y, opt_sx, opt_sy, opt_space) {
+  var sx = typeof opt_sx === 'undefined' ? 0.1 : opt_sx;
+  var sy = typeof opt_sy === 'undefined' ? 0.1 : opt_sy;
+  var space = typeof opt_space === 'undefined' ? 1 : opt_space;
+  space = ee.Number(space)
+  
+  var chars = str.split('');
+  var features = ee.List([]);
+  var offsetX = ee.Number(x);
+  var offsetY = ee.Number(y);
+  for(var i = 0; i < chars.length; i++) {
+    var f = charToFeature(chars[i]);
+    var g = moveTo(f.geometry(), offsetX, offsetY, sx, sy);
+    features = features.add(ee.Feature(g))
+    
+    var w = ee.Number(f.get('width')).multiply(sx)
+    offsetX = offsetX.add(w).add(space);
+  }
+  
+  return ee.FeatureCollection(features);
+}
+  
+/**
+ * Converts text string to an image layer using position, scale and space between characters.
+ */
+function textToImage(str, x, y, opt_sx, opt_sy, opt_space) {
+  var features = textToFeatureCollection(str, x, y, opt_sx, opt_sy, opt_space)
+
+  var text = ee.Image(0).toByte();
+  text = text.paint(features, 1); // paint fill
+  text = text.paint(features, 0, 1); // paint outline
+  
+  text = text.mask(text);
+  
+  return text
+}
+
+// show welcome messate
+var x = 0; var y = 10;
+var txt = textToImage('Very Nice!', x, y)
+
+var img = ee.Image('MODIS/MOD09A1/MOD09A1_005_2015_08_21');
+print(img)
+Map.addLayer(img.mask(txt), {bands: ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03'],
+     gain: 0.07,
+     gamma: 1.4
+    });
