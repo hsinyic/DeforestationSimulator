@@ -29,17 +29,12 @@ Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Gunarso OP 200
 Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Gunarso OP 2000');
 Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Gunarso OP 1990');
 
-
-
-
 //initiate a blank layer for use (could be redundant)
 var blank = lossYear.multiply(0);
 var OP90 = blank.where(OP90_raster.eq(1), 1);
 var OP00 = blank.where(OP00_raster.eq(1), 1);
 var OP05 = blank.where(OP05_raster.eq(1), 1);
 var OP10 = blank.where(OP10_raster.eq(1), 1);
-
-
 
 
 //initiate Gunarso image collection 
@@ -57,12 +52,17 @@ for (var i = 2000; i < 2012; ++i){
 var OriginalHansenLoss = lossYear.rename(['OriginalHansenLoss']); 
 Gunarso = Gunarso.addBands(OriginalHansenLoss);
 //Initiate monochromatic color layers for use later 
-var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']); 
-var OP_BEF_color = lossYear.multiply(0).add(10).rename(['OP_BEF']); 
-var OP_AFT_color = lossYear.multiply(0).add(30).rename(['OP_AFT']); 
-var F_color = lossYear.multiply(0).add(20).rename(['Color_F']); 
-var OTH_color = lossYear.multiply(0).add(40).rename(['Color_OTH']); 
-Gunarso = Gunarso.addBands([OP_color, OP_BEF_color, F_color, OP_AFT_color,OTH_color]);
+var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']);
+var F_color = lossYear.multiply(0).add(2).rename(['Color_F']); 
+var OTH_color = lossYear.multiply(0).add(3).rename(['Color_OTH']); 
+
+
+
+var C1 = lossYear.multiply(0).add(2).rename(['C1']); 
+var C2 = lossYear.multiply(0).add(3).rename(['C2']); 
+var C3 = lossYear.multiply(0).add(4).rename(['C3']); 
+var C4 = lossYear.multiply(0).add(5).rename(['C4']); 
+Gunarso = Gunarso.addBands([C1,C2,C3,C4,OP_color,F_color,OTH_color ]);
 
 //Check that Gunarso has 1. All Gunarso OP layers 
 //2. Hansen yearly data 3. Monocrhomatic color layers
@@ -79,48 +79,47 @@ print('Gunarso image collection: ', Gunarso);
 //assign all areas that has been OP in 2000 and Non-OP in 2005 as OTH2
 
 var OP_90_00 = Gunarso.expression(
-  "(OP1990==1 && OP2000==1) ? OP \
-    : (OP1990==1 && OP2000==0) ? OTH2 \
-      :(OP1990==0 && OP2000==0) ? F \
-        : OTH", 
+  "(OP1990==1 && OP2000==1) ? C1 \
+    : (OP1990==1 && OP2000==0) ? C2 \
+      :(OP1990==0 && OP2000==0) ? C3 \
+        : C4", 
         {
         'OP1990': Gunarso.select('OP90'),
         'OP2000': Gunarso.select('OP00'),
-        'OP': Gunarso.select('Color_OP'),
-        'F': Gunarso.select('Color_F'),
-        'OTH': Gunarso.select('OP_BEF'),
-        'OTH2': Gunarso.select('OP_AFT'),
+        'C1': Gunarso.select('C1'),
+        'C2': Gunarso.select('C2'),
+        'C3': Gunarso.select('C3'),
+        'C4': Gunarso.select('C4'),
         }
     ).rename(['OP_90_00']);
 
 var OP_00_05 = Gunarso.expression(
-    "(OP2000==1 && OP2005==1) ? OP \
-      : (OP2000==1 && OP2005==0) ? OTH2 \
-        :(OP2000==0 && OP2005==0) ? F \
-          : OTH", 
+    "(OP2000==1 && OP2005==1) ? C1 \
+      : (OP2000==1 && OP2005==0) ? C2 \
+        :(OP2000==0 && OP2005==0) ? C3 \
+          : C4", 
         {
         'OP2000': Gunarso.select('OP00'),
         'OP2005': Gunarso.select('OP05'),
-        'OP': Gunarso.select('Color_OP'),
-        'F': Gunarso.select('Color_F'),
-        'OTH': Gunarso.select('OP_BEF'),
-        'OTH2': Gunarso.select('OP_AFT'),
-
+        'C1': Gunarso.select('C1'),
+        'C2': Gunarso.select('C2'),
+        'C3': Gunarso.select('C3'),
+        'C4': Gunarso.select('C4'),
         }
     ).rename(['OP_00_05']);
 
 var OP_05_10 = Gunarso.expression(
-      "(OP2005==1 && OP2010==1) ? OP \
-      : (OP2005==1 && OP2010==0) ? OTH2 \
-        :(OP2005==0 && OP2010==0) ? F \
-          : OTH", 
+  "(OP2005==1 && OP2010==1) ? C1\
+      : (OP2005==1 && OP2010==0) ? C2 \
+        :(OP2005==0 && OP2010==0) ? C3 \
+          : C4", 
         {
         'OP2005': Gunarso.select('OP05'),
         'OP2010': Gunarso.select('OP10'),
-        'OP': Gunarso.select('Color_OP'),
-        'F': Gunarso.select('Color_F'),
-        'OTH': Gunarso.select('OP_BEF'),
-        'OTH2': Gunarso.select('OP_AFT'),
+        'C1': Gunarso.select('C1'),
+        'C2': Gunarso.select('C2'),
+        'C3': Gunarso.select('C3'),
+        'C4': Gunarso.select('C4'),
         }
     ).rename(['OP_05_10']);
 
@@ -149,7 +148,7 @@ Gunarso = Gunarso.addBands([OP_90_00, OP_00_05, OP_05_10]);
 var Gunarso_final =ee.Image([lossYear]);
 
 
-//for 2000 to 2005 demon
+//for 2000 to 2005 demonstration 
 var final= ee.Image();
 for (var t = 0; t <= 5; ++t){
   var index = "year_200" +String(t);
