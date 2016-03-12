@@ -255,23 +255,3 @@ Map.addLayer(Gunarso_final.select(['lossyear']).clip(malaysia), {min: 0, max: 12
 palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},'lossyear from 0 to 3, huge zero area');
 
 
-
-
-////////
-//Reference for band range values (see top of the script) 
-////////
-
-//  1>> OP before and after 
-// 10>> Non-OP before and  OP after 
-// 20>> Non OP throughout 
-// 30>> OP before and Non-OP after 
- 
-// var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']); 
-// var OP_BEF_color = lossYear.multiply(0).add(10).rename(['OP_BEF']); 
-// var F_color = lossYear.multiply(0).add(20).rename(['Color_F']); 
-// var OP_AFT_color = lossYear.multiply(0).add(30).rename(['OP_AFT']); 
-
-// "(OP2005==1 && OP2010==1) ? OP  \ //1
-// : (OP2005==1 && OP2010==0) ? OTH2 \ //30
-//   :(OP2005==0 && OP2010==0) ? F \ //20
-//     : OTH", // (OP2005==0 && OP2010==1) 10
