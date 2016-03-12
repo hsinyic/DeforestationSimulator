@@ -169,7 +169,7 @@ var final= ee.Image();
 for (var t = 0; t <= 5; ++t){
   var t_lastyear = t-1;
   // At year t, map F and NF from Hansen
-  var t = Gunarso.expression(
+  var t_now = Gunarso.expression(
     'lossYear ==0? F\
       :lossYear > t? F\
         :NF',
