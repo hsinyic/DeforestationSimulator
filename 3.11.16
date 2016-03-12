@@ -176,15 +176,15 @@ for (var t = 0; t <= 5; ++t){
     // F classification needs to be split further into OTH and F
     // if It is 2000= Non-OP and 2005=OP, 
     // then t < loss year is F , t >=loss year is OP
-    //
     "nodata ==0? blank\
-      :lossYear == 0? F \
-        :OP_00_05 == 3 && t>= lossYear? OTH \
-            : OP_00_05 == 3 && t< lossYear ? F \
-              : (OP_00_05 == 1)? OP\
-                : (OP_00_05 == 2)? OP\
-                  :(t>=lossYear )? OP \
-                    : F",
+      : lossYear == 0 && OP_00_05 == 1? F\   
+        :lossYear == 0 && OP_00_05 == 1 ? F \
+          :OP_00_05 == 3 && t>= lossYear? OTH \
+              : OP_00_05 == 3 && t< lossYear ? F \
+                : (OP_00_05 == 1)? OP\
+                  : (OP_00_05 == 2)? OP\
+                    :(t>=lossYear )? OP \
+                      : F",
           {
           'OP_00_05': Gunarso.select('OP_00_05'),
           'OP': Gunarso.select('Color_OP'),
@@ -209,8 +209,8 @@ for (var t = 0; t <= 5; ++t){
   palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},index);
 }
 
-Map.addLayer(Gunarso_final.select(['lossyear']).clip(malaysia), {min: 0, max: 5,
-palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},index);
+Map.addLayer(Gunarso_final.select(['lossyear']).clip(malaysia), {min: 0, max: 12,
+palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},'lossyear from 0 to 3, huge zero area');
 
 
 
