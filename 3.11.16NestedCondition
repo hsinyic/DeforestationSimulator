@@ -1,0 +1,9 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfc = ee.Image("UMD/hansen/global_forest_change_2015");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var cond1 = gfc.expression('b("lossyear") > 3 && b("gain")==1 ? A'); 
+var cond2 = gfc.expression('b("lossyear") > 3 && b("gain")==0? B'); 
+var cond3 = gfc.expression('b("lossyear") == 3 && b("gain")==0? C'); 
+var cond =  cond1.or(cond2).or(cond3); 
+print('cond', cond);
+var output = ee.Image(4).where(cond, 3); 
