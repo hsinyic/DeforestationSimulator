@@ -164,8 +164,6 @@ var Gunarso_final =ee.Image([lossYear]);
 // var OTH_color = lossYear.multiply(0).add(2).rename(['Color_OTH']); MEDIUM GREEN 
 // var F_color = lossYear.multiply(0).add(3).rename(['Color_F']); DARK GREEN 
 
-
-    
 //for 2000 to 2005 demonstration 
 var final= ee.Image();
 for (var t = 0; t <= 5; ++t){
