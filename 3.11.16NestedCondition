@@ -1,9 +1,15 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var gfc = ee.Image("UMD/hansen/global_forest_change_2015");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var cond1 = gfc.expression('b("lossyear") > 3 && b("gain")==1 ? A'); 
-var cond2 = gfc.expression('b("lossyear") > 3 && b("gain")==0? B'); 
-var cond3 = gfc.expression('b("lossyear") == 3 && b("gain")==0? C'); 
+var cond1 = gfc.expression('b("lossyear") > 3' ); 
+var cond2 = gfc.expression('b("lossyear") > 3 '); 
+var cond3 = gfc.expression('b("lossyear") == 3' ); 
 var cond =  cond1.or(cond2).or(cond3); 
-print('cond', cond);
-var output = ee.Image(4).where(cond, 3); 
+var condf = gfc.expression('b("loss") == 1? A', 
+{'A':gfc.select(["lossyear"]).multiply(0).add(5)} ); 
+
+var output = ee.Image(4).where(cond1, condf).where(cond2,2).where(cond3,4); 
+print('output', output);
+print('condf', condf);
+
+
