@@ -1,0 +1,4 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var imageCollection = ee.ImageCollection("LANDSAT/LC8_L1T_8DAY_TOA");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addlayer()
