@@ -1,4 +1,17 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var imageCollection = ee.ImageCollection("LANDSAT/LC8_L1T_8DAY_TOA");
+var Landsat = ee.ImageCollection("LANDSAT/LC8_L1T_8DAY_TOA");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addlayer()
+// Load a raw Landsat scene and display it.
+print(Landsat);
+Map.centerObject(Landsat.select([3]), 10);
+var raw = Landsat.select([3]);
+Map.addLayer(raw, {bands: ['B4', 'B3', 'B2'], max: 120}, 'raw');
+
+// Convert the raw data to radiance.
+var radiance = ee.Algorithms.Landsat.calibratedRadiance(raw);
+Map.addLayer(radiance, {bands: ['B4', 'B3', 'B2'], max: 90}, 'radiance');
+
+// Convert the raw data to top-of-atmosphere reflectance.
+var toa = ee.Algorithms.Landsat.TOA(raw);
+
+Map.addLayer(toa, {bands: ['B4', 'B3', 'B2'], max: 0.4}, 'toa reflectance');
