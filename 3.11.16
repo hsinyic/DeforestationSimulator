@@ -214,14 +214,17 @@ for (var t = 0; t <= 5; ++t){
   Map.addLayer(Gunarso_final.select(index).clip(malaysia).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
   palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},index);
 }
-// var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']); LIGHT GREEN
-// var OTH_color = lossYear.multiply(0).add(2).rename(['Color_OTH']); MEDIUM GREEN 
-// var F_color = lossYear.multiply(0).add(3).rename(['Color_F']); DARK GREEN 
-//1, 2, 3, 4 (inconsistent),
+///////
+// the following sets the new color scheme
+///////
+// var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']); 
+// var OTH_color = lossYear.multiply(0).add(2).rename(['Color_OTH']); 
+// var F_color = lossYear.multiply(0).add(3).rename(['Color_F']); 
+//1, 2, 3, 4 (Inconsistent spots),
 //OP, OTH, F, INCONSISTENT 
 // DARK BLUE, LIGHT GREEN, RED, YELLOW
 //'0000FF', '#27ff7d', '#ff510f', '#ffec0d'
-//
+
 Map.addLayer(Gunarso_final.select(['lossyear']).clip(malaysia), {min: 0, max: 12,
 palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},'lossyear from 0 to 3, huge zero area');
 
