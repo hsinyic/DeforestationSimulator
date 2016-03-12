@@ -176,15 +176,20 @@ for (var t = 0; t <= 5; ++t){
     // F classification needs to be split further into OTH and F
     // if It is 2000= Non-OP and 2005=OP, 
     // then t < loss year is F , t >=loss year is OP
+    //C1: OP to OP
+    //C2: OP to Non-OP
+    //C3: Non-OP to Non-OP
+    //C4:Non-OP to OP
     "nodata ==0? blank\
-      : lossYear == 0 && OP_00_05 == 1? F\   
-        :lossYear == 0 && OP_00_05 == 1 ? F \
-          :OP_00_05 == 3 && t>= lossYear? OTH \
-              : OP_00_05 == 3 && t< lossYear ? F \
-                : (OP_00_05 == 1)? OP\
-                  : (OP_00_05 == 2)? OP\
-                    :(t>=lossYear )? OP \
-                      : F",
+      : (lossYear == 0) && (OP_00_05 == (1 ||2 ))? OP\
+        : (lossYear == 0) && (OP_00_05 == 3)? F\
+          : (lossYear == 0) && (OP_00_05 == 4)? I\
+            :OP_00_05 == 3 && t>= lossYear? OTH \
+                : OP_00_05 == 3 && t< lossYear ? F \
+                  : (OP_00_05 == 1)? OP\
+                    : (OP_00_05 == 2)? OP\
+                      :(t>=lossYear )? OP \
+                        : F",
           {
           'OP_00_05': Gunarso.select('OP_00_05'),
           'OP': Gunarso.select('Color_OP'),
@@ -193,6 +198,7 @@ for (var t = 0; t <= 5; ++t){
           'lossYear':Gunarso.select('OriginalHansenLoss'),
           'nodata':Gunarso.select('nodata'),
           'blank': Gunarso.select('Color_OP').multiply(0),
+          'I': Gunarso.select('Color_OP').multiply(0).add(5),
           't':t
           }
       ).rename([index]);
