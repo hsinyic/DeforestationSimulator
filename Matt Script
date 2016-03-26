@@ -22,7 +22,7 @@ var pro_grass = pro_grass.addBands(mask);
 var bandNames2 = pro_grass.bandNames();
 print('bandNames2', bandNames2);
 
-//use .rename(['bandname1','bandname2','bandname3', 'bandname4']) 
+//use var pro_grass = pro_grass.rename(['bandname1','bandname2','bandname3', 'bandname4']); 
 
 // image expression, this outputs pro_grass_cloudfree, 
 //which excludes pixel that is not cloud free 
@@ -30,8 +30,6 @@ print('bandNames2', bandNames2);
 var pro_grass_cloudfree = pro_grass.expression(
       "(b('cloud') == 1) ? b('grass')" +
       ": b('blank') ");
-
-
 
 // convert pro_grass_cloudfree back to a feature  
 //https://developers.google.com/earth-engine/reducers_reduce_to_vectors 
@@ -45,9 +43,6 @@ var pro_grass_cloudfree_vector = pro_grass_cloudfree.reduceToVectors({
   labelProperty: ,
   reducer: ee.Reducer.mean()
 });
-
-
-
 
 
 // Add reducer output to the Features in the collection.
