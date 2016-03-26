@@ -22,25 +22,30 @@ var pro_grass = pro_grass.addBands(mask);
 //which excludes pixel that is not cloud free 
 var pro_grass_cloudfree = pro_grass.expression(
       "(b('cloud') == 1) ? b('grass')" +
-      ": b('blank') "
-);
-
-var All_image = Landsat.addBands(pro_grass_cloudfree);
-
-//Now put the neighboring 
+      ": b('blank') ");
 
 
 
-// Load input imagery: Landsat 7 5-year composite.
-var image = ee.Image('LE7_TOA_5YEAR/2008_2012');
+// convert pro_grass_cloudfree back to a feature  
+//https://developers.google.com/earth-engine/reducers_reduce_to_vectors 
 
-// Load a FeatureCollection of counties in Maine.
-var maineCounties = ee.FeatureCollection('ft:1S4EB6319wWW2sWQDPhDvmSBIVrD3iEmCLYB7nMM')
-  .filterMetadata('StateName', 'equals', 'Maine');
+var pro_grass_cloudfree_vector = pro_grass_cloudfree.reduceToVectors({
+  geometry: ,
+  crs: ,
+  scale: ,
+  geometryType: ,
+  eightConnected: ,
+  labelProperty: ,
+  reducer: ee.Reducer.mean()
+});
+
+
+
+
 
 // Add reducer output to the Features in the collection.
-var maineMeansFeatures = image.reduceRegions({
-  collection: maineCounties,
+var band_means = landsat.reduceRegions({
+  collection: pro_grass_cloudfree_vector,
   reducer: ee.Reducer.mean(),
   scale: 30,
 });
