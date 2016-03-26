@@ -26,6 +26,7 @@ print('bandNames2', bandNames2);
 
 // image expression, this outputs pro_grass_cloudfree, 
 //which excludes pixel that is not cloud free 
+//you can create b('blank') by the using the Hansen 
 var pro_grass_cloudfree = pro_grass.expression(
       "(b('cloud') == 1) ? b('grass')" +
       ": b('blank') ");
