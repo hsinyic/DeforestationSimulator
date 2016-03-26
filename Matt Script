@@ -19,8 +19,7 @@ var pro_grass = pro_grass.addBands(mask);
 // check the names of the band, rename if needed 
 
 // image expression, this outputs pro_grass_cloudfree, 
-//which excludes pixel that is not 
-//cloud free 
+//which excludes pixel that is not cloud free 
 var pro_grass_cloudfree = pro_grass.expression(
       "(b('cloud') == 1) ? b('grass')" +
       ": b('blank') "
@@ -29,4 +28,23 @@ var pro_grass_cloudfree = pro_grass.expression(
 var All_image = Landsat.addBands(pro_grass_cloudfree);
 
 //Now put the neighboring 
+
+
+
+// Load input imagery: Landsat 7 5-year composite.
+var image = ee.Image('LE7_TOA_5YEAR/2008_2012');
+
+// Load a FeatureCollection of counties in Maine.
+var maineCounties = ee.FeatureCollection('ft:1S4EB6319wWW2sWQDPhDvmSBIVrD3iEmCLYB7nMM')
+  .filterMetadata('StateName', 'equals', 'Maine');
+
+// Add reducer output to the Features in the collection.
+var maineMeansFeatures = image.reduceRegions({
+  collection: maineCounties,
+  reducer: ee.Reducer.mean(),
+  scale: 30,
+});
+
+// Print the first feature, to illustrate the result.
+print(ee.Feature(maineMeansFeatures.first()).select(image.bandNames()));
 
