@@ -24,8 +24,6 @@ print('bandNames2', bandNames2);
 
 //use .rename(['bandname1','bandname2','bandname3', 'bandname4']) 
 
-
-
 // image expression, this outputs pro_grass_cloudfree, 
 //which excludes pixel that is not cloud free 
 var pro_grass_cloudfree = pro_grass.expression(
