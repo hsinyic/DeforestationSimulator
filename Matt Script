@@ -12,4 +12,18 @@ Map.addLayer(mask, {}, 'mask');
 Map.setCenter(-155.75, 20.25, 9);
 print(mask);
 
+//add cloud bands and a blank layer to pro_grass layer 
+var pro_grass = pro_grass.addBands(mask);
+
+// check the names of the band, rename if needed 
+
+// image expression, this outputs pro_grass_cloudfree, 
+//which excludes pixel that is not 
+//cloud free 
+var pro_grass_cloudfree = pro_grass.expression(
+      "(b('cloud') =1 ) ? b('grass')" +
+      ": b('blank') "
+);
+
+var All_image = Landsat.addBands(pro_grass_cloudfree);
 
