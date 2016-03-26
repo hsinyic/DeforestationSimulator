@@ -33,7 +33,15 @@ var pro_grass_cloudfree = pro_grass.expression(
 
 // convert pro_grass_cloudfree back to a feature  
 //https://developers.google.com/earth-engine/reducers_reduce_to_vectors 
-
+// need to figure out what to fill in for the following  
+/*  geometry: ,
+  crs: ,
+  scale: ,
+  geometryType: ,
+  eightConnected: ,
+  labelProperty: ,
+  reducer: ee.Reducer.mean()
+*/
 var pro_grass_cloudfree_vector = pro_grass_cloudfree.reduceToVectors({
   geometry: ,
   crs: ,
