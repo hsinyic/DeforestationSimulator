@@ -3,10 +3,6 @@ var endmem = ee.Image("users/matthewlucas234/EM_UMIX3"),
     landsat = ee.Image("LANDSAT/LE7_L1T_TOA/LE70630462000052EDC00");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-// Load Landsat 8 TOA reflectance, add the IGBP band.
-// 2000-feb-21 Landsat 7 scene.
-
-
 // Clip to the output image to Hawaii state boundaries.
 var HI = ee.FeatureCollection('ft:1fRY18cjsHzDgGiJiS2nnpUU3v9JPDc2HNaR7Xk8')
 .filter(ee.Filter.or(ee.Filter.eq('Name', 'Hawaii')));
@@ -17,7 +13,7 @@ print('endmem', endmem);
 print('landsat', landsat);
 // Use these bands.
 var bandNames = ee.List(['B1', 'B2', 'B3', 'B4', 'B5', 'B7']);
-  var image = landsat.select(bandNames).addBands(endmem);
+var image = landsat.select(bandNames).addBands(endmem);
 
 // Define a list of Landsat 8 wavelengths for X-axis labels.
 var bands = [bandNames];
