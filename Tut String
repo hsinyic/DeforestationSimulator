@@ -3,3 +3,18 @@ var NOP_OP= 2;//NonOP to OP
 var OP_NOP= 3;//OP to NonOP
 var OP_OP= 4;//OP to OP
 
+var t=9; 
+if(t<=5){
+  var G = String('b("OP_00_05")');
+}
+else{
+  var G = String('b("OP_05_10")');
+}
+
+var v = G+ String('==')+ String(NOP_NOP); 
+print(t);
+print(v);
+
+
+var b = String(t+2000);
+print(b)
