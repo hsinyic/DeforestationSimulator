@@ -28,7 +28,7 @@ var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.f
 var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 
-// Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Gunarso OP 2010');
+Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Gunarso OP 2010');
 // Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Gunarso OP 2005');
 // Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Gunarso OP 2000');
 // Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Gunarso OP 1990');
@@ -220,7 +220,7 @@ for (var t = 0; t <= 10; ++t){
   Gunarso_final = Gunarso_final.addBands(yearmap);
   // print(index, yearmap);
 }
-print('Gunarso_final, add 6 extra bands from 2000 to 2009 on top of original hansen loss year', Gunarso_final);
+print('Gunarso_final, 2000-2010', Gunarso_final);
 
 
 //Graph all the layers between 2000 to 2010 
