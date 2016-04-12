@@ -1,0 +1,79 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
+    Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
+    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var lossYear = gfcImage.select(['lossyear']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+var forest = gfcImage.select(['treecover2000']);
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var nodata = gfcImage.select(['datamask']).rename(['nodata']);
+var blank = gfcImage.select(["lossyear"]).multiply(0).rename(['blank']);
+
+// Convert Gunarso Peninsula ONLY vector map to a raster, make it a binary raster map 
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']);
+var OP00 = blank.where(OP00_raster.eq(1), 1).rename(['OP00']);
+var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']);
+var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']);
+var Gunarso = ee.Image([OP90]);
+Gunarso= Gunarso.addBands([OP00, OP05,OP10, nodata, blank]);
+
+print('Gunarso image collection: ', Gunarso);
+
+var OPcolor = 1;
+var NFcolor = 2;
+var Fcolor = 3;
+
+
+//first classify your layers 
+var cond1 = gfcImage.expression('b("lossyear") > 6'); 
+var cond2 = gfcImage.expression('b("lossyear") < 6 '); 
+var cond3 = gfcImage.expression('b("lossyear") == 6' ); 
+
+//mask out the area where there isn't a "loss year" mark
+Map.addLayer(lossYear.clip(malaysia).updateMask(gfcImage.select(['lossyear'])),
+             {'min': 0, 'max': 12, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+             'Hansen Forest Lost Year');
+
+//Not used here but you can further nest your conditions 
+// var cond =  cond1.and(cond2).or(cond3); 
+
+//Now state the NOP to OP rules 
+var execute1 = gfcImage.expression(
+  'b("treecover2000") > 55? A :C ', 
+  {'A':gfcImage.select(["lossyear"]).multiply(0).add(1),'C':gfcImage.select(["lossyear"]).multiply(0).add(2)} ); 
+var execute2 = gfcImage.expression(
+  'b("treecover2000") > 55? A :C ', 
+  {'A':gfcImage.select(["lossyear"]).multiply(0).add(3),'C':gfcImage.select(["lossyear"]).multiply(0).add(4)} ); 
+var execute3 = gfcImage.expression(
+  'b("treecover2000") > 55? A :C ', 
+  {'A':gfcImage.select(["lossyear"]).multiply(0).add(5),'C':gfcImage.select(["lossyear"]).multiply(0).add(6)} ); 
+
+// the initial map "output" starts with blank= 1, and end up with actually 3 colors, so check 
+//The output image starts with a uniform value of 1
+
+var output = blank;
+
+output= output.where(cond1, execute1).where(cond2,execute2).where(cond3,execute3).where(cond3, execute4);
+Map.addLayer(output.updateMask(output),
+             {'min': 0, 'max': 6, 'palette': ['0000FF', '00FF00', '#e0ff3a', 'FF0000']},
+             'output');
+
+
+// Yes, there is pixels wtih value of 5, and 6 here
+// var output_test= blank.where(output.eq(5), 5);
+// Map.addLayer(output_test,
+//             {'min': 0, 'max': 5, 'palette': ['0000FF', '00FF00', '#e0ff3a', 'FF0000']},
+//             'output_test');
+
+
+print('output', output); 
+//gives a range from 1 to 6. starts with value of uniform 1, and and now it has range up to 6
