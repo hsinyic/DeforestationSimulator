@@ -150,9 +150,9 @@ for (var t = 0; t <= 10; ++t){
   var condOP_OP = Gunarso.expression(transition+ String('==')+ String(OP_OP)); 
 
   var executeOP_OP = Gunarso.expression(
-  'treecover2000>=30 && ( lossYear >t OR b("loss")==0) ? FF\
-    :treecover2000>=30 && lossYear==t? FNF\
-      : treecover2000<30 OR (treecover2000>30 && lossYear<t)? NFNF\
+  'treecover2000>=30 && ( lossYear >t || b("loss")==0) ? FF\
+    :treecover2000>=30 && (lossYear==t && t!=0) ? FNF\
+      : treecover2000<30 || (treecover2000>30 && lossYear<t)? NFNF\
         :OTH',
       {  
         'FF': Gunarso.select('blank').add(OP_color),
@@ -166,9 +166,9 @@ for (var t = 0; t <= 10; ++t){
       }
   );
   var executeOP_NOP = Gunarso.expression(
-  'treecover2000>=30 && ( lossYear >t OR b("loss")==0) ? FF\
-    :treecover2000>=30 && lossYear==t? FNF\
-      : treecover2000<30 OR (treecover2000>30 && lossYear<t)? NFNF\
+  'treecover2000>=30 && ( lossYear >t || b("loss")==0) ? FF\
+    :treecover2000>=30 && (lossYear==t && t!=0) ? FNF\
+      : treecover2000<30 || (treecover2000>30 && lossYear<t)? NFNF\
         :OTH',
       {  
         'FF': Gunarso.select('blank').add(OP_color),
@@ -182,9 +182,9 @@ for (var t = 0; t <= 10; ++t){
       }
   );
   var executeNOP_OP = Gunarso.expression(
-  'treecover2000>=30 && ( lossYear >t OR b("loss")==0) ? FF\
+  'treecover2000>=30 && ( lossYear >t || b("loss")==0) ? FF\
     :treecover2000>=30 && (lossYear==t && t!=0) ? FNF\
-      : treecover2000<30 OR (treecover2000>30 && lossYear<t)? NFNF\
+      : treecover2000<30 || (treecover2000>30 && lossYear<t)? NFNF\
         :OTH',
       {  
         'FF': Gunarso.select('blank').add(F_color),
@@ -198,9 +198,9 @@ for (var t = 0; t <= 10; ++t){
       }
   );
   var executeNOP_NOP = Gunarso.expression(
-  'treecover2000>=30 && ( lossYear >t OR b("loss")==0) ? FF\
+  'treecover2000>=30 && ( lossYear >t || b("loss")==0) ? FF\
     :treecover2000>=30 && (lossYear==t && t!=0) ? FNF\
-      : treecover2000<30 OR (treecover2000>30 && lossYear<t)? NFNF\
+      : treecover2000<30 || (treecover2000>30 && lossYear<t)? NFNF\
         :OTH',
       {  
         'FF': Gunarso.select('blank').add(F_color),
@@ -222,9 +222,9 @@ print('Gunarso_final, add 6 extra bands from 2000 to 2009 on top of original han
 
 //Graph all the layers between 2000 to 2010 
 for (var t = 0; t <= 10; ++t){
-  var index = "year_" +String(t+2000);
-  Map.addLayer(Gunarso_final.select(index).clip(malaysia).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
-  palette:['0000FF', '#b72c16', '#00ffff', '#ff510f', '#ffec0d', '99B718']},index);
+    var index = "year_" +String(t+2000);
+    Map.addLayer(Gunarso_final.select(index).clip(malaysia).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
+    palette:['0000FF', '#b72c16', '#00ffff', '#ff510f', '#ffec0d', '99B718']},index);
 }
 
 
@@ -233,12 +233,12 @@ palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},'lossyear from 0 to 
 
 
  
-var Hansenyear5= Gunarso_final.select(['lossyear']).eq(5);
-Map.addLayer(Hansenyear5.clip(malaysia), {min: 0, max: 1,
-palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},'HansenYear5');
+// var Hansenyear5= Gunarso_final.select(['lossyear']).eq(5);
+// Map.addLayer(Hansenyear5.clip(malaysia), {min: 0, max: 1,
+// palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},'HansenYear5');
 
-var Hansenyear6= Gunarso_final.select(['lossyear']).eq(6);
-Map.addLayer(Hansenyear6.clip(malaysia), {min: 0, max: 1,
-palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},'HansenYear6');
+// var Hansenyear6= Gunarso_final.select(['lossyear']).eq(6);
+// Map.addLayer(Hansenyear6.clip(malaysia), {min: 0, max: 1,
+// palette:['FFFFFF', '99B718', '207401', '011D01', '011301']},'HansenYear6');
 
 
