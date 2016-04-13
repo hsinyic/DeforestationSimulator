@@ -5,6 +5,13 @@ var geometry = /* color: d63000 */ee.Geometry.Polygon(
           [-96.240234375, 28.536274512989912],
           [-98.349609375, 49.49667452747044]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+var geometry = /* color: d63000 */ee.Geometry.Polygon(
+        [[[-122.431640625, 47.754097979680026],
+          [-122.16796875, 29.075375179558346],
+          [-96.240234375, 28.536274512989912],
+          [-98.349609375, 49.49667452747044]]]),
+          
+          
 // // An image with just a few numbers in it.
 // var img = ee.Image("srtm90_v4").divide(1000).int();
 
@@ -38,3 +45,17 @@ var sums = counties
 // Print the resultant Dictionary.
 print(sums);
     
+    
+// // An image with just a few numbers in it.
+// var img = ee.Image("srtm90_v4").divide(1000).int();
+
+// var r = img.reduceRegion({
+//   reducer: ee.Reducer.frequencyHistogram().unweighted(),
+//   scale: 10000,
+//   geometry: geometry
+// });
+// print(r)
+
+// var countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+
+
