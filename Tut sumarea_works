@@ -1,0 +1,34 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: d63000 */ee.Geometry.Polygon(
+        [[[-122.431640625, 47.754097979680026],
+          [-122.16796875, 29.075375179558346],
+          [-96.240234375, 28.536274512989912],
+          [-98.349609375, 49.49667452747044]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// An image with just a few numbers in it.
+var img = ee.Image("srtm90_v4").divide(1000).int();
+print(ee.Image("srtm90_v4"));
+// Need a band to group on and another to count, so duplicate the single band.
+img = img.addBands(img);
+print('img',img);
+
+
+var db= String('0000FF');
+var lb= String('#11ffff');
+var red=String('ff510f');
+var yellow=String('#fff832');
+var gr= String('#4cff62');
+Map.addLayer(img.select(['elevation']), 
+{min: 0, max: 6, palette: [db, lb, gr, yellow, red]}, 'loss_lossyear2000');
+
+
+
+// Grouped reducer.
+var r = img.reduceRegion({
+  reducer: ee.Reducer.count().group(1),
+  scale: 10000,
+  geometry: geometry
+});
+print(r);
+
+
