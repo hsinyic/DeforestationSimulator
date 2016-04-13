@@ -1,0 +1,40 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: d63000 */ee.Geometry.Polygon(
+        [[[-122.431640625, 47.754097979680026],
+          [-122.16796875, 29.075375179558346],
+          [-96.240234375, 28.536274512989912],
+          [-98.349609375, 49.49667452747044]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// // An image with just a few numbers in it.
+// var img = ee.Image("srtm90_v4").divide(1000).int();
+
+// // Need a band to group on and another to count, so duplicate the single band.
+// img = img.addBands(img)
+
+// // Grouped reducer.
+// var r = img.addBands(img).reduceRegion({
+//   reducer: ee.Reducer.count().group(0),
+//   scale: 10000,
+//   geometry: geometry
+// });
+// print(r)
+
+// Load a collection of US counties with census data properties.
+var counties = ee.FeatureCollection('ft:1S4EB6319wWW2sWQDPhDvmSBIVrD3iEmCLYB7nMM');
+print(counties);
+// Compute sums of the specified properties, grouped by state name.
+var sums = counties
+  .filter(ee.Filter.and(
+    ee.Filter.neq('Census 2000 Population', null),
+    ee.Filter.neq('Census 2000 Housing Units', null)))
+  .reduceColumns({
+    selectors: ['Census 2000 Population', 'Census 2000 Housing Units', 'StateName'],
+    reducer: ee.Reducer.sum().repeat(2).group({
+      groupField: 2,
+      groupName: 'state',
+    })
+});
+
+// Print the resultant Dictionary.
+print(sums);
+    
