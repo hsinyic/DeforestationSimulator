@@ -53,22 +53,46 @@ var condnoloss = gfcImage.expression('b("loss")==0');
 // Map.addLayer(loss_ever.clip(malaysia), 
 // {min: 0, max: 4, palette: ['0000FF', '#11ffff', '#ff510f', '#ffec0d']}, 'no loss, but lossyear is 2000');
 
+var collection = ee.Image(blank);
+collection= collection.addBands([lossYear,lossImage]);
 
-
-var loss_lossyear2000 = gfcImage.expression(
+print(collection);
+var loss_lossyear2000 = collection.expression(
   "lossYear==0 && loss==0 ? consistent\
-    :lossYear>2 && loss==1 ? LY1_L0\
-      : LY0_L1", 
+    :lossYear>0 && loss==1? consistent2\
+      :lossYear==0 && loss==1 ? inconsistent\
+        :lossYear>0 && loss==0 ? inconsistent2\
+        : blank", 
   {  
-    'consistent': gfcImage.select('lossyear').multiply(0).add(2),
-    'LY1_L0': gfcImage.select('lossyear').multiply(0).add(1),
-    'LY0_L1': gfcImage.select('lossyear').multiply(0).add(0),
-    'lossYear': gfcImage.select('lossyear'),
-    'loss': gfcImage.select('loss'),
+    'consistent': collection.select('loss').multiply(0).add(0),
+    'consistent2': collection.select('loss').multiply(0).add(1),
+    'inconsistent': collection.select('loss').multiply(0).add(2),
+    'inconsistent2': collection.select('loss').multiply(0).add(3),
+    'lossYear': collection.select('lossyear'),
+    'blank': collection.select('loss').multiply(0).add(4), 
+    'loss': collection.select('loss'),
   }
-)
+);
+print('loss_lossyear2000', loss_lossyear2000)
+// .clip(malaysia)
+
+var db= String('0000FF');
+var lb= String('#11ffff');
+var red=String('ff510f');
+var yellow=String('#fff832');
+var gr= String('#4cff62');
+Map.addLayer(loss_lossyear2000, 
+{min: 0, max: 3, palette: [db, lb, red, yellow]}, 'loss_lossyear2000');
+// 'consistent': collection.select('loss').multiply(0).add(2), red 
+// 'LY1_L0': collection.select('loss').multiply(0).add(1), light blue
+// 'LY0_L1': collection.select('loss').multiply(0).add(0), dark blaue 
 
 
+//dark blue, light blue, red
+Map.addLayer(lossImage, 
+{min: 0, max: 2, palette: ['0000FF', '#11ffff','#ff510f']}, 'loss_binary');
 
-Map.addLayer(loss_lossyear2000.clip(malaysia), 
-{min: 0, max: 2, palette: ['0000FF', '#11ffff', '#ff510f']}, 'loss_lossyear2000');
+
+var blue = String('0000FF'); 
+print(blue);
+
