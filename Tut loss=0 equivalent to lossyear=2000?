@@ -57,7 +57,7 @@ var condnoloss = gfcImage.expression('b("loss")==0');
 
 var loss_lossyear2000 = gfcImage.expression(
   "lossYear==0 && loss==0 ? consistent\
-    :lossYear==0 && loss==1 ? LY1_L0\
+    :lossYear>2 && loss==1 ? LY1_L0\
       : LY0_L1", 
   {  
     'consistent': gfcImage.select('lossyear').multiply(0).add(2),
