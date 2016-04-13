@@ -1,0 +1,74 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: d63000 */ee.Geometry.Polygon(
+        [[[-122.431640625, 47.754097979680026],
+          [-122.16796875, 29.075375179558346],
+          [-96.240234375, 28.536274512989912],
+          [-98.349609375, 49.49667452747044]]]),
+    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1wBE2aHmREoHaFASg7KCFy2uol_oNpCqJqTVkKJw1");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// // An image with just a few numbers in it.
+// var img = ee.Image("srtm90_v4").divide(1000).int();
+
+// var r = img.reduceRegion({
+//   reducer: ee.Reducer.frequencyHistogram().unweighted(),
+//   scale: 10000,
+//   geometry: geometry
+// });
+// print(r)
+
+// var countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+
+
+
+
+var lossYear = gfcImage.select(['lossyear']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+var forest = gfcImage.select(['treecover2000']);
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var nodata = gfcImage.select(['datamask']);
+var blank = lossYear.multiply(0).rename(['blank']);
+
+var condNODATA = gfcImage.expression('b("datamask")==1'); 
+var cond2000F = gfcImage.expression('b("treecover2000")>=30'); 
+var cond2000NF = gfcImage.expression('b("treecover2000")<30'); 
+var condlossYear2000 = gfcImage.expression('b("lossyear")==0'); 
+var condlossYear_neq_0 = gfcImage.expression('b("lossyear")!=0'); 
+var condnoloss = gfcImage.expression('b("loss")==0'); 
+
+
+//no data, 2000 Forest Cover, 2000 No Forest Cover 
+// var Forest2000 = blank.where(condNODATA,3).where(cond2000F,2).where(cond2000NF,1);
+// var lossYear_neq_0 = blank.where(condlossYear_neq_0,1);
+// var NF2000 = blank.where(cond2000NF,1);
+// var lossYear_NG2000 = blank.where(condlossYear_neq_0.and(cond2000NF),1);
+// var loss_ever = blank.where(condnoloss.and(condlossYear2000),1);
+// Map.addLayer(Forest2000.mask(Forest2000).clip(malaysia), 
+// {min: 0, max: 3, palette: ['0000FF', '#11ffff', '#ff510f', '#ffec0d']}, 'Forest2000:F vs NF vs NoDAT');
+// Map.addLayer(lossYear_neq_0.clip(malaysia), 
+// {min: 0, max: 4, palette: ['0000FF', '#11ffff', '#ff510f', '#ffec0d']}, 'lossYear>=2001');
+// Map.addLayer(lossYear_NG2000.clip(malaysia), 
+// {min: 0, max: 4, palette: ['0000FF', '#11ffff', '#ff510f', '#ffec0d']}, 'lossyear>=2001, and Forest2000: NF');
+// Map.addLayer(loss_ever.clip(malaysia), 
+// {min: 0, max: 4, palette: ['0000FF', '#11ffff', '#ff510f', '#ffec0d']}, 'no loss, but lossyear is 2000');
+
+
+
+var loss_lossyear2000 = gfcImage.expression(
+  "lossYear==0 && loss==0 ? consistent\
+    :lossYear==0 && loss==1 ? LY1_L0\
+      : LY0_L1", 
+  {  
+    'consistent': gfcImage.select('lossyear').multiply(0).add(2),
+    'LY1_L0': gfcImage.select('lossyear').multiply(0).add(1),
+    'LY0_L1': gfcImage.select('lossyear').multiply(0).add(0),
+    'lossYear': gfcImage.select('lossyear'),
+    'loss': gfcImage.select('loss'),
+  }
+)
+
+
+
+Map.addLayer(loss_lossyear2000.clip(malaysia), 
+{min: 0, max: 2, palette: ['0000FF', '#11ffff', '#ff510f']}, 'loss_lossyear2000');
