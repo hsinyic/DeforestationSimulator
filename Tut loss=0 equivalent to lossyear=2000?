@@ -59,30 +59,48 @@ collection= collection.addBands([lossYear,lossImage]);
 print(collection);
 var loss_lossyear2000 = collection.expression(
   "lossYear==0 && loss==0 ? consistent\
-    :lossYear>0 && loss==1? consistent2\
-      :lossYear==0 && loss==1 ? inconsistent\
-        :lossYear>0 && loss==0 ? inconsistent2\
-        : blank", 
+    :lossYear==0 && loss==1 ? inconsistent\
+      :lossYear>0 && loss==0 ? inconsistent2\
+        :lossYear>0 && loss==1? consistent2\
+          : blank", 
   {  
-    'consistent': collection.select('loss').multiply(0).add(0),
-    'consistent2': collection.select('loss').multiply(0).add(1),
-    'inconsistent': collection.select('loss').multiply(0).add(2),
-    'inconsistent2': collection.select('loss').multiply(0).add(3),
+    'consistent': collection.select('blank').multiply(0).add(0),
+    'consistent2': collection.select('blank').multiply(0).add(1),
+    'inconsistent': collection.select('blank').multiply(0).add(2),
+    'inconsistent2': collection.select('blank').multiply(0).add(3),
     'lossYear': collection.select('lossyear'),
-    'blank': collection.select('loss').multiply(0).add(4), 
+    'blank': collection.select('blank').multiply(0).add(4), 
     'loss': collection.select('loss'),
-  }
+  }.rename(['loss_lossyear2000'])
 );
-print('loss_lossyear2000', loss_lossyear2000)
 // .clip(malaysia)
-
+print('loss_lossyear2000', loss_lossyear2000);
 var db= String('0000FF');
 var lb= String('#11ffff');
 var red=String('ff510f');
 var yellow=String('#fff832');
 var gr= String('#4cff62');
 Map.addLayer(loss_lossyear2000, 
-{min: 0, max: 3, palette: [db, lb, red, yellow]}, 'loss_lossyear2000');
+{min: 0, max: 4, palette: [db, lb, gr, yellow, red]}, 'loss_lossyear2000');
+
+loss_lossyear2000= loss_lossyear2000.addBands([blank]);
+
+var cond1 = loss_lossyear2000.expression(
+  "blank==4 ? weird\
+    : ok", 
+  {  
+    'blank': loss_lossyear2000.select('loss_lossyear2000'),
+    'weird': loss_lossyear2000.select('blank').add(1), 
+    'ok': loss_lossyear2000.select('blank'),
+  }
+);
+
+var werid = blank.where(cond1, 1);
+
+Map.addLayer(werid, 
+{min: 0, max: 1, palette: [db, lb, gr, yellow, red]}, 'where it is 4');
+
+
 // 'consistent': collection.select('loss').multiply(0).add(2), red 
 // 'LY1_L0': collection.select('loss').multiply(0).add(1), light blue
 // 'LY0_L1': collection.select('loss').multiply(0).add(0), dark blaue 
