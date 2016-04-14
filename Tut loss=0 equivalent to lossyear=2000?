@@ -11,7 +11,7 @@ var forest = gfcImage.select(['treecover2000']);
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var nodata = gfcImage.select(['datamask']);
 var blank = lossYear.multiply(0).rename(['blank']);
-
+print(malaysia);
 var condNODATA = gfcImage.expression('b("datamask")==1'); 
 var cond2000F = gfcImage.expression('b("treecover2000")>=30'); 
 var cond2000NF = gfcImage.expression('b("treecover2000")<30'); 
@@ -89,6 +89,43 @@ Map.addLayer(lossImage,
 {min: 0, max: 2, palette: ['0000FF', '#11ffff','#ff510f']}, 'loss_binary');
 
 
-var blue = String('0000FF'); 
-print(blue);
+// // var random = Math.floor(Math.random()*5);
+print(Math.floor(Math.random()*5));
+print(Math.floor(Math.random()*5));
+print(Math.floor(Math.random()*5));
+print(Math.floor(Math.random()*5));
+print(Math.floor(Math.random()*5));
+
+// var count = ee.Reducer.count()
+
+/*var sumpixels = loss_lossyear2000.clip(malaysia);
+var areas = sumpixels.eq([0, 1]).multiply(ee.Image.pixelArea());
+print('areas', areas);
+var p = areas.select(['loss_lossyear2000']).reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: areas.geometry(),
+  scale: 1000,
+});
+
+print(p);*/
+
+var scale = 10000; // scale in meters 
+var maxPixels = 1e12; // maximum number of pixels allowed for computations
+var bestEffort = false; 
+
+// species 10039 - Caecilia tentaculata
+
+var broadleavedEvergreenTrees = ee.Image("srtm90_v4").eq(0).multiply(ee.Image.pixelArea());
+
+var esa2010 = broadleavedEvergreenTrees.reduceRegion({
+  reducer: ee.Reducer.count().group(0),
+  geometry: malaysia.geometry(),
+  scale: scale,
+  maxPixels: maxPixels,
+  bestEffort: bestEffort
+});
+
+var resultESA = esa2010.getInfo(); 
+print(resultESA.b1 / 1e6 ); 
+
 
