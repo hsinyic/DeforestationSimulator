@@ -236,29 +236,18 @@ var Gunarso_final =ee.Image([lossYear,year_2000 ]);
 
 
 
-var classify = function(t)
- {
-   
-  // t= ee.Number(T);
+var classify = function(t){
   var transition; 
   var lossyear;
   var basemap;
-  if(t<=5){
-    transition = String('b("OP_00_05")');
-    lossyear=String('lossyear00_05');
-    basemap = String('year_2000');
-  }
-  else if(t<=10){
-    transition = String('b("OP_05_10")');
-    lossyear= String('lossyear05_10'); 
-    basemap = String('year_2005');
-  }
-  // print(transition, lossyear, basemap);
-  var index = "year_" +String(t+2000);
-
+  transition = String('b("OP_00_05")');
+  lossyear=String('lossyear00_05');
+  basemap = String('year_2000');
+    // transition = String('b("OP_05_10")');
+    // lossyear= String('lossyear05_10'); 
+    // basemap = String('year_2005');
   var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
   var condNOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_OP)); 
-  // var condOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(OP_NOP)); 
   var condOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(OP_OP)); 
 
   var executeOP_OP = Gunarso_intermediate.expression(
@@ -268,7 +257,7 @@ var classify = function(t)
         'OP': Gunarso_intermediate.select('blank').add(OP_color),
         'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
         'lossYear': Gunarso_intermediate.select(lossyear),
-        't': t,
+        't': ee.Number(t),
       }
   );
 
@@ -284,7 +273,7 @@ var classify = function(t)
         'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
         'lossYear': Gunarso_intermediate.select(lossyear),
         'basemap': Gunarso_intermediate.select(basemap),
-        't': t,
+        't': ee.Number(t),
         'NF_color': NF_color,
         'F_color': F_color
       }
@@ -300,7 +289,7 @@ var classify = function(t)
         'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
         'lossYear': Gunarso_intermediate.select(lossyear),
         'basemap': Gunarso_intermediate.select(basemap),
-        't': t,
+        't': ee.Number(t),
         'NF_color': NF_color,
         'F_color': F_color
       }
@@ -310,22 +299,41 @@ var classify = function(t)
   var yearmap= Gunarso_intermediate.select('blank')
   .where(condOP_OP,executeOP_OP)
   .where(condNOP_OP,executeNOP_OP)
-  .where(condNOP_NOP,executeNOP_NOP)
-  .rename([index]);
-  Gunarso_final = Gunarso_final.addBands(yearmap);
-  if(t==5){
-  Gunarso_intermediate = Gunarso_intermediate.addBands(yearmap);
-  }
-  // print(index, yearmap);
-   return t;
- };
+  .where(condNOP_NOP,executeNOP_NOP);
+   return yearmap;
+};
+
+// var classify = function(t)
+// {
+//   var transition; 
+//   var lossyear;
+//   var basemap;
+//   transition = String('b("OP_00_05")');
+//   lossyear=String('lossyear00_05');
+//   basemap = String('year_2000');
+//   var condOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(OP_OP)); 
+//   var executeOP_OP = Gunarso_intermediate.expression(
+//   '(lossYear==t && lossYear!=0) ? OPR\
+//     :OP',
+//       {  
+//         'OP': Gunarso_intermediate.select('blank').add(OP_color),
+//         'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
+//         'lossYear': Gunarso_intermediate.select(lossyear),
+//         't': ee.Number(t),
+//       }
+//   );
+// // Change the following section 
+//   var yearmap= Gunarso_intermediate.select('blank').where(condOP_OP,executeOP_OP).add(ee.Number(t));
+//   Gunarso_final = Gunarso_final.addBands(yearmap);
+//   return yearmap;
+// };
 
 var time = ee.List.sequence(1, 5); 
-var listDeforestationClassesMap = time.map(classify);
-print('listDeforestationClassesMap', listDeforestationClassesMap);
-print('Gunarso_intermediate',Gunarso_intermediate)
+print(time);
+var map = time.map(classify);
+print('Map', map);
 
-print('Gunarso_final, 2000-2010', Gunarso_final);
+print(map('1'))
 // //add color scheme 
 // var db= String('0000FF');
 // var lb= String('#11ffff');
