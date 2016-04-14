@@ -253,7 +253,7 @@ var classify = function(t)
     lossyear= String('lossyear05_10'); 
     basemap = String('year_2005');
   }
-  print(transition, lossyear, basemap);
+  // print(transition, lossyear, basemap);
   var index = "year_" +String(t+2000);
 
   var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
