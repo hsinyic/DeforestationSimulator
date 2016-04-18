@@ -1,0 +1,49 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: d63000 */ee.Geometry.Polygon(
+        [[[94.3963581673271, 25.787509542701734],
+          [93.96991282440479, 17.38176790924723],
+          [101.99122889051796, 13.01429626800988],
+          [100.43373031625163, 25.706136655833635]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+
+//Import Data
+var globalForestChangeData = ee.Image('UMD/hansen/global_forest_change_2015');
+
+//get deforestation band
+var loss = globalForestChangeData.select(['lossyear']).reproject(ee.Projection('EPSG:4326'), null, 30);
+
+//clip 
+var lossCliped = loss.clip(geometry).reproject(ee.Projection('EPSG:4326'), null, 30);
+
+
+//**********Function to Map***********************
+/**
+ * Returns image containing only the class specified by classNumber (1-14)
+ */
+ var filterDeforestationClass = function(classNumber)
+ {
+   return lossCliped.eq(ee.Number(classNumber));
+ };
+
+
+ //**********Mapping ************************
+ 
+ //list with classes
+var listClassnumbers = ee.List.sequence(1, 14); 
+                                                
+ //map 
+var listDeforestationClassesMap = listClassnumbers.map(filterDeforestationClass);
+print(listDeforestationClassesMap);
+
+ //**********For Loop***********************
+
+ var listDeforestationClasses = ee.List([]);
+ for (var i = 1; i<=14; i++)
+ {
+   var deforestationClassi = lossCliped.eq(i);
+   listDeforestationClasses = listDeforestationClasses.add(deforestationClassi);
+ }
+
+ 
+
