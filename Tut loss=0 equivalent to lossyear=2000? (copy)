@@ -3,43 +3,14 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1wBE2aHmREoHaFASg7KCFy2uol_oNpCqJqTVkKJw1");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-
-
 var lossYear = gfcImage.select(['lossyear']);
 var lossImage = gfcImage.select(['loss']);
-var gainImage = gfcImage.select(['gain']);
-var forest = gfcImage.select(['treecover2000']);
-var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var nodata = gfcImage.select(['datamask']);
 var blank = lossYear.multiply(0).rename(['blank']);
-print(malaysia);
-var condNODATA = gfcImage.expression('b("datamask")==1'); 
-var cond2000F = gfcImage.expression('b("treecover2000")>=30'); 
-var cond2000NF = gfcImage.expression('b("treecover2000")<30'); 
-var condlossYear2000 = gfcImage.expression('b("lossyear")==0'); 
-var condlossYear_neq_0 = gfcImage.expression('b("lossyear")!=0'); 
-var condnoloss = gfcImage.expression('b("loss")==0'); 
 
-
-//no data, 2000 Forest Cover, 2000 No Forest Cover 
-// var Forest2000 = blank.where(condNODATA,3).where(cond2000F,2).where(cond2000NF,1);
-// var lossYear_neq_0 = blank.where(condlossYear_neq_0,1);
-// var NF2000 = blank.where(cond2000NF,1);
-// var lossYear_NG2000 = blank.where(condlossYear_neq_0.and(cond2000NF),1);
-// var loss_ever = blank.where(condnoloss.and(condlossYear2000),1);
-// Map.addLayer(Forest2000.mask(Forest2000).clip(malaysia), 
-// {min: 0, max: 3, palette: ['0000FF', '#11ffff', '#ff510f', '#ffec0d']}, 'Forest2000:F vs NF vs NoDAT');
-// Map.addLayer(lossYear_neq_0.clip(malaysia), 
-// {min: 0, max: 4, palette: ['0000FF', '#11ffff', '#ff510f', '#ffec0d']}, 'lossYear>=2001');
-// Map.addLayer(lossYear_NG2000.clip(malaysia), 
-// {min: 0, max: 4, palette: ['0000FF', '#11ffff', '#ff510f', '#ffec0d']}, 'lossyear>=2001, and Forest2000: NF');
-// Map.addLayer(loss_ever.clip(malaysia), 
-// {min: 0, max: 4, palette: ['0000FF', '#11ffff', '#ff510f', '#ffec0d']}, 'no loss, but lossyear is 2000');
 
 var collection = ee.Image(blank);
 collection= collection.addBands([lossYear,lossImage]);
-
-print(collection);
 var loss_lossyear2000 = collection.expression(
   "lossYear==0 && loss==0 ? consistent\
     :lossYear==0 && loss==1 ? inconsistent\
@@ -56,77 +27,13 @@ var loss_lossyear2000 = collection.expression(
     'loss': collection.select('loss'),
   }
 ).rename(['loss_lossyear2000']);
-// .clip(malaysia)
+
 print('loss_lossyear2000', loss_lossyear2000);
 var db= String('0000FF');
 var lb= String('#11ffff');
 var red=String('ff510f');
 var yellow=String('#fff832');
 var gr= String('#4cff62');
+
 Map.addLayer(loss_lossyear2000, 
 {min: 0, max: 4, palette: [db, lb, gr, yellow, red]}, 'loss_lossyear2000');
-
-loss_lossyear2000= loss_lossyear2000.addBands([blank]);
-
-var cond1 = loss_lossyear2000.expression(
-  "blank==4 ? weird\
-    : ok", 
-  {  
-    'blank': loss_lossyear2000.select('loss_lossyear2000'),
-    'weird': loss_lossyear2000.select('blank').add(1), 
-    'ok': loss_lossyear2000.select('blank'),
-  }
-);
-
-var weird = blank.where(cond1, 1);
-
-Map.addLayer(weird, 
-{min: 0, max: 1, palette: [db,  yellow]}, 'where it is 4');
-
-print('weird', weird);
-
-
-Map.addLayer(lossImage, 
-{min: 0, max: 2, palette: ['0000FF', '#11ffff','#ff510f']}, 'loss_binary');
-
-
-// // var random = Math.floor(Math.random()*5);
-print(Math.floor(Math.random()*5));
-print(Math.floor(Math.random()*5));
-print(Math.floor(Math.random()*5));
-print(Math.floor(Math.random()*5));
-print(Math.floor(Math.random()*5));
-
-// var count = ee.Reducer.count()
-
-/*var sumpixels = loss_lossyear2000.clip(malaysia);
-var areas = sumpixels.eq([0, 1]).multiply(ee.Image.pixelArea());
-print('areas', areas);
-var p = areas.select(['loss_lossyear2000']).reduceRegion({
-  reducer: ee.Reducer.sum(),
-  geometry: areas.geometry(),
-  scale: 1000,
-});
-
-print(p);*/
-
-var scale = 10000; // scale in meters 
-var maxPixels = 1e12; // maximum number of pixels allowed for computations
-var bestEffort = false; 
-
-// species 10039 - Caecilia tentaculata
-
-var broadleavedEvergreenTrees = ee.Image("srtm90_v4").eq(0).multiply(ee.Image.pixelArea());
-
-var esa2010 = broadleavedEvergreenTrees.reduceRegion({
-  reducer: ee.Reducer.count().group(0),
-  geometry: malaysia.geometry(),
-  scale: scale,
-  maxPixels: maxPixels,
-  bestEffort: bestEffort
-});
-
-var resultESA = esa2010.getInfo(); 
-print(resultESA.b1 / 1e6 ); 
-
-
