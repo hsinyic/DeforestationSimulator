@@ -16,14 +16,14 @@ var loss_lossyear2000 = collection.expression(
     :lossYear==0 && loss==1 ? inconsistent\
       :lossYear>0 && loss==0 ? inconsistent2\
         :lossYear>0 && loss==1? consistent2\
-          : blank", 
+          : otherwise", 
   {  
-    'consistent': collection.select('blank').multiply(0).add(0),
-    'consistent2': collection.select('blank').multiply(0).add(1),
-    'inconsistent': collection.select('blank').multiply(0).add(2),
-    'inconsistent2': collection.select('blank').multiply(0).add(3),
+    'consistent': collection.select('blank').add(0),
+    'consistent2': collection.select('blank').add(1),
+    'inconsistent': collection.select('blank').add(2),
+    'inconsistent2': collection.select('blank').add(3),
     'lossYear': collection.select('lossyear'),
-    'blank': collection.select('blank').multiply(0).add(4), 
+    'otherwise': collection.select('blank').add(4), 
     'loss': collection.select('loss'),
   }
 ).rename(['loss_lossyear2000']);
