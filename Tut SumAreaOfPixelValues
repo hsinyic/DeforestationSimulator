@@ -1,0 +1,22 @@
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015");
+var countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw");
+
+var lossYear = gfcImage.select(['lossyear']);
+var treecover2000 = gfcImage.select(['treecover2000']);
+var nodata = gfcImage.select(['datamask']);
+var blank = lossYear.multiply(0).rename(['blank']);
+
+
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
+var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
+var totalarea = malaysia.merge(indonesia).merge(PNG);
+
+
+
+var Hansen = lossYear.reduceRegion({
+  reducer: ee.Reducer.frequencyHistogram().unweighted(),
+  scale: 700,
+  geometry: malaysia
+});
+print(Hansen);
