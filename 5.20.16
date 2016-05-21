@@ -355,12 +355,15 @@ for (var t = 10; t >= 0; --t){
 // Compute summary statistics 
 // ###################
 for (var t = 0; t <= 10; ++t){
+  var index = "year_" +String(t+2000);
+  var output = Gunarso_final.select(index);
   Export.image.toDrive({
-  image: Gunarso2002,
-  description: 'Gunarso2002_900',
+  image: output,
+  description: index,
   scale: 900,
   region: geometry
 });
+
     // var index = "year_" +String(t+2000);
     // var output = Gunarso_final.select(index);
     // var Stat = output.addBands(output);
@@ -375,29 +378,29 @@ for (var t = 0; t <= 10; ++t){
 // ###################
 // Export Gunarso 2003 to Google Drive 
 // ###################
-var Gunarso2003 = Gunarso_final.select("year_2003");
-var Gunarso2002 = Gunarso_final.select("year_2002");
-print(Gunarso2003);
-print(Gunarso2002);
+// var Gunarso2003 = Gunarso_final.select("year_2003");
+// var Gunarso2002 = Gunarso_final.select("year_2002");
+// print(Gunarso2003);
+// print(Gunarso2002);
 
-Export.image.toDrive({
-  image: Gunarso2002,
-  description: 'Gunarso2002_900',
-  scale: 900,
-  region: geometry
-});
+// Export.image.toDrive({
+//   image: Gunarso2002,
+//   description: 'Gunarso2002_900',
+//   scale: 900,
+//   region: geometry
+// });
 
-Export.image.toDrive({
-  image: Gunarso2003,
-  description: 'Gunarso2004',
-  scale: 900,
-  region: geometry
-});
+// Export.image.toDrive({
+//   image: Gunarso2003,
+//   description: 'Gunarso2004',
+//   scale: 900,
+//   region: geometry
+// });
 
-Export.image.toDrive({
-  image: lossYear,
-  description: 'Hansen',
-  scale: 900,
-  region: geometry
-});
+// Export.image.toDrive({
+//   image: lossYear,
+//   description: 'Hansen',
+//   scale: 900,
+//   region: geometry
+// });
 
