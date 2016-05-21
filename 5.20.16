@@ -20,7 +20,6 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
           [101.79388878948464, -0.23087604431434772],
           [102.82459597256343, 0.3948065919905545]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-print(image);
 
 // ############
 // # Step 1: Load data 
@@ -356,13 +355,14 @@ for (var t = 10; t >= 0; --t){
 for (var t = 0; t <= 10; ++t){
   var index = "year_" +String(t+2000);
   var output = Gunarso_final.select(index);
+}
   // Export.image.toDrive({
   // image: output,
   // description: index,
   // scale: 900,
   // region: geometry
   // });
-}
+
 
     // var index = "year_" +String(t+2000);
     // var output = Gunarso_final.select(index);
@@ -389,12 +389,12 @@ for (var t = 0; t <= 10; ++t){
 //   region: geometry
 // });
 
-Export.image.toDrive({
-  image: Gunarso2003,
-  description: 'Gunarso2004',
-  scale: 900,
-  region: geometry
-});
+// Export.image.toDrive({
+//   image: Gunarso2003,
+//   description: 'Gunarso2004',
+//   scale: 900,
+//   region: geometry
+// });
 
 // Export.image.toDrive({
 //   image: lossYear,
