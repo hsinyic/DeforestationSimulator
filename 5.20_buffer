@@ -1,9 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: 000000 */ee.Geometry.Polygon(
-        [[[101.2774658203125, 1.1370103264643097],
-          [101.31591796875, -0.3350810977086186],
-          [103.11767578125, -0.41198375451568836],
-          [103.0517578125, 1.1754546449158993]]]),
+var geometry = /* color: d63000 */ee.Geometry.Polygon(
+        [[[101.15587824757256, 1.1533389796704754],
+          [101.10641833806437, -0.5055037585400546],
+          [103.10594229998628, -0.45057362161003495],
+          [103.04549539283437, 1.2686676604067928]]]),
     G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
     G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -52,15 +52,22 @@ print(vector2002);
 
 var feature = ee.Feature(vector2002.first());
 print(feature);
-Map.addLayer(buffer(feature, 3, 0.5), {}, 'ok', false);
-Map.addLayer(buffer(feature, 2, 0.05), {}, 'ok', false);
-Map.addLayer(buffer(feature, 1, 0.05), {}, 'ok', false);
+
+function buffer(feature, bufferSize, bufferError){
+  return feature.buffer(
+      bufferSize, 
+      ee.ErrorMargin(bufferError, 'projected'), 
+      'EPSG:4326') ;
+}
+
+print(vector2002.first());
+
+Map.addLayer(buffer(feature, 3, 0.5), {}, '1', false);
+Map.addLayer(buffer(feature, 2, 0.05), {}, '2', false);
+Map.addLayer(buffer(feature, 1, 0.05), {}, '3', false);
 
 
 //use buffer expand the geometry 
 // var test2003 = display2002.buffer(2);
 // var display2003 = ee.Image(0).updateMask(0).paint(test2003, '000000', 3);
 // Map.addLayer(display2003, {palette: '000000'}, 'vectors2003');
-
-
-
