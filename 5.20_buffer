@@ -1,9 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: 000000 */ee.Geometry.Polygon(
-        [[[101.55211954429001, 0.4284521428950802],
-          [101.60156687282597, 0.01097090534190573],
-          [102.08496233880612, 0.05491606998939865],
-          [102.0794777676706, 0.4284521727620153]]]),
+var geometry = /* color: 000000 */ee.Geometry.MultiPoint(),
     G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
     G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -48,7 +44,12 @@ var display2002 = ee.Image(0).updateMask(0).paint(vector2002, '000000', 3);
 Map.addLayer(display2002, {palette: '000000'}, 'vectors2002');
 print(vector2002);
 
-Map.addLayer(display2002["400"], {palette:'000000'}, 'display2002_400');
+// Map.addLayer(display2002["400"], {palette:'000000'}, 'display2002_400');
+
+var feature = ee.Feature(vector2002.first());
+Map.addLayer(buffer(feature, 3, 0.5), {}, 'ok', false);
+Map.addLayer(buffer(feature, 2, 0.05), {}, 'ok', false);
+Map.addLayer(buffer(feature, 1, 0.05), {}, 'ok', false);
 
 
 //use buffer expand the geometry 
