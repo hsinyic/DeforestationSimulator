@@ -26,7 +26,7 @@ var treecover2000 = gfcImage.select(['treecover2000']);
 var nodata = gfcImage.select(['datamask']);
 var blank = lossYear.multiply(0).rename(['blank']);
 
-var malaysia = countriPeninsula_outlinees.filterMetadata('Country', 'equals', 'Malaysia');
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 var totalarea = malaysia.merge(indonesia).merge(PNG);
@@ -362,6 +362,9 @@ for (var t = 10; t >= 0; --t){
 // ###################
 // Export Gunarso 2003 to Google Drive 
 // ###################
+
+var geometry = ee.Geometry.Rectangle([116.34916, 39.95725, 116.43259, 40.01236]);
+
 
 var Gunarso2003 = Gunarso_final.select("year_2003");
 Export.image.toDrive({
