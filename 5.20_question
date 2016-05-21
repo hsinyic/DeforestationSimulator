@@ -36,7 +36,3 @@ var r = Stat.reduceRegion({
 });
 print('summary statistics', r);
 
-
-//############
-//# Expand polygon from 2002 to 2004  
-//############
