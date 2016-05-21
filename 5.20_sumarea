@@ -1,16 +1,11 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
-    geometry = /* color: 000000 */ee.Geometry.Polygon(
+var geometry = /* color: 000000 */ee.Geometry.Polygon(
         [[[101.38733786286514, 1.027166227904569],
           [101.40380857602315, -0.21423290098878023],
           [102.81006086366165, -0.21697946105268517],
           [102.80182033962615, 1.0161816414827798]]]),
-    G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
-    G2003 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2003"),
-    G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
+    G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var image = ee.Image('LANDSAT/LC8_L1T/LC80440342014077LGN00').select('B4');
-var lossYear = gfcImage.select(['lossyear']);
 
 
 var db= String('0000FF');
