@@ -1,9 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: d63000 */ee.Geometry.Polygon(
+var geometry = /* color: 0B4A8B */ee.Geometry.Polygon(
         [[[101.109077027073, 1.0982934909986786],
-          [101.0595903144889, -0.5605484405804431],
+          [101.1145219551139, -0.5111121274793937],
           [103.05913122611992, -0.5056182112954141],
-          [102.99865667091717, 1.2136220849318204]]]),
+          [103.05358831154217, 1.109273425170133]]]),
     G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
     G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
