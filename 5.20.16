@@ -14,7 +14,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: 732f8a */ee.Geometry.Polygon(
+    geometry = /* color: b164ff */ee.Geometry.Polygon(
         [[[102.18481272472036, 1.0393565904848714],
           [101.36277170438166, 0.5483169737218532],
           [101.78840018894061, -0.23088052486242813],
@@ -377,15 +377,15 @@ var Gunarso2002 = Gunarso_final.select("year_2002");
 
 Export.image.toDrive({
   image: Gunarso2002,
-  description: 'Gunarso2002',
-  scale: 900,
+  description: 'Gunarso2002_A',
+  scale: 30,
   region: geometry
 });
 
 Export.image.toDrive({
   image: Gunarso2003,
-  description: 'Gunarso2003',
-  scale: 900,
+  description: 'Gunarso2003_A',
+  scale: 30,
   region: geometry
 });
 
