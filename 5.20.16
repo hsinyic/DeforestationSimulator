@@ -14,7 +14,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: b164ff */ee.Geometry.Polygon(
+    geometry = /* color: 98ff00 */ee.Geometry.Polygon(
         [[[102.19030132539262, 1.0393610710611736],
           [101.36826030434088, 0.5483214540008622],
           [101.79388878948464, -0.23087604431434772],
@@ -354,17 +354,23 @@ for (var t = 10; t >= 0; --t){
 // ###################
 // Compute summary statistics 
 // ###################
-// for (var t = 0; t <= 10; ++t){
-//     var index = "year_" +String(t+2000);
-//     var output = Gunarso_final.select(index);
-//     var Stat = output.addBands(output);
-//     var r = Stat.reduceRegion({
-//       reducer: ee.Reducer.count().group(1),
-//       scale: 900,
-//       geometry: Peninsula_outline
-//     });
-//     print(2000+t, 'summary statistics', r);
-// }
+for (var t = 0; t <= 10; ++t){
+  Export.image.toDrive({
+  image: Gunarso2002,
+  description: 'Gunarso2002_900',
+  scale: 900,
+  region: geometry
+});
+    // var index = "year_" +String(t+2000);
+    // var output = Gunarso_final.select(index);
+    // var Stat = output.addBands(output);
+    // var r = Stat.reduceRegion({
+    //   reducer: ee.Reducer.count().group(1),
+    //   scale: 900,
+    //   geometry: Peninsula_outline
+    // });
+    // print(2000+t, 'summary statistics', r);
+}
 
 // ###################
 // Export Gunarso 2003 to Google Drive 
