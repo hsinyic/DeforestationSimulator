@@ -1,0 +1,21 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: 98ff00 */ee.Geometry.Polygon(
+        [[[101.109077027073, 1.0982934909986786],
+          [101.0595903144889, -0.5605484405804431],
+          [103.05913122611992, -0.5056182112954141],
+          [102.99865667091717, 1.2136220849318204]]]),
+    BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
+    AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var db= String('0000FF');
+var lb= String('#11ffff');
+var red=String('ff510f');
+var yellow=String('#fff832');
+var gr= String('#4cff62');
+var whi=String('#181716');
+
+
+//Display the original images
+Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+
