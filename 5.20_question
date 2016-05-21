@@ -1,15 +1,13 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var image = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/Kim2_28"),
-    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
-    geometry = /* color: d63000 */ee.Geometry.MultiPoint(),
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    geometry = /* color: 000000 */ee.Geometry.Polygon(
+        [[[101.38459128083389, 1.0354046392882985],
+          [101.38732908383565, -0.23620538735118943],
+          [102.81555402772415, -0.22796570634190166],
+          [102.81829983181359, 1.0271662230031433]]]),
     G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
     G2003 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2003"),
-    G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004"),
-    G2005 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2005"),
-    G2006 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2006"),
-    G2007 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2007"),
-    G2008 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2008"),
-    G2009 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2009");
+    G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var image = ee.Image('LANDSAT/LC8_L1T/LC80440342014077LGN00').select('B4');
 var lossYear = gfcImage.select(['lossyear']);
@@ -26,16 +24,18 @@ var whi=String('#181716');
 //# Sum area 
 //############
 
-Map.addLayer(G2009, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2009");
-Map.addLayer(G2008, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2008");
-Map.addLayer(G2007, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2007");
-Map.addLayer(G2006, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2006");
-Map.addLayer(G2005, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2005");
 Map.addLayer(G2004, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2004");
 Map.addLayer(G2003, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2003");
 Map.addLayer(G2002, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2002");
 
 
 
+var Stat = G2002.addBands(G2002);
+var r = Stat.reduceRegion({
+  reducer: ee.Reducer.count().group(1),
+  scale: 900,
+  geometry: geometry
+});
+print('summary statistics', r);
 
 
