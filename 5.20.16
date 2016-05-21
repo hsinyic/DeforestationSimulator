@@ -18,19 +18,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
         [[[102.19030132539262, 1.0393610710611736],
           [101.36826030434088, 0.5483214540008622],
           [101.79388878948464, -0.23087604431434772],
-          [102.82459597256343, 0.3948065919905545]]]),
-    image = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/Gunarso2002"),
-    image2 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2000"),
-    image3 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2001"),
-    image4 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
-    image5 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2003"),
-    image6 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004"),
-    image7 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2005"),
-    image8 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2006"),
-    image9 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2007"),
-    image10 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2008"),
-    image11 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2009"),
-    image12 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2010");
+          [102.82459597256343, 0.3948065919905545]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 print(image);
 
