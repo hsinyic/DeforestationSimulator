@@ -21,12 +21,12 @@ var gr= String('#4cff62');
 var whi=String('#181716');
 
 //############
-//# Sum area 
+//# Sum area for 2002 
 //############
 
-Map.addLayer(G2004, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2004");
-Map.addLayer(G2003, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2003");
-Map.addLayer(G2002, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2002");
+Map.addLayer(G2004, {min: 0, max: 5, palette:[lb, db, gr, yellow, red, whi ]},"G2004");
+Map.addLayer(G2003, {min: 0, max: 5, palette:[lb, db, gr, yellow, red, whi ]},"G2003");
+Map.addLayer(G2002, {min: 0, max: 5, palette:[lb, db, gr, yellow, red, whi ]},"G2002");
 
 
 
@@ -39,3 +39,6 @@ var r = Stat.reduceRegion({
 print('summary statistics', r);
 
 
+//############
+//# Expand polygon from 2002 to 2004  
+//############
