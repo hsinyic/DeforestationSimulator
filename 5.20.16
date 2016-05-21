@@ -362,6 +362,7 @@ for (var t = 0; t <= 10; ++t){
   scale: 900,
   region: geometry
 });
+}
 
     // var index = "year_" +String(t+2000);
     // var output = Gunarso_final.select(index);
@@ -372,7 +373,6 @@ for (var t = 0; t <= 10; ++t){
     //   geometry: Peninsula_outline
     // });
     // print(2000+t, 'summary statistics', r);
-}
 
 // ###################
 // Export Gunarso 2003 to Google Drive 
