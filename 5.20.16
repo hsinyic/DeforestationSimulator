@@ -13,7 +13,13 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    geometry = /* color: 732f8a */ee.Geometry.Polygon(
+        [[[99.19772760054047, 4.558140512601694],
+          [97.66023177130467, 3.520986511689132],
+          [96.01675225748204, 2.3462341873165973],
+          [96.53651288171511, 1.1601718434581987],
+          [100.00223749053566, 3.666080221142124]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // ############
 // # Step 1: Load data 
@@ -363,13 +369,16 @@ for (var t = 10; t >= 0; --t){
 // Export Gunarso 2003 to Google Drive 
 // ###################
 
-var geometry = ee.Geometry.Rectangle([116.34916, 39.95725, 116.43259, 40.01236]);
+
 
 
 var Gunarso2003 = Gunarso_final.select("year_2003");
+var Gunarso2002 = Gunarso_final.select("year_2002");
+
+
 Export.image.toDrive({
-  image: landsat,
-  description: 'Gunarso2003',
+  image: Gunarso2002,
+  description: 'Gunarso2002',
   scale: 900,
-  region: Peninsula_outline
+  region: geometry
 });
