@@ -383,7 +383,7 @@ Export.image.toDrive({
 
 Export.image.toDrive({
   image: Gunarso2003,
-  description: 'Gunarso2003_900',
+  description: 'Gunarso2004',
   scale: 900,
   region: geometry
 });
