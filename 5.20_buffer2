@@ -56,7 +56,7 @@ Map.addLayer(buffer(feature, 0.01, 0.005), {}, '3', false);
 // # Buffer for all features with red cells 
 // ##########
 
-// Join all features belonging to the red cells into one single feature 
+// Join all features belonging to the red cells into one single feature, name it R
 
 
-// 
+// Expand the new feature R 
