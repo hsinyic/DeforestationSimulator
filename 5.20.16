@@ -373,14 +373,14 @@ var Gunarso2002 = Gunarso_final.select("year_2002");
 
 Export.image.toDrive({
   image: Gunarso2002,
-  description: 'Gunarso2002_A',
+  description: 'Gunarso2002_900',
   scale: 900,
   region: geometry
 });
 
 Export.image.toDrive({
   image: Gunarso2003,
-  description: 'Gunarso2003_A',
+  description: 'Gunarso2003_900',
   scale: 900,
   region: geometry
 });
