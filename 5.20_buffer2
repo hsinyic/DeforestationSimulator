@@ -1,9 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = /* color: d63000 */ee.Geometry.Polygon(
-        [[[101.29870954301214, 1.1643228220433084],
-          [101.24925497642357, -0.4945200770716008],
-          [103.2487757771022, -0.43958995857187466],
-          [103.18833438028446, 1.2796515200973844]]]),
+        [[[101.109077027073, 1.0982934909986786],
+          [101.0595903144889, -0.5605484405804431],
+          [103.05913122611992, -0.5056182112954141],
+          [102.99865667091717, 1.2136220849318204]]]),
     G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
     G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -50,7 +50,7 @@ function buffer(feature, bufferSize, bufferError){
 
 Map.addLayer(buffer(feature, 0.03, 0.015), {}, '1', false);
 Map.addLayer(buffer(feature, 0.02, 0.01), {}, '2', false);
-Map.addLayer(buffer(feature, 0.01, 0.005), {}, '3', false);
+Map.addLayer(buffer(feature, -0.01, 0.005), {}, '3', false);
 
 // ##########
 // # Buffer for all features with red cells 
