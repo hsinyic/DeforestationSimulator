@@ -1,12 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var image = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/Kim2_28"),
     gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
-    geometry = /* color: d63000 */ee.Geometry.Polygon(
-        [[[102.18481272472036, 1.0393565904848714],
-          [101.36277170438166, 0.5483169737218532],
-          [101.78840018894061, -0.23088052486242813],
-          [102.81910737167789, 0.39480211181524366]]]),
-    image2 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/Gunarso2002");
+    geometry = /* color: d63000 */ee.Geometry.MultiPoint(),
+    G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/Gunarso2002"),
+    G2003 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/Gunarso2003");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var image = ee.Image('LANDSAT/LC8_L1T/LC80440342014077LGN00').select('B4');
 var lossYear = gfcImage.select(['lossyear']);
@@ -38,4 +35,5 @@ Export.image.toDrive({
   region: geometry
 });
 
-Map.addLayer(image2.updateMask(image2), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_00_05');
+Map.addLayer(G2002.updateMask(G2002), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_00_05');
+Map.addLayer(G2003.updateMask(G2003), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_00_05');
