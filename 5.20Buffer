@@ -41,8 +41,6 @@ var patchid = hotspots.connectedComponents(ee.Kernel.plus(1), 256);
 Map.addLayer(patchid.randomVisualizer(), {}, 'patches');
 
 
-
-
 // Threshold the thermal band to find "hot" objects.
 var hotspots = AFTER.eq(4);
 
