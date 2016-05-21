@@ -1,9 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = /* color: d63000 */ee.Geometry.Polygon(
-        [[[101.15587824757256, 1.1533389796704754],
-          [101.10641833806437, -0.5055037585400546],
-          [103.10594229998628, -0.45057362161003495],
-          [103.04549539283437, 1.2686676604067928]]]),
+        [[[101.15040733294745, 1.1203858971601772],
+          [101.10093138315119, -0.5384563582110418],
+          [103.1004652702834, -0.48352616599085846],
+          [103.04000181819515, 1.2357145259346811]]]),
     G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
     G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -48,10 +48,12 @@ var display2002 = ee.Image(0).updateMask(0).paint(vector2002, '000000', 3);
 Map.addLayer(display2002, {palette: '000000'}, 'vectors2002');
 print(vector2002);
 
-// Map.addLayer(display2002["400"], {palette:'000000'}, 'display2002_400');
+// #########
+// #Buffer for the first feature using script from 
+// #https://groups.google.com/forum/#!searchin/google-earth-engine-developers/buffer/google-earth-engine-developers/KFT_e9lgBxE/ZtyZmwvPCQAJ
+// ######### 
 
-var feature = ee.Feature(vector2002.first());
-print(feature);
+var feature = ee.Feature(vector2004.first());
 
 function buffer(feature, bufferSize, bufferError){
   return feature.buffer(
@@ -60,14 +62,8 @@ function buffer(feature, bufferSize, bufferError){
       'EPSG:4326') ;
 }
 
-print(vector2002.first());
-
-Map.addLayer(buffer(feature, 3, 0.5), {}, '1', false);
-Map.addLayer(buffer(feature, 2, 0.05), {}, '2', false);
-Map.addLayer(buffer(feature, 1, 0.05), {}, '3', false);
+Map.addLayer(buffer(feature, 0.03, 0.015), {}, '1', false);
+Map.addLayer(buffer(feature, 0.02, 0.01), {}, '2', false);
+Map.addLayer(buffer(feature, 0.01, 0.005), {}, '3', false);
 
 
-//use buffer expand the geometry 
-// var test2003 = display2002.buffer(2);
-// var display2003 = ee.Image(0).updateMask(0).paint(test2003, '000000', 3);
-// Map.addLayer(display2003, {palette: '000000'}, 'vectors2003');
