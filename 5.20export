@@ -35,5 +35,5 @@ Export.image.toDrive({
   region: geometry
 });
 
-Map.addLayer(G2002.updateMask(G2002), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_00_05');
-Map.addLayer(G2003.updateMask(G2003), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_00_05');
+Map.addLayer(G2002.updateMask(G2002), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP2002');
+Map.addLayer(G2003.updateMask(G2003), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP2003');
