@@ -1,5 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: 000000 */ee.Geometry.MultiPoint(),
+var geometry = /* color: 000000 */ee.Geometry.Polygon(
+        [[[101.2774658203125, 1.1370103264643097],
+          [101.31591796875, -0.3350810977086186],
+          [103.11767578125, -0.41198375451568836],
+          [103.0517578125, 1.1754546449158993]]]),
     G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
     G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -47,6 +51,7 @@ print(vector2002);
 // Map.addLayer(display2002["400"], {palette:'000000'}, 'display2002_400');
 
 var feature = ee.Feature(vector2002.first());
+print(feature);
 Map.addLayer(buffer(feature, 3, 0.5), {}, 'ok', false);
 Map.addLayer(buffer(feature, 2, 0.05), {}, 'ok', false);
 Map.addLayer(buffer(feature, 1, 0.05), {}, 'ok', false);
