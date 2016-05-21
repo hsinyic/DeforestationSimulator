@@ -15,11 +15,11 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: 732f8a */ee.Geometry.Polygon(
-        [[[99.19772760054047, 4.558140512601694],
-          [97.66023177130467, 3.520986511689132],
-          [96.01675225748204, 2.3462341873165973],
-          [96.53651288171511, 1.1601718434581987],
-          [100.00223749053566, 3.666080221142124]]]);
+        [[[99.13275040394751, 4.931548724406573],
+          [97.59444874080032, 3.8944905569814856],
+          [95.95052498402595, 2.7195431799934724],
+          [96.47061717610416, 1.5335757653659332],
+          [99.93747897453625, 4.03933109170068]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // ############
 // # Step 1: Load data 
