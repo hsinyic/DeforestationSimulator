@@ -1,9 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = /* color: d63000 */ee.Geometry.Polygon(
-        [[[101.15040733294745, 1.1203858971601772],
-          [101.10093138315119, -0.5384563582110418],
-          [103.1004652702834, -0.48352616599085846],
-          [103.04000181819515, 1.2357145259346811]]]),
+        [[[98.51368338917382, 1.142355355660551],
+          [98.46421813505754, -0.5164872216315781],
+          [100.46374533165681, -0.46155706627218546],
+          [100.40329291208889, 1.2576840190784393]]]),
     G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
     G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
@@ -31,18 +31,6 @@ var vector2002 = G2002.addBands(G2002).reduceToVectors({
   labelProperty: 'zone',
   reducer: ee.Reducer.mean()
 });
-var vector2004 = G2004.addBands(G2004).reduceToVectors({
-  geometry: geometry,
-  crs: G2002.projection(),
-  scale: G2002.projection().nominalScale(),
-  geometryType: 'polygon',
-  eightConnected: false,
-  labelProperty: 'zone',
-  reducer: ee.Reducer.mean()
-});
-var display2004 = ee.Image(0).updateMask(0).paint(vector2004, '000000', 3);
-Map.addLayer(display2004, {palette: '000000'}, 'vectors2004');
-print(vector2004);
 
 var display2002 = ee.Image(0).updateMask(0).paint(vector2002, '000000', 3);
 Map.addLayer(display2002, {palette: '000000'}, 'vectors2002');
@@ -53,7 +41,8 @@ print(vector2002);
 // #https://groups.google.com/forum/#!searchin/google-earth-engine-developers/buffer/google-earth-engine-developers/KFT_e9lgBxE/ZtyZmwvPCQAJ
 // ######### 
 
-var feature = ee.Feature(vector2004.first());
+
+var feature = ee.Feature(vector2002.first());
 
 function buffer(feature, bufferSize, bufferError){
   return feature.buffer(
