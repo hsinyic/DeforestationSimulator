@@ -22,6 +22,9 @@ var yellow=String('#fff832');
 var gr= String('#4cff62');
 var whi=String('#181716');
 
+//############
+//# Sum area 
+//############
 
 Map.addLayer(G2009, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2009");
 Map.addLayer(G2008, {min: 0, max: 5, palette:[db, lb, gr, yellow, red, whi ]},"G2008");
