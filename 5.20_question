@@ -1,10 +1,10 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     geometry = /* color: 000000 */ee.Geometry.Polygon(
-        [[[101.38459128083389, 1.0354046392882985],
-          [101.38732908383565, -0.23620538735118943],
-          [102.81555402772415, -0.22796570634190166],
-          [102.81829983181359, 1.0271662230031433]]]),
+        [[[101.38733786286514, 1.027166227904569],
+          [101.40380857602315, -0.21423290098878023],
+          [102.81006086366165, -0.21697946105268517],
+          [102.80182033962615, 1.0161816414827798]]]),
     G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
     G2003 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2003"),
     G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
@@ -27,8 +27,6 @@ var whi=String('#181716');
 Map.addLayer(G2004, {min: 0, max: 5, palette:[lb, db, gr, yellow, red, whi ]},"G2004");
 Map.addLayer(G2003, {min: 0, max: 5, palette:[lb, db, gr, yellow, red, whi ]},"G2003");
 Map.addLayer(G2002, {min: 0, max: 5, palette:[lb, db, gr, yellow, red, whi ]},"G2002");
-
-
 
 var Stat = G2002.addBands(G2002);
 var r = Stat.reduceRegion({
