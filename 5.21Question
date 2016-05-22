@@ -88,7 +88,7 @@ var Selected_expansion = AFTER.where(cumulativeCost.lte(10), 4);
 // .where(AFTER.gte(3),1 ).where(AFTER.lte(2),0);
 // var Selected_expansion = Selected_expansion.updateMask(Selected_expansion);
 
-Map.addLayer(Selected_expansion, {min: -1e3, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'Selected_expansion');
+Map.addLayer(Selected_expansion, {min: 0, max: 4, palette:[ whi, yellow, gr, lb, db ] }, 'Selected_expansion');
 
 
 
