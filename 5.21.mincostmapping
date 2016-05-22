@@ -60,8 +60,8 @@ var cover = BEFORE.where(expansion_area.updateMask(expansion_area).neq(0), 0);
 var cost =
   cover.eq(0).multiply(1).add(
   cover.eq(3).or(cover.eq(4)).multiply(2).add(
-  cover.eq(2).multiply(3).add(
-  cover.eq(1).multiply(4))));
+  cover.eq(2).multiply(9999).add(
+  cover.eq(1).multiply(9999))));
 Map.addLayer(cover, {min: 0, max: 4, palette:[ whi, db ]},"cover");
 Map.addLayer(cost, {min: 0, max: 4, palette:[ whi, db ]},"cost");
 
@@ -71,27 +71,22 @@ var cumulativeCost = cost.cumulativeCost({
   source: sources,
   maxDistance: 5 * 1000 // 80 kilometers
 });
+var cumulativeThreshold = cumulativeCost.lte(1e5);
 print(cumulativeCost, "cumulativeCost");
-// Display the results
 Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'accumulated cost');
 
-var Selected_expansion = BEFORE.where(cumulativeCost.lte(1e5), 4);
-// .where(AFTER.gte(3),1 ).where(AFTER.lte(2),0);
-// var Selected_expansion = Selected_expansion.updateMask(Selected_expansion);
 
-Map.addLayer(Selected_expansion, {min: 0, max: 4, palette:[ whi, db, gr, yellow, red ] }, 'Selected_expansion');
+// Use cumulative cost to find an intermediate expansion 
+// If 1. cumulativeCost is less than a threshold -- 1e5,
+//    2. it does not overlap with the AFTER layer
+var Selected_expansion = BEFORE.where(cumulativeThreshold, 4);
 
 
-
-// Map.addLayer(geometry, {color: 'FF0000'}, 'source geometry');
+// Visualize BEFORE, INTERMEDIATE, and AFTER 
+Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+Map.addLayer(Selected_expansion, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE');
 Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
-
-var expanded = BEFORE.where(cumulativeCost.neq(0), 4);
-
-// Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
-// Map.addLayer(expanded, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"EXPANDED");
-// Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
 
 
