@@ -11,7 +11,7 @@ var lb= String('#11ffff');
 var red=String('ff510f');
 var yellow=String('#fff832');
 var gr= String('#4cff62');
-var whi=String('#181716');
+var whi=String('#ffffff');
 
 
 //Display the original images BEFORE and AFTER, as well as labeling expansion_area
@@ -23,57 +23,85 @@ Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 
 
 //##########
-//#Change the distance mapping   
+//# Identify the patches to expand from, and make them geometric objects   
+//##########
+var patchid = BEFORE.gte(3).connectedComponents(ee.Kernel.plus(1), 256);
+// Map.addLayer(patchid.randomVisualizer(), {}, 'patches');
+print(patchid); // band1 is label, and band2 is a binary layer 
+
+//Question1: do these different patches have different pixel values? 
+//If so, what are these values? 
+// Map.addLayer(patchid.select("labels"), {min: -9, max: 9, palette:[ db, gr, yellow, red ]},"patchid_view");
+
+
+
+//##########
+//# Minimum cost mapping: Pick one of the patchid 
 //##########
 
-
-
-
-//##########
-//#Adapt minimum cost mapping 
-//#Translate this matrice into 
-//##########
-
-// A hand shaped rectangle 
 
 // Create a source image where the geometry is 1, everything else is 0.
-var sources = ee.Image().toByte().paint(geometry, 1);
+//Use map function to apply the spatial expansion to all patchid patches 
+// var sources = ee.Image().toByte().paint(geometry, 1);
+
+var sources =patchid.select("labels");
 
 // Mask the sources image with itself.
 sources = sources.updateMask(sources);
 
-// The cost data is generated from classes in ESA/GLOBCOVER.
-var cover = BEFORE;
 
-// Expansion Area have cost 1 
+// The cost data is generated from classes in ESA/GLOBCOVER.
+//where expansion 
+var cover = BEFORE.where(expansion_area.updateMask(expansion_area).neq(0), 0);
+print(cover, "BEFORE, 0 for expansion_area");
+Map.addLayer(cover, {min: 0, max: 4, palette:[ whi, db, gr, yellow, red ]},"cost data");
+
+
+// Expansion Area have cost 0
+// Original OP Area have cost 1 
 // NF Area have cost 2 
 // F Are have cost 3.
 var cost =
+  cover.eq(0).multiply(1).add(
   cover.eq(3).or(cover.eq(4))
-      .multiply(1).add(
-  cover.eq(2)
       .multiply(2).add(
+  cover.eq(2)
+      .multiply(9999).add(
   cover.eq(1)
-      .multiply(3)));
+      .multiply(9999))));
 
 // Compute the cumulative cost to traverse the land cover.
 var cumulativeCost = cost.cumulativeCost({
   source: sources,
-  maxDistance: 2 * 1000 // 80 kilometers
+  maxDistance: 5 * 1000 // 80 kilometers
 });
+print(cumulativeCost, "cumulativeCost");
+// Display the results
+Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'accumulated cost');
+
 
 
 //maxDistance should be the smallest distance between Before and After
 //You should do 2003, and then using 2003, do 2002 and 2004, and finally, do 2001 
 
-var Selected_expansion = cumulativeCost.gte(3e4);
-Map.addLayer(Selected_expansion, {color: 'FF0000'}, 'Selected_expansion');
+var Selected_expansion = AFTER.where(cumulativeCost.lte(10), 4);
+// .where(AFTER.gte(3),1 ).where(AFTER.lte(2),0);
+// var Selected_expansion = Selected_expansion.updateMask(Selected_expansion);
+
+Map.addLayer(Selected_expansion, {min: -1e3, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'Selected_expansion');
 
 
 
-print(cumulativeCost, "cumulativeCost");
-// Display the results
-// Map.setCenter(18.71, 4.2, 9);
-Map.addLayer(cumulativeCost, {min: 0, max: 5e4}, 'accumulated cost');
-Map.addLayer(geometry, {color: 'FF0000'}, 'source geometry');
+// Map.addLayer(geometry, {color: 'FF0000'}, 'source geometry');
+Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+
+
+var expanded = BEFORE.where(cumulativeCost.neq(0), 4);
+
+// Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+// Map.addLayer(expanded, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"EXPANDED");
+// Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+
+
+
 
