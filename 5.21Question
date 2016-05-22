@@ -53,7 +53,7 @@ sources = sources.updateMask(sources);
 //where expansion 
 var cover = BEFORE.where(expansion_area.updateMask(expansion_area).neq(0), 0);
 print(cover, "BEFORE, 0 for expansion_area");
-Map.addLayer(cover, {min: 0, max: 4, palette:[ whi, db, gr, yellow, red ]},"cost data");
+Map.addLayer(cover, {min: 0, max: 4, palette:[ whi, db, gr, yellow, red ]},"cover");
 
 
 // Expansion Area have cost 0
@@ -63,7 +63,7 @@ Map.addLayer(cover, {min: 0, max: 4, palette:[ whi, db, gr, yellow, red ]},"cost
 var cost =
   cover.eq(0).multiply(1).add(
   cover.eq(3).or(cover.eq(4))
-      .multiply(2).add(
+      .multiply(1).add(
   cover.eq(2)
       .multiply(9999).add(
   cover.eq(1)
