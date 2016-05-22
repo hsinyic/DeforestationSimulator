@@ -1,6 +1,5 @@
 // Load a landsat image and select three bands.
-var landsat = ee.Image('LANDSAT/LC8_L1T_TOA/LC81230322014135LGN00')
-  .select(['B4', 'B3', 'B2']);
+var landsat = ee.Image('LANDSAT/LC8_L1T_TOA/LC81230322014135LGN00').select(['B4', 'B3', 'B2']);
 // B4, B3, B2 is the region of the 
 
 // Create a geometry representing an export region.
@@ -16,20 +15,14 @@ addToMap(landsat) /*1*/
 addToMap(geometry) /*2*/
 
 
-Map.addLayer(ee.Image('LC8_L1T/LC80440342014077LGN00'),
-    {'min': 6000, 'max': 18000}); /*3*/
+Map.addLayer(ee.Image('LC8_L1T/LC80440342014077LGN00'),{'min': 6000, 'max': 18000}); /*3*/
 Map.setCenter(-122.44, 37.77, 12);
-Map.addLayer(ee.ImageCollection('LANDSAT/LC8_L1T'),
-  {'bands': ['B4', 'B3', 'B2'], 'min': 6000, 'max': 18000}); /*4*/
+Map.addLayer(ee.ImageCollection('LANDSAT/LC8_L1T'),{'bands': ['B4', 'B3', 'B2'], 'min': 6000, 'max': 18000}); /*4*/
 Map.setCenter(-122.44, 37.77, 7);
 // recent value composite having
 // each scenes from a different time in each path. >> discontinuous output 
 
 
-
-
-
 // Since it wasn't explicitly specified, 
 // the CRS of the output will be taken from 
 // the first band of the image to be exported.
-
