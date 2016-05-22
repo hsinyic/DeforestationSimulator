@@ -11,70 +11,55 @@ var gr= String('#4cff62');
 var whi=String('#181716');
 
 
-//Display the original images
+//Display the original images BEFORE and AFTER, as well as labeling expansion_area
 
 Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
-
-
-
-var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); // meet criteria>> 1, rest >> 0 
-Map.addLayer(expansion_area.updateMask(expansion_area),null , "AREA TO EXPAND");
+var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
+Map.addLayer(expansion_area.updateMask(expansion_area));
 Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 
+//##########
+//#Adapt minimum cost mapping 
+//#Translate this matrice into 
+//##########
 
-// //Convert BEFORE image to feature 
-// var vectorBEFORE = BEFORE.addBands(BEFORE).reduceToVectors({
-//   geometry: geometry,
-//   crs: BEFORE.projection(),
-//   scale: BEFORE.projection().nominalScale(),
-//   geometryType: 'polygon',
-//   eightConnected: false,
-//   labelProperty: 'zone',
-//   reducer: ee.Reducer.mean()
-// });
-// var displayBEFORE = ee.Image(0).updateMask(0).paint(vectorBEFORE, '000000', 3);
-// Map.addLayer(displayBEFORE, {palette: '000000'}, 'vectorsBEFORE');
-// print(vectorBEFORE);
-
-// var vectorAFTER = AFTER.addBands(AFTER).reduceToVectors({
-//   geometry: geometry,
-//   crs: AFTER.projection(),
-//   scale: AFTER.projection().nominalScale(),
-//   geometryType: 'polygon',
-//   eightConnected: false,
-//   labelProperty: 'zone',
-//   reducer: ee.Reducer.mean()
-// });
-
-// var displayAFTER = ee.Image(0).updateMask(0).paint(vectorAFTER, '000000', 3);
-// Map.addLayer(displayAFTER, {palette: '000000'}, 'vectorsAFTER');
-// print(vectorAFTER);
+Map.addLayer(expansion_area.randomVisualizer(), {}, 'patches');
 
 
+// A rectangle representing Bangui, Central African Republic.
+var geometry = ee.Geometry.Rectangle([18.5229, 4.3491, 18.5833, 4.4066]);
 
-// // #########
-// // #Buffer for the first feature using script from 
-// // #https://groups.google.com/forum/#!searchin/google-earth-engine-developers/buffer/google-earth-engine-developers/KFT_e9lgBxE/ZtyZmwvPCQAJ
-// // ######### 
+// Create a source image where the geometry is 1, everything else is 0.
+var sources = ee.Image().toByte().paint(geometry, 1);
 
-// var feature = ee.Feature(vectorBEFORE.first());
+// Mask the sources image with itself.
+sources = sources.updateMask(sources);
 
-// function buffer(feature, bufferSize, bufferError){
-//   return feature.buffer(
-//       bufferSize, 
-//       ee.ErrorMargin(bufferError, 'projected'), 
-//       'EPSG:4326') ;
-// }
+// The cost data is generated from classes in ESA/GLOBCOVER.
+var cover = ee.Image('ESA/GLOBCOVER_L4_200901_200912_V2_3').select(0);
 
-// Map.addLayer(buffer(feature, 0.03, 0.015), {}, '1', false);
-// Map.addLayer(buffer(feature, 0.02, 0.01), {}, '2', false);
-// Map.addLayer(buffer(feature, -0.01, 0.005), {}, '3', false);
+// Classes 60, 80, 110, 140 have cost 1.
+// Classes 40, 90, 120, 130, 170 have cost 2.
+// Classes 50, 70, 150, 160 have cost 3.
+var cost =
+  cover.eq(60).or(cover.eq(80)).or(cover.eq(110)).or(cover.eq(140))
+      .multiply(1).add(
+  cover.eq(40).or(cover.eq(90)).or(cover.eq(120)).or(cover.eq(130))
+    .or(cover.eq(170))
+      .multiply(2).add(
+  cover.eq(50).or(cover.eq(70)).or(cover.eq(150)).or(cover.eq(160))
+      .multiply(3)));
 
-// ##########
-// # Buffer for all features with red cells 
-// ##########
+// Compute the cumulative cost to traverse the land cover.
+var cumulativeCost = cost.cumulativeCost({
+  source: sources,
+  maxDistance: 80 * 1000 // 80 kilometers
+});
 
-// Join all features belonging to the red cells into one single feature, name it R
+print(cumulativeCost, "cumulativeCost");
+// Display the results
+Map.setCenter(18.71, 4.2, 9);
+Map.addLayer(cover, {}, 'Globcover');
+Map.addLayer(cumulativeCost, {min: 0, max: 5e4}, 'accumulated cost');
+Map.addLayer(geometry, {color: 'FF0000'}, 'source geometry');
 
-
-// Expand the new feature R 
