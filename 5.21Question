@@ -12,60 +12,68 @@ var whi=String('#181716');
 
 
 //Display the original images
-Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+
 Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
-var step = AFTER.subtract(BEFORE);
-Map.addLayer(step, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"step");
-print(step);
 
-//Convert BEFORE image to feature 
-var vectorBEFORE = BEFORE.addBands(BEFORE).reduceToVectors({
-  geometry: geometry,
-  crs: BEFORE.projection(),
-  scale: BEFORE.projection().nominalScale(),
-  geometryType: 'polygon',
-  eightConnected: false,
-  labelProperty: 'zone',
-  reducer: ee.Reducer.mean()
-});
-var displayBEFORE = ee.Image(0).updateMask(0).paint(vectorBEFORE, '000000', 3);
-Map.addLayer(displayBEFORE, {palette: '000000'}, 'vectorsBEFORE');
-print(vectorBEFORE);
 
-var vectorAFTER = AFTER.addBands(AFTER).reduceToVectors({
-  geometry: geometry,
-  crs: AFTER.projection(),
-  scale: AFTER.projection().nominalScale(),
-  geometryType: 'polygon',
-  eightConnected: false,
-  labelProperty: 'zone',
-  reducer: ee.Reducer.mean()
-});
+var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); // meet criteria>> 1, rest >> 0 
+Map.addLayer(expansion_area.updateMask(expansion_area), {min: 3, max: 3, palette:[gr, whi]},"step");
+print(expansion_area);
 
-var displayAFTER = ee.Image(0).updateMask(0).paint(vectorAFTER, '000000', 3);
-Map.addLayer(displayAFTER, {palette: '000000'}, 'vectorsAFTER');
-print(vectorAFTER);
+
+Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 
 
 
-// #########
-// #Buffer for the first feature using script from 
-// #https://groups.google.com/forum/#!searchin/google-earth-engine-developers/buffer/google-earth-engine-developers/KFT_e9lgBxE/ZtyZmwvPCQAJ
-// ######### 
 
-var feature = ee.Feature(vectorBEFORE.first());
+// //Convert BEFORE image to feature 
+// var vectorBEFORE = BEFORE.addBands(BEFORE).reduceToVectors({
+//   geometry: geometry,
+//   crs: BEFORE.projection(),
+//   scale: BEFORE.projection().nominalScale(),
+//   geometryType: 'polygon',
+//   eightConnected: false,
+//   labelProperty: 'zone',
+//   reducer: ee.Reducer.mean()
+// });
+// var displayBEFORE = ee.Image(0).updateMask(0).paint(vectorBEFORE, '000000', 3);
+// Map.addLayer(displayBEFORE, {palette: '000000'}, 'vectorsBEFORE');
+// print(vectorBEFORE);
 
-function buffer(feature, bufferSize, bufferError){
-  return feature.buffer(
-      bufferSize, 
-      ee.ErrorMargin(bufferError, 'projected'), 
-      'EPSG:4326') ;
-}
+// var vectorAFTER = AFTER.addBands(AFTER).reduceToVectors({
+//   geometry: geometry,
+//   crs: AFTER.projection(),
+//   scale: AFTER.projection().nominalScale(),
+//   geometryType: 'polygon',
+//   eightConnected: false,
+//   labelProperty: 'zone',
+//   reducer: ee.Reducer.mean()
+// });
 
-Map.addLayer(buffer(feature, 0.03, 0.015), {}, '1', false);
-Map.addLayer(buffer(feature, 0.02, 0.01), {}, '2', false);
-Map.addLayer(buffer(feature, -0.01, 0.005), {}, '3', false);
+// var displayAFTER = ee.Image(0).updateMask(0).paint(vectorAFTER, '000000', 3);
+// Map.addLayer(displayAFTER, {palette: '000000'}, 'vectorsAFTER');
+// print(vectorAFTER);
+
+
+
+// // #########
+// // #Buffer for the first feature using script from 
+// // #https://groups.google.com/forum/#!searchin/google-earth-engine-developers/buffer/google-earth-engine-developers/KFT_e9lgBxE/ZtyZmwvPCQAJ
+// // ######### 
+
+// var feature = ee.Feature(vectorBEFORE.first());
+
+// function buffer(feature, bufferSize, bufferError){
+//   return feature.buffer(
+//       bufferSize, 
+//       ee.ErrorMargin(bufferError, 'projected'), 
+//       'EPSG:4326') ;
+// }
+
+// Map.addLayer(buffer(feature, 0.03, 0.015), {}, '1', false);
+// Map.addLayer(buffer(feature, 0.02, 0.01), {}, '2', false);
+// Map.addLayer(buffer(feature, -0.01, 0.005), {}, '3', false);
 
 // ##########
 // # Buffer for all features with red cells 
