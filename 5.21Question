@@ -56,10 +56,10 @@ print(cover, "BEFORE, 0 for expansion_area");
 Map.addLayer(cover, {min: 0, max: 4, palette:[ whi, db, gr, yellow, red ]},"cover");
 
 
-// Expansion Area have cost 0
-// Original OP Area have cost 1 
-// NF Area have cost 2 
-// F Are have cost 3.
+// Expansion Area have cost 1
+// Original OP Area have cost 2 
+// NF Area have cost 9999 (forbidden) 
+// F Are have cost (forbidden)
 var cost =
   cover.eq(0).multiply(1).add(
   cover.eq(3).or(cover.eq(4)).multiply(1).add(
