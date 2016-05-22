@@ -75,11 +75,6 @@ print(cumulativeCost, "cumulativeCost");
 // Display the results
 Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'accumulated cost');
 
-
-
-//maxDistance should be the smallest distance between Before and After
-//You should do 2003, and then using 2003, do 2002 and 2004, and finally, do 2001 
-
 var Selected_expansion = BEFORE.where(cumulativeCost.lte(1e5), 4);
 // .where(AFTER.gte(3),1 ).where(AFTER.lte(2),0);
 // var Selected_expansion = Selected_expansion.updateMask(Selected_expansion);
