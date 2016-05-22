@@ -19,25 +19,12 @@ BEFORE = BEFORE.where(AFTER.eq(3),4);
 //# Mark the area we want to do extrapolation on 
 //##########
 var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
-// Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
-// Map.addLayer(expansion_area.updateMask(expansion_area));
-// Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 
 
 //##########
 //# Identify the patches to expand from   
 //##########
 var patchid = BEFORE.gte(3).connectedComponents(ee.Kernel.plus(1), 256);
-Map.addLayer(patchid.randomVisualizer(), {}, 'patches with different colors');
-// band1 is label, and band2 is a binary layer 
-// print(patchid);
-
-//##########
-//# Question1: do these different patches have different pixel values? 
-//# If so, what are these values? 
-//##########
-//This show the same color, indicating that all patches have the same value 
-Map.addLayer(patchid.select("labels"), {min: -9, max: 9, palette:[ db, gr, yellow, red ]},"patchid_view");
 
 
 //##########
@@ -59,8 +46,6 @@ var cost =
   cover.eq(3).or(cover.eq(4)).multiply(2).add(
   cover.eq(2).multiply(9999).add(
   cover.eq(1).multiply(9999))));
-Map.addLayer(cover, {min: 0, max: 4, palette:[ whi, db ]},"cover");
-Map.addLayer(cost, {min: 0, max: 4, palette:[ whi, db ]},"cost");
 
 
 // Compute the cumulative cost to traverse the land cover.
