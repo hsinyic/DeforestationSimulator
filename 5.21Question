@@ -15,7 +15,6 @@ var whi=String('#ffffff');
 
 
 //Display the original images BEFORE and AFTER, as well as labeling expansion_area
-
 Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
 Map.addLayer(expansion_area.updateMask(expansion_area));
