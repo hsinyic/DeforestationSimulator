@@ -1,0 +1,81 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: 0B4A8B */ee.Geometry.Polygon(
+        [[[95.90169846761432, 0.43922542593767216],
+          [95.85188729226729, -1.219606813589435],
+          [97.8517745461744, -1.1646754795466412],
+          [97.79096463580152, 0.5545529785304827]]]),
+    AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
+    BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var db= String('0000FF');
+var lb= String('#11ffff');
+var red=String('ff510f');
+var yellow=String('#fff832');
+var gr= String('#4cff62');
+var whi=String('#181716');
+
+
+//Display the original images
+Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+
+var step = AFTER.subtract(BEFORE);
+Map.addLayer(step, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"step");
+print(step);
+
+//Convert BEFORE image to feature 
+var vectorBEFORE = BEFORE.addBands(BEFORE).reduceToVectors({
+  geometry: geometry,
+  crs: BEFORE.projection(),
+  scale: BEFORE.projection().nominalScale(),
+  geometryType: 'polygon',
+  eightConnected: false,
+  labelProperty: 'zone',
+  reducer: ee.Reducer.mean()
+});
+var displayBEFORE = ee.Image(0).updateMask(0).paint(vectorBEFORE, '000000', 3);
+Map.addLayer(displayBEFORE, {palette: '000000'}, 'vectorsBEFORE');
+print(vectorBEFORE);
+
+var vectorAFTER = AFTER.addBands(AFTER).reduceToVectors({
+  geometry: geometry,
+  crs: AFTER.projection(),
+  scale: AFTER.projection().nominalScale(),
+  geometryType: 'polygon',
+  eightConnected: false,
+  labelProperty: 'zone',
+  reducer: ee.Reducer.mean()
+});
+
+var displayAFTER = ee.Image(0).updateMask(0).paint(vectorAFTER, '000000', 3);
+Map.addLayer(displayAFTER, {palette: '000000'}, 'vectorsAFTER');
+print(vectorAFTER);
+
+
+
+// #########
+// #Buffer for the first feature using script from 
+// #https://groups.google.com/forum/#!searchin/google-earth-engine-developers/buffer/google-earth-engine-developers/KFT_e9lgBxE/ZtyZmwvPCQAJ
+// ######### 
+
+var feature = ee.Feature(vectorBEFORE.first());
+
+function buffer(feature, bufferSize, bufferError){
+  return feature.buffer(
+      bufferSize, 
+      ee.ErrorMargin(bufferError, 'projected'), 
+      'EPSG:4326') ;
+}
+
+Map.addLayer(buffer(feature, 0.03, 0.015), {}, '1', false);
+Map.addLayer(buffer(feature, 0.02, 0.01), {}, '2', false);
+Map.addLayer(buffer(feature, -0.01, 0.005), {}, '3', false);
+
+// ##########
+// # Buffer for all features with red cells 
+// ##########
+
+// Join all features belonging to the red cells into one single feature, name it R
+
+
+// Expand the new feature R 
