@@ -1,9 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: 0B4A8B */ee.Geometry.Polygon(
-        [[[101.7718505859375, 0.17578097424708533],
-          [101.7333984375, 0.10986321392741416],
-          [101.7938232421875, 0.10437005946680143]]]),
-    AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
+var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
     BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var db= String('0000FF');
@@ -15,7 +11,6 @@ var whi=String('#ffffff');
 
 
 //Display the original images BEFORE and AFTER, and label expansion_area
-
 var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
 // Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 // Map.addLayer(expansion_area.updateMask(expansion_area));
