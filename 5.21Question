@@ -1,9 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: 0B4A8B */ee.Geometry.Polygon(
-        [[[95.90169846761432, 0.43922542593767216],
-          [95.85188729226729, -1.219606813589435],
-          [97.8517745461744, -1.1646754795466412],
-          [97.79096463580152, 0.5545529785304827]]]),
+var geometry = /* color: 0B4A8B */ee.Geometry.MultiPoint(),
     AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
     BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
