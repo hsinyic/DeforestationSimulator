@@ -21,7 +21,7 @@ var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); // meet criteria>> 1, re
 Map.addLayer(expansion_area.updateMask(expansion_area), {min: 3, max: 3, palette:[gr, whi]},"step");
 print(expansion_area);
 
-
+Map.addLayer(expansion_area.updateMask(expansion_area));
 Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 
 
