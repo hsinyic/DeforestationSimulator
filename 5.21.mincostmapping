@@ -68,9 +68,13 @@ var cumulativeCost = cost.cumulativeCost({
   source: sources,
   maxDistance: 8 * 1000 // 5 kilometers
 });
-var cumulativeThreshold = cumulativeCost.lte(1000);
+var cumulativeThreshold = cumulativeCost.lte(5e2);
 var cumulativeThreshold1 = cumulativeCost.lte(5e4);
 var cumulativeThreshold2 = cumulativeCost.lte(5e8);
+var cumulativeThreshold3 = cumulativeCost.lte(5e10);
+var cumulativeThreshold4 = cumulativeCost.lte(5e14);
+
+
 
 
 
@@ -86,12 +90,18 @@ Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, d
 var Selected_expansion = BEFORE.where(cumulativeThreshold, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
 var Selected_expansion1 = BEFORE.where(cumulativeThreshold1, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
 var Selected_expansion2 = BEFORE.where(cumulativeThreshold2, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+var Selected_expansion3 = BEFORE.where(cumulativeThreshold3, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+var Selected_expansion4 = BEFORE.where(cumulativeThreshold4, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+
+
 
 
 
 
 // Visualize BEFORE, INTERMEDIATE, and AFTER 
 Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+Map.addLayer(Selected_expansion4, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE4');
+Map.addLayer(Selected_expansion3, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE3');
 Map.addLayer(Selected_expansion2, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE2');
 Map.addLayer(Selected_expansion1, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE1');
 Map.addLayer(Selected_expansion, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE0');
