@@ -30,14 +30,14 @@ var expansion_area = AFTER.gte(3).and((BEFORE.lte(2)));
 var patchid = BEFORE.gte(3).connectedComponents(ee.Kernel.plus(1), 256);
 Map.addLayer(patchid.randomVisualizer(), {}, 'patches with different colors');
 // band1 is label, and band2 is a binary layer 
-// print(patchid);
+print(patchid);
 
 //##########
 //# Question1: do these different patches have different pixel values? 
 //# If so, what are these values? 
 //##########
 //This show the same color, indicating that all patches have the same value 
-Map.addLayer(patchid.select("labels"), {min: -9, max: 9, palette:[ db, gr, yellow, red ]},"patchid_view");
+// Map.addLayer(patchid.select("labels"), {min: -9, max: 9, palette:[ db, gr, yellow, red ]},"patchid_view");
 
 
 //##########
@@ -46,7 +46,7 @@ Map.addLayer(patchid.select("labels"), {min: -9, max: 9, palette:[ db, gr, yello
 
 // Pick patchid as the source image to expand from
 // Mask the sources image with itself.
-var sources =patchid.select("labels").multiply(1);
+var sources =BEFORE.eq(4).multiply(0.25);
 sources = sources.updateMask(sources);
 
 // The cost data is generated from classification map BEFORE and AFTER.
@@ -66,22 +66,35 @@ Map.addLayer(cost, {min: 0, max: 4, palette:[ whi, db ]},"cost");
 // Compute the cumulative cost to traverse the land cover.
 var cumulativeCost = cost.cumulativeCost({
   source: sources,
-  maxDistance: 5 * 1000 // 5 kilometers
+  maxDistance: 8 * 1000 // 5 kilometers
 });
-var cumulativeThreshold = cumulativeCost.lte(1e5);
+var cumulativeThreshold = cumulativeCost.lte(1000);
+var cumulativeThreshold1 = cumulativeCost.lte(5e4);
+var cumulativeThreshold2 = cumulativeCost.lte(5e8);
+
+
+
 print(cumulativeCost, "cumulativeCost");
 Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'accumulated cost');
+
+
 
 
 // Use cumulative cost to find an intermediate expansion 
 // If 1. cumulativeCost is less than a threshold -- 1e5,
 //    2. it does not overlap with the AFTER layer
-var Selected_expansion = BEFORE.where(cumulativeThreshold, 4);
+var Selected_expansion = BEFORE.where(cumulativeThreshold, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+var Selected_expansion1 = BEFORE.where(cumulativeThreshold1, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+var Selected_expansion2 = BEFORE.where(cumulativeThreshold2, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+
+
 
 
 // Visualize BEFORE, INTERMEDIATE, and AFTER 
 Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
-Map.addLayer(Selected_expansion, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE');
+Map.addLayer(Selected_expansion2, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE2');
+Map.addLayer(Selected_expansion1, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE1');
+Map.addLayer(Selected_expansion, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE0');
 Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
 
