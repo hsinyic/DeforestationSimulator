@@ -113,5 +113,5 @@ Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE")
 
 // Set a threshold and run the thing 
 // Would setting different scales lead to anything? 
-// Use a map function compute the maximum number of pixels with value 4 and 
-// 
+// Use a map function compute the maximum number of pixels with value 4 with different step size
+// Find the step size that gives the optimal error. 
