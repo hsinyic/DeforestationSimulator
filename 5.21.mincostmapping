@@ -68,11 +68,13 @@ var cumulativeCost = cost.cumulativeCost({
   source: sources,
   maxDistance: 30 * 1000 // 5 kilometers
 });
+
+// Set arbitrary thresholds >> regressional analysis to match the number of pixels and distance
 var cumulativeThreshold = cumulativeCost.lte(5e3);
 var cumulativeThreshold1 = cumulativeCost.lte(8e3);
 var cumulativeThreshold2 = cumulativeCost.lte(9e3);
-var cumulativeThreshold3 = cumulativeCost.lte(10e4);
-var cumulativeThreshold4 = cumulativeCost.lte(5e10);
+var cumulativeThreshold3 = cumulativeCost.lte(1e4);
+var cumulativeThreshold4 = cumulativeCost.lte(5e4);
 
 
 
