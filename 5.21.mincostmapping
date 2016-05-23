@@ -111,3 +111,6 @@ Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE")
 
 
 
+// Set a threshold and run the thing 
+// Would setting different scales lead to anything? 
+// Use a map function compute the number of pixels with value 4 
