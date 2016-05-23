@@ -68,13 +68,11 @@ var cumulativeCost = cost.cumulativeCost({
   source: sources,
   maxDistance: 8 * 1000 // 5 kilometers
 });
-var cumulativeThreshold = cumulativeCost.lte(5e2);
-var cumulativeThreshold1 = cumulativeCost.lte(5e4);
-var cumulativeThreshold2 = cumulativeCost.lte(5e8);
-var cumulativeThreshold3 = cumulativeCost.lte(5e10);
+var cumulativeThreshold = cumulativeCost.lte(5e3);
+var cumulativeThreshold1 = cumulativeCost.lte(8e3);
+var cumulativeThreshold2 = cumulativeCost.lte(9e3);
+var cumulativeThreshold3 = cumulativeCost.lte(10e4);
 var cumulativeThreshold4 = cumulativeCost.lte(5e14);
-
-
 
 
 
