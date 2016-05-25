@@ -1,0 +1,29 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var l7r = ee.ImageCollection("LANDSAT/LE7_L1T");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+Map.setCenter(36.5,28.5,10);
+
+var extent = ee.Geometry.Rectangle([35.9, 28.6, 37.1, 29.1]);
+
+var l7rf=l7r.filterBounds(ee.Geometry.Point([36.5,28.6])).filterBounds(ee.Geometry.Point([35.9,28.1])).filterBounds(ee.Geometry.Point([37.1,29.1]));
+var raw=ee.Image(l7rf.first());
+var ndvi=raw.normalizedDifference(['B4','B3']);
+
+
+var hot=ndvi.mask(ndvi.lt(0.2));
+var cold=ndvi.mask(ndvi.gt(0.5));
+
+var foo = ee.Image(1).byte().mask(cold).clip(extent);
+var region = foo.reduceToVectors({
+    scale: 30,
+    geometryInNativeProjection: true,
+    maxPixels: 1e9
+  });
+
+Map.addLayer(hot,{},'hot');
+Map.addLayer(cold,{},'cold');
+Map.centerObject(cold, 13);
+
+print(hot.sample({numPixels:1, scale:30}));
+print(cold.sample({numPixels:1, region:region, scale: 30}));
