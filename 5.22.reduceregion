@@ -76,8 +76,10 @@ var cumulativeCost = cost.cumulativeCost({
 });
 
 // Set arbitrary thresholds >> regressional analysis to match the number of pixels and distance
-var cumulativeThreshold = cumulativeCost.lte(3e3);
-var cumulativeThreshold1 = cumulativeCost.lte(6e3);
+var cumulativeThreshold = cumulativeCost.where(cumulativeCost.gte(3e3),0);
+var cumulativeThreshold1 = cumulativeCost.where(cumulativeCost.gte(6e3),0);
+var cumulativeThreshold1 = cumulativeCost.where(cumulativeCost.gte(27309.49486250461),0);
+
 var cumulativeThreshold2 = cumulativeCost.lte(9e3);
 var cumulativeThreshold3 = cumulativeCost.lte(12e3);
 var cumulativeThreshold4 = cumulativeCost.lte(15e3);
@@ -92,6 +94,10 @@ var cumulativeThreshold7 = cumulativeCost.lte(24e3);
 
 print(cumulativeCost, "cumulativeCost");
 Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'accumulated cost');
+Map.addLayer(cumulativeThreshold, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'cumulativeThreshold');
+Map.addLayer(cumulativeThreshold1, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'cumulativeThreshold1');
+// Map.addLayer(cumulativeThreshold7, {min: 0, max: 7, palette:[ whi, yellow, gr, lb, db ] }, 'accumulated cost');
+
 
 
 
