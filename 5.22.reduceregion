@@ -1,6 +1,12 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
-    BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE");
+    BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
+    geometry = /* color: d63000 */ee.Geometry.LinearRing(
+        [[101.4532051585378, 0.9996949795233879],
+         [101.45321029142656, -0.15931564528632883],
+         [102.77706087832598, -0.1648102448522191],
+         [102.77707057747705, 0.9942011362567624],
+         [101.4532051585378, 0.9996949795233879]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var db= String('0000FF');
 var lb= String('#11ffff');
@@ -111,29 +117,62 @@ var Selected_expansion7 = BEFORE.where(cumulativeThreshold7, 4).where(AFTER.eq(1
 
 
 // Visualize BEFORE, INTERMEDIATE, and AFTER 
-// Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
-// Map.addLayer(Selected_expansion7, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE7');
-// Map.addLayer(Selected_expansion6, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE6');
-// Map.addLayer(Selected_expansion5, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE5');
-// Map.addLayer(Selected_expansion4, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE4');
-// Map.addLayer(Selected_expansion3, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE3');
-// Map.addLayer(Selected_expansion2, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE2');
-// Map.addLayer(Selected_expansion1, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE1');
-// Map.addLayer(Selected_expansion, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE0');
-// Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+Map.addLayer(Selected_expansion7, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE7');
+Map.addLayer(Selected_expansion6, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE6');
+Map.addLayer(Selected_expansion5, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE5');
+Map.addLayer(Selected_expansion4, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE4');
+Map.addLayer(Selected_expansion3, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE3');
+Map.addLayer(Selected_expansion2, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE2');
+Map.addLayer(Selected_expansion1, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE1');
+Map.addLayer(Selected_expansion, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE0');
+Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+
+
+
+// Reduce the region. The region parameter is the Feature geometry.
+var Dictionary60 = cumulativeCost.reduceRegion({
+  reducer: ee.Reducer.percentile([60]),
+  geometry: geometry,
+  // scale: 30,
+});
+
+// The result is a Dictionary.  Print it.
+print(Dictionary60);
+
+
+var top_60 = cumulativeCost.lte(25472.116688324317);
+Map.addLayer(top_60.updateMask(top_60), {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'accumulated cost 60');
+
+
+var top_60_Selected_expansion = BEFORE.where(top_60, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+Map.addLayer(top_60_Selected_expansion, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'top_60_Selected_expansion');
+Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 
 
 
 
+// var image= cumulativeCost;
+// // Return the percentile values for each band in an image.
+// var get_percentile = function (image, percentile, crs, scale, geometry) {
+//   return image.reduceRegion(
+//     ee.Reducer.percentile(percentile), // reducer
+//     geometry, // geometry (Defaults to the footprint of the image's first band)
+//     scale, // scale (Set automatically because bestEffort == true)
+//     crs,
+//     null, // crsTransform,
+//     true  // bestEffort
+//   ).getInfo();
+// };
 
-// Set a threshold and run the thing 
-// Would setting different scales lead to anything? 
-// Use a map function compute the maximum number of pixels with value 4 with different step size
-// Find the step size that gives the optimal error. 
+// // Get the CRS string for the image.
+// var crs = image.getInfo().bands[0].crs;
+// var scale = 30;
 
-var percent = ee.Reducer.percentile( [0, 50, 100]);
+// // Get the percentile values for each band.
+// var p05 = get_percentile(image, [5], crs, scale, geometry);
+// var p95 = get_percentile(image, [95], crs, scale, geometry);
 
-cumulativeCost.reduceRegion(percent);
-Map.addLayer(cumulativeCost, {min: 1, max: 5e5, palette:[ db, gr, yellow, red ] }, 'reduce region');
-
+// // Print out the image ststistics.
+// print('5%', p05, '95%', p95);
 
