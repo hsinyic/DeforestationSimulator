@@ -1,0 +1,60 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var ndvis = ee.ImageCollection("LANDSAT/LC8_L1T_8DAY_NDVI"),
+    raw = ee.ImageCollection("LANDSAT/LC8_L1T_8DAY_RAW"),
+    evi = ee.ImageCollection("LANDSAT/LC8_L1T_8DAY_EVI"),
+    toa = ee.ImageCollection("LANDSAT/LC8_L1T_8DAY_TOA"),
+    l7usgs = ee.ImageCollection("LANDSAT/LE7_L1T_TOA"),
+    l8usgs = ee.ImageCollection("LANDSAT/LC8_L1T_TOA"),
+    jBlock = /* color: 999900 */ee.Geometry.Point([-122.601141972222, 38.6073177555556]),
+    iBlock = /* color: 009999 */ee.Geometry.Point([-122.60904944, 38.6081140733333]),
+    gBlock = /* color: ff00ff */ee.Geometry.Point([-122.60820055, 38.60730445]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+var cloudiness = 20; 
+var buffer = 25;
+
+var sensors = ee.FeatureCollection([
+  ee.Feature(jBlock, {label: 'CMW J Block'}),
+  ee.Feature(iBlock, {label: 'CMW I Block'}),
+  ee.Feature(gBlock, {label: 'CMW G Block'})
+]);
+
+function printChart(data, band, title){
+  var chart = Chart.image.seriesByRegion(data, sensors, ee.Reducer.mean(), band, 30, "system:time_start", "label");
+  print(chart.setOptions({title: title}));
+}
+
+function processSatellite(data, name) {
+  var L7 = name === "L7";
+  var cloud = data.map(function(image) {
+    var cloud = ee.Algorithms.Landsat.simpleCloudScore(image.set('SENSOR_ID', L7 ? 'ETM+' : "OLI_TIRS"));
+    return cloud;
+  });
+
+  printChart(cloud, "cloud", "Cloud Score - USGS Landsat " + name + " TOA Reflectance");
+  
+  var masked = cloud.map(function(image) {
+    // Set each pixel's datamask band with a 1 if it's not cloudy and each pixel with a 0 if it is
+    var quality = image.select('cloud').lt(cloudiness);
+    return image.mask(quality);
+  });
+  print(masked);
+  
+  var ndvi = masked.map(function(image) {
+    var bands = L7 ? ["B4", "B3"] : ["B5", "B4"];
+    return image.addBands(image.normalizedDifference(bands), ["nd"]);
+  });
+  printChart(ndvi, "nd", "Cloud Masked @ " + cloudiness + " - USGS Landsat " + name + " TOA Reflectance");  
+}
+
+var l72014 = l7usgs.filterDate('2014-01-01', '2014-12-31').filterBounds(sensors);
+processSatellite(l72014, "L7");
+
+var l82014 = l8usgs.filterDate('2014-01-01', '2014-12-31').filterBounds(sensors);
+processSatellite(l82014, "L8");
+
+
+var minPlus = collection.select('cloud').reduce('min').add(10);
+collection = collection.map(function(img) {
+    return img.updateMask(img.select('cloud').gt(minPlus));
+});
