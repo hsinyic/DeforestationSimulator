@@ -111,16 +111,16 @@ var Selected_expansion7 = BEFORE.where(cumulativeThreshold7, 4).where(AFTER.eq(1
 
 
 // Visualize BEFORE, INTERMEDIATE, and AFTER 
-Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
-Map.addLayer(Selected_expansion7, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE7');
-Map.addLayer(Selected_expansion6, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE6');
-Map.addLayer(Selected_expansion5, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE5');
-Map.addLayer(Selected_expansion4, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE4');
-Map.addLayer(Selected_expansion3, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE3');
-Map.addLayer(Selected_expansion2, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE2');
-Map.addLayer(Selected_expansion1, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE1');
-Map.addLayer(Selected_expansion, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE0');
-Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+// Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+// Map.addLayer(Selected_expansion7, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE7');
+// Map.addLayer(Selected_expansion6, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE6');
+// Map.addLayer(Selected_expansion5, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE5');
+// Map.addLayer(Selected_expansion4, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE4');
+// Map.addLayer(Selected_expansion3, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE3');
+// Map.addLayer(Selected_expansion2, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE2');
+// Map.addLayer(Selected_expansion1, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE1');
+// Map.addLayer(Selected_expansion, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE0');
+// Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
 
 
@@ -130,3 +130,10 @@ Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE")
 // Would setting different scales lead to anything? 
 // Use a map function compute the maximum number of pixels with value 4 with different step size
 // Find the step size that gives the optimal error. 
+
+var percent = ee.Reducer.percentile( [0, 50, 100]);
+
+cumulativeCost.reduceRegion(percent);
+Map.addLayer(cumulativeCost, {min: 1, max: 5e5, palette:[ db, gr, yellow, red ] }, 'reduce region');
+
+
