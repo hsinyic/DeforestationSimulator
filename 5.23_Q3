@@ -47,7 +47,7 @@ Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 
 
 
 
-
+// pixel count by class over the entire image 
 var pixelcount = function(image){
   var Stat = image.addBands(image);
   var r = Stat.reduceRegion({
@@ -57,5 +57,5 @@ var pixelcount = function(image){
   });
   return r; 
 };
-print(pixelcount(costmap));
+print("pixel values", pixelcount(costmap));
 
