@@ -30,9 +30,15 @@ var pixelcount = function(image){
   });
   return r; 
 };
-print("pixel values", pixelcount(BEFORE));
 
-var number = ee.Number(pixelcount(BEFORE).get('groups')); 
-print("get the count for group 0",number.get('0'));
-print("get the count for group 1",number.get('1'));
+var N = pixelcount(BEFORE);
+print("pixel counts", N);
+
+var trial1 = ee.Number(N.get('groups')); 
+print("trial1", trial2);
+
+var trial2 =N.toArray();
+print("trial2", trial2);
+
+
 
