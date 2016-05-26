@@ -42,7 +42,10 @@ var trial1 = ee.Number(N.get('groups'));
 print("trial1", trial1);
 
 var trial2 =N.toArray();
-trial2 = ee.Array(trial2);// cast trial2 as a dictionary 
+trial2 = ee.Array(trial2);// cast trial2 as an array 
 print("trial2", trial2);
+
+
+print("trial3", N.values());
 
 
