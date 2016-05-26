@@ -15,35 +15,8 @@ var yellow=String('#fff832');
 var gr= String('#4cff62');
 var whi=String('#ffffff');
 var black = String('#1a1a1a');
-//##########
-//# Data Preprocessing (ignore this part) 
-//##########
-BEFORE = BEFORE.where(BEFORE.eq(3),4);
+
 Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
-
-//##########
-//# Minimum cost mapping: 
-//##########
-
-// Mask the sources image with itself.
-var sources =BEFORE.eq(4);
-sources = sources.updateMask(sources);
-Map.addLayer(sources, {min: 0, max: 1, palette:[ whi, black ]},"sources");
-// Unifrom cost of 1 in every pixel
-var cost = BEFORE.multiply(0).add(1); 
-Map.addLayer(cost, {min: 0, max: 1, palette:[ whi, black ]},"cost");
-// Compute the cumulative cost to traverse the land cover.
-var cumulativeCost = cost.cumulativeCost({
-  source: sources,
-  maxDistance: 50 * 1000 // 5 kilometers
-});
-Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'acumulativeCost');
-
-
-//Mask out certain areas  
-var costmap = cumulativeCost.where(cumulativeCost.neq(0),1);
-costmap = costmap.updateMask(costmap);
-Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'acumulativeCost2');
 
 
 
@@ -57,16 +30,9 @@ var pixelcount = function(image){
   });
   return r; 
 };
-print("pixel values", pixelcount(costmap));
+print("pixel values", pixelcount(BEFORE));
 
+var number = ee.Number(pixelcount(BEFORE).get('groups')); 
+print("get the count for group 0",number.get('0'));
+print("get the count for group 1",number.get('1'));
 
-
-
-// var test= pixelcount(expansion_area);
-// print("test",test );
-// // print(test.keys());
-// var test2 = ee.Number(pixelcount(expansion_area).get('groups')); 
-// print("test2",test2);
-// print(test2.get(1));
-// print(pixelcount(expansion_area).values() );
-// print(pixelcount(E30));
