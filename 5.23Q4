@@ -18,8 +18,6 @@ var black = String('#1a1a1a');
 
 Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
-
-
 // pixel count by class over the entire image 
 var pixelcount = function(image){
   var Stat = image.addBands(image);
@@ -34,11 +32,17 @@ var pixelcount = function(image){
 var N = pixelcount(BEFORE);
 print("pixel counts", N);
 
+//Find a way to get the numbers in the list 
+
+//get the keys 
+print("get keys", N.keys());
+
+// cast N.get('groups') as a list 
 var trial1 = ee.Number(N.get('groups')); 
-print("trial1", trial2);
+print("trial1", trial1);
 
 var trial2 =N.toArray();
+trial2 = ee.Array(trial2);// cast trial2 as a dictionary 
 print("trial2", trial2);
-
 
 
