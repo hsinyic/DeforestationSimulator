@@ -1,20 +1,51 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
     BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
-    geometry = /* color: bf04c2 */ee.Geometry.LinearRing(
-        [[101.3983154296875, 1.016182073033441],
-         [101.3983154296875, -0.21972602392079613],
-         [102.821044921875, -0.2252191465717146],
-         [102.81005859375, 1.0106897682409128],
-         [101.3983154296875, 1.016182073033441]]);
+    geometry = /* color: d63000 */ee.Geometry({
+      "type": "GeometryCollection",
+      "geometries": [
+        {
+          "type": "LinearRing",
+          "coordinates": [
+            [
+              101.3983154296875,
+              1.016182073033441
+            ],
+            [
+              101.3983154296875,
+              -0.21972602392079613
+            ],
+            [
+              102.821044921875,
+              -0.2252191465717146
+            ],
+            [
+              102.81005859375,
+              1.0106897682409128
+            ],
+            [
+              101.3983154296875,
+              1.016182073033441
+            ]
+          ]
+        },
+        {
+          "type": "Point",
+          "coordinates": [
+            102.0849609375,
+            0.39550467153201946
+          ]
+        }
+      ]
+    });
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // list map it.
 // list should be 10, 20, 30, 40, 50, 60 and so forth 
 // more syntax to deal with 
 // 1. Do you refine the algorithm, or just crank one out right now? 
+centerMap(102.0849609375, 0.39550467153201946, 8);
 
-
- db= String('0000FF');
+var db= String('0000FF');
 var lb= String('#11ffff');
 var red=String('ff510f');
 var yellow=String('#fff832');
