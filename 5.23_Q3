@@ -40,6 +40,14 @@ var cumulativeCost = cost.cumulativeCost({
 Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'acumulativeCost');
 
 
+//Mask out certain areas  
+var costmap = cumulativeCost.where(BEFORE.eq(4), 0).where(AFTER.neq(4),0);
+costmap = costmap.updateMask(costmap);
+Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'acumulativeCost2');
+
+
+
+
 var pixelcount = function(image){
   var Stat = image.addBands(image);
   var r = Stat.reduceRegion({
@@ -49,5 +57,5 @@ var pixelcount = function(image){
   });
   return r; 
 };
-print(pixelcount(cumulativeCost));
+print(pixelcount(costmap));
 
