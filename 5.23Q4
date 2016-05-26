@@ -1,6 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
-    BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
+var BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
     geometry = /* color: 98ff00 */ee.Geometry.LinearRing(
         [[101.3983154296875, 1.016182073033441],
          [101.3983154296875, -0.21972602392079613],
