@@ -1,12 +1,12 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
     BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
-    geometry = /* color: 98ff00 */ee.Geometry.LineString(
-        [[101.3818379375, 1.0106897682409128],
-         [101.40381059375, -0.2252191465717146],
-         [102.7825947734375, -0.19775351362548127],
-         [102.7935811015625, 1.016182073033441],
-         [101.3873311015625, 1.016182073033441]]);
+    geometry = /* color: 0B4A8B */ee.Geometry.LinearRing(
+        [[101.3983154296875, 1.016182073033441],
+         [101.3983154296875, -0.21972602392079613],
+         [102.821044921875, -0.2252191465717146],
+         [102.81005859375, 1.0106897682409128],
+         [101.3983154296875, 1.016182073033441]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var db= String('0000FF');
 var lb= String('#11ffff');
@@ -51,21 +51,27 @@ Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 
 
 //Calculate the percentile threshold 
 var percentile_threshold = function(p){
-  var Dictionary60 = costmap.reduceRegion({
+  var Dictionary = costmap.reduceRegion({
     reducer: ee.Reducer.percentile([p]),
-    geometry: geometry});  
-  return ee.Number(Dictionary60.get('cumulative_cost'))};
+    geometry: geometry}); 
+  // print(Dictionary.keys());
+  return ee.Number(Dictionary.get('cumulative_cost'))};
 var N30 = percentile_threshold(30);
 var N60 = percentile_threshold(60);
 var N90 = percentile_threshold(90);
 
 var E30 = costmap.where(cumulativeCost.gte(N30),0);
+E30 = E30.where(E30.neq(0),1);
 var E60 = costmap.where(cumulativeCost.gte(N60),0);
+E60 = E60.where(E60.neq(0),1);
 var E90 = costmap.where(cumulativeCost.gte(N90),0);
+E90 = E90.where(E90.neq(0),1);
+
 Map.addLayer(E30, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'E30');
 Map.addLayer(E60, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'E60');
 Map.addLayer(E90, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'E90');
 
+// Test
 // Visualize BEFORE, INTERMEDIATE, and AFTER 
 var T30 = BEFORE.where(E30.neq(0), 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
 var T60 = BEFORE.where(E60.neq(0), 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
@@ -77,8 +83,19 @@ Map.addLayer(T30, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDI
 Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
 
-//Verify Statistics 
+//Verify Statistics, turn all nonzero pixels into a value 
+var pixelcount = function(image){
+  var Stat = image.addBands(image);
+  var r = Stat.reduceRegion({
+    reducer: ee.Reducer.count().group(1),
+    scale: 30,
+    geometry: geometry
+  });
+  return r; 
+};
 
 
-
+print(pixelcount(E30));
+print(pixelcount(E60));
+print(pixelcount(E90));
 
