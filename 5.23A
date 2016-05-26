@@ -1,7 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
     BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
-    geometry = /* color: 0B4A8B */ee.Geometry.LinearRing(
+    geometry = /* color: ffc82d */ee.Geometry.LinearRing(
         [[101.3983154296875, 1.016182073033441],
          [101.3983154296875, -0.21972602392079613],
          [102.821044921875, -0.2252191465717146],
@@ -20,7 +20,7 @@ var whi=String('#ffffff');
 //# Mark the area we want to do extrapolation on 
 //##########
 AFTER = AFTER.where(AFTER.eq(3),4);
-BEFORE = BEFORE.where(AFTER.eq(3),4);
+BEFORE = BEFORE.where(BEFORE.eq(3),4);
 var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
 // Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 Map.addLayer(expansion_area, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"expansion_area");
