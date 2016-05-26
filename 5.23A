@@ -51,7 +51,7 @@ Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 
 
 //Calculate the percentile threshold 
 var percentile_threshold = function(p){
-  var Dictionary60 = cumulativeCost_mask.reduceRegion({
+  var Dictionary60 = costmap.reduceRegion({
     reducer: ee.Reducer.percentile([p]),
     geometry: geometry});  
   return ee.Number(Dictionary60.get('cumulative_cost'))};
@@ -59,17 +59,17 @@ var N30 = percentile_threshold(30);
 var N60 = percentile_threshold(60);
 var N90 = percentile_threshold(90);
 
-var E30 = cumulativeCost_mask.where(cumulativeCost.gte(N30),0);
-var E60 = cumulativeCost_mask.where(cumulativeCost.gte(N60),0);
-var E90 = cumulativeCost_mask.where(cumulativeCost.gte(N90),0);
+var E30 = costmap.where(cumulativeCost.gte(N30),0);
+var E60 = costmap.where(cumulativeCost.gte(N60),0);
+var E90 = costmap.where(cumulativeCost.gte(N90),0);
 Map.addLayer(E30, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'E30');
 Map.addLayer(E60, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'E60');
 Map.addLayer(E90, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'E90');
 
 // Visualize BEFORE, INTERMEDIATE, and AFTER 
-var T30 = BEFORE.where(T30, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
-var T60 = BEFORE.where(T60, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
-var T90 = BEFORE.where(T90, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+var T30 = BEFORE.where(E30.neq(0), 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+var T60 = BEFORE.where(E60.neq(0), 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+var T90 = BEFORE.where(E90.neq(0), 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
 Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 Map.addLayer(T90, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE90');
 Map.addLayer(T60, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE60');
@@ -77,34 +77,8 @@ Map.addLayer(T30, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDI
 Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
 
+//Verify Statistics 
 
 
 
 
-
-// var image= cumulativeCost;
-// // Return the percentile values for each band in an image.
-var get_percentile = function (image, percentile, crs, scale, geometry) {
-  return image.reduceRegion(
-    ee.Reducer.percentile(percentile), // reducer
-    geometry, // geometry (Defaults to the footprint of the image's first band)
-    null, // scale (Set automatically because bestEffort == true)
-    null,
-    null, // crsTransform,
-    true  // bestEffort
-  ).getInfo();
-};
-
-// // Get the CRS string for the image.
-var crs = cumulativeCost_mask.getInfo().bands[0].crs;
-var scale = 30;
-
-// // Get the percentile values for each band.
-var p05 = get_percentile(cumulativeCost_mask, [20], crs, scale, geometry);
-var p95 = get_percentile(cumulativeCost_mask, [60], crs, scale, geometry);
-
-// // Print out the image ststistics.
-print('20%', p05, '60%', p95);
-// print(p05.getInfo());
-// 1536.38788112959
-// 9031.93226477216
