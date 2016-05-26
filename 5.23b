@@ -112,7 +112,7 @@ E90 = E90.where(E90.neq(0),1);
 
 // print(pixelcount(E30));
 // print(pixelcount(E60));
-print(pixelcount(E90));
+// print(pixelcount(E90));
 print(pixelcount(costmap));
 print(pixelcount(cumulativeCost));
 
