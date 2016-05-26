@@ -22,16 +22,16 @@ var whi=String('#ffffff');
 AFTER = AFTER.where(AFTER.eq(3),4);
 BEFORE = BEFORE.where(AFTER.eq(3),4);
 var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
-// Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 Map.addLayer(expansion_area, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"expansion_area");
-// Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 
 //##########
 //# Minimum cost mapping: 
 //##########
 
 // Mask the sources image with itself.
-var sources =BEFORE.eq(4).multiply(0.25);
+var sources =BEFORE.eq(4);
 sources = sources.updateMask(sources);
 //Unifrom cost data
 var cost = BEFORE.multiply(0).add(1); 
@@ -41,7 +41,7 @@ var cumulativeCost = cost.cumulativeCost({
   source: sources,
   maxDistance: 50 * 1000 // 5 kilometers
 });
-
+Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'acumulativeCost');
 
 //Mask out BEFORE area AND Non-expanding area 
 var costmap = cumulativeCost.where(BEFORE.eq(4), 0).where(AFTER.neq(4),0);
