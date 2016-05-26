@@ -17,58 +17,25 @@ var whi=String('#ffffff');
 
 //##########
 //# Data Preprocessing 
+//# Mark the area we want to do extrapolation on 
 //##########
 AFTER = AFTER.where(AFTER.eq(3),4);
 BEFORE = BEFORE.where(AFTER.eq(3),4);
-
-//##########
-//# Mark the area we want to do extrapolation on 
-//##########
 var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
 // Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
-// Map.addLayer(expansion_area.updateMask(expansion_area));
+Map.addLayer(expansion_area, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"expansion_area");
 // Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
-
-
-//##########
-//# Identify the patches to expand from   
-//##########
-var patchid = BEFORE.gte(3).connectedComponents(ee.Kernel.plus(1), 256);
-Map.addLayer(patchid.randomVisualizer(), {}, 'patches with different colors');
-// band1 is label, and band2 is a binary layer 
-print(patchid);
-
-//##########
-//# Question1: do these different patches have different pixel values? 
-//# If so, what are these values? 
-//##########
-//This show the same color, indicating that all patches have the same value 
-// Map.addLayer(patchid.select("labels"), {min: -9, max: 9, palette:[ db, gr, yellow, red ]},"patchid_view");
-
 
 //##########
 //# Minimum cost mapping: 
 //##########
 
-// Pick patchid as the source image to expand from
 // Mask the sources image with itself.
 var sources =BEFORE.eq(4).multiply(0.25);
 sources = sources.updateMask(sources);
-
-// The cost data is generated from classification map BEFORE and AFTER.
-// add another class in BEFORE image: expansion_area is assigned a value 0 
-var cover = BEFORE.where(expansion_area.updateMask(expansion_area).neq(0), 0);
-
-// Expansion Area have cost 1, Original RED Area have cost 2, GREEN AND BLUE Area have cost 9999 (forbiddenly high) 
-var cost =
-  cover.eq(0).multiply(1).add(
-  cover.eq(3).or(cover.eq(4)).multiply(1).add(
-  cover.eq(2).multiply(1).add(
-  cover.eq(1).multiply(1))));
-Map.addLayer(cover, {min: 0, max: 4, palette:[ whi, db ]},"cover");
-Map.addLayer(cost, {min: 0, max: 4, palette:[ whi, db ]},"cost");
-
-
+//Unifrom cost data
+var cost = BEFORE.multiply(0).add(1); 
+Map.addLayer(cost, {min: 0, max: 4, palette:[ gr, whi, db,red ]},"cost");
 // Compute the cumulative cost to traverse the land cover.
 var cumulativeCost = cost.cumulativeCost({
   source: sources,
@@ -80,24 +47,19 @@ var cumulativeCost = cost.cumulativeCost({
 var cumulativeCost_mask = cumulativeCost.where(BEFORE.eq(4), 0).where(AFTER.neq(4),0);
 cumulativeCost_mask = cumulativeCost_mask.updateMask(cumulativeCost_mask);
 
+//Calculate the percentile threshold 
+var percentile_threshold = function(p){
+  var Dictionary60 = cumulativeCost_mask.reduceRegion({
+    reducer: ee.Reducer.percentile([p]),
+    geometry: geometry});  
+  return ee.Number(Dictionary60.get('cumulative_cost'))};
+var N30 = percentile_threshold(30);
+var N60 = percentile_threshold(60);
+var N90 = percentile_threshold(90);
 
-//Calculate the percentile 
-
-// Reduce the region. The region parameter is the Feature geometry.
-var Dictionary60 = cumulativeCost_mask.reduceRegion({
-  reducer: ee.Reducer.percentile([60]),
-  geometry: geometry,
-  // scale: 30,
-});
-
-// The result is a Dictionary.  Print it.
-print(Dictionary60);
-
-
-
-// Set arbitrary thresholds >> regressional analysis to match the number of pixels and distance
-var cumulativeThreshold = cumulativeCost.where(cumulativeCost.gte(4e3),0).where(BEFORE.eq(4), 0).where(AFTER.neq(4),0);
-cumulativeThreshold = cumulativeThreshold.updateMask(cumulativeThreshold);
+var E30 = cumulativeCost_mask.where(cumulativeCost.gte(N30),0);
+var E60 = cumulativeCost_mask.where(cumulativeCost.gte(N60),0);
+var E90 = cumulativeCost_mask.where(cumulativeCost.gte(N90),0);
 
 // var cumulativeThreshold1 = cumulativeCost.where(cumulativeCost.gte(6e3),0).where(BEFORE.eq(4), 0).where(AFTER.neq(4),0);
 var cumulativeThreshold1 = cumulativeCost.where(cumulativeCost.gte(27309.49486250461),0).where(BEFORE.eq(4), 0).where(AFTER.neq(4),0);
@@ -204,6 +166,6 @@ var p95 = get_percentile(cumulativeCost_mask, [60], crs, scale, geometry);
 
 // // Print out the image ststistics.
 print('20%', p05, '60%', p95);
-print(p05.getInfo());
+// print(p05.getInfo());
 // 1536.38788112959
 // 9031.93226477216
