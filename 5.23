@@ -84,7 +84,7 @@ cumulativeCost_mask = cumulativeCost_mask.updateMask(cumulativeCost_mask);
 //Calculate the percentile 
 
 // Reduce the region. The region parameter is the Feature geometry.
-var Dictionary60 = cumulativeCost.reduceRegion({
+var Dictionary60 = cumulativeCost_mask.reduceRegion({
   reducer: ee.Reducer.percentile([60]),
   geometry: geometry,
   // scale: 30,
@@ -128,7 +128,7 @@ Map.addLayer(cumulativeThreshold1, {min: 0, max: 5e4, palette:[ whi, yellow, gr,
 // Use cumulative cost to find an intermediate expansion 
 // If 1. cumulativeCost is less than a threshold -- 1e5,
 //    2. it does not overlap with the AFTER layer
-var Selected_expansion = BEFORE.where(cumulativeThreshold, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
+var Selected_expansion = BEFORE.where(cumulativeThreshold.neq(0), 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
 var Selected_expansion1 = BEFORE.where(cumulativeThreshold1, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
 var Selected_expansion2 = BEFORE.where(cumulativeThreshold2, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
 var Selected_expansion3 = BEFORE.where(cumulativeThreshold3, 4).where(AFTER.eq(1),1).where(AFTER.eq(2),2);
@@ -187,21 +187,23 @@ var get_percentile = function (image, percentile, crs, scale, geometry) {
   return image.reduceRegion(
     ee.Reducer.percentile(percentile), // reducer
     geometry, // geometry (Defaults to the footprint of the image's first band)
-    scale, // scale (Set automatically because bestEffort == true)
-    crs,
+    null, // scale (Set automatically because bestEffort == true)
+    null,
     null, // crsTransform,
     true  // bestEffort
   ).getInfo();
 };
 
 // // Get the CRS string for the image.
-// var crs = image.getInfo().bands[0].crs;
-// var scale = 30;
+var crs = cumulativeCost_mask.getInfo().bands[0].crs;
+var scale = 30;
 
 // // Get the percentile values for each band.
-// var p05 = get_percentile(image, [5], crs, scale, geometry);
-// var p95 = get_percentile(image, [95], crs, scale, geometry);
+var p05 = get_percentile(cumulativeCost_mask, [20], crs, scale, geometry);
+var p95 = get_percentile(cumulativeCost_mask, [60], crs, scale, geometry);
 
 // // Print out the image ststistics.
-// print('5%', p05, '95%', p95);
-
+print('20%', p05, '60%', p95);
+print(p05.getInfo());
+// 1536.38788112959
+// 9031.93226477216
