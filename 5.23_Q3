@@ -1,7 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
     BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
-    geometry = /* color: 0B4A8B */ee.Geometry.LinearRing(
+    geometry = /* color: 00ff00 */ee.Geometry.LinearRing(
         [[101.3983154296875, 1.016182073033441],
          [101.3983154296875, -0.21972602392079613],
          [102.821044921875, -0.2252191465717146],
@@ -39,4 +39,15 @@ var cumulativeCost = cost.cumulativeCost({
 });
 Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'acumulativeCost');
 
+
+var pixelcount = function(image){
+  var Stat = image.addBands(image);
+  var r = Stat.reduceRegion({
+    reducer: ee.Reducer.count().group(1),
+    scale: 30,
+    geometry: geometry
+  });
+  return r; 
+};
+print(pixelcount(cumulativeCost));
 
