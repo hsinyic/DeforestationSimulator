@@ -1,14 +1,20 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
     BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
-    geometry = /* color: ffc82d */ee.Geometry.LinearRing(
+    geometry = /* color: bf04c2 */ee.Geometry.LinearRing(
         [[101.3983154296875, 1.016182073033441],
          [101.3983154296875, -0.21972602392079613],
          [102.821044921875, -0.2252191465717146],
          [102.81005859375, 1.0106897682409128],
          [101.3983154296875, 1.016182073033441]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var db= String('0000FF');
+// list map it.
+// list should be 10, 20, 30, 40, 50, 60 and so forth 
+// more syntax to deal with 
+// 1. Do you refine the algorithm, or just crank one out right now? 
+
+
+ db= String('0000FF');
 var lb= String('#11ffff');
 var red=String('ff510f');
 var yellow=String('#fff832');
@@ -56,14 +62,14 @@ var percentile_threshold = function(p){
     geometry: geometry}); 
   // print(Dictionary.keys());
   return ee.Number(Dictionary.get('cumulative_cost'))};
-var N30 = percentile_threshold(30);
-var N60 = percentile_threshold(60);
-var N90 = percentile_threshold(90);
+var N30 = percentile_threshold(10);
+var N60 = percentile_threshold(40);
+var N90 = percentile_threshold(70);
 
 var N70 = percentile_threshold(70);
 var N71 = percentile_threshold(71);
 var N80 = percentile_threshold(80);
-var N90 = percentile_threshold(90);
+// var N90 = percentile_threshold(90);
 var N100 = percentile_threshold(100);
 // print("N70", N70)
 // print("N71", N71)
@@ -109,9 +115,18 @@ E60 = E60.where(E60.neq(0),1);
 E90 = E90.where(E90.neq(0),1);
 
 
-// print(pixelcount(E30));
-// print(pixelcount(E60));
+print(pixelcount(E30));
+print(pixelcount(E60));
 print(pixelcount(E90));
-print(pixelcount(costmap));
-print(pixelcount(cumulativeCost));
+// print(pixelcount(costmap));
+// print(pixelcount(cumulativeCost));
 
+
+// var test= pixelcount(expansion_area);
+// print("test",test );
+// // print(test.keys());
+// var test2 = ee.Number(pixelcount(expansion_area).get('groups')); 
+// print("test2",test2);
+// print(test2.get(1));
+// print(pixelcount(expansion_area).values() );
+// print(pixelcount(E30));
