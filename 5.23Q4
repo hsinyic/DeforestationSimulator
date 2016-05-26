@@ -48,3 +48,4 @@ print("trial2", trial2);
 print("trial3", N.values());
 
 
+print("trial4", N.get('groups').get('0'));
