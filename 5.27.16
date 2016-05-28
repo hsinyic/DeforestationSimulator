@@ -89,23 +89,19 @@ var in10_raster = blank.where(in10_raster.eq(1), 1).where(in05_raster.eq(1), 1);
 
 
 // Revise to make sure NOP-OP scenarios is not possible 
-var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']);
-var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
-var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
-var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
+var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
+var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']).clip(totalarea);
+var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
+var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
 // Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Gunarso OP 2010');
 // Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Gunarso OP 2005');
 // Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Gunarso OP 2000');
 // Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Gunarso OP 1990');
-
-
-
 print('Gunarso image collection: ', Gunarso);
 
 // ####################
 // # Step 2: Categorical map for 1990-2000, 2000-2005, 2005-2010 
 // ####################
-
 var Gunarso = ee.Image([lossYear]);
 Gunarso= Gunarso.addBands([OP90, OP00, OP05,OP10, treecover2000,blank]);
 
@@ -436,7 +432,7 @@ E30 = E30.where(E30.neq(0),1);
 print("pixelcount", pixelcount(E30,Peninsula_outline));
 print("area", area(E30,Peninsula_outline));
 
-// What every you
+
 
 
 
