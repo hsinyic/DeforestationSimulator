@@ -413,7 +413,7 @@ Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE")
 
 
 //Verify Statistics, turn all nonzero pixels into a value 
-var pixelcount = function(image){
+var pixelcount = function(image, shape){
   var Stat = image.addBands(image);
   var r = Stat.reduceRegion({
     reducer: ee.Reducer.count().group(1),
@@ -422,6 +422,15 @@ var pixelcount = function(image){
   });
   return r; 
 };
+var area = function(image, shape){
+  var stats = areaImage.reduceRegion({
+    reducer: ee.Reducer.sum(),
+    geometry: shape,
+    maxPixels: 5e9
+  });
+};
+print('area lost: ', stats.get('loss'), ' square meters');
+
 
 E30 = E30.where(E30.neq(0),1);
 print("pixelcount", pixelcount(E30));
