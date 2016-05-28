@@ -423,7 +423,7 @@ var pixelcount = function(image, shape){
   return r; 
 };
 var area = function(image, shape){
-  var stats = areaImage.reduceRegion({
+  var stats = image.reduceRegion({
     reducer: ee.Reducer.sum(),
     geometry: shape,
     maxPixels: 5e9
@@ -436,6 +436,7 @@ E30 = E30.where(E30.neq(0),1);
 print("pixelcount", pixelcount(E30,Peninsula_outline));
 print("area", area(E30,Peninsula_outline));
 
+// What every you
 
 
 
