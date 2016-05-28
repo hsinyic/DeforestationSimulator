@@ -22,15 +22,17 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 // # 2) draw boundaries around malaysia, indo, PNG
 // # 3) Gunarso vector maps, converted to raster
 // ############
-var lossYear = gfcImage.select(['lossyear']);
-var treecover2000 = gfcImage.select(['treecover2000']);
-var nodata = gfcImage.select(['datamask']);
-var blank = lossYear.multiply(0).rename(['blank']);
-
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 var totalarea = malaysia.merge(indonesia).merge(PNG);
+
+
+var lossYear = gfcImage.select(['lossyear']);
+var treecover2000 = gfcImage.select(['treecover2000']);
+var nodata = gfcImage.select(['datamask']);
+var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
+
 
 
 //Peninsula,Malaysia contour (for computing statistics within Penninsula region)
@@ -213,7 +215,7 @@ var lossyear00_05= Gunarso.expression(
     {  
       'OP_00_05': Gunarso.select('OP_00_05'),
       'lossyear': Gunarso.select('lossyear'),
-      'random': Gunarso.select('blank').add(3),
+      'random': Gunarso.select('blank').add(99),
       'NOP_OP': NOP_OP
       // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+1)
     }
@@ -226,7 +228,7 @@ var lossyear05_10= Gunarso.expression(
     {  
       'OP_05_10': Gunarso.select('OP_05_10'),
       'lossyear': Gunarso.select('lossyear'),
-      'random': Gunarso.select('blank').add(8),
+      'random': Gunarso.select('blank').add(99),
       'NOP_OP': NOP_OP
       // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+6)
     }
