@@ -31,12 +31,10 @@ var area = function(image, shape){
   var stats = areaImage.reduceRegion({
     reducer: ee.Reducer.sum(),
     geometry: shape,
-    maxPixels: 8e11
+    maxPixels: 8e8
   });
   return stats.get('cumulative_cost');
 };
-
-
 
 // ############
 // # Step 1: Load data 
@@ -49,19 +47,10 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 var totalarea = malaysia.merge(indonesia).merge(PNG);
 
-
 var lossYear = gfcImage.select(['lossyear']);
 var treecover2000 = gfcImage.select(['treecover2000']);
 var nodata = gfcImage.select(['datamask']);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
-
-
-
-//Peninsula,Malaysia contour (for computing statistics within Penninsula region)
-// var Peninsula_out= Peninsula_outline.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-// Map.addLayer(Peninsula_out.updateMask(Peninsula_out), {min: 0, max: 1, palette: ['0000FF']}, 'Peninsula_outline');
-
-
 
 // //add color scheme 
 var db= String('0000FF');
@@ -219,12 +208,6 @@ var year_2000 = Gunarso.expression(
     }
 ).rename(['year_2000']);
 
-// print('year_2000',year_2000);
-// Map.addLayer(year_2000.clip(totalarea), {min: 0, max: 5, palette: [whi, db, lb, red, yellow, gr]}, 'year_2000');
-
-
-
-
 //Create separate lossyear00_05 and lossyear05_10
 Gunarso= Gunarso.addBands([OP_00_05, OP_05_10]);
 var lossyear00_05= Gunarso.expression(
@@ -238,8 +221,6 @@ var lossyear00_05= Gunarso.expression(
       // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+1)
     }
 ).rename(['lossyear00_05']);
-
-
 
 var lossyear05_10= Gunarso.expression(
 ' OP_05_10==NOP_OP && (lossyear >10 || lossyear <=5) ? random\
@@ -260,4 +241,7 @@ var lossyear05_10= Gunarso.expression(
 var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 
-print(pixelcount(year_2000, Peninsula_outline));
+print(area(year_2000, Peninsula_outline));
+var A2000 = area(year_2000.eq(OP_color), Peninsula_outline);
+var listA2000 = ee.List(ee.Dictionary(A2000).get('groups'));
+A2000 = ee.Dictionary(listA2000.get(1)).get('cumulative_cost');
