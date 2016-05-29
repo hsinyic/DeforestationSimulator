@@ -452,3 +452,9 @@ E30 = E30.where(E30.neq(0),1);
 
 
 
+var Available  = blank.where(
+    (OP_00_05.eq(NOP_OP))
+    .and(
+        (lossyear.gt(5))
+        .or(lossyear.eq(0))
+        ),1);
