@@ -32,7 +32,7 @@ var area = function(image, shape){
   var stats = areaImage.reduceRegion({
     reducer: ee.Reducer.sum(),
     geometry: shape,
-    maxPixels: 8e8
+    maxPixels: 12e10
   });
   // return stats.get('cumulative_cost');
   return stats;
@@ -61,6 +61,7 @@ var red=String('ff510f');
 var yellow=String('#fff832');
 var gr= String('#4cff62');
 var whi=String('#181716');
+var black = String('#101010');
 
 // show lossyear, and where lossyear = 0 
 Map.addLayer(lossYear.clip(totalarea).updateMask(lossYear),
@@ -209,7 +210,8 @@ var year_2000 = Gunarso.expression(
       'treecover2000': Gunarso.select('treecover2000')
     }
 ).rename(['year_2000']);
-
+Map.addLayer(year_2000, {min: 0, max: 6,
+    palette:[lb,db , gr, yellow, red, black,  whi ]},'year_2000');
 //Create separate lossyear00_05 and lossyear05_10
 Gunarso= Gunarso.addBands([OP_00_05, OP_05_10]);
 var lossyear00_05= Gunarso.expression(
@@ -257,7 +259,18 @@ var A_current = ee.Number(A2000) + ee.Number(area(G2001, Peninsula_outline).get(
 var A_expand = A_target - A_current;
 print('A2000', A2000);
 print('A2000 ee Number', ee.Number(A2000).add(ee.Number(A2000)));
-print('A_target', A_target);
-print('type test', area(G2001.updateMask(G2001), Peninsula_outline));
-print('area test', area(year_2000, Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
+// print('A_target', A_target);
+// print('type test', area(G2001.updateMask(G2001), Peninsula_outline));
+print('area ALL', area(year_2000, Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
+print('area OP', area(year_2000.eq(OP_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
+print('area F', area(year_2000.eq(F_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
+print('area NF', area(year_2000.eq(NF_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
+print('area OTH', area(year_2000.eq(OTH_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
+print('area OPR', area(year_2000.eq(OPReplant_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
 
+
+
+
+
+
+print(year_2000);
