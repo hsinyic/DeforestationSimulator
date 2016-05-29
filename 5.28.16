@@ -264,3 +264,4 @@ var lossyear05_10= Gunarso.expression(
 var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 
+print(area(year_2000, Peninsula_outline));
