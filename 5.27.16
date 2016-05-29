@@ -16,6 +16,28 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.Point([101.744384765625, 4.861100978309958]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Verify Statistics, turn all nonzero pixels into a value 
+var pixelcount = function(image, shape){
+  var Stat = image.addBands(image);
+  var r = Stat.reduceRegion({
+    reducer: ee.Reducer.count().group(1),
+    scale: 500,
+    geometry: shape
+  });
+  return r; 
+};
+var area = function(image, shape){
+  var areaImage = image.multiply(ee.Image.pixelArea());
+  var stats = areaImage.reduceRegion({
+    reducer: ee.Reducer.sum(),
+    geometry: shape,
+    maxPixels: 7e11
+  });
+  return stats.get('cumulative_cost');
+};
+
+
+
 // ############
 // # Step 1: Load data 
 // # 1) from Hansen 
@@ -339,14 +361,14 @@ print('Gunarso_final, 2000-2010', Gunarso_final);
 // Graph all the classificaiton maps between 2000 to 2010 
 for (var t = 5; t >= 0; --t){
     var index = "year_" +String(t+2000);
-    Map.addLayer(Gunarso_final.select(index).clip(totalarea).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
-    palette:[db, lb, gr, yellow, red, whi ]},index);
+    // Map.addLayer(Gunarso_final.select(index).clip(totalarea).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
+    // palette:[db, lb, gr, yellow, red, whi ]},index);
 }
 
 // ###################
 // Compute summary statistics 
 // ###################
-for (var t = 5; t <= 5; ++t){
+/*for (var t = 5; t <= 5; ++t){
     var index = "year_" +String(t+2000);
     var output = Gunarso_final.select(index);
     var Stat = output.addBands(output);
@@ -357,19 +379,28 @@ for (var t = 5; t <= 5; ++t){
     });
     print(2000+t, 'summary statistics', r);
     // print("pixel area", Stat.pixelArea());
-}
+}*/
 
+var p = area(Gunarso_final.select('year_2000'));
+print(p);
+
+// for (var t = 0; t <= 2; ++t){
+//     var index = "year_" +String(t+2000);
+//     var output = Gunarso_final.select(index);
+//     print(2000+t, 'summary statistics', area(output, Peninsula_outline));
+//     // print("pixel area", Stat.pixelArea());
+// }
 //###################
 //# Extrapolate expansion area 
 //###################
 
 // centerMap(102.0849609375, 0.39550467153201946, 7); //Indo
-centerMap(101.744384765625, 4.861100978309958, 7); //Penninsula, Malaysia
+centerMap(101.744384765625, 4.861100978309958, 5); //Penninsula, Malaysia
 var AFTER = Gunarso_final.select("year_2005").clip(Peninsula_outline);
 var BEFORE = Gunarso_final.select("year_2000").clip(Peninsula_outline);
 var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
 // Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
-Map.addLayer(expansion_area, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"expansion_area");
+// Map.addLayer(expansion_area, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"expansion_area");
 // Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 
 //##########
@@ -405,34 +436,16 @@ var E30 = costmap.where(cumulativeCost.gte(N30),0);
 Map.addLayer(E30, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'E30');
 var T30 = BEFORE.where(E30.neq(0), 4);
 
-Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
-Map.addLayer(T30, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE30');
-Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+// Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+// Map.addLayer(T30, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE30');
+// Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
 
-//Verify Statistics, turn all nonzero pixels into a value 
-var pixelcount = function(image, shape){
-  var Stat = image.addBands(image);
-  var r = Stat.reduceRegion({
-    reducer: ee.Reducer.count().group(1),
-    scale: 500,
-    geometry: shape
-  });
-  return r; 
-};
-var area = function(image, shape){
-  var stats = image.reduceRegion({
-    reducer: ee.Reducer.sum(),
-    geometry: shape,
-    maxPixels: 5e10
-  });
-  return stats.get('cumulative_cost');
-};
 
 
 E30 = E30.where(E30.neq(0),1);
-print("pixelcount", pixelcount(E30,Peninsula_outline));
-print("area", area(E30,Peninsula_outline));
+// print("pixelcount", pixelcount(E30,Peninsula_outline));
+// print("area", area(E30,Peninsula_outline));
 
 
 
