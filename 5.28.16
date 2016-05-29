@@ -14,8 +14,9 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: d63000 */ee.Geometry.Point([101.744384765625, 4.861100978309958]);
+    geometry = /* color: 98ff00 */ee.Geometry.Point([102.10693359375, 3.973860975839102]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.setCenter(102.10693359375, 3.973860975839102, 5);
 //Verify Statistics, turn all nonzero pixels into a value 
 var pixelcount = function(image, shape){
   var Stat = image.addBands(image);
@@ -33,7 +34,8 @@ var area = function(image, shape){
     geometry: shape,
     maxPixels: 8e8
   });
-  return stats.get('cumulative_cost');
+  // return stats.get('cumulative_cost');
+  return stats;
 };
 
 // ############
@@ -238,7 +240,22 @@ var lossyear05_10= Gunarso.expression(
 var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 
+
+//Experimental Section 
+var A_target = 21059772402.93213/4;
+
 print(pixelcount(year_2000, Peninsula_outline));
 var A2000 = area(year_2000.eq(OP_color), Peninsula_outline);
-var listA2000 = ee.List(ee.Dictionary(A2000).get('groups'));
-A2000 = ee.Dictionary(listA2000.get(1)).get('cumulative_cost');
+A2000 = ee.List(ee.Dictionary(A2000).get('year_2000'));
+print('listA2000',A2000);
+
+var G2001 = blank.where((lossYear.eq(1)).and(OP_00_05.eq(NOP_OP)),1); // binary layer of things to expand
+// print(G2001);
+
+// print(area(G2001, Peninsula_outline));
+var A_current = ee.Number(A2000) + ee.Number(area(G2001, Peninsula_outline).get('blank'));
+var A_expand = A_target.subtract(A_current);
+print('A2000', A2000);
+print('A2000 ee Number', ee.Number(A2000).add(ee.Number(A2000)));
+print('A_target', A_target);
+print('type test', area(G2001, Peninsula_outline));
