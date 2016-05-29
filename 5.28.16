@@ -238,7 +238,7 @@ var lossyear05_10= Gunarso.expression(
 var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 
-print(area(year_2000, Peninsula_outline));
+print(pixelcount(year_2000, Peninsula_outline));
 var A2000 = area(year_2000.eq(OP_color), Peninsula_outline);
 var listA2000 = ee.List(ee.Dictionary(A2000).get('groups'));
 A2000 = ee.Dictionary(listA2000.get(1)).get('cumulative_cost');
