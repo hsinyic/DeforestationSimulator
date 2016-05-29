@@ -182,10 +182,6 @@ var OP_05_10 = Gunarso.expression(
     ).rename(['OP_05_10']);
 
 
-// print('op 1990- 2000',OP_90_00);
-// print('op 2000- 2005',OP_00_05);
-// print('op 2005- 2010',OP_05_10);
-
 // Map.addLayer(OP_90_00.clip(totalarea).updateMask(OP_90_00), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_90_00');
 // Map.addLayer(OP_00_05.clip(totalarea).updateMask(OP_00_05), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_00_05');
 // Map.addLayer(OP_05_10.clip(totalarea).updateMask(OP_05_10), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_05_10');
@@ -264,4 +260,4 @@ var lossyear05_10= Gunarso.expression(
 var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 
-print(area(year_2000, Peninsula_outline));
+print(pixelcount(year_2000, Peninsula_outline));
