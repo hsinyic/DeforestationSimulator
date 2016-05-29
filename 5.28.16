@@ -234,9 +234,6 @@ var lossyear05_10= Gunarso.expression(
     }
 ).rename(['lossyear05_10']);
 
-// Visualize 
-// Map.addLayer(lossyear05_10.clip(totalarea).updateMask(lossyear05_10), {min: 0, max: 20, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'lossyear05_10');
-
 //Append the new categorical maps to Gunarso band 
 var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
