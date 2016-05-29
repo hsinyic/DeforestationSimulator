@@ -242,7 +242,7 @@ Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, 
 
 
 //Experimental Section 
-var A_target = 21059772402.93213/4;
+var A_target = ee.Number(21059772402.93213).divide(4);
 
 print(pixelcount(year_2000, Peninsula_outline));
 var A2000 = area(year_2000.eq(OP_color), Peninsula_outline);
@@ -254,8 +254,8 @@ var G2001 = blank.where((lossYear.eq(1)).and(OP_00_05.eq(NOP_OP)),1); // binary 
 
 // print(area(G2001, Peninsula_outline));
 var A_current = ee.Number(A2000) + ee.Number(area(G2001, Peninsula_outline).get('blank'));
-var A_expand = A_target.subtract(A_current);
+var A_expand = A_target - A_current;
 print('A2000', A2000);
 print('A2000 ee Number', ee.Number(A2000).add(ee.Number(A2000)));
 print('A_target', A_target);
-print('type test', area(G2001, Peninsula_outline));
+print('type test', area(G2001.updateMask(G2001), Peninsula_outline));
