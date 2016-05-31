@@ -3,7 +3,10 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.Point([102.10693359375, 3.973860975839102]),
-    Pen00 = ee.FeatureCollection("ft:1lm0_RkF3J8gTk7gQliQD2JQv2eJ0WP4MmJ8udi3q");
+    Pen10 = ee.FeatureCollection("ft:1xabXcdjDWY8PCYLjAO6zH07XTczWVKqGcNVVQI3Y"),
+    Pen05 = ee.FeatureCollection("ft:1YZK7dCxaKKF5WneTc3hcNyB1ss6nVRkl818pf7zI"),
+    Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
+    Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.10693359375, 3.973860975839102, 5);
 //Verify Statistics, turn all nonzero pixels into a value 
@@ -37,6 +40,8 @@ var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 var totalarea = malaysia.merge(indonesia).merge(PNG);
+var peninsula = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+
 
 var lossYear = gfcImage.select(['lossyear']);
 var treecover2000 = gfcImage.select(['treecover2000']);
@@ -57,17 +62,17 @@ Map.addLayer(lossYear.clip(totalarea).updateMask(lossYear),
             'Hansen Forest Lost Year');
 
 // Convert Gunarso vector maps to a raster, Peninsula
-// var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP00_raster = Pen00.reduceToImage({properties: ['ha'],reducer: ee.Reducer.first()});
-// var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-// var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 
 
 // Revise to make sure NOP-OP scenarios is not possible 
-// var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
+var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
 var OP00 = blank.where(OP00_raster.eq(1), 1).rename(['OP00']).clip(totalarea);
-// var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
-// var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
+var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
+var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
 
 // ####################
 // # Step 2: Categorical map for 1990-2000, 2000-2005, 2005-2010 
