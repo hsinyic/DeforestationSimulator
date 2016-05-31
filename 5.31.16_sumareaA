@@ -9,7 +9,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // 5.31.16_sumareaA
 
-Map.setCenter(102.10693359375, 3.973860975839102, 7);
+Map.setCenter(102.10693359375, 3.973860975839102, 5);
 
 var pixelcount = function(image, shape){
   var Stat = image.addBands(image);
@@ -25,7 +25,8 @@ var area = function(image, shape){
   var stats = areaImage.reduceRegion({
     reducer: ee.Reducer.sum(),
     geometry: shape,
-    maxPixels: 12e10
+    scale: 500,
+    // maxPixels: 2e8
   });
   // return stats.get('cumulative_cost');
   return stats;
@@ -178,32 +179,13 @@ Map.addLayer(year_2000, {min: 0, max: 6,
 var pixel2000 = pixelcount(year_2000, Peninsula_outline);
 print(pixel2000);
 
-var area2000 = area(year_2000.eq(), Peninsula_outline);
+var area2000 = area(year_2000, Peninsula_outline);
+var area2000_NF = area(year_2000.eq(1), Peninsula_outline);
+var area2000_F = area(year_2000.eq(2), Peninsula_outline);
+var area2000_OP = area(year_2000.eq(4), Peninsula_outline);
 
+print('area2000_NF', area2000_NF);
+print('area2000_F', area2000_F);
+print('area2000_OP', area2000_OP);
+print('area2000 Total', area2000);
 
-
-//Create separate lossyear00_05 and lossyear05_10
-Gunarso= Gunarso.addBands([OP_00_05, OP_05_10]);
-var lossyear00_05= Gunarso.expression(
-' OP_00_05== NOP_OP && (lossyear >5 || lossyear==0) ? random\
-  :lossyear',
-    {  
-      'OP_00_05': Gunarso.select('OP_00_05'),
-      'lossyear': Gunarso.select('lossyear'),
-      'random': Gunarso.select('blank').add(99),
-      'NOP_OP': NOP_OP
-      // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+1)
-    }
-).rename(['lossyear00_05']);
-
-var lossyear05_10= Gunarso.expression(
-' OP_05_10==NOP_OP && (lossyear >10 || lossyear <=5) ? random\
-  :lossyear',
-    {  
-      'OP_05_10': Gunarso.select('OP_05_10'),
-      'lossyear': Gunarso.select('lossyear'),
-      'random': Gunarso.select('blank').add(99),
-      'NOP_OP': NOP_OP
-      // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+6)
-    }
-).rename(['lossyear05_10']);
