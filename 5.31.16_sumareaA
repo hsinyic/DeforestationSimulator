@@ -7,10 +7,11 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
     Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// 5.31.16_sumareaA
-
 Map.setCenter(102.10693359375, 3.973860975839102, 5);
 
+// ############
+// # Step 0: Define pixel count and area functions  
+// ############
 var pixelcount = function(image, shape){
   var Stat = image.addBands(image);
   var r = Stat.reduceRegion({
@@ -59,12 +60,12 @@ var gr= String('#4cff62');
 var whi=String('#181716');
 var black = String('#101010');
 
-// show lossyear, and where lossyear = 0 
+// show lossyear from Hansen Global Forest Cover Change 
 Map.addLayer(lossYear.clip(totalarea).updateMask(lossYear),
             {'min': 0, 'max': 14, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
             'Hansen Forest Lost Year');
 
-// Convert Gunarso vector maps to a raster, Peninsula
+// Convert vector maps to a raster, Peninsula
 var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
 var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
 var OP05_raster = Pen05.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
@@ -176,9 +177,11 @@ Map.addLayer(year_2000, {min: 0, max: 6,
     palette:[lb,db , gr, yellow, red, black,  whi ]},'year_2000');
 
 
+// sum pixel 
 var pixel2000 = pixelcount(year_2000, Peninsula_outline);
 print(pixel2000);
 
+// sum area takes a very long time 
 var area2000 = area(year_2000, Peninsula_outline);
 var area2000_NF = area(year_2000.eq(1), Peninsula_outline);
 var area2000_F = area(year_2000.eq(2), Peninsula_outline);
