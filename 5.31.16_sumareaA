@@ -37,7 +37,7 @@ var area = function(image, shape){
 // # Step 1: Load data 
 // # 1) from Hansen 
 // # 2) draw boundaries around malaysia, indo, PNG
-// # 3) Gunarso vector maps, converted to raster
+// # 3) AreaExpansion vector maps, converted to raster
 // ############
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
@@ -81,9 +81,9 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
 // ####################
 // # Step 2: Categorical map for 1990-2000, 2000-2005, 2005-2010 
 // ####################
-var Gunarso = ee.Image([lossYear]);
-Gunarso= Gunarso.addBands([OP90, OP00, OP05,OP10, treecover2000,blank]);
-print('Gunarso image collection: ', Gunarso);
+var AreaExpansion = ee.Image([lossYear]);
+AreaExpansion= AreaExpansion.addBands([OP90, OP00, OP05,OP10, treecover2000,blank]);
+print('AreaExpansion image collection: ', AreaExpansion);
 
 
 //Define transition variables
@@ -92,48 +92,48 @@ var NOP_OP= 2;//NonOP to OP
 var OP_NOP= 3;//OP to NonOP
 var OP_OP= 4;//OP to OP
 
-var OP_90_00 = Gunarso.expression(
+var OP_90_00 = AreaExpansion.expression(
   "(OP1990==1 && OP2000==1) ? OP_OP \
     : (OP1990==1 && OP2000==0) ? OP_NOP \
       :(OP1990==0 && OP2000==0) ? NOP_NOP \
         : NOP_OP", 
         {
-        'OP1990': Gunarso.select('OP90'),
-        'OP2000': Gunarso.select('OP00'),
-        'OP_OP': Gunarso.select('blank').add(OP_OP),
-        'OP_NOP': Gunarso.select('blank').add(OP_NOP),
-        'NOP_NOP': Gunarso.select('blank').add(NOP_NOP),
-        'NOP_OP': Gunarso.select('blank').add(NOP_OP),
+        'OP1990': AreaExpansion.select('OP90'),
+        'OP2000': AreaExpansion.select('OP00'),
+        'OP_OP': AreaExpansion.select('blank').add(OP_OP),
+        'OP_NOP': AreaExpansion.select('blank').add(OP_NOP),
+        'NOP_NOP': AreaExpansion.select('blank').add(NOP_NOP),
+        'NOP_OP': AreaExpansion.select('blank').add(NOP_OP),
         }
     ).rename(['OP_90_00']);
 
-var OP_00_05 = Gunarso.expression(
+var OP_00_05 = AreaExpansion.expression(
     "(OP2000==1 && OP2005==1) ? OP_OP \
       : (OP2000==1 && OP2005==0) ? OP_NOP \
         :(OP2000==0 && OP2005==0) ? NOP_NOP \
           : NOP_OP", 
         {
-        'OP2000': Gunarso.select('OP00'),
-        'OP2005': Gunarso.select('OP05'),
-        'OP_OP': Gunarso.select('blank').add(OP_OP),
-        'OP_NOP': Gunarso.select('blank').add(OP_NOP),
-        'NOP_NOP': Gunarso.select('blank').add(NOP_NOP),
-        'NOP_OP': Gunarso.select('blank').add(NOP_OP),
+        'OP2000': AreaExpansion.select('OP00'),
+        'OP2005': AreaExpansion.select('OP05'),
+        'OP_OP': AreaExpansion.select('blank').add(OP_OP),
+        'OP_NOP': AreaExpansion.select('blank').add(OP_NOP),
+        'NOP_NOP': AreaExpansion.select('blank').add(NOP_NOP),
+        'NOP_OP': AreaExpansion.select('blank').add(NOP_OP),
         }
     ).rename(['OP_00_05']);
 
-var OP_05_10 = Gunarso.expression(
+var OP_05_10 = AreaExpansion.expression(
   "(OP2005==1 && OP2010==1) ? OP_OP\
       : (OP2005==1 && OP2010==0) ? OP_NOP \
         :(OP2005==0 && OP2010==0) ? NOP_NOP \
           : NOP_OP", 
         {
-        'OP2005': Gunarso.select('OP05'),
-        'OP2010': Gunarso.select('OP10'),
-        'OP_OP': Gunarso.select('blank').add(OP_OP),
-        'OP_NOP': Gunarso.select('blank').add(OP_NOP),
-        'NOP_NOP': Gunarso.select('blank').add(NOP_NOP),
-        'NOP_OP': Gunarso.select('blank').add(NOP_OP),
+        'OP2005': AreaExpansion.select('OP05'),
+        'OP2010': AreaExpansion.select('OP10'),
+        'OP_OP': AreaExpansion.select('blank').add(OP_OP),
+        'OP_NOP': AreaExpansion.select('blank').add(OP_NOP),
+        'NOP_NOP': AreaExpansion.select('blank').add(NOP_NOP),
+        'NOP_OP': AreaExpansion.select('blank').add(NOP_OP),
         }
     ).rename(['OP_05_10']);
 
@@ -147,7 +147,7 @@ Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, r
 // # 1) Create 2000 Basemap  
 // # 2) Fix inconsistencies for "NOP>OP, but no lossevents in between"
 // # 3) Append the categorical maps, basemaps, and new lossyear layers 
-// #    (00-05, 05-10) to Gunarso_intermediate band
+// #    (00-05, 05-10) to AreaExpansion_intermediate band
 // ############
 
 // code NF, F, OPR, OP into numbers 
@@ -159,22 +159,22 @@ var OTH_color = 5;
 
 
 // Create year_2000 classified layer of OP, F, NF  
-var year_2000 = Gunarso.expression(
+var year_2000 = AreaExpansion.expression(
 '(OP00 ==1)? OP\
   :((OP00==0) && treecover2000>=30)? F\
     :((OP00==0)&& treecover2000<30)? NF\
       :OTH',
     {  
-      'OP': Gunarso.select('blank').add(OP_color),
-      'F': Gunarso.select('blank').add(F_color),
-      'NF': Gunarso.select('blank').add(NF_color),
-      'OTH': Gunarso.select('blank').add(OTH_color),
-      'OP00': Gunarso.select('OP00'),
-      'treecover2000': Gunarso.select('treecover2000')
+      'OP': AreaExpansion.select('blank').add(OP_color),
+      'F': AreaExpansion.select('blank').add(F_color),
+      'NF': AreaExpansion.select('blank').add(NF_color),
+      'OTH': AreaExpansion.select('blank').add(OTH_color),
+      'OP00': AreaExpansion.select('OP00'),
+      'treecover2000': AreaExpansion.select('treecover2000')
     }
 ).rename(['year_2000']);
-Map.addLayer(year_2000, {min: 0, max: 6,
-    palette:[lb,db , gr, yellow, red, black,  whi ]},'year_2000');
+Map.addLayer(year_2000, {min: 0, max: 5,
+    palette:[lb,db , gr, yellow, red, black ]},'year_2000');
 
 
 // sum pixel 
@@ -187,8 +187,16 @@ var area2000_NF = area(year_2000.eq(1), Peninsula_outline);
 var area2000_F = area(year_2000.eq(2), Peninsula_outline);
 var area2000_OP = area(year_2000.eq(4), Peninsula_outline);
 
+var area2000_OTH = area(year_2000.eq(5), Peninsula_outline);
+var area2000_OTH2 = area(year_2000.eq(3), Peninsula_outline);
+
+
+
 print('area2000_NF', area2000_NF);
 print('area2000_F', area2000_F);
 print('area2000_OP', area2000_OP);
+print('area2000_OTH', area2000_OTH);
+print('area2000_OTH2', area2000_OTH2);
 print('area2000 Total', area2000);
 
+print(year_2000);
