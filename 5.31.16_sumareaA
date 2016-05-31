@@ -26,7 +26,7 @@ var area = function(image, shape){
   var stats = areaImage.reduceRegion({
     reducer: ee.Reducer.sum(),
     geometry: shape,
-    scale: 1000,
+    scale: 500,
     // maxPixels: 2e8
   });
   // return stats.get('cumulative_cost');
