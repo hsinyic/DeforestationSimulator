@@ -62,11 +62,13 @@ Map.addLayer(lossYear.clip(totalarea).updateMask(lossYear),
             'Hansen Forest Lost Year');
 
 // Convert Gunarso vector maps to a raster, Peninsula
-var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var OP00_raster = Pen00.reduceToImage({properties: ['ha'],reducer: ee.Reducer.first()});
-var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
+var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
+var OP05_raster = Pen05.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
+var OP10_raster = Pen10.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
 
+
+print(OP90_raster);
 
 // Revise to make sure NOP-OP scenarios is not possible 
 var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
@@ -133,9 +135,9 @@ var OP_05_10 = Gunarso.expression(
         }
     ).rename(['OP_05_10']);
 
-Map.addLayer(OP_90_00.clip(totalarea).updateMask(OP_90_00), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_90_00');
-Map.addLayer(OP_00_05.clip(totalarea).updateMask(OP_00_05), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_00_05');
-Map.addLayer(OP_05_10.clip(totalarea).updateMask(OP_05_10), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_05_10');
+Map.addLayer(OP_90_00.clip(totalarea), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_90_00');
+Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_00_05');
+Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'OP_05_10');
 
 
 // // ############
