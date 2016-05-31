@@ -7,8 +7,10 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
     Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+// 5.31.16_sumareaA
+
 Map.setCenter(102.10693359375, 3.973860975839102, 7);
-//Verify Statistics, turn all nonzero pixels into a value 
+
 var pixelcount = function(image, shape){
   var Stat = image.addBands(image);
   var r = Stat.reduceRegion({
@@ -197,35 +199,3 @@ var lossyear05_10= Gunarso.expression(
       // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+6)
     }
 ).rename(['lossyear05_10']);
-
-//Experimental Section 
-var A_target = ee.Number(21059772402.93213).divide(4);
-
-print(pixelcount(year_2000, Peninsula_outline));
-var A2000 = area(year_2000.eq(OP_color), Peninsula_outline);
-A2000 = ee.List(ee.Dictionary(A2000).get('year_2000'));
-print('listA2000',A2000);
-
-var G2001 = blank.where((lossYear.eq(1)).and(OP_00_05.eq(NOP_OP)),1); // binary layer of things to expand
-// print(G2001);
-
-// print(area(G2001, Peninsula_outline));
-var A_current = ee.Number(A2000) + ee.Number(area(G2001, Peninsula_outline).get('blank'));
-var A_expand = A_target - A_current;
-print('A2000', A2000);
-print('A2000 ee Number', ee.Number(A2000).add(ee.Number(A2000)));
-// print('A_target', A_target);
-// print('type test', area(G2001.updateMask(G2001), Peninsula_outline));
-print('area ALL', area(year_2000, Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
-print('area OP', area(year_2000.eq(OP_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
-print('area F', area(year_2000.eq(F_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
-print('area NF', area(year_2000.eq(NF_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
-print('area OTH', area(year_2000.eq(OTH_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
-print('area OPR', area(year_2000.eq(OPReplant_color), Peninsula_outline)); // it does NOT give me counts for different classes of pixels 
-
-
-
-
-
-
-print(year_2000);
