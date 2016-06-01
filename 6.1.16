@@ -232,10 +232,10 @@ print(getcount(A2000,1));
 // print("2000 count", getcount(pixelcount(OP00.eq(1), malaysia),1));
 // print("2000 area", area(OP00.eq(1), malaysia,'OP00' ));
 var Target = ee.List([3893371, 3932764,4059473,4200598,4648253,4837937]);
-for(var t = 1; t <= 4; ++t){
+for(var t = 1; t <= 5; ++t){
 // pixel count target for year 2000 
   var A_target = ee.Number(Target.get(t));
-  print(A_target); 
+  // print(A_target); 
 
 
   var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
@@ -245,8 +245,8 @@ for(var t = 1; t <= 4; ++t){
   var A_expand = ee.Number(A_target).subtract(A_current);
   // print(ee.Number(getcount(A2000,1)));
   // print(ee.Number(getcount(G2001,1)));
-  print(A_current);
-  print('A_expand', A_expand);
+  // print(A_current);
+  // print('A_expand', A_expand);
   if(A_expand.getInfo()<0){
     lossyear00_05 = lossyear00_05;
     print('ah', t);
