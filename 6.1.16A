@@ -397,7 +397,6 @@ var t=4;
   // Simply label the places on Hansen lossyear map with 2001
   lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;
 // }
-
 var t=5;
   var A_target = ee.Number(Target.get(t));
   // print(A_target); 
