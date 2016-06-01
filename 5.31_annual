@@ -221,15 +221,16 @@ var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear 
 // count and area conversion 
 // print("2000 count", getcount(pixelcount(OP00.eq(1), malaysia),1));
 // print("2000 area", area(OP00.eq(1), malaysia,'OP00' ));
-
-
+var Target = ee.List([])
+for (var t = 1; t <= 10; ++t){
+  
 // pixel count target for year 2000 
-var A_target = 190803;  
-var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
+  var A_target = 190803;  
+  var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
 print(getcount(A2000,1));
 
 
-var G2001 = blank.where((lossyear00_05.eq(1)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
+var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
 Map.addLayer(G2001, {min: 0, max: 1, palette: [whi, gr]}, 'G2001');
 
 G2001 = pixelcount(G2001, targetarea);
