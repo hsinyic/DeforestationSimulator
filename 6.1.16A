@@ -39,13 +39,10 @@ var area = function(image, shape, index){
     });
   return stats.get(index);
 };
-
-// get count function for pixel counts 
 var getcount = function(dict, group){
   var list = ee.List(ee.Dictionary(dict).get('groups'));
   return ee.Dictionary(list.get(group)).get('count');
 };
-
 var percentile_threshold = function(p){
   var output = costmap.clip(targetarea).reduceRegion({
     reducer: ee.Reducer.percentile([p]),
@@ -247,11 +244,7 @@ var t=1;
   // print(ee.Number(getcount(G2001,1)));
   // print(A_current);
   // print('A_expand', A_expand);
-  if(A_expand.getInfo()<0){
-    lossyear00_05 = lossyear00_05;
-    print('ah', t);
-  }
-  else{
+  print("A_expand", t, A_expand);
   var Available  = blank
   .where(lossyear00_05.lte(t),1)
   .where(year_2000.eq(OP_color),1)
@@ -279,7 +272,6 @@ var t=1;
   costmap = costmap.lt(N);
   // Simply label the places on Hansen lossyear map with 2001
   lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;
-  }
 // }
 var t=2;
   var A_target = ee.Number(Target.get(t));
@@ -292,11 +284,7 @@ var t=2;
   // print(ee.Number(getcount(G2001,1)));
   // print(A_current);
   // print('A_expand', A_expand);
-  if(A_expand.getInfo()<0){
-    lossyear00_05 = lossyear00_05;
-    print('ah', t);
-  }
-  else{
+  print("A_expand", t, A_expand);
   var Available  = blank
   .where(lossyear00_05.lte(t),1)
   .where(year_2000.eq(OP_color),1)
@@ -324,9 +312,9 @@ var t=2;
   costmap = costmap.lt(N);
   // Simply label the places on Hansen lossyear map with 2001
   lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;
-  }
+// }
+
 var t=3;
-var t=2;
   var A_target = ee.Number(Target.get(t));
   // print(A_target); 
   var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
@@ -337,11 +325,7 @@ var t=2;
   // print(ee.Number(getcount(G2001,1)));
   // print(A_current);
   // print('A_expand', A_expand);
-  if(A_expand.getInfo()<0){
-    lossyear00_05 = lossyear00_05;
-    print('ah', t);
-  }
-  else{
+  print("A_expand", t, A_expand);
   var Available  = blank
   .where(lossyear00_05.lte(t),1)
   .where(year_2000.eq(OP_color),1)
@@ -369,5 +353,85 @@ var t=2;
   costmap = costmap.lt(N);
   // Simply label the places on Hansen lossyear map with 2001
   lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;
-  }
+// }
+var t=4;
+  var A_target = ee.Number(Target.get(t));
+  // print(A_target); 
+  var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
+  G2001 = pixelcount(G2001, targetarea);
+  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
+  var A_expand = A_target.subtract(A_current);
+  // print(ee.Number(getcount(A2000,1)));
+  // print(ee.Number(getcount(G2001,1)));
+  // print(A_current);
+  // print('A_expand', A_expand);
+  print("A_expand", t, A_expand);
+  var Available  = blank
+  .where(lossyear00_05.lte(t),1)
+  .where(year_2000.eq(OP_color),1)
+  .clip(targetarea);   
+  // Map.addLayer(Available, {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'Available');
+  var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
+  // print('A_available',A_available);
+  var Percentage = A_expand.divide(A_available);
+  // print('Percentage', Percentage);
+  // Minimum Cost Mapping 
+  var cost = blank.multiply(0).add(1).clip(targetarea); 
+  var cumulativeCost = cost.cumulativeCost({
+    source: Available,
+    maxDistance: 50 * 1000 // 5 kilometers
+  });
+  Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'cumulativeCost');
+  // leave out area that is not NOP to OP
+  // leave out area that has Hansen transition between 2001 to 2005 
+  var costmap = cumulativeCost
+  .where(OP_00_05.neq(NOP_OP),0) //clip out area where there is no transition 
+  .where((OP_00_05.eq(NOP_OP)).and(lossyear00_05.lte(5)),0) ;// clip out area that is transition but Hansen already has a lossyear 
+  costmap = costmap.updateMask(costmap);
+  // Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'costmap');
+  var N = percentile_threshold(Percentage); 
+  costmap = costmap.lt(N);
+  // Simply label the places on Hansen lossyear map with 2001
+  lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;
+// }
 
+var t=5;
+  var A_target = ee.Number(Target.get(t));
+  // print(A_target); 
+  var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
+  G2001 = pixelcount(G2001, targetarea);
+  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
+  var A_expand = A_target.subtract(A_current);
+  // print(ee.Number(getcount(A2000,1)));
+  // print(ee.Number(getcount(G2001,1)));
+  // print(A_current);
+  // print('A_expand', A_expand);
+  print("A_expand", t, A_expand);
+  var Available  = blank
+  .where(lossyear00_05.lte(t),1)
+  .where(year_2000.eq(OP_color),1)
+  .clip(targetarea);   
+  // Map.addLayer(Available, {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'Available');
+  var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
+  // print('A_available',A_available);
+  var Percentage = A_expand.divide(A_available);
+  // print('Percentage', Percentage);
+  // Minimum Cost Mapping 
+  var cost = blank.multiply(0).add(1).clip(targetarea); 
+  var cumulativeCost = cost.cumulativeCost({
+    source: Available,
+    maxDistance: 50 * 1000 // 5 kilometers
+  });
+  Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'cumulativeCost');
+  // leave out area that is not NOP to OP
+  // leave out area that has Hansen transition between 2001 to 2005 
+  var costmap = cumulativeCost
+  .where(OP_00_05.neq(NOP_OP),0) //clip out area where there is no transition 
+  .where((OP_00_05.eq(NOP_OP)).and(lossyear00_05.lte(5)),0) ;// clip out area that is transition but Hansen already has a lossyear 
+  costmap = costmap.updateMask(costmap);
+  // Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'costmap');
+  var N = percentile_threshold(Percentage); 
+  costmap = costmap.lt(N);
+  // Simply label the places on Hansen lossyear map with 2001
+  lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;
+// }
