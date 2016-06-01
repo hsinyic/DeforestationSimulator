@@ -73,7 +73,7 @@ var red=String('ff510f');
 var lr = String("#ff8f7d");
 var yellow=String('#fff832');
 var gr= String('#4cff62');
-var whi=String('#181716');
+var whi=String('#f7f7f7');
 var black = String('#101010');
 
 
@@ -229,7 +229,7 @@ var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
 print(getcount(A2000,1));
 
 
-var G2001 = blank.where((lossyear00_05.eq(1)).and(OP_00_05.eq(NOP_OP)),1);
+var G2001 = blank.where((lossyear00_05.eq(1)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
 Map.addLayer(G2001, {min: 0, max: 1, palette: [whi, gr]}, 'G2001');
 
 G2001 = pixelcount(G2001, targetarea);
@@ -245,6 +245,9 @@ var Available  = blank
 .where(lossyear00_05.lte(5),0) // adjusted Hansen year is out of the 2001-2005 range  
 .where(lossyear00_05.eq(0),1) // or when it is 0 for lossyear
 .where(year_2000.eq(OP_color),1);  // or it is an OP in 2000 
+Map.addLayer(Available, {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'Available');
+
+
 
 
 var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
@@ -252,7 +255,7 @@ print('A_available',A_available);
 
 
 var Percentage = A_expand.divide(A_available);
-print(Percentage);
+print('Percentage', Percentage);
 
 // Minimum Cost Mapping 
 var cost = blank.multiply(0).add(1).clip(targetarea); 
@@ -261,5 +264,14 @@ var cumulativeCost = cost.cumulativeCost({
   maxDistance: 50 * 1000 // 5 kilometers
 });
 
+
+
+// leave out area that is not NOP to OP
+// leave out area that has Hansen transition between 2001 to 2005 
+var costmap = cumulativeCost
+.where(OP_00_05.neq(NOP_OP),0) //clip out area where there is no transition 
+.where(lossyear00_05.lte(5),0) // clip out area that is less than or equal to 5 
+.where(lossyear00_05.eq(0),1); // compensate for the area that is labeled no loss 
+costmap = costmap.updateMask(costmap);
 
 
