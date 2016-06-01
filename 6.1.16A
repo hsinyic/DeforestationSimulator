@@ -552,7 +552,6 @@ for (var t = 1; t <= 4; ++t){
   if(t==5){
   Gunarso_intermediate = Gunarso_intermediate.addBands(yearmap);
   }
-  
   //append yearmap to Gunarso_final image collection
   Gunarso_final = Gunarso_final.addBands(yearmap);
 
