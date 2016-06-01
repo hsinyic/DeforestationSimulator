@@ -24,12 +24,12 @@ var pixelcount = function(image, shape){
   var Stat = image.addBands(image);
   var r = Stat.reduceRegion({
     reducer: ee.Reducer.count().group(1),
-    scale: 1000,
+    scale: 500,
     geometry: shape
   });
   return r; 
 };
-var area = function(image, shape){
+var area = function(image, shape, index){
     var areaImage = image.multiply(ee.Image.pixelArea());
     var stats = areaImage.reduceRegion({
         reducer: ee.Reducer.sum(),
@@ -37,8 +37,16 @@ var area = function(image, shape){
         scale: 500,
         // maxPixels: 5e9
     });
-  return stats.get('cumulative_cost');
+  return stats.get(index);
 };
+
+// get count function for pixel counts 
+var getcount = function(dict, group){
+  var list = ee.List(ee.Dictionary(dict).get('groups'));
+  return ee.Dictionary(list.get(group)).get('count');
+};
+
+
 
 // ############
 // # Step 1: Load data 
@@ -109,6 +117,11 @@ var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(i
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']).clip(totalarea);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
+
+var t = pixelcount(OP00.eq(1), malaysia);
+print("2000 count", getcount(t,1));
+
+
 
 // ####################
 // # Step 2: Categorical map for 1990-2000, 2000-2005, 2005-2010 
@@ -202,11 +215,6 @@ var year_2000 = Gunarso.expression(
     }
 ).rename(['year_2000']);
 
-// get count function for pixel counts 
-var getcount = function(dict, group){
-  var list = ee.List(ee.Dictionary(dict).get('groups'));
-  return ee.Dictionary(list.get(group)).get('count');
-};
 
 
 // Analysis for Malaysia 
@@ -215,7 +223,7 @@ var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear 
 
 
 var A_target = 190803;  // pixel count target for year 2000 
-var A2000 = pixelcount(year_2000.gte(OP_color), targetarea);
+var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
 print(getcount(A2000,1));
 
 
@@ -223,11 +231,12 @@ var G2001 = blank.where((lossyear00_05.eq(1)).and(OP_00_05.eq(NOP_OP)),1);
 Map.addLayer(G2001, {min: 0, max: 1, palette: [whi, gr]}, 'G2001');
 
 G2001 = pixelcount(G2001, targetarea);
-var A_current = ee.Number(getcount(A2000,1)) + ee.Number(getcount(G2001,1));
-var A_expand = ee.Number(A_target) - A_current;
+var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
+var A_expand = ee.Number(A_target).subtract(A_current);
 print(ee.Number(getcount(A2000,1)));
 print(ee.Number(getcount(G2001,1)));
-
+print(A_current);
+print('A_expand', A_expand);
 
 var Available  = blank
 .where(OP_00_05.eq(NOP_OP),1) // there is a transition 
