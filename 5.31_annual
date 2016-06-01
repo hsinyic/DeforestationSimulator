@@ -118,10 +118,6 @@ var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(i
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
 
-var t = pixelcount(OP00.eq(1), malaysia);
-print("2000 count", getcount(t,1));
-
-
 
 // ####################
 // # Step 2: Categorical map for 1990-2000, 2000-2005, 2005-2010 
@@ -222,7 +218,13 @@ var targetarea = malaysia;
 var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear as 99 
 
 
-var A_target = 190803;  // pixel count target for year 2000 
+// count and area conversion 
+print("2005 count", getcount(pixelcount(OP05.eq(1), malaysia),1));
+print("2005 area", area(OP05.eq(1), malaysia,'OP05' ));
+
+
+// pixel count target for year 2000 
+var A_target = 190803;  
 var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
 print(getcount(A2000,1));
 
@@ -244,4 +246,20 @@ var Available  = blank
 .where(lossyear00_05.eq(0),1) // or when it is 0 for lossyear
 .where(year_2000.eq(OP_color),1);  // or it is an OP in 2000 
 
-// var A_available = 
+
+var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
+print('A_available',A_available);
+
+
+var Percentage = A_expand.divide(A_available);
+print(Percentage);
+
+// Minimum Cost Mapping 
+var cost = blank.multiply(0).add(1).clip(targetarea); 
+var cumulativeCost = cost.cumulativeCost({
+  source: Available,
+  maxDistance: 50 * 1000 // 5 kilometers
+});
+
+
+
