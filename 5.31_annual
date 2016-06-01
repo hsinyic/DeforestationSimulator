@@ -181,3 +181,5 @@ var A2000 = pixelcount(year_2000.gte(OP_color), totalarea);
 var listA2000 = ee.List(ee.Dictionary(A2000).get('groups'));
 print(ee.Dictionary(A2000.get(1)).get('groups'));
 
+
+
