@@ -53,7 +53,7 @@ var percentile_threshold = function(p){
     scale: 500
   });
   print(output);
-  return ee.Dictionary(output.get('cumulative_cost'));
+  return ee.Number(output.get('cumulative_cost'));
   }; 
 
 // ############
