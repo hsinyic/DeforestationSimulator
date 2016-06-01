@@ -214,7 +214,6 @@ var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear 
 
 var A_target = 190803;  // pixel count target for year 2000 
 var A2000 = pixelcount(year_2000.gte(OP_color), totalarea);
-print(getcount(A2000,1));
 
 
 var G2001 = blank.where((lossyear00_05.eq(1)).and(OP_00_05.eq(NOP_OP)),1);
@@ -230,4 +229,11 @@ var Available  = blank.where(
     (OP_00_05.eq(NOP_OP)).and(lossyear00_05.lte(1))
     ,1)
 .where(year_2000.eq(OP_color),1) ;
+
+
+var Available  = blank
+.where(OP_00_05.eq(NOP_OP),1) // there is a transition 
+.where(lossyear00_05.lte(5),0) // adjusted Hansen year is out of the 2001-2005 range  
+.where(lossyear00_05.eq(0),1) // or when it is 0 for lossyear
+.where(year_2000.eq(OP_color),1);  // or it is an OP in 2000 
 
