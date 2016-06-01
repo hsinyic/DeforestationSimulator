@@ -52,7 +52,8 @@ var percentile_threshold = function(p){
     geometry: targetarea,
     scale: 500
   });
-  return ee.Dictionary(output.get(1)).get('cumulative_cost');
+  print(output);
+  return ee.Dictionary(output.get('cumulative_cost'));
   }; 
 
 // ############
@@ -224,7 +225,7 @@ var year_2000 = Gunarso.expression(
 var targetarea = malaysia; 
 var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear as 99 
 var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
-print(getcount(A2000,1));
+// print(getcount(A2000,1));
 
 
 
@@ -285,7 +286,6 @@ for(var t = 1; t <= 5; ++t){
 
   var N=percentile_threshold(Percentage); 
   costmap = costmap.lt(N);
-  
   // Simply label the places on Hansen lossyear map with 2001
   lossyear00_05 = lossyear00_05.where(costmap.neq(0), 1) ;
   }
