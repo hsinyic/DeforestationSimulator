@@ -129,7 +129,7 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(i
 // ####################
 
 var Gunarso = ee.Image([lossYear]);
-Gunarso= Gunarso.addBands([OP90, OP00, OP05,OP10, treecover2000,blank]);
+Gunarso= Gunarso.addBands([OP90, OP00, OP05,OP10, treecover2000,blank,OP_05_10 ]);
 
 
 //Define transition variables
@@ -240,12 +240,12 @@ var Target = ee.List([157224,159719,167744,176683,205036,217051,230507,248288,26
 var t=1;
   var A_target = ee.Number(Target.get(t));
   print(A_target); 
-  var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
-  G2001 = pixelcount(G2001, targetarea);
-  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
+  var G_current = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
+  G_current = pixelcount(G_current, targetarea);
+  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G_current,1)));
   var A_expand = A_target.subtract(A_current);
   print(ee.Number(getcount(A2000,1)));
-  print(ee.Number(getcount(G2001,1)));
+  print(ee.Number(getcount(G_current,1)));
   print(A_current);
   print("A_expand", t, A_expand);
   var Available  = blank
@@ -279,12 +279,12 @@ var t=1;
 var t=2;
   var A_target = ee.Number(Target.get(t));
   // print(A_target); 
-  var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
-  G2001 = pixelcount(G2001, targetarea);
-  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
+  var G_current = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
+  G_current = pixelcount(G_current, targetarea);
+  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G_current,1)));
   var A_expand = A_target.subtract(A_current);
   // print(ee.Number(getcount(A2000,1)));
-  // print(ee.Number(getcount(G2001,1)));
+  // print(ee.Number(getcount(G_current,1)));
   // print(A_current);
   // print('A_expand', A_expand);
   print("A_expand", t, A_expand);
@@ -320,12 +320,12 @@ var t=2;
 var t=3;
   var A_target = ee.Number(Target.get(t));
   // print(A_target); 
-  var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
-  G2001 = pixelcount(G2001, targetarea);
-  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
+  var G_current = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
+  G_current = pixelcount(G_current, targetarea);
+  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G_current,1)));
   var A_expand = A_target.subtract(A_current);
   // print(ee.Number(getcount(A2000,1)));
-  // print(ee.Number(getcount(G2001,1)));
+  // print(ee.Number(getcount(G_current,1)));
   // print(A_current);
   // print('A_expand', A_expand);
   print("A_expand", t, A_expand);
@@ -337,7 +337,7 @@ var t=3;
   var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
   // print('A_available',A_available);
   var Percentage = A_expand.divide(A_available);
-  // print('Percentage', Percentage);
+  print('Percentage', Percentage);
   // Minimum Cost Mapping 
   var cost = blank.multiply(0).add(1).clip(targetarea); 
   var cumulativeCost = cost.cumulativeCost({
@@ -360,12 +360,12 @@ var t=3;
 var t=4;
   var A_target = ee.Number(Target.get(t));
   // print(A_target); 
-  var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
-  G2001 = pixelcount(G2001, targetarea);
-  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
+  var G_current = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
+  G_current = pixelcount(G_current, targetarea);
+  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G_current,1)));
   var A_expand = A_target.subtract(A_current);
   // print(ee.Number(getcount(A2000,1)));
-  // print(ee.Number(getcount(G2001,1)));
+  // print(ee.Number(getcount(G_current,1)));
   // print(A_current);
   // print('A_expand', A_expand);
   print("A_expand", t, A_expand);
@@ -377,7 +377,7 @@ var t=4;
   var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
   // print('A_available',A_available);
   var Percentage = A_expand.divide(A_available);
-  // print('Percentage', Percentage);
+  print('Percentage', Percentage);
   // Minimum Cost Mapping 
   var cost = blank.multiply(0).add(1).clip(targetarea); 
   var cumulativeCost = cost.cumulativeCost({
@@ -400,12 +400,12 @@ var t=4;
 var t=5;
   var A_target = ee.Number(Target.get(t));
   // print(A_target); 
-  var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
-  G2001 = pixelcount(G2001, targetarea);
-  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
+  var G_current = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
+  G_current = pixelcount(G_current, targetarea);
+  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G_current,1)));
   var A_expand = A_target.subtract(A_current);
   // print(ee.Number(getcount(A2000,1)));
-  // print(ee.Number(getcount(G2001,1)));
+  // print(ee.Number(getcount(G_current,1)));
   // print(A_current);
   // print('A_expand', A_expand);
   print("A_expand", t, A_expand);
@@ -417,7 +417,7 @@ var t=5;
   var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
   // print('A_available',A_available);
   var Percentage = A_expand.divide(A_available);
-  // print('Percentage', Percentage);
+  print('Percentage', Percentage);
   // Minimum Cost Mapping 
   var cost = blank.multiply(0).add(1).clip(targetarea); 
   var cumulativeCost = cost.cumulativeCost({
@@ -438,4 +438,126 @@ var t=5;
   lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;
 // }
 
-//and then export it, or run it, or whatever
+
+var lossyear05_10= Gunarso.expression(
+' OP_05_10==NOP_OP && (lossyear >10 || lossyear <=5) ? random\
+  :lossyear',
+    {  
+      'OP_05_10': Gunarso.select('OP_05_10'),
+      'lossyear': Gunarso.select('lossyear'),
+      'random': Gunarso.select('blank').add(8),
+      'NOP_OP': NOP_OP
+      // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+6)
+    }
+).rename(['lossyear05_10']);
+
+// Visualize 
+// Map.addLayer(lossyear05_10.clip(totalarea).updateMask(lossyear05_10), {min: 0, max: 20, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'lossyear05_10');
+
+//Append the new categorical maps to Gunarso band 
+var Gunarso_intermediate = ee.Image([lossYear]);
+Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
+
+// #########################
+// #Step4 : Create yearly maps (stored in Gunarso_final)
+// #########################
+
+// Start a new collection of images 
+var Gunarso_final =ee.Image([lossYear,year_2000 ]);
+
+for (var t = 1; t <= 4; ++t){
+  //2000<t<2005, basemap 2000, lossyear00_05, transition map is OP_00_05
+  if(t<=5){
+    print(t, 'hey');
+    var transition = String('b("OP_00_05")');
+    var lossyear=String('lossyear00_05');
+    var basemap = String('year_2000');
+  }
+  //2005 <t<2010, basemap 2005, lossyear05_10, transition map is OP_05_10
+  else if(t>5 || t<=10){
+    var transition = String('b("OP_05_10")');
+    var lossyear= String('lossyear05_10'); 
+    var basemap = String('year_2005');
+  }
+
+  // index is year_2001, year_2002, .... consistent with year_2000 defined before 
+  var index = "year_" +String(t+2000);
+  //define condNOP_NOP, condNOP_OP, condOP_OP
+  var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
+  var condNOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_OP)); 
+  var condOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(OP_OP)); 
+
+
+  //define executeNOP_NOP, executeNOP_OP, executeOP_OP
+  var executeOP_OP = Gunarso_intermediate.expression(
+  'lossYear==t ? OPR\
+    :(lossYear>t || lossYear<t) ? OP\
+    : OTH',
+      {  
+        'OP': Gunarso_intermediate.select('blank').add(OP_color),
+        'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
+        'lossYear': Gunarso_intermediate.select(lossyear),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        't': t,
+      }
+  );
+
+  var executeNOP_OP = Gunarso_intermediate.expression(
+  ' lossYear>t && basemap==F_color? F\
+    : lossYear>t && basemap==NF_color?NF\
+      : lossYear<=t? OP\
+        :OTH',
+      {  
+        'F': Gunarso_intermediate.select('blank').add(F_color),
+        'OP': Gunarso_intermediate.select('blank').add(OP_color),
+        'NF': Gunarso_intermediate.select('blank').add(NF_color),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        'lossYear': Gunarso_intermediate.select(lossyear),
+        'basemap': Gunarso_intermediate.select(basemap),
+        't': t,
+        'NF_color': NF_color,
+        'F_color': F_color
+      }
+  );
+  var executeNOP_NOP = Gunarso_intermediate.expression(
+  ' basemap==F_color && (lossYear>t || lossYear==0)? F\
+    :basemap==F_color && (lossYear<=t && lossYear>0)? NF\
+          :basemap==NF_color ? NF\
+            :OTH',
+      {  
+        'F': Gunarso_intermediate.select('blank').add(F_color),
+        'NF': Gunarso_intermediate.select('blank').add(NF_color),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        'lossYear': Gunarso_intermediate.select(lossyear),
+        'basemap': Gunarso_intermediate.select(basemap),
+        't': t,
+        'NF_color': NF_color,
+        'F_color': F_color
+      }
+  );
+
+  // individual yearmap classifications  
+  var yearmap= Gunarso_intermediate.select('blank')
+  .where(condOP_OP,executeOP_OP)
+  .where(condNOP_OP,executeNOP_OP)
+  .where(condNOP_NOP,executeNOP_NOP)
+  .rename([index]);
+  
+  // at t=2005, add year_2005 as the base year map to Gunarso_intermediate for the period 2005-2010
+  if(t==5){
+  Gunarso_intermediate = Gunarso_intermediate.addBands(yearmap);
+  }
+  
+  //append yearmap to Gunarso_final image collection
+  Gunarso_final = Gunarso_final.addBands(yearmap);
+
+}
+
+// Graph all the classificaiton maps between 2000 to 2010 
+for (var t = 5; t >= 0; --t){
+    print('hey', t);
+    var index = "year_" +String(t+2000);
+    Map.addLayer(Gunarso_final.select(index).clip(totalarea).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
+    palette:[db, lb, gr, yellow, red, whi ]},index);
+}
+
