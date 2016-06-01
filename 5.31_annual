@@ -68,6 +68,7 @@ var gr= String('#4cff62');
 var whi=String('#181716');
 var black = String('#101010');
 
+
 // Convert Gunarso vector maps to a raster, Peninsula
 var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
@@ -223,10 +224,10 @@ Map.addLayer(G2001, {min: 0, max: 1, palette: [whi, gr]}, 'G2001');
 
 G2001 = pixelcount(G2001, targetarea);
 var A_current = ee.Number(getcount(A2000,1)) + ee.Number(getcount(G2001,1));
-var A_expand = A_target - A_current;
+var A_expand = ee.Number(A_target) - A_current;
 print(ee.Number(getcount(A2000,1)));
 print(ee.Number(getcount(G2001,1)));
-
+print(A_current);
 
 
 var Available  = blank
