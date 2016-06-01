@@ -249,8 +249,6 @@ var Available  = blank
 Map.addLayer(Available, {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'Available');
 
 
-
-
 var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
 print('A_available',A_available);
 
