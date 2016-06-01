@@ -231,8 +231,8 @@ print(getcount(A2000,1));
 // count and area conversion 
 // print("2000 count", getcount(pixelcount(OP00.eq(1), malaysia),1));
 // print("2000 area", area(OP00.eq(1), malaysia,'OP00' ));
-var Target = ee.List([3893371, 3932764,4059473,4200598,4648253]);
-for(var t = 1; t <= 10; ++t){
+var Target = ee.List([3893371, 3932764,4059473,4200598,4648253,4837937]);
+for(var t = 1; t <= 4; ++t){
 // pixel count target for year 2000 
   var A_target = ee.Number(Target.get(t));
   print(A_target); 
@@ -249,6 +249,7 @@ for(var t = 1; t <= 10; ++t){
   print('A_expand', A_expand);
   if(A_expand.lte(0)){
     lossyear00_05 = lossyear00_05;
+    print('ah', t)
   }
   else{
   var Available  = blank
