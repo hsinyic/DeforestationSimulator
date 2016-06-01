@@ -16,6 +16,28 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // ############
+// # Define Statistical Functions
+// ############
+var pixelcount = function(image, shape){
+  var Stat = image.addBands(image);
+  var r = Stat.reduceRegion({
+    reducer: ee.Reducer.count().group(1),
+    scale: 500,
+    geometry: shape
+  });
+  return r; 
+};
+var area = function(image, shape){
+    var areaImage = image.multiply(ee.Image.pixelArea());
+    var stats = areaImage.reduceRegion({
+        reducer: ee.Reducer.sum(),
+        geometry: shape,
+        maxPixels: 5e9
+    });
+  return stats.get('cumulative_cost');
+};
+
+// ############
 // # Step 1: Load data 
 // # 1) from Hansen 
 // # 2) draw boundaries around malaysia, indo, PNG
@@ -180,6 +202,8 @@ var A_target = 190803;  // pixel count target for year 2000
 var A2000 = pixelcount(year_2000.gte(OP_color), totalarea);
 var listA2000 = ee.List(ee.Dictionary(A2000).get('groups'));
 print(ee.Dictionary(A2000.get(1)).get('groups'));
+
+
 
 
 
