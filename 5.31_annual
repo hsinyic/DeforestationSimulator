@@ -227,7 +227,6 @@ var A_current = ee.Number(getcount(A2000,1)) + ee.Number(getcount(G2001,1));
 var A_expand = ee.Number(A_target) - A_current;
 print(ee.Number(getcount(A2000,1)));
 print(ee.Number(getcount(G2001,1)));
-print(A_current);
 
 
 var Available  = blank
