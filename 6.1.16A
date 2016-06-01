@@ -129,7 +129,8 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(i
 // ####################
 
 var Gunarso = ee.Image([lossYear]);
-Gunarso= Gunarso.addBands([OP90, OP00, OP05,OP10, treecover2000,blank,OP_05_10 ]);
+Gunarso= Gunarso.addBands([OP90, OP00, OP05,OP10, treecover2000,blank ]);
+
 
 
 //Define transition variables
@@ -191,6 +192,10 @@ var OP_05_10 = Gunarso.expression(
 // Map.addLayer(OP_90_00.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_90_00');
 Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
 Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
+
+
+Gunarso= Gunarso.addBands([OP_90_00, OP_00_05, OP_05_10]);
+
 
 
 // code NF, F, OPR, OP into numbers 
