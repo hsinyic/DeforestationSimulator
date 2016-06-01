@@ -46,16 +46,17 @@ var area = function(image, shape){
 // # 2) draw boundaries around malaysia, indo, PNG
 // # 3) Gunarso vector maps, converted to raster
 // ############
-var lossYear = gfcImage.select(['lossyear']);
-var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear as 99 
-var treecover2000 = gfcImage.select(['treecover2000']);
-var nodata = gfcImage.select(['datamask']);
-var blank = lossYear.multiply(0).rename(['blank']);
-
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 var totalarea = malaysia.merge(indonesia).merge(PNG);
+
+
+
+var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
+var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
+var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
+
 
 // //add color scheme 
 var db= String('0000FF');
@@ -103,10 +104,10 @@ var in10_raster = blank.where(in10_raster.eq(1), 1).where(in05_raster.eq(1), 1);
 
 
 // Revise to make sure NOP-OP scenarios is not possible 
-var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']);
-var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
-var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
-var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
+var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
+var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']).clip(totalarea);
+var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
+var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
 
 // ####################
 // # Step 2: Categorical map for 1990-2000, 2000-2005, 2005-2010 
@@ -207,28 +208,25 @@ var getcount = function(dict, group){
 };
 
 
-// Do it for Malaysia 
-totalarea = malaysia; 
+// Analysis for Malaysia 
+var targetarea = malaysia; 
 var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear as 99 
 
 
 var A_target = 190803;  // pixel count target for year 2000 
-var A2000 = pixelcount(year_2000.gte(OP_color), totalarea);
+var A2000 = pixelcount(year_2000.gte(OP_color), targetarea);
+print(getcount(A2000,1));
 
 
 var G2001 = blank.where((lossyear00_05.eq(1)).and(OP_00_05.eq(NOP_OP)),1);
-G2001 = pixelcount(G2001, totalarea);
+Map.addLayer(G2001, {min: 0, max: 1, palette: [whi, gr]}, 'G2001');
+
+G2001 = pixelcount(G2001, targetarea);
 var A_current = ee.Number(getcount(A2000,1)) + ee.Number(getcount(G2001,1));
 var A_expand = A_target - A_current;
 print(ee.Number(getcount(A2000,1)));
 print(ee.Number(getcount(G2001,1)));
 
-
-
-var Available  = blank.where(
-    (OP_00_05.eq(NOP_OP)).and(lossyear00_05.lte(1))
-    ,1)
-.where(year_2000.eq(OP_color),1) ;
 
 
 var Available  = blank
@@ -237,3 +235,4 @@ var Available  = blank
 .where(lossyear00_05.eq(0),1) // or when it is 0 for lossyear
 .where(year_2000.eq(OP_color),1);  // or it is an OP in 2000 
 
+// var A_available = 
