@@ -46,14 +46,14 @@ var getcount = function(dict, group){
   return ee.Dictionary(list.get(group)).get('count');
 };
 
-  var percentile_threshold = function(p){
-    var output = costmap.clip(targetarea).reduceRegion({
-      reducer: ee.Reducer.percentile([p]),
-      geometry: targetarea,
-      scale: 500
-    });
-    return ee.Dictionary(output.get(1)).get('cumulative_cost');
-    }; 
+var percentile_threshold = function(p){
+  var output = costmap.clip(targetarea).reduceRegion({
+    reducer: ee.Reducer.percentile([p]),
+    geometry: targetarea,
+    scale: 500
+  });
+  return ee.Dictionary(output.get(1)).get('cumulative_cost');
+  }; 
 
 // ############
 // # Step 1: Load data 
@@ -247,9 +247,9 @@ for(var t = 1; t <= 4; ++t){
   // print(ee.Number(getcount(G2001,1)));
   print(A_current);
   print('A_expand', A_expand);
-  if(A_expand.lte(0)){
+  if(A_expand.getInfo()<0){
     lossyear00_05 = lossyear00_05;
-    print('ah', t)
+    print('ah', t);
   }
   else{
   var Available  = blank
@@ -283,10 +283,10 @@ for(var t = 1; t <= 4; ++t){
   costmap = costmap.updateMask(costmap);
   // Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'costmap');
 
-  var N=Percentile(Percentage); 
+  var N=percentile_threshold(Percentage); 
   costmap = costmap.lt(N);
   
   // Simply label the places on Hansen lossyear map with 2001
-  var lossyear05_10 = lossyear05_10.where(costmap.neq(0), 1) ;
+  lossyear00_05 = lossyear00_05.where(costmap.neq(0), 1) ;
   }
 }
