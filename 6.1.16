@@ -15,7 +15,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(102.10693359375, 3.973860975839102, 4);
+Map.setCenter(102.10693359375, 3.973860975839102, 5);
 
 // ############
 // # Define Statistical Functions
@@ -233,7 +233,7 @@ var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
 // print("2000 count", getcount(pixelcount(OP00.eq(1), malaysia),1));
 // print("2000 area", area(OP00.eq(1), malaysia,'OP00' ));
 var Target = ee.List([3893371, 3932764,4059473,4200598,4648253,4837937]);
-for(var t = 1; t <= 5; ++t){
+for(var t = 1; t <= 3; ++t){
 // pixel count target for year 2000 
   var A_target = ee.Number(Target.get(t));
   // print(A_target); 
@@ -243,7 +243,7 @@ for(var t = 1; t <= 5; ++t){
   
   G2001 = pixelcount(G2001, targetarea);
   var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
-  var A_expand = ee.Number(A_target).subtract(A_current);
+  var A_expand = A_target.subtract(A_current);
   // print(ee.Number(getcount(A2000,1)));
   // print(ee.Number(getcount(G2001,1)));
   // print(A_current);
@@ -284,9 +284,11 @@ for(var t = 1; t <= 5; ++t){
   costmap = costmap.updateMask(costmap);
   // Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'costmap');
 
-  var N=percentile_threshold(Percentage); 
+  var N = percentile_threshold(Percentage); 
   costmap = costmap.lt(N);
   // Simply label the places on Hansen lossyear map with 2001
   lossyear00_05 = lossyear00_05.where(costmap.neq(0), 1) ;
+  
   }
 }
+
