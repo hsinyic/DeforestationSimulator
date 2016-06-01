@@ -182,7 +182,7 @@ var pixel2000 = pixelcount(year_2000, Peninsula_outline);
 print(pixel2000);
 
 // sum area takes a very long time 
-var area2000 = area(year_2000, Peninsula_outline);
+var area2000 = area(year_2000.multiply(0).add(1), Peninsula_outline);
 var area2000_NF = area(year_2000.eq(1), Peninsula_outline);
 var area2000_F = area(year_2000.eq(2), Peninsula_outline);
 var area2000_OP = area(year_2000.eq(4), Peninsula_outline);
@@ -191,12 +191,11 @@ var area2000_OTH = area(year_2000.eq(5), Peninsula_outline);
 var area2000_OTH2 = area(year_2000.eq(3), Peninsula_outline);
 
 
-
+print('area2000 Total', area2000);
 print('area2000_NF', area2000_NF);
 print('area2000_F', area2000_F);
 print('area2000_OP', area2000_OP);
 print('area2000_OTH', area2000_OTH);
 print('area2000_OTH2', area2000_OTH2);
-print('area2000 Total', area2000);
 
 print(year_2000);
