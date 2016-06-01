@@ -34,7 +34,8 @@ var area = function(image, shape){
     var stats = areaImage.reduceRegion({
         reducer: ee.Reducer.sum(),
         geometry: shape,
-        maxPixels: 5e9
+        scale: 500,
+        // maxPixels: 5e9
     });
   return stats.get('cumulative_cost');
 };
@@ -171,9 +172,9 @@ var OP_05_10 = Gunarso.expression(
 // print('op 2000- 2005',OP_00_05);
 // print('op 2005- 2010',OP_05_10);
 
-Map.addLayer(OP_90_00.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_90_00');
-Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
-Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
+// Map.addLayer(OP_90_00.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_90_00');
+// Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
+// Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
 
 
 // code NF, F, OPR, OP into numbers 
@@ -199,13 +200,34 @@ var year_2000 = Gunarso.expression(
     }
 ).rename(['year_2000']);
 
-// 
-// var A_target = 190803;  // pixel count target for year 2000 
-// var A2000 = pixelcount(year_2000.gte(OP_color), totalarea);
-// var listA2000 = ee.List(ee.Dictionary(A2000).get('groups'));
-// print(ee.Dictionary(A2000.get(1)).get('groups'));
-
-print('finshed');
+// get count function for pixel counts 
+var getcount = function(dict, group){
+  var list = ee.List(ee.Dictionary(dict).get('groups'));
+  return ee.Dictionary(list.get(group)).get('count');
+};
 
 
+// Do it for Malaysia 
+totalarea = malaysia; 
+var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear as 99 
+
+
+var A_target = 190803;  // pixel count target for year 2000 
+var A2000 = pixelcount(year_2000.gte(OP_color), totalarea);
+print(getcount(A2000,1));
+
+
+var G2001 = blank.where((lossyear00_05.eq(1)).and(OP_00_05.eq(NOP_OP)),1);
+G2001 = pixelcount(G2001, totalarea);
+var A_current = ee.Number(getcount(A2000,1)) + ee.Number(getcount(G2001,1));
+var A_expand = A_target - A_current;
+print(ee.Number(getcount(A2000,1)));
+print(ee.Number(getcount(G2001,1)));
+
+
+
+var Available  = blank.where(
+    (OP_00_05.eq(NOP_OP)).and(lossyear00_05.lte(1))
+    ,1)
+.where(year_2000.eq(OP_color),1) ;
 
