@@ -43,7 +43,7 @@ var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
 // list should be 10, 20, 30, 40, 50, 60 and so forth 
 // more syntax to deal with 
 // 1. Do you refine the algorithm, or just crank one out right now? 
-centerMap(102.0849609375, 0.39550467153201946, 8);
+centerMap(102.0849609375, 0.39550467153201946, 9);
 
 var db= String('0000FF');
 var lb= String('#11ffff');
@@ -123,6 +123,7 @@ var T30 = BEFORE.where(E30.neq(0), 4);
 var T60 = BEFORE.where(E60.neq(0), 4);
 var T90 = BEFORE.where(E90.neq(0), 4);
 // .where(AFTER.eq(1),1).where(AFTER.eq(2),2)
+AFTER = AFTER.where((BEFORE.eq(2).and(AFTER.neq(4))),2);
 Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
 Map.addLayer(T90, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE90');
 Map.addLayer(T60, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE60');
