@@ -282,3 +282,9 @@ var percentile_threshold = function(p){
   });
   return ee.Dictionary(output.get(1)).get('cumulative_cost');
   }; 
+var N=Percentile(Percentage); 
+costmap = costmap.lt(N);
+
+// Simply label the places on Hansen lossyear map with 2001
+var lossyear05_10 = lossyear05_10.where(costmap.neq(0), 1) 
+ 
