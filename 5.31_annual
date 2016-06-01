@@ -219,8 +219,8 @@ var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear 
 
 
 // count and area conversion 
-print("2005 count", getcount(pixelcount(OP05.eq(1), malaysia),1));
-print("2005 area", area(OP05.eq(1), malaysia,'OP05' ));
+print("2000 count", getcount(pixelcount(OP00.eq(1), malaysia),1));
+print("2000 area", area(OP00.eq(1), malaysia,'OP00' ));
 
 
 // pixel count target for year 2000 
