@@ -10,44 +10,6 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.10693359375, 3.973860975839102, 5);
 
-// ############
-// # Define Statistical Functions
-// ############
-var pixelcount = function(image, shape){
-  var Stat = image.addBands(image);
-  var r = Stat.reduceRegion({
-    reducer: ee.Reducer.count().group(1),
-    scale: 500,
-    geometry: shape
-  });
-  return r; 
-};
-var area = function(image, shape, index){
-    var areaImage = image.multiply(ee.Image.pixelArea());
-    var stats = areaImage.reduceRegion({
-        reducer: ee.Reducer.sum(),
-        geometry: shape,
-        scale: 500,
-        // maxPixels: 5e9
-    });
-  return stats.get(index);
-};
-
-// get count function for pixel counts 
-var getcount = function(dict, group){
-  var list = ee.List(ee.Dictionary(dict).get('groups'));
-  return ee.Dictionary(list.get(group)).get('count');
-};
-
-var percentile_threshold = function(p){
-  var output = costmap.clip(targetarea).reduceRegion({
-    reducer: ee.Reducer.percentile([p]),
-    geometry: targetarea,
-    scale: 500
-  });
-  print(output);
-  return ee.Number(output.get('cumulative_cost'));
-  }; 
 
 // ############
 // # Step 1: Load data 
@@ -55,17 +17,16 @@ var percentile_threshold = function(p){
 // # 2) draw boundaries around malaysia, indo, PNG
 // # 3) Gunarso vector maps, converted to raster
 // ############
+var lossYear = gfcImage.select(['lossyear']);
+var treecover2000 = gfcImage.select(['treecover2000']);
+var nodata = gfcImage.select(['datamask']);
+var blank = lossYear.multiply(0).rename(['blank']);
+
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
-var totalarea = Peninsula_outline;
-
-
-
-var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
-var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
-var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
-
+// var totalarea = malaysia.merge(indonesia).merge(PNG);
+var totalarea= Peninsula_outline; 
 
 // //add color scheme 
 var db= String('0000FF');
@@ -74,9 +35,14 @@ var red=String('ff510f');
 var lr = String("#ff8f7d");
 var yellow=String('#fff832');
 var gr= String('#4cff62');
-var whi=String('#f7f7f7');
+var whi=String('#181716');
 var black = String('#101010');
 
+
+// show lossyear, and where lossyear = 0 
+Map.addLayer(lossYear.clip(totalarea).updateMask(lossYear),
+            {'min': 0, 'max': 14, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+            'Hansen Forest Lost Year');
 
 // Convert Gunarso vector maps to a raster, Peninsula
 var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()});
@@ -84,17 +50,16 @@ var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.fi
 var OP05_raster = Pen05.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()});
 var OP10_raster = Pen10.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()});
 
-
-var OP90_raster = blank.where(OP90_raster.neq(0), 1);
-var OP00_raster = blank.where(OP00_raster.neq(0), 1).where(OP90_raster.eq(1), 1);
-var OP05_raster = blank.where(OP05_raster.neq(0), 1).where(OP00_raster.eq(1), 1);
-var OP10_raster = blank.where(OP10_raster.neq(0), 1).where(OP05_raster.eq(1), 1);
-
 // Revise to make sure NOP-OP scenarios is not possible 
-var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
-var OP00 = blank.where(OP00_raster.eq(1), 1).rename(['OP00']).clip(totalarea);
-var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
-var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
+var OP90_raster = blank.where(OP90_raster.neq(0), 1);
+var OP00_raster = blank.where(OP00_raster.neq(0), 1).where(OP90_raster.neq(0), 1);
+var OP05_raster = blank.where(OP05_raster.neq(0), 1).where(OP00_raster.neq(0), 1);
+var OP10_raster = blank.where(OP10_raster.neq(0), 1).where(OP05_raster.neq(0), 1);
+
+var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']);
+var OP00 = blank.where(OP00_raster.eq(1), 1).rename(['OP00']);
+var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']);
+var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']);
 
 
 // ####################
@@ -103,6 +68,8 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
 
 var Gunarso = ee.Image([lossYear]);
 Gunarso= Gunarso.addBands([OP90, OP00, OP05,OP10, treecover2000,blank]);
+print('Gunarso image collection: ', Gunarso);
+
 
 
 //Define transition variables
@@ -110,6 +77,21 @@ var NOP_NOP= 1;//NonOP to NonOP
 var NOP_OP= 2;//NonOP to OP
 var OP_NOP= 3;//OP to NonOP
 var OP_OP= 4;//OP to OP
+
+var OP_90_00 = Gunarso.expression(
+  "(OP1990==1 && OP2000==1) ? OP_OP \
+    : (OP1990==1 && OP2000==0) ? OP_NOP \
+      :(OP1990==0 && OP2000==0) ? NOP_NOP \
+        : NOP_OP", 
+        {
+        'OP1990': Gunarso.select('OP90'),
+        'OP2000': Gunarso.select('OP00'),
+        'OP_OP': Gunarso.select('blank').add(OP_OP),
+        'OP_NOP': Gunarso.select('blank').add(OP_NOP),
+        'NOP_NOP': Gunarso.select('blank').add(NOP_NOP),
+        'NOP_OP': Gunarso.select('blank').add(NOP_OP),
+        }
+    ).rename(['OP_90_00']);
 
 var OP_00_05 = Gunarso.expression(
     "(OP2000==1 && OP2005==1) ? OP_OP \
@@ -140,10 +122,25 @@ var OP_05_10 = Gunarso.expression(
         'NOP_OP': Gunarso.select('blank').add(NOP_OP),
         }
     ).rename(['OP_05_10']);
-// Map.addLayer(OP_90_00.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_90_00');
+
+
+// print('op 1990- 2000',OP_90_00);
+// print('op 2000- 2005',OP_00_05);
+// print('op 2005- 2010',OP_05_10);
+
+Map.addLayer(OP_90_00.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_90_00');
 Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
 Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
 
+
+
+// ############
+// # Step 3: Preliminary data processing 
+// # 1) Create 2000 Basemap  
+// # 2) Fix inconsistencies for "NOP>OP, but no lossevents in between"
+// # 3) Append the categorical maps, basemaps, and new lossyear layers 
+// #    (00-05, 05-10) to Gunarso_intermediate band
+// ############
 
 // code NF, F, OPR, OP into numbers 
 var NF_color = 1;
@@ -151,6 +148,7 @@ var F_color = 2;
 var OPReplant_color = 3; 
 var OP_color = 4; 
 var OTH_color = 5;
+
 
 // Create year_2000 classified layer of OP, F, NF  
 var year_2000 = Gunarso.expression(
@@ -168,76 +166,145 @@ var year_2000 = Gunarso.expression(
     }
 ).rename(['year_2000']);
 
-
-
-// Analysis for Malaysia 
-var targetarea = malaysia; 
-var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear as 99 
-var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
-// print(getcount(A2000,1));
+// print('year_2000',year_2000);
+// Map.addLayer(year_2000.clip(totalarea), {min: 0, max: 5, palette: [whi, db, lb, red, yellow, gr]}, 'year_2000');
 
 
 
-// count and area conversion 
-// print("2000 count", getcount(pixelcount(OP00.eq(1), malaysia),1));
-// print("2000 area", area(OP00.eq(1), malaysia,'OP00' ));
-var Target = ee.List([3893371, 3932764,4059473,4200598,4648253,4837937]);
-for(var t = 1; t <= 3; ++t){
-// pixel count target for year 2000 
-  var A_target = ee.Number(Target.get(t));
-  // print(A_target); 
+
+//Create separate lossyear00_05 and lossyear05_10
+Gunarso= Gunarso.addBands([OP_00_05, OP_05_10]);
+var lossyear00_05= Gunarso.expression(
+' OP_00_05== NOP_OP && (lossyear >5 || lossyear==0) ? random\
+  :lossyear',
+    {  
+      'OP_00_05': Gunarso.select('OP_00_05'),
+      'lossyear': Gunarso.select('lossyear'),
+      'random': Gunarso.select('blank').add(3),
+      'NOP_OP': NOP_OP
+      // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+1)
+    }
+).rename(['lossyear00_05']);
 
 
-  var G2001 = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
-  
-  G2001 = pixelcount(G2001, targetarea);
-  var A_current = ee.Number(getcount(A2000,1)).add( ee.Number(getcount(G2001,1)));
-  var A_expand = A_target.subtract(A_current);
-  // print(ee.Number(getcount(A2000,1)));
-  // print(ee.Number(getcount(G2001,1)));
-  // print(A_current);
-  // print('A_expand', A_expand);
-  if(A_expand.getInfo()<0){
-    lossyear00_05 = lossyear00_05;
-    print('ah', t);
+var lossyear05_10= Gunarso.expression(
+' OP_05_10==NOP_OP && (lossyear >10 || lossyear <=5) ? random\
+  :lossyear',
+    {  
+      'OP_05_10': Gunarso.select('OP_05_10'),
+      'lossyear': Gunarso.select('lossyear'),
+      'random': Gunarso.select('blank').add(8),
+      'NOP_OP': NOP_OP
+      // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+6)
+    }
+).rename(['lossyear05_10']);
+
+// Visualize 
+// Map.addLayer(lossyear05_10.clip(totalarea).updateMask(lossyear05_10), {min: 0, max: 20, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'lossyear05_10');
+
+//Append the new categorical maps to Gunarso band 
+var Gunarso_intermediate = ee.Image([lossYear]);
+Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
+
+// #########################
+// #Step4 : Create yearly maps (stored in Gunarso_final)
+// #########################
+
+// Start a new collection of images 
+var Gunarso_final =ee.Image([lossYear,year_2000 ]);
+
+for (var t = 1; t <= 10; ++t){
+  //2000<t<2005, basemap 2000, lossyear00_05, transition map is OP_00_05
+  if(t<=5){
+    var transition = String('b("OP_00_05")');
+    var lossyear=String('lossyear00_05');
+    var basemap = String('year_2000');
   }
-  else{
-  var Available  = blank
-  .where(lossyear00_05.lte(t),1)
-  .where(year_2000.eq(OP_color),1)
-  .clip(targetarea);   
-  // Map.addLayer(Available, {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'Available');
-  
-  
-  var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
-  // print('A_available',A_available);
-  
-  
-  var Percentage = A_expand.divide(A_available);
-  // print('Percentage', Percentage);
-  
-  // Minimum Cost Mapping 
-  var cost = blank.multiply(0).add(1).clip(targetarea); 
-  var cumulativeCost = cost.cumulativeCost({
-    source: Available,
-    maxDistance: 50 * 1000 // 5 kilometers
-  });
-  Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'cumulativeCost');
-  
-  
-  // leave out area that is not NOP to OP
-  // leave out area that has Hansen transition between 2001 to 2005 
-  var costmap = cumulativeCost
-  .where(OP_00_05.neq(NOP_OP),0) //clip out area where there is no transition 
-  .where((OP_00_05.eq(NOP_OP)).and(lossyear00_05.lte(5)),0) ;// clip out area that is transition but Hansen already has a lossyear 
-  costmap = costmap.updateMask(costmap);
-  // Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'costmap');
-
-  var N = percentile_threshold(Percentage); 
-  costmap = costmap.lt(N);
-  // Simply label the places on Hansen lossyear map with 2001
-  lossyear00_05 = lossyear00_05.where(costmap.neq(0), 1) ;
-  
+  //2005 <t<2010, basemap 2005, lossyear05_10, transition map is OP_05_10
+  else if(t>5 || t<=10){
+    var transition = String('b("OP_05_10")');
+    var lossyear= String('lossyear05_10'); 
+    var basemap = String('year_2005');
   }
+
+  // index is year_2001, year_2002, .... consistent with year_2000 defined before 
+  var index = "year_" +String(t+2000);
+  //define condNOP_NOP, condNOP_OP, condOP_OP
+  var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
+  var condNOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_OP)); 
+  var condOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(OP_OP)); 
+
+
+  //define executeNOP_NOP, executeNOP_OP, executeOP_OP
+  var executeOP_OP = Gunarso_intermediate.expression(
+  'lossYear==t ? OPR\
+    :(lossYear>t || lossYear<t) ? OP\
+    : OTH',
+      {  
+        'OP': Gunarso_intermediate.select('blank').add(OP_color),
+        'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
+        'lossYear': Gunarso_intermediate.select(lossyear),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        't': t,
+      }
+  );
+
+  var executeNOP_OP = Gunarso_intermediate.expression(
+  ' lossYear>t && basemap==F_color? F\
+    : lossYear>t && basemap==NF_color?NF\
+      : lossYear<=t? OP\
+        :OTH',
+      {  
+        'F': Gunarso_intermediate.select('blank').add(F_color),
+        'OP': Gunarso_intermediate.select('blank').add(OP_color),
+        'NF': Gunarso_intermediate.select('blank').add(NF_color),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        'lossYear': Gunarso_intermediate.select(lossyear),
+        'basemap': Gunarso_intermediate.select(basemap),
+        't': t,
+        'NF_color': NF_color,
+        'F_color': F_color
+      }
+  );
+  var executeNOP_NOP = Gunarso_intermediate.expression(
+  ' basemap==F_color && (lossYear>t || lossYear==0)? F\
+    :basemap==F_color && (lossYear<=t && lossYear>0)? NF\
+          :basemap==NF_color ? NF\
+            :OTH',
+      {  
+        'F': Gunarso_intermediate.select('blank').add(F_color),
+        'NF': Gunarso_intermediate.select('blank').add(NF_color),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        'lossYear': Gunarso_intermediate.select(lossyear),
+        'basemap': Gunarso_intermediate.select(basemap),
+        't': t,
+        'NF_color': NF_color,
+        'F_color': F_color
+      }
+  );
+
+  // individual yearmap classifications  
+  var yearmap= Gunarso_intermediate.select('blank')
+  .where(condOP_OP,executeOP_OP)
+  .where(condNOP_OP,executeNOP_OP)
+  .where(condNOP_NOP,executeNOP_NOP)
+  .rename([index]);
+  
+  // at t=2005, add year_2005 as the base year map to Gunarso_intermediate for the period 2005-2010
+  if(t==5){
+  Gunarso_intermediate = Gunarso_intermediate.addBands(yearmap);
+  }
+  
+  //append yearmap to Gunarso_final image collection
+  Gunarso_final = Gunarso_final.addBands(yearmap);
+
+}
+print('Gunarso_final, 2000-2010', Gunarso_final);
+
+// Graph all the classificaiton maps between 2000 to 2010 
+for (var t = 10; t >= 0; --t){
+    var index = "year_" +String(t+2000);
+    Map.addLayer(Gunarso_final.select(index).clip(totalarea).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
+    palette:[ lb, db, gr, yellow, red, whi ]},index);
 }
 
