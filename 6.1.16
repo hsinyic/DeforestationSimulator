@@ -232,7 +232,7 @@ print(getcount(A2000,1));
 // print("2000 count", getcount(pixelcount(OP00.eq(1), malaysia),1));
 // print("2000 area", area(OP00.eq(1), malaysia,'OP00' ));
 var Target = ee.List([3893371, 3932764,4059473,4200598,4648253]);
-for (var t = 1; t <= 10; ++t){
+for(var t = 1; t <= 10; ++t){
 // pixel count target for year 2000 
   var A_target = ee.Number(Target.get(t));
   print(A_target); 
@@ -251,22 +251,19 @@ for (var t = 1; t <= 10; ++t){
     lossyear00_05 = lossyear00_05;
   }
   else{
-
   var Available  = blank
-  .where(OP_00_05.eq(NOP_OP),1) // there is a transition 
-  .where(lossyear00_05.lte(5),0) // adjusted Hansen year is out of the 2001-2005 range  
-  .where(lossyear00_05.eq(0),1) // or when it is 0 for lossyear
+  .where(lossyear00_05.lte(t),1)
   .where(year_2000.eq(OP_color),1)
-  .clip(targetarea);  // or it is an OP in 2000 
-  Map.addLayer(Available, {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'Available');
+  .clip(targetarea);   
+  // Map.addLayer(Available, {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'Available');
   
   
   var A_available  = ee.Number(getcount(pixelcount(Available.eq(1), targetarea),1));
-  print('A_available',A_available);
+  // print('A_available',A_available);
   
   
   var Percentage = A_expand.divide(A_available);
-  print('Percentage', Percentage);
+  // print('Percentage', Percentage);
   
   // Minimum Cost Mapping 
   var cost = blank.multiply(0).add(1).clip(targetarea); 
@@ -279,13 +276,11 @@ for (var t = 1; t <= 10; ++t){
   
   // leave out area that is not NOP to OP
   // leave out area that has Hansen transition between 2001 to 2005 
-  var costmap = cumulativeCost.where(OP_00_05.neq(NOP_OP),0); //clip out area where there is no transition 
-  // .where(lossyear00_05.lte(5),0) // clip out area that is less than or equal to 5 
-  // .where(lossyear00_05.eq(0),1); // compensate for the area that is labeled no loss 
+  var costmap = cumulativeCost
+  .where(OP_00_05.neq(NOP_OP),0) //clip out area where there is no transition 
+  .where((OP_00_05.eq(NOP_OP)).and(lossyear00_05.lte(5)),0) ;// clip out area that is transition but Hansen already has a lossyear 
   costmap = costmap.updateMask(costmap);
-  Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'costmap');
-  
-  
+  // Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'costmap');
 
   var N=Percentile(Percentage); 
   costmap = costmap.lt(N);
@@ -293,3 +288,4 @@ for (var t = 1; t <= 10; ++t){
   // Simply label the places on Hansen lossyear map with 2001
   var lossyear05_10 = lossyear05_10.where(costmap.neq(0), 1) ;
   }
+}
