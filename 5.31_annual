@@ -15,6 +15,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.setCenter(102.10693359375, 3.973860975839102, 4);
+
 // ############
 // # Define Statistical Functions
 // ############
@@ -198,12 +200,12 @@ var year_2000 = Gunarso.expression(
 ).rename(['year_2000']);
 
 // 
-var A_target = 190803;  // pixel count target for year 2000 
-var A2000 = pixelcount(year_2000.gte(OP_color), totalarea);
-var listA2000 = ee.List(ee.Dictionary(A2000).get('groups'));
-print(ee.Dictionary(A2000.get(1)).get('groups'));
+// var A_target = 190803;  // pixel count target for year 2000 
+// var A2000 = pixelcount(year_2000.gte(OP_color), totalarea);
+// var listA2000 = ee.List(ee.Dictionary(A2000).get('groups'));
+// print(ee.Dictionary(A2000.get(1)).get('groups'));
 
-
+print('finshed');
 
 
 
