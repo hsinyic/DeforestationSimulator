@@ -33,4 +33,4 @@ var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 var totalarea = malaysia.merge(indonesia).merge(PNG);
 
 
-var A_target = 3e5;  // pixel count target for year 2000 
+var A_target = 190803;  // pixel count target for year 2000 
