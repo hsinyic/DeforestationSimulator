@@ -22,7 +22,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 // # 3) Gunarso vector maps, converted to raster
 // ############
 var lossYear = gfcImage.select(['lossyear']);
-var lossyear00_05 = lossYear.where(lossYear.eq(0), 99) // Assign zero lossyear as 99 
+var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear as 99 
 var treecover2000 = gfcImage.select(['treecover2000']);
 var nodata = gfcImage.select(['datamask']);
 var blank = lossYear.multiply(0).rename(['blank']);
@@ -32,3 +32,5 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 var totalarea = malaysia.merge(indonesia).merge(PNG);
 
+
+var A_target = 3e5;  // pixel count target for year 2000 
