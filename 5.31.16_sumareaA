@@ -16,7 +16,7 @@ var pixelcount = function(image, shape){
   var Stat = image.addBands(image);
   var r = Stat.reduceRegion({
     reducer: ee.Reducer.count().group(1),
-    scale: 30,
+    scale: 500,
     maxPixels: 9e12,
     geometry: shape
   });
