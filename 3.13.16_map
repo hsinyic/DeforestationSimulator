@@ -333,7 +333,6 @@ print(time);
 var map = time.map(classify);
 print('Map', map);
 
-print(map('1'))
 // //add color scheme 
 // var db= String('0000FF');
 // var lb= String('#11ffff');
