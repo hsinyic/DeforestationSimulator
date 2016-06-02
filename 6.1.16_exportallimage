@@ -13,13 +13,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: 98ff00 */ee.Geometry.LinearRing(
-        [[93.1640625, 7.100892668623654],
-         [162.333984375, 6.4899833326706515],
-         [151.259765625, -12.382928338487396],
-         [105.908203125, -11.60919340793894],
-         [93.1640625, 7.100892668623654]]);
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.10693359375, 3.973860975839102, 5);
 
@@ -362,17 +356,18 @@ for (var t = 10; t >= 0; --t){
 // Compute summary statistics 
 // ###################
 
-// var json = ee.Element(malaysia).geometry().getInfo();
+
+var json = totalarea.geometry().getInfo();
 // // doesn't work because there is no 'area' method:
 // print(json.area());
 // // does work since ee.Geometry() returns objects with all the methods:
 // print(ee.Geometry(json).area());
 
-var json = Peninsula_outline.geometry().getInfo();
+var json = Peninsula_outline.bounds().geometry().getInfo();
 // doesn't work because there is no 'area' method:
 // print(json.area());
 // does work since ee.Geometry() returns objects with all the methods:
-print(ee.Geometry(json).area());
+print(ee.Geometry(json).toGeoJSON());
 
 for (var t = 0; t <= 10; ++t){
     var index = "year_" +String(t+2000);
@@ -381,7 +376,7 @@ for (var t = 0; t <= 10; ++t){
     image: output,
     description: index,
     scale: 30,
-    region: ee.Geometry(malaysia.geometry().getInfo()).toGeoJSON(),
+    region: ee.Geometry(json).toGeoJSON(),
     maxPixels: 9e12
   });
 }
