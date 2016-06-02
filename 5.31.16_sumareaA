@@ -199,5 +199,4 @@ print('area2000_F', area2000_F);
 print('area2000_OP', area2000_OP);
 print('area2000_OTH', area2000_OTH);
 print('area2000_OTH2', area2000_OTH2);
-
 print(year_2000);
