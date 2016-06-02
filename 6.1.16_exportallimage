@@ -356,18 +356,17 @@ for (var t = 10; t >= 0; --t){
 // Compute summary statistics 
 // ###################
 
-
-var json = totalarea.geometry().getInfo();
+// var json = ee.Element(malaysia).geometry().getInfo();
 // // doesn't work because there is no 'area' method:
 // print(json.area());
 // // does work since ee.Geometry() returns objects with all the methods:
 // print(ee.Geometry(json).area());
 
-var json = Peninsula_outline.bounds().geometry().getInfo();
+var json = Peninsula_outline.geometry().getInfo();
 // doesn't work because there is no 'area' method:
 // print(json.area());
 // does work since ee.Geometry() returns objects with all the methods:
-print(ee.Geometry(json).toGeoJSON());
+print(ee.Geometry(json).area());
 
 for (var t = 0; t <= 10; ++t){
     var index = "year_" +String(t+2000);
@@ -376,7 +375,7 @@ for (var t = 0; t <= 10; ++t){
     image: output,
     description: index,
     scale: 30,
-    region: ee.Geometry(json).toGeoJSON(),
+    region: ee.Geometry(totalarea.geometry().getInfo()).toGeoJSONString(),
     maxPixels: 9e12
   });
 }
