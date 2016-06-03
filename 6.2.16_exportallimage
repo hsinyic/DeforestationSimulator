@@ -37,7 +37,7 @@ var json = Peninsula_outline.geometry().getInfo();
 // does work since ee.Geometry() returns objects with all the methods:
 // print(ee.Geometry(json).area());
 
-
+print(totalarea);
 Export.image.toDrive({
 image: lossYear,
 description: 'lossYear',
