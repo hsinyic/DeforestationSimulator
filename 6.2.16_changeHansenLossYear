@@ -17,7 +17,6 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.10693359375, 3.973860975839102, 10);
 var scale = 500; 
-
 // ############
 // # Define Statistical Functions
 // ############
@@ -231,16 +230,16 @@ var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
 // print("2000 count", getcount(pixelcount(OP00.eq(1), malaysia),1));
 // print("2000 area", area(OP00.eq(1), malaysia,'OP00' ));
 var Target = ee.List([3893371
-,3932764
-,4059473
-,4200598
-,4648253
-,4837937
-,5050383
-,5331116
-,5649785
-,5991216
-,6309886]);
+,3955157
+,4153894
+,4375242
+,5077366
+,5374876
+,5708087
+,6148403
+,6648220
+,7183738
+,7683556]);
 
 var yr = ee.List([1,2,3,4,5,6,7,8,9,10]);
 var A_base = ee.Number(getcount(A2000,1));
@@ -515,11 +514,11 @@ var t=5;
   lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;
 
 
-lossyear00_05 = lossyear00_05.rename(['lossyear05_10']);
-Export.image.toAsset({
-	image: lossyear00_05.clip(targetarea),
-	description: 'lossyear00_05',
-	assetId: 'assetId'
-});
+// lossyear00_05 = lossyear00_05.rename(['lossyear05_10']);
+// Export.image.toAsset({
+// 	image: lossyear00_05,
+// 	description: 'lossyear00_05',
+// 	assetId: 'assetId'
+// });
 
 
