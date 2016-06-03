@@ -515,3 +515,10 @@ var t=5;
 
 
 lossyear00_05 = lossyear00_05.rename(['lossyear05_10']);
+Export.image.toAsset({
+	image: lossyear00_05.clip(targetarea),
+	description: 'lossyear00_05',
+	assetId: 'assetId'
+});
+
+
