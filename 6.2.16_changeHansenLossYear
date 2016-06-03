@@ -17,6 +17,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.10693359375, 3.973860975839102, 10);
 var scale = 500; 
+var scale_square = ee.Number(scale.multiply(scale));
 // ############
 // # Define Statistical Functions
 // ############
@@ -248,7 +249,7 @@ print(A_base);
 
 // var t=1;
 // if(t==1){
-//   var A_target = ee.Number(Target.get(t)).divide(ee.Number(scale).multiply(ee.Number(scale))).multiply(10000);
+//   var A_target = ee.Number(Target.get(t)).divide(square).multiply(10000);
 //   // print(A_target); 
 //   var HansenAddition = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
 //   var A_current = A_base.add( ee.Number(getcount(pixelcount(HansenAddition, targetarea),1)));
@@ -296,7 +297,7 @@ print(A_base);
 //   lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;}
 
 var t=2;
-  var A_target = ee.Number(Target.get(t)).divide(ee.Number(scale).multiply(ee.Number(scale))).multiply(10000);
+  var A_target = ee.Number(Target.get(t)).divide(scale_square).multiply(10000);
   // print(A_target); 
   var HansenAddition = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
   var A_current = A_base.add( ee.Number(getcount(pixelcount(HansenAddition, targetarea),1)));
@@ -353,7 +354,7 @@ var t=2;
 
 
 var t=3;
-  var A_target = ee.Number(Target.get(t)).divide(ee.Number(scale).multiply(ee.Number(scale))).multiply(10000);
+  var A_target = ee.Number(Target.get(t)).divide(square).multiply(10000);
   // print(A_target); 
   var HansenAddition = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
   var A_current = A_base.add( ee.Number(getcount(pixelcount(HansenAddition, targetarea),1)));
@@ -408,7 +409,7 @@ var t=3;
 
 
 var t=4;
-  var A_target = ee.Number(Target.get(t)).divide(ee.Number(scale).multiply(ee.Number(scale))).multiply(10000);
+  var A_target = ee.Number(Target.get(t)).divide(square).multiply(10000);
   // print(A_target); 
   var HansenAddition = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
   var A_current = A_base.add( ee.Number(getcount(pixelcount(HansenAddition, targetarea),1)));
@@ -461,7 +462,7 @@ var t=4;
   lossyear00_05 = lossyear00_05.where(costmap.neq(0), t) ;
 
 var t=5;
-  var A_target = ee.Number(Target.get(t)).divide(ee.Number(scale).multiply(ee.Number(scale))).multiply(10000);
+  var A_target = ee.Number(Target.get(t)).divide(square).multiply(10000);
   // print(A_target); 
   var HansenAddition = blank.where((lossyear00_05.eq(t)).and(OP_00_05.eq(NOP_OP)),1).clip(targetarea);
   var A_current = A_base.add( ee.Number(getcount(pixelcount(HansenAddition, targetarea),1)));
