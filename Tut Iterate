@@ -1,0 +1,2 @@
+var collection = ee.ImageCollection('MODIS/MYD13A1').select('EVI');
+
