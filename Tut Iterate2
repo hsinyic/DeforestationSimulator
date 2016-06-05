@@ -81,10 +81,11 @@ function dcpConvert(image) {
 
 function waterBalance(image, prev) {
   // will need to do the same sort of thing for runoff, melt, and soil water
+
   var snowpack_1 = ee.Image(prev).select(['snowpack'], ['snowpack_1']);
   image = image.addBands(snowpack_1);
   // print(ee.Image(image));
-
+  
   // there will be a melt factor as well in the future so a simple
   // accumulation won't actually work here - only for demo
   var snowpack = image.expression("b('snowpack') + b('snowpack_1)");
