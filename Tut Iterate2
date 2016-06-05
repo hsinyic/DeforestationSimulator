@@ -91,7 +91,7 @@ function waterBalance(image, prev) {
   snowpack = image.select([0], ['snowpack']);
   image = image.addBands('snowpack');
   // Still doesn't print even if I set it to ee.Image() what is wrong here? 
-  print(ee.Image(image));
+  // print(ee.Image(image));
   return image;
 }
 
