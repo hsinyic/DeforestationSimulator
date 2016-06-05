@@ -1,20 +1,15 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
-    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
-    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
-    Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
-    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft"),
-    ma90 = ee.FeatureCollection("ft:1ClQZOLYbgQUpFlaj-IEM0H-HCYH2qgWB0IMgw67s"),
-    ma10 = ee.FeatureCollection("ft:1qnUbN9G35ty03brJzVL_bvwur5r0CrAORkHwZSak"),
-    ma05 = ee.FeatureCollection("ft:1_TjOWmEO3IJviMvrPnpmSf6-X3tbBCNg0rW8MZOb"),
-    ma00 = ee.FeatureCollection("ft:1dZpd04fr-TNZV_5BlsT6GgmDHXTLqoDwH4jg59vX"),
-    in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
-    in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
-    in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
-    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    Pen10 = ee.FeatureCollection("ft:1xabXcdjDWY8PCYLjAO6zH07XTczWVKqGcNVVQI3Y"),
+    Pen05 = ee.FeatureCollection("ft:1YZK7dCxaKKF5WneTc3hcNyB1ss6nVRkl818pf7zI"),
+    Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
+    Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+
+
 Map.setCenter(102.10693359375, 3.973860975839102, 10);
 var scale = 500; 
 var scale_square = ee.Number(scale.multiply(scale));
@@ -61,16 +56,8 @@ var percentile_threshold = function(p){
 // # 2) draw boundaries around malaysia, indo, PNG
 // # 3) Gunarso vector maps, converted to raster
 // ############
-var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
-var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
-var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
-var totalarea = malaysia.merge(indonesia).merge(PNG);
-
-
-
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
-var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
 
 
 // //add color scheme 
@@ -96,34 +83,12 @@ var OP00_raster = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1);
 var OP05_raster = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1);
 var OP10_raster = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1);
 
-// Convert Gunarso vector maps to a raster, Sabah and Sarawak
-var ma90_raster = ma90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var ma00_raster = ma00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var ma05_raster = ma05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var ma10_raster = ma10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-
-var ma90_raster = blank.where(ma90_raster.eq(1), 1);
-var ma00_raster = blank.where(ma00_raster.eq(1), 1).where(ma90_raster.eq(1), 1);
-var ma05_raster = blank.where(ma05_raster.eq(1), 1).where(ma00_raster.eq(1), 1);
-var ma10_raster = blank.where(ma10_raster.eq(1), 1).where(ma05_raster.eq(1), 1);
-
-// Convert Gunarso vector maps to a raster, Indonesia and PNG
-var in90_raster = in90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var in00_raster = in00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var in05_raster = in05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var in10_raster = in10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-
-var in90_raster = blank.where(in90_raster.eq(1), 1);
-var in00_raster = blank.where(in00_raster.eq(1), 1).where(in90_raster.eq(1), 1);
-var in05_raster = blank.where(in05_raster.eq(1), 1).where(in00_raster.eq(1), 1);
-var in10_raster = blank.where(in10_raster.eq(1), 1).where(in05_raster.eq(1), 1);
-
 
 // Revise to make sure NOP-OP scenarios is not possible 
-var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
-var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']).clip(totalarea);
-var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
-var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
+var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
+var OP00 = blank.where(OP00_raster.eq(1), 1).rename(['OP00']).clip(totalarea);
+var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
+var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
 
 
 // ####################
@@ -186,11 +151,7 @@ var OP_05_10 = Gunarso.expression(
     ).rename(['OP_05_10']);
 
 
-// print('op 1990- 2000',OP_90_00);
-// print('op 2000- 2005',OP_00_05);
-// print('op 2005- 2010',OP_05_10);
-
-// Map.addLayer(OP_90_00.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_90_00');
+Map.addLayer(OP_90_00.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_90_00');
 Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
 Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
 
@@ -218,13 +179,10 @@ var year_2000 = Gunarso.expression(
     }
 ).rename(['year_2000']);
 
-
-
 // Analysis for Malaysia 
-var targetarea = malaysia; 
+var targetarea = Peninsula_outline; 
 var lossyear00_05 = lossYear.where(lossYear.eq(0), 99); // Assign zero lossyear as 99 
 var A2000 = pixelcount(year_2000.gte(OPReplant_color), targetarea);
-// print(getcount(A2000,1));
 
 
 
