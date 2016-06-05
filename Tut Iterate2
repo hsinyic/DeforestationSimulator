@@ -1,0 +1,109 @@
+// iteration question: example script that only handles snowpack
+// needs to pass at least ta & snowpack bands to next iteration
+
+// soil water balance model based on dcp30 projections,
+// simplified to show iteration question
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Bridget Guildner, University of Montana Forest Landscape Ecology lab
+// Priestley-Taylor soil water balance projections using NEX DCP-30 tmin/tmax/ppt projections
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~ Set Options ~~~~~~~~~~~~~~~~~~~~
+
+var model = 'GISS-E2-R';
+var scenario = 'rcp26';
+var start = '2017-01-01'; // set three years ahead for spinup
+var end = '2017-04-30';
+var USstate = 'Montana';
+
+// ~~~~~~~~~~~~~~~~~~~~~ Load Data ~~~~~~~~~~~~~~~~~~~~~~~
+
+// load state feature collection
+var area = ee.FeatureCollection("ft:1fRY18cjsHzDgGiJiS2nnpUU3v9JPDc2HNaR7Xk8")
+  .filterMetadata('Name','equals',USstate);
+//Map.addLayer(area, null, 'area');
+
+// load nex-dcp30 image collection & filter by interval, model, & scenario
+var dcp = ee.ImageCollection('NASA/NEX-DCP30')
+      .filterDate(start, end)
+      .filterMetadata('model', 'equals', model)
+      .filterMetadata('scenario', 'equals', scenario)
+      .filterBounds(area);
+print(dcp);
+
+// ~~~~~~~~~~~~~~~ Define functions and constants ~~~~~~~~~~~~
+
+// define functions
+
+function dcpConvert(image) {
+   // function: dcpConvert
+  // converts nex dcp30 tmin & tmax from K to C, ppt from kg m-2 s-1 to mm m-2 mo-1 
+  // and calculates all necessary intermediates for water balance model
+  
+  // tmax
+  var tx = image.expression("b('tasmax') * 1.0 - 273.15");
+  tx = tx.select([0],['tx']);
+  image = image.addBands(tx);
+  
+  // tmin
+  var tn = image.expression("b('tasmin') - 273.15");
+  tn = tn.select([0],['tn']);
+  image = image.addBands(tn);
+  
+  // tmean
+  var ta = image.expression("(b('tx') + b('tn')) / 2");
+  ta = ta.select([0],['ta']);
+  image = image.addBands(ta);
+
+  // ppt
+  var ppt = image.expression("b('pr') * 26300789.0237"); 
+  ppt = ppt.select([0],['ppt']);
+  image = image.addBands(ppt);
+
+  // snow factor
+  var snow_int1 = image.expression("(b('ta')-(-4.80736800))/(11.96586980-(-4.80736800))");
+  var snow_int2 = snow_int1.where(snow_int1.lte(0), 0);
+  var snow_fin = snow_int2.where(snow_int2.gte(1), 1);
+  snow_fin = snow_fin.select([0],['snowfactor']);
+  image = image.addBands(snow_fin);
+
+  // rain
+  var rain = image.expression("b('ppt') * b('snowfactor')");
+  rain = rain.select([0], ['rain']);
+  image = image.addBands(rain);
+  
+  // snow
+  var snow = image.expression("b('ppt') * (1 - b('snowfactor'))");
+  snow = snow.select([0], ['snow']);
+  image = image.addBands(snow);
+  
+  return image;
+}
+
+function waterBalance(image, prev) {
+  // will need to do the same sort of thing for runoff, melt, and soil water
+  var snowpack_1 = ee.Image(prev).select(['snowpack'], ['snowpack_1']);
+  image = image.addBands(snowpack_1);
+  // print(ee.Image(image));
+
+  // there will be a melt factor as well in the future so a simple
+  // accumulation won't actually work here - only for demo
+  var snowpack = image.expression("b('snowpack') + b('snowpack_1)");
+  snowpack = image.select([0], ['snowpack']);
+  image = image.addBands('snowpack');
+  // Still doesn't print even if I set it to ee.Image() what is wrong here? 
+  print(ee.Image(image));
+  return image;
+}
+
+// ~~~~~~~~ Perform conversions & calculate intermediates ~~~~~~~~~~~~~~
+
+// map conversion & intermediate formulas over dcp collection
+var dcpset = dcp.map(dcpConvert);
+print('dcpset:');
+print(dcpset.getInfo());
+print(dcpset);
+
+
+// ~~~~~~~~ Iterate water balance calcs over each image ~~~~~~~~~~~~~~~
+var wb_dcp = dcpset.iterate(waterBalance);
+
