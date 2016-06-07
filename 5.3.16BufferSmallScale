@@ -68,8 +68,14 @@ Map.addLayer(expansion_area, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"
 //##########
 
 // Mask the sources image with itself.
-var sources =BEFORE.eq(4).multiply(0.25);
+var sources =BEFORE.eq(4);
+print(sources);
 sources = sources.updateMask(sources);
+Map.addLayer(sources, {min: 0, max: 1, palette:[ whi,gr ]},"sources");
+
+// Apply kernal to source 
+
+
 //Unifrom cost data
 var cost = BEFORE.multiply(0).add(1); 
 Map.addLayer(cost, {min: 0, max: 4, palette:[ gr, whi, db,red ]},"cost");
@@ -78,6 +84,7 @@ var cumulativeCost = cost.cumulativeCost({
   source: sources,
   maxDistance: 50 * 1000 // 5 kilometers
 });
+
 
 
 //Mask out BEFORE area AND Non-expanding area 
@@ -93,15 +100,9 @@ var percentile_threshold = function(p){
     geometry: geometry}); 
   // print(Dictionary.keys());
   return ee.Number(Dictionary.get('cumulative_cost'))};
-var N30 = percentile_threshold(10);
-var N60 = percentile_threshold(40);
-var N90 = percentile_threshold(70);
-
-var N70 = percentile_threshold(70);
-var N71 = percentile_threshold(71);
-var N80 = percentile_threshold(80);
-// var N90 = percentile_threshold(90);
-var N100 = percentile_threshold(100);
+var N30 = percentile_threshold(30);
+var N60 = percentile_threshold(60);
+var N90 = percentile_threshold(90);
 // print("N70", N70)
 // print("N71", N71)
 // print("N80", N80)
