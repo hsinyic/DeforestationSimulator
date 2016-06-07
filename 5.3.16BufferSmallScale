@@ -78,9 +78,11 @@ Map.addLayer(sources.updateMask(sources), {min: 0, max: 1, palette:[ whi,gr ]},"
 var kernel = ee.Kernel.circle({radius: 1});
 var sources_kernal = sources.focal_min({kernel: kernel, iterations: 5});
             // .focal_max({kernel: kernel, iterations: 2});
-// var sources_kernal = sources.reduceNeighborhood(ee.call("Reducer.min"), ee.call("Kernel.square", 0.5));
 Map.addLayer(sources_kernal, {min: 0, max: 1, palette:[ whi,gr ]},"sources_kernal");
 
+// var sources_kernal2 = sources.reduceNeighborhood(ee.call("Reducer.min"), ee.call("Kernel.circle", 1));
+var sources_kernal2 = sources.reduceNeighborhood(ee.Reducer.min(), ee.Kernel.circle(5, 'meters'));
+Map.addLayer(sources_kernal2, {min: 0, max: 1, palette:[ whi,gr ]},"sources_kernal2");
 
 
 
@@ -155,5 +157,9 @@ E90 = E90.where(E90.neq(0),1);
 print(pixelcount(E30));
 print(pixelcount(E60));
 print(pixelcount(E90));
-Map.addLayer(sources_kernal, {min: 0, max: 1, palette:[ whi,gr ]},"sources_kernal");
+Map.addLayer(sources_kernal.updateMask(sources_kernal), {min: 0, max: 1, palette:[ whi,gr ]},"sources_kernal");
+Map.addLayer(sources_kernal2.updateMask(sources_kernal2), {min: 0, max: 1, palette:[ whi,gr ]},"sources_kernal2");
+Map.addLayer(sources.updateMask(sources), {min: 0, max: 1, palette:[ whi,gr ]},"sources");
+
+
 
