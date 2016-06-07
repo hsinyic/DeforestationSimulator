@@ -180,7 +180,18 @@ var lossyear00_05= Gunarso.expression(
 ).rename(['lossyear00_05']);
 
 
-var lossyear05_10= Gunarso.select('lossyear').rename(['lossyear05_10']);
+var lossyear05_10= Gunarso.expression(
+' OP_05_10==NOP_OP && (lossyear >10 || lossyear <=5) ? random\
+  :lossyear',
+    {  
+      'OP_05_10': Gunarso.select('OP_05_10'),
+      'lossyear': Gunarso.select('lossyear'),
+      'random': Gunarso.select('blank').add(99),
+      'NOP_OP': NOP_OP
+      // 'random': Gunarso.select('blank').add(Math.floor(Math.random()*5)+6)
+    }
+).rename(['lossyear05_10']);
+
 
 // Visualize 
 // Map.addLayer(lossyear05_10.clip(totalarea).updateMask(lossyear05_10), {min: 0, max: 20, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 'lossyear05_10');
