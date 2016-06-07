@@ -71,9 +71,19 @@ Map.addLayer(expansion_area, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"
 var sources =BEFORE.eq(4);
 print(sources);
 sources = sources.updateMask(sources);
-Map.addLayer(sources, {min: 0, max: 1, palette:[ whi,gr ]},"sources");
+Map.addLayer(sources.updateMask(sources), {min: 0, max: 1, palette:[ whi,gr ]},"sources");
+
 
 // Apply kernal to source 
+var kernel = ee.Kernel.circle({radius: 1});
+var sources_kernal = sources.focal_min({kernel: kernel, iterations: 1});
+            // .focal_max({kernel: kernel, iterations: 2});
+
+// var sources_kernal = sources.reduceNeighborhood(ee.call("Reducer.min"), ee.call("Kernel.square", 0.5));
+Map.addLayer(sources_kernal, {min: 0, max: 1, palette:[ whi,gr ]},"sources_kernal");
+
+
+
 
 
 //Unifrom cost data
@@ -103,11 +113,6 @@ var percentile_threshold = function(p){
 var N30 = percentile_threshold(30);
 var N60 = percentile_threshold(60);
 var N90 = percentile_threshold(90);
-// print("N70", N70)
-// print("N71", N71)
-// print("N80", N80)
-// print("N90", N90)
-// print("N100", N100)
 
 
 var E30 = costmap.where(cumulativeCost.gte(N30),0);
@@ -125,11 +130,11 @@ var T60 = BEFORE.where(E60.neq(0), 4);
 var T90 = BEFORE.where(E90.neq(0), 4);
 // .where(AFTER.eq(1),1).where(AFTER.eq(2),2)
 AFTER = AFTER.where((BEFORE.eq(2).and(AFTER.neq(4))),2);
-Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
-Map.addLayer(T90, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE90');
-Map.addLayer(T60, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE60');
-Map.addLayer(T30, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE30');
-Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+// Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+// Map.addLayer(T90, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE90');
+// Map.addLayer(T60, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE60');
+// Map.addLayer(T30, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE30');
+// Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
 
 
 //Verify Statistics, turn all nonzero pixels into a value 
@@ -151,3 +156,5 @@ E90 = E90.where(E90.neq(0),1);
 print(pixelcount(E30));
 print(pixelcount(E60));
 print(pixelcount(E90));
+Map.addLayer(sources_kernal, {min: 0, max: 1, palette:[ whi,gr ]},"sources_kernal");
+
