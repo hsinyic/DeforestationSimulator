@@ -318,3 +318,10 @@ print(Gunarso_final.select('year_.*').eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
 }));
 
 
+print(Gunarso_final.select('year_.*')
+         .reduceRegion({
+            reducer: ee.Reducer.count(),
+            geometry: targetarea,
+            scale: 500
+}));
+
