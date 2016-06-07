@@ -331,3 +331,12 @@ print(Gunarso_final.select('year_.*').eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
 var targetarea = Peninsula_outline; 
 
 var yr = ee.List.sequence(1, 12, 1); 
+
+var Gunarso_step2 = yr.map(function(t){
+  t = ee.Number(t); 
+  var index = String('year_')+ String(t.add(2000)); // this is the problem 
+  print(index);
+  var new_annual = Gunarso_final.select(index);
+  new_annual = new_annual.where(new_annual.eq(OPReplant_color), OP_color); 
+  return new_annual;});
+print(Gunarso_step2);
