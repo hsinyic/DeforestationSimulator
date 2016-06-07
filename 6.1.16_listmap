@@ -310,10 +310,11 @@ print('Gunarso_final, 2000-2010', Gunarso_final);
 var targetarea = Peninsula_outline;
 
 print(Gunarso_final.select('year_.*').eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
-        // .multiply(ee.Image.pixelArea())
+         .multiply(ee.Image.pixelArea())
          .reduceRegion({
-            reducer: ee.Reducer.count().forEachElement(),
+            reducer: ee.Reducer.sum().forEachElement(),
             geometry: targetarea,
             scale: 500
 }));
+
 
