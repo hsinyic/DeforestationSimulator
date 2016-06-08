@@ -197,8 +197,6 @@ var year_2005 = Gunarso.expression(
       'treecover2000': Gunarso.select('treecover2000')
     }
 ).rename(['year_2005']);
-print(pixelcount(year_2005, totalarea, 1));
-print(pixelcount(year_2005, totalarea, 4));
 
 
 print('year_2005',year_2005);
@@ -241,25 +239,25 @@ Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000, year_2005, blank
 // Start a new collection of images 
 var Gunarso_final =ee.Image([lossYear,year_2000 ]);
 
-var yr = ee.List.sequence(1, 10, 1);
+var yr = ee.List.sequence(1, 5, 1);
 
 
 var annual = function(t){
   t= ee.Number(t);
   // #### PROBLEMS ######
-  var transition = ee.Algorithms.If(t.gt(5), String('b("OP_05_10")'), String('b("OP_00_05")'));
-  var lossyear = ee.Algorithms.If(t.gt(5),String('lossyear05_10') , String('lossyear00_05'));
-  var basemap = ee.Algorithms.If(t.gt(5), String('year_2005'), String('year_2000'));
-  print(transition);
-  print(lossyear);
-  print(basemap);
+  // var transition = ee.Algorithms.If(t.gt(5), String('b("OP_05_10")'), String('b("OP_00_05")'));
+  // var lossyear = ee.Algorithms.If(t.gt(5),String('lossyear05_10') , String('lossyear00_05'));
+  // var basemap = ee.Algorithms.If(t.gt(5), String('year_2005'), String('year_2000'));
+  // print(transition);
+  // print(lossyear);
+  // print(basemap);
 
 
 
   // // #### THIS WORKS ######
-  // var transition = String('b("OP_00_05")');
-  // var lossyear= String('lossyear00_05');
-  // var basemap = String('year_2000');
+  var transition = String('b("OP_00_05")');
+  var lossyear= String('lossyear00_05');
+  var basemap = String('year_2000');
 
   var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
   var condNOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_OP)); 
@@ -321,13 +319,13 @@ var annual = function(t){
   return ee.Image(yearmap);
 };
 
-var test = annual(6);
-print('test', test);
-    Map.addLayer(test, {min: 0, max: 5,
-    palette:[db, lb, gr, yellow, red, whi ]}, "test");
+// var test = annual(6);
+// print('test', test);
+//     Map.addLayer(test, {min: 0, max: 5,
+//     palette:[db, lb, gr, yellow, red, whi ]}, "test");
 
-// var Gunarso_00_05 = yr.map(annual);
-// print('Gunarso_final, 2000-2005', Gunarso_00_05);
+var Gunarso_00_05 = yr.map(annual);
+print('Gunarso_final, 2000-2005', Gunarso_00_05);
 
 
 
