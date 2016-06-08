@@ -346,23 +346,6 @@ print(Gunarso_final.select('year_.*').eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
 }));
 
 
-var yr = ee.List.sequence(0, 10, 1); 
-
-
-// ad hoc idea 
-var Gunarso_step2 = yr.map(function(t){
-  t = ee.Number(t); 
-  var index = t.add(2000).int().format('year_%d');
-  var current = Gunarso_final.select(index);
-  // var current2 = Gunarso_final.select(index); // silly way to work around 
-  // var new_annual = current.where(current2.eq(OPReplant_color), OP_color); 
-  var new_annual = current.where(current.eq(OPReplant_color), OP_color); 
-  return new_annual;
-  }
-  );
-  
-//select by band numbers 
-// print(Gunarso_final.select(7));
 
 // ###################
 // Buffer Analysis  
