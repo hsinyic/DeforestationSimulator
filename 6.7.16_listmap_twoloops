@@ -313,10 +313,8 @@ var annual05_10 = function(t){
 var Gunarso05_10 = yr05_10.map(annual05_10);
 print('Gunarso_final, 2005-2010', Gunarso05_10);
 
-
-
-
-
+var Gunarso_combined = Gunarso00_05.cat(Gunarso05_10);
+print(Gunarso_combined);
 
 
 
