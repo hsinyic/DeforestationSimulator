@@ -8,7 +8,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
     Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(102.10693359375, 3.973860975839102, 10);
+Map.setCenter(102.10693359375, 3.973860975839102, 5);
 var scale = ee.Number(500); 
 // ee.Number significantly slows down the calculation, what to do? 
 var scale_square = ee.Number(scale.multiply(scale)); 
@@ -16,19 +16,17 @@ var scale_square = ee.Number(scale.multiply(scale));
 // ############
 // # Define Statistical Functions
 // ############
-var pixelcount = function(image, shape){
+var pixelcount = function(image, shape, group){
   var Stat = image.addBands(image);
   var r = Stat.reduceRegion({
     reducer: ee.Reducer.count().group(1),
     scale: scale,
     geometry: shape
   });
-  return r; 
-};
-var getcount = function(dict, group){
-  var list = ee.List(ee.Dictionary(dict).get('groups'));
+  var list = ee.List(ee.Dictionary(r).get('groups'));
   return ee.Dictionary(list.get(group)).get('count');
 };
+
 var percentile_threshold = function(costmap, p){
   var output = costmap.clip(targetarea).reduceRegion({
     reducer: ee.Reducer.percentile([p]),
@@ -178,21 +176,34 @@ var year_2000 = Gunarso.expression(
 ).rename(['year_2000']);
 
 
+
 var year_2005 = Gunarso.expression(
 '(OP05 ==1)? OP\
-  :((OP00==0) && treecover2000>=30) && (lossYear>=5 || lossYear = 0)? F\
-    : ((OP00==0) && treecover2000>=30) && (lossYear<=5 || lossYear != 0)? NF\
-    :((OP00==0)&& treecover2000<30)? NF\
-      :OTH',
+  :( OP00==1&& OP05==0)? OTH2\
+  :( OP00==0&& OP05==0 && treecover2000<30)? NF\
+    :( OP00==0 && OP05==0 && treecover2000>=30 && lossYear==0)? F\
+    :( OP00==0 && OP05==0 && treecover2000>=30 && lossYear>5)? F\
+    :( OP00==0 && OP05==0 && treecover2000>=30 && lossYear<=5 )? NF\
+        :OTH',
     {  
       'OP': Gunarso.select('blank').add(OP_color),
       'F': Gunarso.select('blank').add(F_color),
       'NF': Gunarso.select('blank').add(NF_color),
       'OTH': Gunarso.select('blank').add(OTH_color),
+      'OTH2': Gunarso.select('blank').add(6),
+      'lossYear': Gunarso.select('lossyear'),
       'OP00': Gunarso.select('OP00'),
+      'OP05': Gunarso.select('OP05'),
       'treecover2000': Gunarso.select('treecover2000')
     }
 ).rename(['year_2005']);
+print(pixelcount(year_2005, totalarea, 1));
+print(pixelcount(year_2005, totalarea, 4));
+
+
+print('year_2005',year_2005);
+    Map.addLayer(year_2005, {min: 0, max: 6,
+    palette:[db, lb, gr, yellow, red, whi, black ]},'year_2005');
 
 
 //Create separate lossyear00_05 and lossyear05_10
@@ -236,15 +247,15 @@ var yr = ee.List.sequence(1, 10, 1);
 var annual = function(t){
   t= ee.Number(t);
   // #### PROBLEMS ######
-  var transition = ee.Algorithms.If(t.lt(5), String('b("OP_05_10")'), String('b("OP_00_05")'));
-  var lossyear = ee.Algorithms.If(t.lt(5),String('lossyear05_10') , String('lossyear00_05'));
-  var basemap = ee.Algorithms.If(t.lt(5), String('year_2005'), String('year_2000'));
-  print("here");
+  // var transition = ee.Algorithms.If(t.gt(5), String('b("OP_05_10")'), String('b("OP_00_05")'));
+  // var lossyear = ee.Algorithms.If(t.gt(5),String('lossyear05_10') , String('lossyear00_05'));
+  // var basemap = ee.Algorithms.If(t.gt(5), String('year_2005'), String('year_2000'));
 
+  // #### THIS WORKS ######
+  var transition = String('b("OP_00_05")');
+  var lossyear= String('lossyear00_05');
+  var basemap = String('year_2000');
 
-  // var transition = String('b("OP_00_05")');
-  // var lossyear= String('lossyear00_05');
-  // var basemap = String('year_2000');
   var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
   var condNOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_OP)); 
   var condOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(OP_OP)); 
@@ -260,6 +271,7 @@ var annual = function(t){
         't': t,
       }
   );
+
 
   var executeNOP_OP = Gunarso_intermediate.expression(
   'lossYear == 99? OTH\
@@ -300,11 +312,7 @@ var annual = function(t){
   .where(condOP_OP,executeOP_OP)
   .where(condNOP_OP,executeNOP_OP)
   .where(condNOP_NOP,executeNOP_NOP);
-  print("here");
-  print(yearmap);
 
-  // // #### PROBLEMS ######
-  // Gunarso_intermediate = ee.Algorithms.If(t.eq(5), Gunarso_intermediate.addBands(yearmap));
   return ee.Image(yearmap);
 };
 
@@ -315,6 +323,7 @@ print('test', test);
 
 // var Gunarso_00_05 = yr.map(annual);
 // print('Gunarso_final, 2000-2005', Gunarso_00_05);
+
 
 
 
