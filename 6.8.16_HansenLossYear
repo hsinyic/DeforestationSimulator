@@ -8,7 +8,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 Map.setCenter(102.10693359375, 3.973860975839102, 10);
-var scale = ee.Number(500); 
+var scale2 = ee.Number(500); 
+var scale = ee.Number(1000);
 var scale_square = scale.multiply(scale);
 // ############
 // # Define Statistical Functions
