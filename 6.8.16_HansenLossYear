@@ -74,11 +74,7 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']);
 var lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var lossYear00_05 = lossYear.clip(totalarea); 
 var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
-var Target = ee.List([127560
-,131736
-,131990
-,125420
-,125982]);
+var Target = ee.List([127560,131736,131990,125420,125982]);
 
 var t=1; 
 var OP = OP00.where(lossYear.lte(t),1);
@@ -106,8 +102,8 @@ costmap = costmap.updateMask(costmap);
 Designated = Designated.where(costmap.neq(0), 0); 
 lossYear00_05 = lossYear00_05.where(costmap.neq(0), t);
 
-t=2; 
 
+t=2; 
 var OP = OP00.where(lossYear.lte(t),1);
 var A_current = pixelcount(OP.eq(1), totalarea,1);
 print(A_current);
