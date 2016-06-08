@@ -345,7 +345,7 @@ var Gunarso_step2 = yr.map(function(t){
   }
   );
   
-//select band numbers 
-print(Gunarso_final.select(7));
+//select by band numbers 
+// print(Gunarso_final.select(7));
 
 
