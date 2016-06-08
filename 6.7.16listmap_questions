@@ -92,12 +92,13 @@ var annual = function(t){
 var test = annual(3);
 print('test', test);
 
-Map.addLayer(test, {min: 0, max: 5,
-              palette:[db, lb, gr, yellow, red, whi ]}, "test");
 
 
 var Gunarso = yr.map(annual);
 print('Gunarso_final, 2000-2005', Gunarso);
+Map.addLayer(Gunarso.select(0), {min: 0, max: 5,
+              palette:[db, lb, gr, yellow, red, whi ]}, "test");
+
 
 
 
