@@ -178,8 +178,8 @@ var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000, year_2005, blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 var Gunarso_final =ee.Image([lossYear,year_2000]);
 
+//Year 2001 - 2005 
 var yr00_05 = ee.List.sequence(1, 5, 1);
-
 var annual00_05 = function(t){
   t= ee.Number(t);
   // // #### THIS WORKS ######
@@ -246,6 +246,7 @@ var annual00_05 = function(t){
 var Gunarso00_05 = yr00_05.map(annual00_05);
 print('Gunarso_final, 2000-2005', Gunarso00_05);
 
+//Year 2006 - 2010 
 var yr05_10 = ee.List.sequence(6, 10, 1);
 var annual05_10 = function(t){
   t= ee.Number(t);
