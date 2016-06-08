@@ -395,7 +395,6 @@ var t=ee.Number(1);
   var source  = Gunarso_final.select(t.add(1)) ; 
   source = source.updateMask(source);
 
-
   var cost = blank.multiply(0).add(1).clip(targetarea); 
   var cumulativeCost = cost.cumulativeCost({
     source: source,
