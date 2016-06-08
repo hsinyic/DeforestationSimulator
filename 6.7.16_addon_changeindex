@@ -317,11 +317,11 @@ for (var t = 1; t <= 10; ++t){
 print('Gunarso_final, 2000-2010', Gunarso_final);
 
 // Graph all the classificaiton maps between 2000 to 2010 
-for (var t = 10; t >= 0; --t){
-    var index = "year_" +String(t+2000);
-    Map.addLayer(Gunarso_final.select(index).clip(totalarea).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
-    palette:[db, lb, gr, yellow, red, whi ]},index);
-}
+// for (var t = 10; t >= 0; --t){
+//     var index = "year_" +String(t+2000);
+//     Map.addLayer(Gunarso_final.select(index).clip(totalarea).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
+//     palette:[db, lb, gr, yellow, red, whi ]},index);
+// }
 
 // ###################
 // Compute summary statistics 
@@ -379,7 +379,7 @@ var t=ee.Number(1);
   // Calculate the target area, and current area, and get the number of pixels needed for expansion 
   // var index = String('year_') + String(2000+t); 
   var before = Gunarso_final.select(t.add(1));
-  var before_update = before.where(before.eq(OPReplant_color),OP_color);
+  var before_update = before.where(before.eq(OPReplant_color),OP_color).clip(targetarea);
   var A_target = ee.Number(Target.get(t.subtract(1)));
   var A_current = ee.Number(getcount(pixelcount(before_update, targetarea),ee.Number(OP_color).subtract(1)));
   var A_expand = A_target.subtract(A_current);
@@ -392,16 +392,23 @@ var t=ee.Number(1);
   var Percentage = A_expand.divide(A_available);
   // print('Percentage', Percentage);
   
-  var source  = Gunarso_final.select(t.add(1)) ; 
+  var source  = before_update.eq(OP_color) ; 
   source = source.updateMask(source);
+  Map.addLayer(source, {min: 0, max: 6e3, palette:[ black, db, lb, gr, lr, yellow ] }, 'source');
+
 
   var cost = blank.multiply(0).add(1).clip(targetarea); 
   var cumulativeCost = cost.cumulativeCost({
     source: source,
     maxDistance: 50 * 1000 // 50 kilometers
   });
+  Map.addLayer(cumulativeCost, {min: 0, max: 10e14, palette:[ black, db, lb, gr, lr, yellow ] }, 'cumulativeCost');
+
 
   var costmap = cumulativeCost
   .where(OP_00_05.neq(NOP_OP),0) //clip out area where there is no transition 
   .where((OP_00_05.eq(NOP_OP)).and(lossyear00_05.lte(5)),0) ;// clip out area that is transition but Hansen already has a lossyear 
   costmap = costmap.updateMask(costmap);
+  
+  Map.addLayer(costmap, {min: 0, max: 6e3, palette:[ black, db, lb, gr, lr, yellow ] }, 'costmap update2');
+  
