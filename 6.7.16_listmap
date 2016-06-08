@@ -183,17 +183,17 @@ var yr = ee.List.sequence(1, 10, 1);
 var annual = function(t){
   t= ee.Number(t);
   // #### PROBLEMS ######
-  // var transition = ee.Algorithms.If(t.gt(5), String('b("OP_05_10")'), String('b("OP_00_05")'));
-  // var lossyear = ee.Algorithms.If(t.gt(5),String('lossyear05_10') , String('lossyear00_05'));
-  // var basemap = ee.Algorithms.If(t.gt(5), String('year_2005'), String('year_2000'));
+  var transition = ee.Algorithms.If(t.gt(5), String('b("OP_05_10")'), String('b("OP_00_05")'));
+  var lossyear = ee.Algorithms.If(t.gt(5),String('lossyear05_10') , String('lossyear00_05'));
+  var basemap = ee.Algorithms.If(t.gt(5), String('year_2005'), String('year_2000'));
   // print(transition);
   // print(lossyear);
   // print(basemap);
 
   // // #### THIS WORKS ######
-  var transition = String('b("OP_00_05")');
-  var lossyear= String('lossyear00_05');
-  var basemap = String('year_2000');
+  // var transition = String('b("OP_00_05")');
+  // var lossyear= String('lossyear00_05');
+  // var basemap = String('year_2000');
 
   var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
   var condNOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_OP)); 
