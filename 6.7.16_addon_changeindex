@@ -345,9 +345,6 @@ print(Gunarso_final.select('year_.*').eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
             scale: 500
 }));
 
-// ###################
-// Buffer Analysis  
-// ###################
 
 var yr = ee.List.sequence(0, 10, 1); 
 
@@ -366,6 +363,12 @@ var Gunarso_step2 = yr.map(function(t){
   
 //select by band numbers 
 // print(Gunarso_final.select(7));
+
+// ###################
+// Buffer Analysis  
+// ###################
+
+
 
 var Target = ee.List([127560,121069,121323,121864,122426]);
 
