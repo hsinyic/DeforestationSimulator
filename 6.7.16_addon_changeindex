@@ -368,16 +368,18 @@ var Gunarso_step2 = yr.map(function(t){
 //select by band numbers 
 // print(Gunarso_final.select(7));
 
-var Target = ee.List([127560
-,121069
-,121323
-,121864
-,122426]);
+var Target = ee.List([127560,121069,121323,121864,122426]);
 
 var t=ee.Number(1);
   // Calculate the target area, and current area, and get the number of pixels needed for expansion 
   var before = Gunarso_final.select(t.add(1));
-  var before_update = before.where(before.eq(3),4).clip(targetarea);
+  var before_update = before.where(before.eq(3),4).clip(targetarea); 
+  Map.addLayer(before_update, {min: 0, max: 5,
+  palette:[db, lb, gr, yellow, red, whi ]},'year 2001');
+
+
+
+
   var A_target = ee.Number(Target.get(t.subtract(1)));
   var A_current = ee.Number(getcount(pixelcount(before_update, targetarea),2));
   var A_expand = A_target.subtract(A_current);
@@ -413,8 +415,8 @@ var t=ee.Number(1);
   var N = percentile_threshold(costmap, Percentage); 
   print("N", N);
 
-
-  costmap = blank.where(costmap.gte(500),costmap).clip(targetarea) ;
+  // Need to set 700, N=499.1840630698151 runs into unique-value problems 
+  costmap = blank.where(costmap.lte(700),costmap).clip(targetarea) ;
   costmap = costmap.updateMask(costmap);
   Map.addLayer(costmap, {min: 0, max: 1, palette:[ black, db ] }, 'costmap update2');
   var after = before.where(costmap.neq(0), 4);
