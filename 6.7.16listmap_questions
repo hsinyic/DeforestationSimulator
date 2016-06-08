@@ -85,8 +85,7 @@ var collection_intermediate = ee.Image([0, OP90, OP00]);
 var annual = function(t){
   t= ee.Number(t);
   var basemap = ee.Algorithms.If(t.lt(5), String('OP90'), String('OP00'));
-  var yearmap= blank 
-  .where(collection_intermediate.select([basemap]).eq(1),1);
+  var yearmap= blank.where(collection_intermediate.select([basemap]).eq(1),1);
   return ee.Image(yearmap);
 };
 var test = annual(3);
@@ -96,11 +95,6 @@ print('test', test);
 
 var Gunarso = yr.map(annual);
 print('Gunarso_final, 2000-2005', Gunarso);
-Map.addLayer(Gunarso.select(0), {min: 0, max: 5,
-              palette:[db, lb, gr, yellow, red, whi ]}, "test");
-
-
-
 
 
 
