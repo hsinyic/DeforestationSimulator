@@ -177,6 +177,24 @@ var year_2000 = Gunarso.expression(
     }
 ).rename(['year_2000']);
 
+
+var year_2005 = Gunarso.expression(
+'(OP05 ==1)? OP\
+  :((OP00==0) && treecover2000>=30) && (lossYear>=5 || lossYear = 0)? F\
+    : ((OP00==0) && treecover2000>=30) && (lossYear<=5 || lossYear != 0)? NF\
+    :((OP00==0)&& treecover2000<30)? NF\
+      :OTH',
+    {  
+      'OP': Gunarso.select('blank').add(OP_color),
+      'F': Gunarso.select('blank').add(F_color),
+      'NF': Gunarso.select('blank').add(NF_color),
+      'OTH': Gunarso.select('blank').add(OTH_color),
+      'OP00': Gunarso.select('OP00'),
+      'treecover2000': Gunarso.select('treecover2000')
+    }
+).rename(['year_2005']);
+
+
 //Create separate lossyear00_05 and lossyear05_10
 Gunarso= Gunarso.addBands([OP_00_05, OP_05_10]);
 var lossyear00_05= Gunarso.expression(
@@ -203,7 +221,7 @@ var lossyear05_10= Gunarso.expression(
 
 //Append the new categorical maps to Gunarso band 
 var Gunarso_intermediate = ee.Image([lossYear]);
-Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
+Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000, year_2005, blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 
 // #########################
 // #Step4 : Create yearly maps (stored in Gunarso_final),  2000 <= t <= 2005
@@ -212,20 +230,21 @@ Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, 
 // Start a new collection of images 
 var Gunarso_final =ee.Image([lossYear,year_2000 ]);
 
-var yr = ee.List.sequence(1, 5, 1);
+var yr = ee.List.sequence(1, 10, 1);
 
 
-var annual00_05 = function(t){
+var annual = function(t){
   t= ee.Number(t);
   // #### PROBLEMS ######
-  // var transition = ee.Algorithms.If(t.lt(5), String('b("OP_05_10")'), String('b("OP_00_05")'));
-  // var lossyear = ee.Algorithms.If(t.lt(5),String('lossyear05_10') , String('lossyear00_05'));
-  // var basemap = ee.Algorithms.If(t.lt(5), String('year_2005'), String('year_2000'));
+  var transition = ee.Algorithms.If(t.lt(5), String('b("OP_05_10")'), String('b("OP_00_05")'));
+  var lossyear = ee.Algorithms.If(t.lt(5),String('lossyear05_10') , String('lossyear00_05'));
+  var basemap = ee.Algorithms.If(t.lt(5), String('year_2005'), String('year_2000'));
+  print("here");
 
 
-  var transition = String('b("OP_00_05")');
-  var lossyear= String('lossyear00_05');
-  var basemap = String('year_2000');
+  // var transition = String('b("OP_00_05")');
+  // var lossyear= String('lossyear00_05');
+  // var basemap = String('year_2000');
   var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
   var condNOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_OP)); 
   var condOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(OP_OP)); 
@@ -281,19 +300,21 @@ var annual00_05 = function(t){
   .where(condOP_OP,executeOP_OP)
   .where(condNOP_OP,executeNOP_OP)
   .where(condNOP_NOP,executeNOP_NOP);
+  print("here");
+  print(yearmap);
 
   // // #### PROBLEMS ######
   // Gunarso_intermediate = ee.Algorithms.If(t.eq(5), Gunarso_intermediate.addBands(yearmap));
   return ee.Image(yearmap);
 };
 
-var test = annual00_05(3);
+var test = annual(6);
 print('test', test);
     Map.addLayer(test, {min: 0, max: 5,
     palette:[db, lb, gr, yellow, red, whi ]}, "test");
 
-var Gunarso_00_05 = yr.map(annual00_05);
-print('Gunarso_final, 2000-2005', Gunarso_00_05);
+// var Gunarso_00_05 = yr.map(annual);
+// print('Gunarso_final, 2000-2005', Gunarso_00_05);
 
 
 
