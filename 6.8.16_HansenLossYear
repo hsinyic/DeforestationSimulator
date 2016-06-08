@@ -45,8 +45,8 @@ var percentile_threshold = function(p){
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
-var totalarea = malaysia.merge(indonesia).merge(PNG);
-
+// var totalarea = malaysia.merge(indonesia).merge(PNG);
+var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
@@ -86,7 +86,8 @@ var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.lt(5)), 1) 
 var t=1; 
 var OP = OP00.where(lossYear.lte(t),1);
 var A_current = pixelcount(OP.eq(1), totalarea,1 );
-// var A_target = ee.Number(Target.get(t)).divide(scale_square).multiply(10000);
+print(A_current);
+var A_target = ee.Number(Target.get(t)).divide(scale_square).multiply(10000);
 // var A_expand = A_target.subtract(A_current); 
 // var A_designate = pixelcount(Available.eq(1),totalarea);
 // var Percentage = A_expand.divide(A_designate);
