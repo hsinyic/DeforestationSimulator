@@ -155,7 +155,7 @@ var lossyear00_05= Gunarso.expression(
     {  
       'OP_00_05': Gunarso.select('OP_00_05'),
       'lossyear': Gunarso.select('lossyear'),
-      'orphan': Gunarso.select('blank').add(99),
+      'orphan': Gunarso.select('blank').add(3),
       'NOP_OP': NOP_OP
     }
 ).rename(['lossyear00_05']);
@@ -165,7 +165,7 @@ var lossyear05_10= Gunarso.expression(
     {  
       'OP_05_10': Gunarso.select('OP_05_10'),
       'lossyear': Gunarso.select('lossyear'),
-      'orphan': Gunarso.select('blank').add(99),
+      'orphan': Gunarso.select('blank').add(8),
       'NOP_OP': NOP_OP
     }
 ).rename(['lossyear05_10']);
@@ -212,8 +212,7 @@ var annual = function(t){
   );
 
   var executeNOP_OP = Gunarso_intermediate.expression(
-  'lossYear == 99? OTH\
-    :lossYear>t && basemap==F_color? F\
+    'lossYear>t && basemap==F_color? F\
       : lossYear>t && basemap==NF_color?NF\
         : lossYear<=t? OP\
           :OTH',
