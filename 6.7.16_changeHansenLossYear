@@ -1,8 +1,15 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
-    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    geometry = /* color: 98ff00 */ee.Geometry.Point([102.10693359375, 3.973860975839102]),
+    Pen10 = ee.FeatureCollection("ft:1xabXcdjDWY8PCYLjAO6zH07XTczWVKqGcNVVQI3Y"),
+    Pen05 = ee.FeatureCollection("ft:1YZK7dCxaKKF5WneTc3hcNyB1ss6nVRkl818pf7zI"),
+    Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
+    Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+    
 Map.setCenter(102.10693359375, 3.973860975839102, 10);
 var scale = 500; 
 // ############
@@ -71,45 +78,21 @@ var black = String('#101010');
 
 
 // Convert Gunarso vector maps to a raster, Peninsula
-var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-
-
+var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP05_raster = Pen05.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP10_raster = Pen10.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
 var OP90_raster = blank.where(OP90_raster.eq(1), 1);
 var OP00_raster = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1);
 var OP05_raster = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1);
 var OP10_raster = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1);
 
-// Convert Gunarso vector maps to a raster, Sabah and Sarawak
-var ma90_raster = ma90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var ma00_raster = ma00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var ma05_raster = ma05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var ma10_raster = ma10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-
-var ma90_raster = blank.where(ma90_raster.eq(1), 1);
-var ma00_raster = blank.where(ma00_raster.eq(1), 1).where(ma90_raster.eq(1), 1);
-var ma05_raster = blank.where(ma05_raster.eq(1), 1).where(ma00_raster.eq(1), 1);
-var ma10_raster = blank.where(ma10_raster.eq(1), 1).where(ma05_raster.eq(1), 1);
-
-// Convert Gunarso vector maps to a raster, Indonesia and PNG
-var in90_raster = in90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var in00_raster = in00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var in05_raster = in05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-var in10_raster = in10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-
-var in90_raster = blank.where(in90_raster.eq(1), 1);
-var in00_raster = blank.where(in00_raster.eq(1), 1).where(in90_raster.eq(1), 1);
-var in05_raster = blank.where(in05_raster.eq(1), 1).where(in00_raster.eq(1), 1);
-var in10_raster = blank.where(in10_raster.eq(1), 1).where(in05_raster.eq(1), 1);
-
-
 // Revise to make sure NOP-OP scenarios is not possible 
-var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
-var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']).clip(totalarea);
-var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
-var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
+var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']);
+var OP00 = blank.where(OP00_raster.eq(1), 1).rename(['OP00']);
+var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']);
+var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']);
+
 
 
 // ####################
