@@ -8,7 +8,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
     Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(102.10693359375, 3.973860975839102, 10);
+Map.setCenter(102.10693359375, 3.973860975839102, 5);
 var scale = ee.Number(500); 
 // ee.Number significantly slows down the calculation, what to do? 
 var scale_square = ee.Number(scale.multiply(scale)); 
@@ -320,11 +320,11 @@ for (var t = 1; t <= 10; ++t){
 print('Gunarso_final, 2000-2010', Gunarso_final);
 
 // Graph all the classificaiton maps between 2000 to 2010 
-// for (var t = 10; t >= 0; --t){
-//     var index = "year_" +String(t+2000);
-//     Map.addLayer(Gunarso_final.select(index).clip(totalarea).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
-//     palette:[db, lb, gr, yellow, red, whi ]},index);
-// }
+for (var t = 10; t >= 0; --t){
+    var index = "year_" +String(t+2000);
+    Map.addLayer(Gunarso_final.select(index).clip(totalarea).updateMask(Gunarso_final.select(index)), {min: 0, max: 5,
+    palette:[db, lb, gr, yellow, red, whi ]},index);
+}
 
 // ###################
 // Compute summary statistics 
@@ -361,53 +361,57 @@ var Target = ee.List([127560
 ,125420
 ,125982]);
 
-var t=ee.Number(1);
-  // Calculate the target area, and current area, and get the number of pixels needed for expansion 
-  var before = Gunarso_final.select(t.add(1));
-  var before_update = before.where(before.eq(3),4).clip(targetarea); 
-  Map.addLayer(before_update, {min: 0, max: 5,
-  palette:[db, lb, gr, yellow, red, whi ]},'year 2001');
+// var t=ee.Number(1);
+//   // Calculate the target area, and current area, and get the number of pixels needed for expansion 
+//   var before = Gunarso_final.select(t.add(1));
+//   var before_update = before.where(before.eq(3),4).clip(targetarea); 
+//   Map.addLayer(before_update, {min: 0, max: 5,
+//   palette:[db, lb, gr, yellow, red, whi ]},'year 2001');
 
 
-  var A_target = ee.Number(Target.get(t.subtract(1)));
-  var A_current = ee.Number(getcount(pixelcount(before_update, targetarea),2));
-  var A_expand = A_target.subtract(A_current);
-  print('A_target', A_target);
-  print('A_current', A_current);
-  print('A_expand', A_expand);
+//   var A_target = ee.Number(Target.get(t.subtract(1)));
+//   var A_current = ee.Number(getcount(pixelcount(before_update, targetarea),2));
+//   var A_expand = A_target.subtract(A_current);
+//   print('A_target', A_target);
+//   print('A_current', A_current);
+//   print('A_expand', A_expand);
 
-  var A_available = ee.Number(getcount(pixelcount(before_update, targetarea),3));
-  print(pixelcount(before_update, targetarea));
-  print("A_available", A_available);
-  var Percentage = ee.Number(A_expand).divide(ee.Number(A_available));
-  print('Percentage', ee.Number(Percentage));
+//   var A_available = ee.Number(getcount(pixelcount(before_update, targetarea),3));
+//   print(pixelcount(before_update, targetarea));
+//   print("A_available", A_available);
+//   var Percentage = ee.Number(A_expand).divide(ee.Number(A_available));
+//   print('Percentage', ee.Number(Percentage));
   
-  var source  = before_update.eq(OP_color) ; 
-  source = source.updateMask(source);
-  Map.addLayer(source, {min: 0, max: 4, palette: [whi, db, lr, red, black]}, 'source');
+//   var source  = before_update.eq(OP_color) ; 
+//   source = source.updateMask(source);
+//   Map.addLayer(source, {min: 0, max: 4, palette: [whi, db, lr, red, black]}, 'source');
 
 
-  var cost = blank.multiply(0).add(1).clip(targetarea); 
-  var cumulativeCost = cost.cumulativeCost({
-    source: source,
-    maxDistance: 50 * 1000 // 50 kilometers
-  });
+//   var cost = blank.multiply(0).add(1).clip(targetarea); 
+//   var cumulativeCost = cost.cumulativeCost({
+//     source: source,
+//     maxDistance: 50 * 1000 // 50 kilometers
+//   });
 
-  var costmap = cumulativeCost
-  .where(before_update.neq(5),0); 
-  costmap = costmap.updateMask(costmap);
-  Map.addLayer(costmap, {min: 0, max: 6e3, palette:[ black, db, lb, gr, lr, yellow ] }, 'costmap2');
+//   var costmap = cumulativeCost
+//   .where(before_update.neq(5),0); 
+//   costmap = costmap.updateMask(costmap);
+//   Map.addLayer(costmap, {min: 0, max: 6e3, palette:[ black, db, lb, gr, lr, yellow ] }, 'costmap2');
 
-  var N = percentile_threshold(costmap, Percentage); 
-  print("N", N);
+//   var N = percentile_threshold(costmap, Percentage); 
+//   print("N", N);
 
-  // Need to set 700, N=499.1840630698151 runs into unique-value problems 
-  costmap = blank.where(costmap.gte(800),costmap).clip(targetarea) ;
-  costmap = costmap.updateMask(costmap);
-  Map.addLayer(costmap, {min: 0, max: 1, palette:[ black, db ] }, 'costmap update2');
-  var after = before.where(costmap.neq(0), 4);
-  Map.addLayer(after, {min: 0, max: 5,
-  palette:[db, lb, gr, yellow, red, whi ]},'year 2001_update');
+//   // Need to set 700, N=499.1840630698151 runs into unique-value problems 
+//   costmap = blank.where(costmap.gte(800),costmap).clip(targetarea) ;
+//   costmap = costmap.updateMask(costmap);
+//   Map.addLayer(costmap, {min: 0, max: 1, palette:[ black, db ] }, 'costmap update2');
+//   var after = before.where(costmap.neq(0), 4);
+//   Map.addLayer(after, {min: 0, max: 5,
+//   palette:[db, lb, gr, yellow, red, whi ]},'year 2001_update');
 
 
  
+Map.addLayer(Gunarso_final.select('year_2005'), {min: 0, max: 5,
+    palette:[db, lb, gr, yellow, red, whi ]},year_2005);
+
+
