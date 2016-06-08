@@ -133,13 +133,13 @@ var cumulativeCost = cost.cumulativeCost({
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 var N = percentile_threshold(Percentage); 
-print('N', N);
-costmap = blank.where(costmap.lt(N),costmap).clip(totalarea) ;
-costmap = costmap.updateMask(costmap);
-Designated = Designated.where(costmap.neq(0), 0); 
-lossYear = lossYear.where(costmap.neq(0), t);
-var check = pixelcount(lossYear.lte(t), totalarea, 1);
-print('check', check);
+// print('N', N);
+// costmap = blank.where(costmap.lt(N),costmap).clip(totalarea) ;
+// costmap = costmap.updateMask(costmap);
+// Designated = Designated.where(costmap.neq(0), 0); 
+// lossYear = lossYear.where(costmap.neq(0), t);
+// var check = pixelcount(lossYear.lte(t), totalarea, 1);
+// print('check', check);
 
 
 
