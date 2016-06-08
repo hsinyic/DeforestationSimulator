@@ -379,14 +379,18 @@ var t=ee.Number(1);
   // Calculate the target area, and current area, and get the number of pixels needed for expansion 
   // var index = String('year_') + String(2000+t); 
   var before = Gunarso_final.select(t.add(1));
-  var before_update = before.where(before.eq(OPReplant_color),OP_color );
-  var A_target = ee.Number(Target.get(t)).divide(scale_square).multiply(10000);
-  var A_current = ee.Number(getcount(pixelcount(Gunarso_final.select(t.add(1)), targetarea),OP_color));
+  var before_update = before.where(before.eq(OPReplant_color),OP_color);
+  var A_target = ee.Number(Target.get(t.subtract(1)));
+  var A_current = ee.Number(getcount(pixelcount(before_update, targetarea),ee.Number(OP_color).subtract(1)));
   var A_expand = A_target.subtract(A_current);
+  print('A_target', A_target);
   print('A_current', A_current);
+  print('A_expand', A_expand);
+  // print(pixelcount(Gunarso_final.select(t.add(1)), targetarea));
+
   var A_available = ee.Number(getcount(pixelcount(Gunarso_final.select(t.add(1)), targetarea),OTH_color));
   var Percentage = A_expand.divide(A_available);
-  print('Percentage', Percentage);
+  // print('Percentage', Percentage);
   
   var source  = Gunarso_final.select(t.add(1)) ; 
   source = source.updateMask(source);
