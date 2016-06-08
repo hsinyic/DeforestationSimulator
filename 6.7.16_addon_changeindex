@@ -363,8 +363,6 @@ var t=ee.Number(1);
   palette:[db, lb, gr, yellow, red, whi ]},'year 2001');
 
 
-
-
   var A_target = ee.Number(Target.get(t.subtract(1)));
   var A_current = ee.Number(getcount(pixelcount(before_update, targetarea),2));
   var A_expand = A_target.subtract(A_current);
