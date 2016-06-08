@@ -228,6 +228,8 @@ Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000,blank, OP_00_05, 
 // Start a new collection of images 
 var Gunarso_final =ee.Image([lossYear,year_2000 ]);
 
+
+
 for (var t = 1; t <= 10; ++t){
   //2000<t<2005, basemap 2000, lossyear00_05, transition map is OP_00_05
   if(t<=5){
