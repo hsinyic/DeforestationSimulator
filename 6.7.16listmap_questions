@@ -89,7 +89,6 @@ var annual = function(t){
   .where(collection_intermediate.select([basemap]).eq(1),1);
   return ee.Image(yearmap);
 };
-
 var test = annual(3);
 print('test', test);
 
