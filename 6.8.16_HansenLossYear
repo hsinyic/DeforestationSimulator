@@ -41,10 +41,6 @@ var percentile_threshold = function(p){
 // # 2) draw boundaries around malaysia, indo, PNG
 // # 3) Gunarso vector maps, converted to raster
 // ############
-var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
-var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
-var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
-// var totalarea = malaysia.merge(indonesia).merge(PNG);
 var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
@@ -75,9 +71,9 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']);
 
 
 // Iteration 
-var lossYear = lossYear.where(lossYear.eq(0), 99);
-var lossYear00_05 = lossYear; 
-var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1) ; 
+var lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
+var lossYear00_05 = lossYear.clip(totalarea); 
+var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
 var Target = ee.List([127560
 ,131736
 ,131990
@@ -108,5 +104,32 @@ var N = percentile_threshold(Percentage);
 costmap = blank.where(costmap.lt(N),costmap).clip(totalarea) ;
 costmap = costmap.updateMask(costmap);
 Designated = Designated.where(costmap.neq(0), 0); 
-lossYear00_05 = lossYear00_05.where(costmap.neq(0), 1);
+lossYear00_05 = lossYear00_05.where(costmap.neq(0), t);
+
+t=2; 
+
+var OP = OP00.where(lossYear.lte(t),1);
+var A_current = pixelcount(OP.eq(1), totalarea,1);
+print(A_current);
+var A_target = ee.Number(Target.get(t));//.divide(scale_square).multiply(10000);
+print(A_target);
+var A_expand = A_target.subtract(A_current); 
+var A_designate = pixelcount(Designated.eq(1),totalarea, 1);
+print(A_designate);
+var Percentage = A_expand.divide(A_designate);
+print('Percentage2', Percentage);
+var source = OP;
+source = source.updateMask(source);
+var cost = blank.add(1).clip(totalarea); 
+var cumulativeCost = cost.cumulativeCost({
+    source: source,
+    maxDistance: 50 * 1000 // 50 kilometers
+  });
+var costmap = blank.where(Designated.eq(1), cumulativeCost);
+costmap = costmap.updateMask(costmap);
+var N = percentile_threshold(Percentage); 
+costmap = blank.where(costmap.lt(N),costmap).clip(totalarea) ;
+costmap = costmap.updateMask(costmap);
+Designated = Designated.where(costmap.neq(0), 0); 
+lossYear00_05 = lossYear00_05.where(costmap.neq(0), t);
 
