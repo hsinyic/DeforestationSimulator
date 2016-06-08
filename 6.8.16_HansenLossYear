@@ -75,7 +75,12 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']);
 // Iteration 
 var lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
-var Target = ee.List([127560,141736,151990,175420,195982]);
+var Target = ee.List([119718
+,127560
+,131736
+,131990
+,125420
+,125982]);
 
 var t=1; 
 var OP = OP00.where(lossYear.lte(t),1);
