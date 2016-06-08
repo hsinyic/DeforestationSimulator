@@ -95,7 +95,7 @@ Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, r
 
 // ############
 // # Step 3: Preliminary data processing 
-// # 1) Create 2000 Basemap  
+// # 1) Create 2000/2005 Basemap  
 // # 2) Mark inconsistencies for "NOP>OP, but no lossevents in between"
 // # 3) Append the categorical maps, basemaps, and new lossyear layers 
 // #    (00-05, 05-10) to Gunarso_intermediate band
