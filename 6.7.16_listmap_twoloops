@@ -178,22 +178,14 @@ var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000, year_2005, blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 var Gunarso_final =ee.Image([lossYear,year_2000]);
 
-var yr = ee.List.sequence(1, 10, 1);
+var yr00_05 = ee.List.sequence(1, 5, 1);
 
 var annual00_05 = function(t){
   t= ee.Number(t);
-  // #### PROBLEMS ######
-  var transition = ee.Algorithms.If(t.gt(5), String('b("OP_05_10")'), String('b("OP_00_05")'));
-  var lossyear = ee.Algorithms.If(t.gt(5),String('lossyear05_10') , String('lossyear00_05'));
-  var basemap = ee.Algorithms.If(t.gt(5), String('year_2005'), String('year_2000'));
-  // print(transition);
-  // print(lossyear);
-  // print(basemap);
-
   // // #### THIS WORKS ######
-  // var transition = String('b("OP_00_05")');
-  // var lossyear= String('lossyear00_05');
-  // var basemap = String('year_2000');
+  var transition = String('b("OP_00_05")');
+  var lossyear= String('lossyear00_05');
+  var basemap = String('year_2000');
 
   var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
   var condNOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_OP)); 
@@ -251,14 +243,75 @@ var annual00_05 = function(t){
   .where(condNOP_NOP,executeNOP_NOP);
   return ee.Image(yearmap);
 };
+var Gunarso00_05 = yr00_05.map(annual00_05);
+print('Gunarso_final, 2000-2005', Gunarso00_05);
 
-// var test = annual(6);
-// print('test', test);
-//     Map.addLayer(test, {min: 0, max: 5,
-//     palette:[db, lb, gr, yellow, red, whi ]}, "test");
+var yr05_10 = ee.List.sequence(6, 10, 1);
+var annual05_10 = function(t){
+  t= ee.Number(t);
+  var transition = String('b("OP_05_10")');
+  var lossyear= String('lossyear05_10');
+  var basemap = String('year_2005');
 
-var Gunarso = yr.map(annual);
-print('Gunarso_final, 2000-2005', Gunarso);
+  var condNOP_NOP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_NOP)); 
+  var condNOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(NOP_OP)); 
+  var condOP_OP = Gunarso_intermediate.expression(transition+ String('==')+ String(OP_OP)); 
+  var executeOP_OP = Gunarso_intermediate.expression(
+  'lossYear==t ? OPR\
+    :(lossYear>t || lossYear<t) ? OP\
+    : OTH',
+      {  
+        'OP': Gunarso_intermediate.select('blank').add(OP_color),
+        'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
+        'lossYear': Gunarso_intermediate.select(lossyear),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        't': t,
+      }
+  );
+
+  var executeNOP_OP = Gunarso_intermediate.expression(
+    'lossYear>t && basemap==F_color? F\
+      : lossYear>t && basemap==NF_color?NF\
+        : lossYear<=t? OP\
+          :OTH',
+      {  
+        'F': Gunarso_intermediate.select('blank').add(F_color),
+        'OP': Gunarso_intermediate.select('blank').add(OP_color),
+        'NF': Gunarso_intermediate.select('blank').add(NF_color),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        'lossYear': Gunarso_intermediate.select(lossyear),
+        'basemap': Gunarso_intermediate.select(basemap),
+        't': t,
+        'NF_color': NF_color,
+        'F_color': F_color
+      }
+  );
+  var executeNOP_NOP = Gunarso_intermediate.expression(
+  ' basemap==F_color && (lossYear>t || lossYear==0)? F\
+    :basemap==F_color && (lossYear<=t && lossYear>0)? NF\
+          :basemap==NF_color ? NF\
+            :OTH',
+      {  
+        'F': Gunarso_intermediate.select('blank').add(F_color),
+        'NF': Gunarso_intermediate.select('blank').add(NF_color),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        'lossYear': Gunarso_intermediate.select(lossyear),
+        'basemap': Gunarso_intermediate.select(basemap),
+        't': t,
+        'NF_color': NF_color,
+        'F_color': F_color
+      }
+  );
+  // individual yearmap classifications  
+  var yearmap= blank 
+  .where(condOP_OP,executeOP_OP)
+  .where(condNOP_OP,executeNOP_OP)
+  .where(condNOP_NOP,executeNOP_NOP);
+  return ee.Image(yearmap);
+};
+var Gunarso05_10 = yr05_10.map(annual05_10);
+print('Gunarso_final, 2005-2010', Gunarso05_10);
+
 
 
 
