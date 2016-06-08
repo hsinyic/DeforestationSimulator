@@ -402,7 +402,7 @@ var t=ee.Number(1);
   print("N", N);
 
   // Need to set 700, N=499.1840630698151 runs into unique-value problems 
-  costmap = blank.where(costmap.lte(800),costmap).clip(targetarea) ;
+  costmap = blank.where(costmap.gte(800),costmap).clip(targetarea) ;
   costmap = costmap.updateMask(costmap);
   Map.addLayer(costmap, {min: 0, max: 1, palette:[ black, db ] }, 'costmap update2');
   var after = before.where(costmap.neq(0), 4);
