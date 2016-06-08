@@ -9,15 +9,36 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.10693359375, 3.973860975839102, 5);
-var area = function(image, shape, index){
-    var areaImage = image.multiply(ee.Image.pixelArea());
-    var stats = areaImage.reduceRegion({
-        reducer: ee.Reducer.sum(),
-        geometry: shape,
-        scale: 900
-    });
-  return stats.get(index);
+var scale = ee.Number(500); 
+// ee.Number significantly slows down the calculation, what to do? 
+var scale_square = ee.Number(scale.multiply(scale)); 
+
+// ############
+// # Define Statistical Functions
+// ############
+var pixelcount = function(image, shape){
+  var Stat = image.addBands(image);
+  var r = Stat.reduceRegion({
+    reducer: ee.Reducer.count().group(1),
+    scale: scale,
+    geometry: shape
+  });
+  return r; 
 };
+var getcount = function(dict, group){
+  var list = ee.List(ee.Dictionary(dict).get('groups'));
+  return ee.Dictionary(list.get(group)).get('count');
+};
+var percentile_threshold = function(p){
+  var output = costmap.clip(targetarea).reduceRegion({
+    reducer: ee.Reducer.percentile([p]),
+    geometry: targetarea,
+    scale: 500
+  });
+  print(output);
+  return ee.Number(output.get('cumulative_cost'));
+  }; 
+
 
 // ############
 // # Step 1: Load data 
@@ -330,7 +351,7 @@ print(Gunarso_final.select('year_.*').eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
 
 var targetarea = Peninsula_outline; 
 
-var yr = ee.List.sequence(1, 10, 1); 
+var yr = ee.List.sequence(0, 10, 1); 
 
 
 // ad hoc idea 
@@ -348,4 +369,36 @@ var Gunarso_step2 = yr.map(function(t){
 //select by band numbers 
 // print(Gunarso_final.select(7));
 
+var Target = ee.List([127560
+,121069
+,121323
+,121864
+,122426]);
 
+var t=ee.Number(1);
+  // Calculate the target area, and current area, and get the number of pixels needed for expansion 
+  // var index = String('year_') + String(2000+t); 
+  var before = Gunarso_final.select(t.add(1));
+  var before_update = before.where(before.eq(OPReplant_color),OP_color );
+  var A_target = ee.Number(Target.get(t)).divide(scale_square).multiply(10000);
+  var A_current = ee.Number(getcount(pixelcount(Gunarso_final.select(t.add(1)), targetarea),OP_color));
+  var A_expand = A_target.subtract(A_current);
+  print('A_current', A_current);
+  var A_available = ee.Number(getcount(pixelcount(Gunarso_final.select(t.add(1)), targetarea),OTH_color));
+  var Percentage = A_expand.divide(A_available);
+  print('Percentage', Percentage);
+  
+  var source  = Gunarso_final.select(t.add(1)) ; 
+  source = source.updateMask(source);
+
+
+  var cost = blank.multiply(0).add(1).clip(targetarea); 
+  var cumulativeCost = cost.cumulativeCost({
+    source: source,
+    maxDistance: 50 * 1000 // 50 kilometers
+  });
+
+  var costmap = cumulativeCost
+  .where(OP_00_05.neq(NOP_OP),0) //clip out area where there is no transition 
+  .where((OP_00_05.eq(NOP_OP)).and(lossyear00_05.lte(5)),0) ;// clip out area that is transition but Hansen already has a lossyear 
+  costmap = costmap.updateMask(costmap);
