@@ -74,7 +74,7 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']);
 var lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 // Designated is the so-called-5-pixel 
 var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
-var Target = ee.List([127560,141736]);
+var Target = ee.List([127560,141736,151990]);
 
 var t=1; 
 //OP is the so-called-4-pixel 
