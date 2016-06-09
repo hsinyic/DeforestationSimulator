@@ -36,7 +36,7 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(
 // Define parameters 
 var lossYear1 = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear1.gt(5)), 1).clip(totalarea); 
-var Target = ee.List([0, 0.2,0.5,0.6,0.9,1.0]);
+var Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 
 //Minimum cost mapping 
 var source = OP00;
@@ -168,7 +168,7 @@ var OP_05_10 = Gunarso.expression(
         }
     ).rename(['OP_05_10']);
 Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
-Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
+// Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
 
 
 // ############
@@ -221,8 +221,8 @@ var year_2005 = Gunarso.expression(
     }
 ).rename(['year_2005']);
 print('year_2005',year_2005);
-    Map.addLayer(year_2005, {min: 0, max: 6,
-    palette:[db, lb, gr, yellow, red, whi, black ]},'year_2005');
+    // Map.addLayer(year_2005, {min: 0, max: 6,
+    // palette:[db, lb, gr, yellow, red, whi, black ]},'year_2005');
 
 
 //Create separate lossyear00_05 and lossyear05_10
@@ -325,8 +325,8 @@ var annual = function(t){
 
 var test = annual(6);
 print('test', test);
-    Map.addLayer(test, {min: 0, max: 5,
-    palette:[db, lb, gr, yellow, red, whi ]}, "test");
+    // Map.addLayer(test, {min: 0, max: 5,
+    // palette:[db, lb, gr, yellow, red, whi ]}, "test");
 
 var Gunarso = yr.map(annual);
 print('Annual Classification Maps, 2000-2010', Gunarso);
