@@ -6,49 +6,14 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
     Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
 Map.setCenter(102.10693359375, 3.973860975839102, 6);
 var scale = ee.Number(1000); 
-var scale_square = scale.multiply(scale);
-
-
-// ############
-// # Define Statistical Functions
-// ############
-var pixelcount = function(image, shape, group){
-  var Stat = image.addBands(image);
-  var r = Stat.reduceRegion({
-    reducer: ee.Reducer.count().group(1),
-    scale: scale,
-    geometry: shape
-  });
-  // print(r);
-  var list = ee.List(ee.Dictionary(r).get('groups'));
-  return ee.Dictionary(list.get(group)).get('count');
-};
-
-var percentile_threshold = function(p){
-  var output = costmap.clip(totalarea).reduceRegion({
-    reducer: ee.Reducer.percentile([p]),
-    geometry: totalarea,
-    scale: 500
-  });
-  // print(output);
-  return ee.Number(output.get('blank'));
-  }; 
-
-// ############
-// # Step 1: Load data 
-// # 1) from Hansen 
-// # 2) draw boundaries around malaysia, indo, PNG
-// # 3) Gunarso vector maps, converted to raster
-// ############
 var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
 
-// //add color scheme 
+// NOT IMPORTANT add name string for colors, so I don't have to input the colors   
 var db= String('0000FF');
 var lb= String('#11ffff');
 var red=String('ff510f');
@@ -57,7 +22,7 @@ var yellow=String('#fff832');
 var gr= String('#4cff62');
 var whi=String('#f7f7f7');
 var black = String('#101010');
-// Data Processing 
+// NOT IMPORTANT  Data Processing 
 var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
 var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
 var OP05_raster = Pen05.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
@@ -68,14 +33,9 @@ var OP05 = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1).rename(
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(['OP10']);
 
 
-// Iteration 
 var lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
-var Target = ee.List([0, 0.2
-,0.5
-,0.6
-,0.9
-,1.0]);
+var Target = ee.List([0, 0.2,0.5,0.6,0.9,1.0]);
 
 
 var source = OP00;
@@ -105,18 +65,12 @@ var mincostmapping = function(t){
   // print(output);
   return ee.Number(output.get('blank'));
 };
-
-// var test = mincostmapping(1);
-// var test2 = mincostmapping(2);
-// var test3 = mincostmapping(3);
-
 var lossYear1 = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var threshold = Target.map(mincostmapping);
-print(threshold);
+print('percentile threshold', threshold);
 
-
-var x=1;
-x=ee.Number(x).toInt();
+var execute = function(x){
+  x=ee.Number(x).toInt();
 var cuttoff = ee.Number(threshold.get(x));
 print(cuttoff);
 var cuttoff_before = ee.Number(threshold.get(x.subtract(1).toInt()));
@@ -125,7 +79,14 @@ print(cuttoff_before);
 var Binary = blank.where(costmap.lte(cuttoff).and(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
 var lossYear_update = lossYear.where(Binary.eq(1), x);
 print(lossYear_update);
+};
 
+var x=1;
+execute(x);
+x=2;
+execute(x);
+x=3;
+execute(x);
 
 
 
