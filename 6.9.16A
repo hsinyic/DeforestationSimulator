@@ -35,19 +35,22 @@ var gr= String('#4cff62');
 var whi=String('#f7f7f7');
 var black = String('#101010');
 // NOT IMPORTANT  Data Processing 
-var OP90_raster = Pen90.reduceToImage({properties: ['first'],reducer: ee.Reducer.first()}).multiply(0).add(1);
-var OP00_raster = Pen00.reduceToImage({properties: ['first'],reducer: ee.Reducer.first()}).multiply(0).add(1);
-var OP05_raster = Pen05.reduceToImage({properties: ['first'],reducer: ee.Reducer.first()}).multiply(0).add(1);
-var OP10_raster = Pen10.reduceToImage({properties: ['first'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()}).multiply(0).add(1);
 var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']);
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(['OP10']);
-// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
-//     palette:[whi, lb ]}, "costmap");
+// Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "OP10");
+// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "OP05");
 // Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
-//     palette:[whi, lb ]}, "costmap");
-// // print('here')
+//     palette:[whi, lb ]}, "OP00");
+// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "OP90");
 
 
 
@@ -63,18 +66,28 @@ source = source.updateMask(source);
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
 
 var cost = blank.add(1).clip(totalarea); 
+
 var cumulativeCost = cost.cumulativeCost({
     source: source,
-    maxDistance: 500 * 1000 // 50 kilometers
+    maxDistance: 100 * 1000 // 50 kilometers
   });
+Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost");
+
+
+Map.addLayer(source, {min: 0, max: 5e3,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "source");
 
 
 // Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost");
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
-// Map.addLayer(costmap, {min: 0, max: 5e4,
-//     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
+
+Map.addLayer(costmap, {min: 0, max: 5e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
+
+
 
 //Get a series of threshold corresponding to the percentage 
 var mincostmapping = function(t){
@@ -90,7 +103,6 @@ var mincostmapping = function(t){
   return ee.Number(output.get('blank'));
 };
 var threshold = Target.map(mincostmapping);
-
 
 
 // Update Hansen lossyear layer  
@@ -357,12 +369,12 @@ var Gunarso = yr.map(annual);
 // print('Annual Classification Maps, 2000-2010', Gunarso);
 
 
-// for (var t =5; t >=0; --t){
-//   var year = String(2000+t);
-//   var img = ee.Image(Gunarso.get(t));
-//   Map.addLayer(img, {min: 0, max: 5,
-//     palette:[db, lb, gr,  yellow, red, whi ]}, year);
-// }
+for (var t =5; t >=0; --t){
+  var year = String(2000+t);
+  var img = ee.Image(Gunarso.get(t));
+  Map.addLayer(img, {min: 0, max: 5,
+    palette:[db, lb, gr,  yellow, red, whi ]}, year);
+}
 // // complex geometry shape is really hard to go over. Maybe we should smooth it before operation..? 
 
 
@@ -476,7 +488,6 @@ var Gunarso_age = yr.map(age);
 
 // t=5;
 // r= printhis(t);
-
 
 // for (var t =5; t >=0; --t){
 //   var year = String(2000+t);
