@@ -438,9 +438,16 @@ for (var t =5; t >=0; --t){
   var year = String(2000+t);
   var img = ee.Image(Gunarso_age.get(t));
   Map.addLayer(img, {min: 0, max: 25,
-    palette:[yellow, red, gr, lb, db ]}, year);
+    palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF' ]}, year);
 }
   // Map.addLayer(ee.ImageCollection(Gunarso_age), {min: 0, max: 30,
   //   palette:[db, lb, gr, yellow, red, whi ]}, "test");
 
-
+// var db= String('0000FF');
+// var lb= String('#11ffff');
+// var red=String('ff510f');
+// var lr = String("#ff8f7d");
+// var yellow=String('#fff832');
+// var gr= String('#4cff62');
+// var whi=String('#f7f7f7');
+// var black = String('#101010');
