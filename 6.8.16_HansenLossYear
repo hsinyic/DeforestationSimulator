@@ -71,7 +71,7 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(
 // Iteration 
 var lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
-var Target = ee.List([0.2
+var Target = ee.List([0, 0.2
 ,0.5
 ,0.6
 ,0.9
@@ -93,7 +93,6 @@ costmap = costmap.updateMask(costmap);
 Map.addLayer(costmap, {min: 0, max: 5e4,
     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost2");
 
-
 var mincostmapping = function(t){
   t= ee.Number(t);
   var N_target = ee.Number(Target.get(t));
@@ -111,50 +110,37 @@ var mincostmapping = function(t){
 // var test2 = mincostmapping(2);
 // var test3 = mincostmapping(3);
 
-
+var lossYear1 = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var threshold = Target.map(mincostmapping);
 print(threshold);
 
 
-// lossYear = lossYear.where(costmap.neq(0), t).clip(totalarea);
+var x=1;
+x=ee.Number(x).toInt();
+var cuttoff = ee.Number(threshold.get(x));
+print(cuttoff);
+var cuttoff_before = ee.Number(threshold.get(x.subtract(1).toInt()));
+print(cuttoff_before);
+// var Binary = blank.where(costmap.lte(cuttoff).or(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
+var Binary = blank.where(costmap.lte(cuttoff).and(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
+var lossYear_update = lossYear.where(Binary.eq(1), x);
+print(lossYear_update);
 
 
 
-// costmap = blank.where(costmap.lt(N),costmap).clip(totalarea) ;
-// costmap = costmap.updateMask(costmap);
-// Designated = Designated.where(costmap.neq(0), 0); 
-// lossYear = lossYear.where(costmap.neq(0), t).clip(totalarea);
-// var check = pixelcount(lossYear.lte(t), totalarea, 1);
-// print('check', check);
 
-// t=2;
-// var OP = OP00.where(lossYear.lte(t),1);
-// var A_current = pixelcount(OP.eq(1), totalarea,1);
-// print('A_current', A_current);
-// var A_target = ee.Number(Target.get(t));//.divide(scale_square).multiply(10000);
-// print('A_target',A_target);
-// var A_expand = A_target.subtract(A_current); 
-// var A_designate = pixelcount(Designated.eq(1),totalarea, 1);
-// print('A_designate',A_designate);
-// var Percentage = A_expand.divide(A_designate);
-// print('Percentage', Percentage);
-// var source = OP;
-// source = source.updateMask(source);
-// var cost = blank.add(1).clip(totalarea); 
-// var cumulativeCost = cost.cumulativeCost({
-//     source: source,
-//     maxDistance: 50 * 1000 // 50 kilometers
-//   });
-// var costmap = blank.where(Designated.eq(1), cumulativeCost);
-// costmap = costmap.updateMask(costmap);
-// var N = percentile_threshold(Percentage); 
-// // print('N', N);
-// // costmap = blank.where(costmap.lt(N),costmap).clip(totalarea) ;
-// // costmap = costmap.updateMask(costmap);
-// // Designated = Designated.where(costmap.neq(0), 0); 
-// // lossYear = lossYear.where(costmap.neq(0), t);
-// // var check = pixelcount(lossYear.lte(t), totalarea, 1);
-// // print('check', check);
+var lossYear_update = function(list, prevlossYear) {
+    var cuttoff = ee.Number(list);
+    // print(cuttoff);
+    var cuttoff_before = ee.Number(list.get(-1));
+    // print(cuttoff_before);
+    prevlossYear = ee.Image(prevlossYear); 
+    var lossYear_update = prevlossYear.where(costmap.lte(cuttoff).and(costmap.gte(cuttoff_before)), x );
+    return ee.Image(lossYear_update);
+};
+
+
+var iterate = threshold.iterate(lossYear_update, lossYear1);
 
 
 
