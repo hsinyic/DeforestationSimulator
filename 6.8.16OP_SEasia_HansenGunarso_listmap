@@ -242,7 +242,7 @@ var annual = function(t){
   .where(OP_05_10.eq(2),executeNOP_OP)
   .where(OP_05_10.eq(1),executeNOP_NOP);
   var yearmap = ee.Algorithms.If(t.gt(5), yearmap05_10, yearmap00_05);
-  return ee.Image(yearmap);
+  return ee.Image(yearmap).clip(totalarea);
 };
 
 var test = annual(6);
@@ -264,9 +264,14 @@ print(ee.Image(Gunarso.get(0)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
             geometry: targetarea,
             scale: 500
 }));
+print(ee.Image(Gunarso.get(1)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
+        .multiply(ee.Image.pixelArea())
+        .reduceRegion({
+            reducer: ee.Reducer.sum().forEachElement(),
+            geometry: targetarea,
+            scale: 500
+}));
 
-
-// print(ee.Image(Gunarso_final));
 var sumarea = function(t){
   t = ee.Number(t);
   var summary=  ee.Image(Gunarso.get(t)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
