@@ -438,7 +438,7 @@ for (var t =5; t >=0; --t){
   var year = String(2000+t);
   var img = ee.Image(Gunarso_age.get(t));
   Map.addLayer(img, {min: 0, max: 25,
-    palette:[black, db, lb, gr, yellow,red,  whi ]}, year);
+    palette:[yellow, red, gr, lb, db ]}, year);
 }
   // Map.addLayer(ee.ImageCollection(Gunarso_age), {min: 0, max: 30,
   //   palette:[db, lb, gr, yellow, red, whi ]}, "test");
