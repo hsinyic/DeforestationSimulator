@@ -97,8 +97,8 @@ var cuttoff_before = ee.Number(threshold.get(x.subtract(1).toInt()));
 // var Binary = blank.where(costmap.lte(cuttoff).or(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
 var Binary = blank.where(costmap.lte(cuttoff).and(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
 var lossYear_update = lossYear.where(Binary.eq(1), x);
-  // Map.addLayer(Binary.updateMask(Binary), {min: 0, max: 1,
-  //   palette:[whi, lb   ]}, "cumulativeCost2");
+  Map.addLayer(Binary.updateMask(Binary), {min: 0, max: 1,
+    palette:[whi, lb   ]}, 'this');
 // print(lossYear_update);
 return lossYear_update;
 };
