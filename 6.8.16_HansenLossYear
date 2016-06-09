@@ -67,20 +67,20 @@ var mincostmapping = function(t){
   return ee.Number(output.get('blank'));
 };
 var threshold = Target.map(mincostmapping);
-print('percentile threshold', threshold);
+// print('percentile threshold', threshold);
 
 
-//Update Hansen lossyear layer  
+// Update Hansen lossyear layer  
 var execute = function(x){
   x=ee.Number(x).toInt();
 var cuttoff = ee.Number(threshold.get(x));
-print(cuttoff);
+// print(cuttoff);
 var cuttoff_before = ee.Number(threshold.get(x.subtract(1).toInt()));
-print(cuttoff_before);
+// print(cuttoff_before);
 // var Binary = blank.where(costmap.lte(cuttoff).or(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
 var Binary = blank.where(costmap.lte(cuttoff).and(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
 var lossYear_update = lossYear.where(Binary.eq(1), x);
-print(lossYear_update);
+// print(lossYear_update);
 };
 var x=1;
 execute(x);
@@ -94,34 +94,31 @@ x=5;
 execute(x);
 
 //Try to use iterate() 
-var placeholder = ee.Number(50);
-var lossYear_2= lossYear.where(lossYear.eq(0), 99);
-lossYear_2 = lossYear_2.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear1.gt(5)), placeholder) ;
-var lossYear_update = function(list, prevlossYear) {
-    var cuttoff = ee.Number(list);
-    // print(cuttoff);
-    // Need to get the previous element on the list 
-    // var cuttoff_before = ee.Number(list.get(-1));
-    // print(cuttoff_before);
-    prevlossYear = ee.Image(prevlossYear); 
-    var lossYear_update = prevlossYear.where(costmap.lte(cuttoff).and(prevlossYear.eq(50)), x );
-    return ee.Image(lossYear_update);
-};
-
-var iterate = threshold.iterate(lossYear_update, lossYear1);
-print(iterate);
-
-// var list_iterate = function(list, prev){
-//   var A = ee.Number(list); // should be 1,3,5,7,9,11
-//   var B = ee.Number(list.get(-1)); // should be  1,3,5,7,9,11
-//   prev = ee.Image(prev);
-//   return ee.Image(prev.add(A.subtract(B)));
+// var placeholder = ee.Number(50);
+// var lossYear_2= lossYear.where(lossYear.eq(0), 99);
+// lossYear_2 = lossYear_2.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear1.gt(5)), placeholder) ;
+// var lossYear_update = function(list, prevlossYear) {
+//     var cuttoff = ee.Number(list);
+//     // print(cuttoff);
+//     // Need to get the previous element on the list 
+//     // var cuttoff_before = ee.Number(list.get(-1));
+//     // print(cuttoff_before);
+//     prevlossYear = ee.Image(prevlossYear); 
+//     var lossYear_update = prevlossYear.where(costmap.lte(cuttoff).and(prevlossYear.eq(50)), x );
+//     return ee.Image(lossYear_update);
 // };
 
-// var list = ee.List([1,3,5,7,9,11]);
-// var list_lag = ee.List([0, 2, 2, 2, 2, 2])
-// 0 -1 
-// 1- 3 
-// 3- 5 
-// //where it has not been labeled with the right kind, do it!!! 
-// var result = list.iterate(list_iterate, blank)
+// var iterate = threshold.iterate(lossYear_update, lossYear1);
+// print(iterate);
+
+var list_iterate = function(list, prev){
+  var A = ee.Number(list); // should be 1,3,5,7,9,11
+  var B = ee.Number(list.get(-1)); // should be  1,3,5,7,9,11
+  prev = ee.Image(prev);
+  return ee.Image(blank.where(lossYear.lte(A).and(lossYear.gte(B),1)));
+};
+
+var list = ee.List([1,3,5,7,9,11]);
+var list_lag = ee.List([0, 2, 2, 2, 2, 2])
+//where it has not been labeled with the right kind, do it!!! 
+var result = list.iterate(list_iterate, lossYear)
