@@ -415,7 +415,7 @@ var age = function(t){
   return(ee.Image(agemap));
 };
 var Gunarso_age = yr.map(age);
-print(Gunarso_age);
+// print(Gunarso_age);
 
 // Export.image.toDrive({
 //   image: lossYear,
