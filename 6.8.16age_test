@@ -84,8 +84,8 @@ var age = function(t){
     : (lossindicator == 1  && t>=lossYear )? t-lossYear \
       :OTH',
       {  
-        'lossYear': Gunarso_age.select(lossYear),
-        'lossindicator': Gunarso_age.select(lossindicator),
+        'lossYear': Gunarso_age.select('lossYear'),
+        'lossindicator': Gunarso_age.select('lossindicator'),
         't': t,
       }
   );
@@ -95,8 +95,8 @@ var age = function(t){
     : (lossindicator == 1  && t>=lossYear )? t-lossYear \
       :OTH',
       {  
-        'lossYear': Gunarso_age.select(lossYear),
-        'lossindicator': Gunarso_age.select(lossindicator),
+        'lossYear': Gunarso_age.select('lossYear'),
+        'lossindicator': Gunarso_age.select('lossindicator'),
         't': t,
       }
   );
