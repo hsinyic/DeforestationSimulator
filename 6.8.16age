@@ -28,7 +28,7 @@ var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']);
 var treecover2000 = gfcImage.select(['treecover2000']);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
-var lossindicator = blank.where(lossYear.gte(1).and(lossYear.lte(0)), 1).clip(totalarea).rename(['lossindicator']); // lossyear indicator of 0 and 
+var lossindicator = blank.where(lossYear.gte(11).and(lossYear.lte(0)), 1).clip(totalarea).rename(['lossindicator']); // lossyear indicator of 0 and 
 // //add color scheme 
 var db= String('0000FF');
 var lb= String('#11ffff');
