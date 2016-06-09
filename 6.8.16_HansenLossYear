@@ -111,14 +111,14 @@ execute(x);
 // var iterate = threshold.iterate(lossYear_update, lossYear1);
 // print(iterate);
 
-var list_iterate = function(list, prev){
-  var A = ee.Number(list); // should be 1,3,5,7,9,11
-  var B = ee.Number(list.get(-1)); // should be  1,3,5,7,9,11
-  prev = ee.Image(prev);
-  return ee.Image(blank.where(lossYear.lte(A).and(lossYear.gte(B),1)));
-};
+// var list_iterate = function(list, prev){
+//   var A = ee.Number(list); // should be 1,3,5,7,9,11
+//   var B = ee.Number(list.get(-1)); // should be  1,3,5,7,9,11
+//   prev = ee.Image(prev);
+//   return ee.Image(blank.where(lossYear.lte(A).and(lossYear.gte(B),1)));
+// };
 
-var list = ee.List([1,3,5,7,9,11]);
-var list_lag = ee.List([0, 2, 2, 2, 2, 2])
-//where it has not been labeled with the right kind, do it!!! 
-var result = list.iterate(list_iterate, lossYear)
+// var list = ee.List([1,3,5,7,9,11]);
+// var list_lag = ee.List([0, 2, 2, 2, 2, 2])
+// //where it has not been labeled with the right kind, do it!!! 
+// var result = list.iterate(list_iterate, lossYear)
