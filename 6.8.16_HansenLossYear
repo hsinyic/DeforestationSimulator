@@ -42,20 +42,20 @@ var Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 //Minimum cost mapping 
 var source = OP00;
 source = source.updateMask(source);
-Map.addLayer(source, {min: 0, max: 5e4,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "source");
+// Map.addLayer(source, {min: 0, max: 5e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
 
 var cost = blank.add(1).clip(totalarea); 
 var cumulativeCost = cost.cumulativeCost({
     source: source,
     maxDistance: 50 * 1000 // 50 kilometers
   });
-Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost");
+// Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost");
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
-Map.addLayer(costmap, {min: 0, max: 5e4,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
+// Map.addLayer(costmap, {min: 0, max: 5e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
 //Get a series of threshold corresponding to the percentage 
 var mincostmapping = function(t){
@@ -71,31 +71,15 @@ var mincostmapping = function(t){
   return ee.Number(output.get('blank'));
 };
 var threshold = Target.map(mincostmapping);
-print('percentile threshold', threshold);
-Map.addLayer(costmap, {min: 0, max: 5e4,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "costmap_original");
-
-
-// costmap = costmap.where(cumulativeCost.gt(1952.932966055218),0 );
-Map.addLayer(costmap.where(costmap.lte(2e4), 0), {min: 0, max: 5e4,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
-
-
 
 
 // Update Hansen lossyear layer  
 var execute = function(x){
   x=ee.Number(x).toInt();
 var cuttoff = ee.Number(threshold.get(x));
-// print(cuttoff);
 var cuttoff_before = ee.Number(threshold.get(x.subtract(1).toInt()));
-// print(cuttoff_before);
-// var Binary = blank.where(costmap.lte(cuttoff).or(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
 var Binary = blank.where(costmap.lte(cuttoff).and(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
 var lossYear_update = lossYear.where(Binary.eq(1), x);
-  Map.addLayer(Binary.updateMask(Binary), {min: 0, max: 1,
-    palette:[whi, lb   ]}, 'this');
-// print(lossYear_update);
 return lossYear_update;
 };
 var x=1;
@@ -108,8 +92,6 @@ x=4;
 lossYear = execute(x);
 x=5;
 lossYear = execute(x);
-
-print(lossYear);
 
 
 //Try to use iterate() 
@@ -182,7 +164,7 @@ var OP_05_10 = Gunarso.expression(
         'NOP_OP': Gunarso.select('blank').add(NOP_OP),
         }
     ).rename(['OP_05_10']);
-Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
+// Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
 // Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
 
 
@@ -235,7 +217,7 @@ var year_2005 = Gunarso.expression(
       'treecover2000': Gunarso.select('treecover2000')
     }
 ).rename(['year_2005']);
-print('year_2005',year_2005);
+// print('year_2005',year_2005);
     // Map.addLayer(year_2005, {min: 0, max: 6,
     // palette:[db, lb, gr, yellow, red, whi, black ]},'year_2005');
 
@@ -339,12 +321,12 @@ var annual = function(t){
 };
 
 var test = annual(6);
-print('test', test);
+// print('test', test);
     // Map.addLayer(test, {min: 0, max: 5,
     // palette:[db, lb, gr, yellow, red, whi ]}, "test");
 
 var Gunarso = yr.map(annual);
-print('Annual Classification Maps, 2000-2010', Gunarso);
+// print('Annual Classification Maps, 2000-2010', Gunarso);
 
 
 // for (var t =5; t >=0; --t){
@@ -353,6 +335,6 @@ print('Annual Classification Maps, 2000-2010', Gunarso);
 //   Map.addLayer(img, {min: 0, max: 5,
 //     palette:[db, lb, gr,  yellow, red, whi ]}, year);
 // }
-// complex geometry shape is really hard to go over. Maybe we should smooth it before operation..? 
+// // complex geometry shape is really hard to go over. Maybe we should smooth it before operation..? 
 
 
