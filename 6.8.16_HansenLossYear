@@ -33,6 +33,13 @@ var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']);
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(['OP10']);
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
+    palette:[whi, lb ]}, "costmap");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
+    palette:[whi, lb ]}, "costmap");
+
+
+
 
 // Define parameters 
 var lossYear1 = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
@@ -164,8 +171,8 @@ var OP_05_10 = Gunarso.expression(
         'NOP_OP': Gunarso.select('blank').add(NOP_OP),
         }
     ).rename(['OP_05_10']);
-// Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
-// Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
+Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
+Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
 
 
 // ############
@@ -341,7 +348,7 @@ var Gunarso = yr.map(annual);
 // // ####################
 // // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
 // // ####################
-var lossindicator = blank.where(lossYear.gte(11).and(lossYear.lte(0)), 1).clip(totalarea).rename(['lossindicator']); // lossyear indicator of 0 and 
+var lossindicator = blank.where(lossYear.gt(5).and(lossYear.lt(1)), 1).clip(totalarea).rename(['lossindicator']); // lossyear indicator of 0 and 
 
 var Gunarso_age = ee.Image([lossYear,OP90, OP00, OP05,
                           OP10, treecover2000,blank,lossindicator]);
@@ -352,13 +359,13 @@ var yr = ee.List.sequence(0, 5, 1);
 var age = function(t){
   t = ee.Number(t);
   // boundaries of age map
-  var agemap = blank.where(OP10.eq(1),1);
+  var agemap = blank.where(OP05.eq(1),1);
   agemap = agemap.updateMask(agemap);
   var ageNOP_NOP = Gunarso_age.expression(
-  ' (lossindicator ==0 && t>=5)? t-5 \
-  : (lossindicator ==0 && t< 5)? 26 \
-    : (lossindicator == 1  && t<lossYear )? 26 \
-    : (lossindicator == 1  && t>=lossYear )? t-lossYear \
+  ' (lossindicator ==1 && t>=5)? t-5 \
+  : (lossindicator ==1 && t< 5)? 26 \
+    : (lossindicator == 0  && t<lossYear )? 26 \
+    : (lossindicator == 0  && t>=lossYear )? t-lossYear \
       :OTH',
       {  
         'lossYear': Gunarso_age.select('lossyear'),
@@ -431,7 +438,7 @@ for (var t =5; t >=0; --t){
   var year = String(2000+t);
   var img = ee.Image(Gunarso_age.get(t));
   Map.addLayer(img, {min: 0, max: 25,
-    palette:[db, lb, gr, red, yellow, whi ]}, year);
+    palette:[black, db, lb, gr, yellow,red,  whi ]}, year);
 }
   // Map.addLayer(ee.ImageCollection(Gunarso_age), {min: 0, max: 30,
   //   palette:[db, lb, gr, yellow, red, whi ]}, "test");
