@@ -5,15 +5,11 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen05 = ee.FeatureCollection("ft:1YZK7dCxaKKF5WneTc3hcNyB1ss6nVRkl818pf7zI"),
     Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
     Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m"),
-    geometry = /* color: 0B4A8B */ee.Geometry.Polygon(
-        [[[101.7936239523957, 4.393074581309317],
-          [101.8925144152646, 3.546205228420735],
-          [102.93368711494577, 3.6448721377282007],
-          [102.84034151327705, 4.467002859427418]]]);
+    geometry = /* color: 0B4A8B */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.10693359375, 3.973860975839102, 9);
-var scale = ee.Number(100); 
-var totalarea = geometry;
+var scale = ee.Number(500); 
+var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
@@ -67,7 +63,7 @@ var mincostmapping = function(t){
   var N_target = ee.Number(Target.get(t));
   // print(N_target);
   var output = costmap.reduceRegion({
-    reducer: ee.Reducer.percentile([t.multiply(10)]),
+    reducer: ee.Reducer.percentile([t.multiply(100)]),
     geometry: totalarea,
     scale: scale
   });
@@ -357,5 +353,6 @@ print('Annual Classification Maps, 2000-2010', Gunarso);
 //   Map.addLayer(img, {min: 0, max: 5,
 //     palette:[db, lb, gr,  yellow, red, whi ]}, year);
 // }
+// complex geometry shape is really hard to go over. Maybe we should smooth it before operation..? 
 
 
