@@ -434,12 +434,36 @@ var Gunarso_age = yr.map(age);
 //     palette:[db, lb, gr, red, yellow, whi ]}, year);
 //   return(3);
 // };
-for (var t =5; t >=0; --t){
-  var year = String(2000+t);
+var t= 1;
+var printhis = function(t){
+  t = ee.Number(t);
   var img = ee.Image(Gunarso_age.get(t));
-  Map.addLayer(img, {min: 0, max: 25,
-    palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF' ]}, year);
-}
+  var index = t.add(ee.Number(2000)).int().format('year_%d');
+  // print(index);
+  Map.addLayer(img, {min: 0, max: 25, palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF','#101010' ]}, 'hey');
+    return(img);
+};
+var r = printhis(t);
+t=2;
+r= printhis(t);
+
+t=3;
+r= printhis(t);
+
+t=4;
+r= printhis(t);
+
+t=5;
+r= printhis(t);
+
+
+// for (var t =5; t >=0; --t){
+//   var year = String(2000+t);
+//   var img = ee.Image(Gunarso_age.get(t));
+//   Map.addLayer(img, {min: 0, max: 25,
+//     palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF' ]}, year);
+// }
+
   // Map.addLayer(ee.ImageCollection(Gunarso_age), {min: 0, max: 30,
   //   palette:[db, lb, gr, yellow, red, whi ]}, "test");
 
