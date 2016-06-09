@@ -2,7 +2,7 @@
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: d63000 */ee.Geometry.Point([102.10693359375, 3.973860975839102]),
+    geometry = /* color: 98ff00 */ee.Geometry.Point([102.10693359375, 3.973860975839102]),
     Pen10 = ee.FeatureCollection("ft:1xabXcdjDWY8PCYLjAO6zH07XTczWVKqGcNVVQI3Y"),
     Pen05 = ee.FeatureCollection("ft:1YZK7dCxaKKF5WneTc3hcNyB1ss6nVRkl818pf7zI"),
     Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
@@ -251,11 +251,33 @@ print('test', test);
     palette:[db, lb, gr, yellow, red, whi ]}, "test");
 
 var Gunarso = yr.map(annual);
-print('Gunarso_final, 2000-2010', Gunarso);
+print('Annual Classification Maps, 2000-2010', Gunarso);
 
 
+var targetarea = Peninsula_outline;
 
 
+print(ee.Image(Gunarso.get(0)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
+        .multiply(ee.Image.pixelArea())
+        .reduceRegion({
+            reducer: ee.Reducer.sum().forEachElement(),
+            geometry: targetarea,
+            scale: 500
+}));
 
 
+// print(ee.Image(Gunarso_final));
+var sumarea = function(t){
+  t = ee.Number(t);
+  var summary=  ee.Image(Gunarso.get(t)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
+         .reduceRegion({
+            reducer: ee.Reducer.sum().forEachElement(),
+            geometry: targetarea,
+            scale: 500});
+            
+  return ee.List(summary);
+  
+};
+var p = ee.Dictionary(yr.map(sumarea));
 
+print(p);
