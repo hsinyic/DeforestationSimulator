@@ -338,93 +338,102 @@ var Gunarso = yr.map(annual);
 // // complex geometry shape is really hard to go over. Maybe we should smooth it before operation..? 
 
 
-// ####################
-// # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
-// ####################
-var lossindicator = blank.where(lossYear.gte(1).and(lossYear.lte(0)), 1).clip(totalarea).rename(['lossindicator']); // lossyear indicator of 0 and 
+// // ####################
+// // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
+// // ####################
+var lossindicator = blank.where(lossYear.gte(11).and(lossYear.lte(0)), 1).clip(totalarea).rename(['lossindicator']); // lossyear indicator of 0 and 
 
-var Gunarso_age = ee.Image([lossYear,OP90, OP00, OP05,
-                          OP10, treecover2000,blank,lossindicator]);
+// var Gunarso_age = ee.Image([lossYear,OP90, OP00, OP05,
+//                           OP10, treecover2000,blank,lossindicator]);
 
-var yr = ee.List.sequence(0, 10, 1);
+// var yr = ee.List.sequence(0, 10, 1);
 
-// Palm oil age map 
-var age = function(t){
-  t = ee.Number(t);
-  // boundaries of age map
-  var agemap = blank.where(OP10.eq(1),1);
-  agemap = agemap.updateMask(agemap);
-  var ageNOP_NOP = Gunarso_age.expression(
-  ' (lossindicator ==0 && t>=5)? t-5 \
-  : (lossindicator ==0 && t< 5)? 26 \
-    : (lossindicator == 1  && t< lossYear )? 26 \
-    : (lossindicator == 1  && t>=lossYear )? t-lossYear \
-      :OTH',
-      {  
-        'lossYear': Gunarso_age.select('lossyear'),
-        'lossindicator': Gunarso_age.select('lossindicator'),
-        't': t,
-        'OTH': Gunarso_age.select('blank').add(100),
-      }
-  );
-  var ageNOP_OP = Gunarso_age.expression(
-  ' lossindicator ==0 ? t+5 \
-    : (lossindicator == 1  && t< lossYear )? (25-t+lossYear) \
-    : (lossindicator == 1  && t>=lossYear )? (t-lossYear) \
-      :OTH',
-      {  
-        'lossYear': Gunarso_age.select('lossyear'),
-        'lossindicator': Gunarso_age.select('lossindicator'),
-        't': t,
-        'OTH': Gunarso_age.select('blank').add(100),
-      }
-  );
+// // Palm oil age map 
+// var age = function(t){
+//   t = ee.Number(t);
+//   // boundaries of age map
+//   var agemap = blank.where(OP10.eq(1),1);
+//   agemap = agemap.updateMask(agemap);
+//   var ageNOP_NOP = Gunarso_age.expression(
+//   ' (lossindicator ==0 && t>=5)? t-5 \
+//   : (lossindicator ==0 && t< 5)? 26 \
+//     : (lossindicator == 1  && t<lossYear )? 26 \
+//     : (lossindicator == 1  && t>=lossYear )? t-lossYear \
+//       :OTH',
+//       {  
+//         'lossYear': Gunarso_age.select('lossyear'),
+//         'lossindicator': Gunarso_age.select('lossindicator'),
+//         't': t,
+//         'OTH': Gunarso_age.select('blank').add(100),
+//       }
+//   );
+//   var ageNOP_OP = Gunarso_age.expression(
+//   ' lossindicator ==0 ? t+5 \
+//     : (lossindicator == 1  && t< lossYear )? (25-t+lossYear) \
+//     : (lossindicator == 1  && t>=lossYear )? (t-lossYear) \
+//       :OTH',
+//       {  
+//         'lossYear': Gunarso_age.select('lossyear'),
+//         'lossindicator': Gunarso_age.select('lossindicator'),
+//         't': t,
+//         'OTH': Gunarso_age.select('blank').add(100),
+//       }
+//   );
 
-  var ageOP_OP =Gunarso_age.expression(
-  ' lossindicator ==0 ? t+13 \
-    : lossindicator == 1  && t< lossYear ? (25-t+lossYear) \
-    : lossindicator == 1  && t>=lossYear ? (t-lossYear) \
-      :OTH',
-      {  
-        'lossYear': Gunarso_age.select('lossyear'),
-        'lossindicator': Gunarso_age.select('lossindicator'),
-        't': t,
-        'OTH': Gunarso_age.select('blank').add(100),
-      }
-  );
+//   var ageOP_OP =Gunarso_age.expression(
+//   ' lossindicator ==0 ? t+13 \
+//     : lossindicator == 1  && t< lossYear ? (25-t+lossYear) \
+//     : lossindicator == 1  && t>=lossYear ? (t-lossYear) \
+//       :OTH',
+//       {  
+//         'lossYear': Gunarso_age.select('lossyear'),
+//         'lossindicator': Gunarso_age.select('lossindicator'),
+//         't': t,
+//         'OTH': Gunarso_age.select('blank').add(100),
+//       }
+//   );
   
-  agemap = agemap
-  .where(OP90.eq(0).and(OP00.eq(0)), ageNOP_NOP)
-  .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
-  .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP);
+//   agemap = agemap
+//   .where(OP90.eq(0).and(OP00.eq(0)), ageNOP_NOP)
+//   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
+//   .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP);
   
-  var agemap2 = agemap
-  .where(lossindicator.eq(0).and(OP00.eq(0)), ageNOP_NOP)
-  .where(lossindicator.eq(0).and(OP00.eq(1)), ageNOP_OP)
-  .where(lossindicator.eq(1).and(OP00.eq(1)), ageOP_OP);
+//   var agemap2 = agemap
+//   .where(lossindicator.eq(0).and(OP00.eq(0)), ageNOP_NOP)
+//   .where(lossindicator.eq(0).and(OP00.eq(1)), ageNOP_OP)
+//   .where(lossindicator.eq(1).and(OP00.eq(1)), ageOP_OP);
 
 
 
-  return(ee.Image(agemap));
-};
-var Gunarso_age = yr.map(age);
-print(Gunarso_age);
+//   return(ee.Image(agemap));
+// };
+// var Gunarso_age = yr.map(age);
+// print(Gunarso_age);
 
-// Export.image.toDrive({
-//   image: lossYear,
-//   description: 'lossYear',
-//   scale: 30,
-//   region: totalarea.geometry().bounds(),
-//   maxPixels: 9e12
-// });
+// // Export.image.toDrive({
+// //   image: lossYear,
+// //   description: 'lossYear',
+// //   scale: 30,
+// //   region: totalarea.geometry().bounds(),
+// //   maxPixels: 9e12
+// // });
 
-for (var t =5; t >=0; --t){
-  var year = String(2000+t);
-  var img = ee.Image(Gunarso_age.get(t));
-  Map.addLayer(img, {min: 0, max: 25,
-    palette:[db, lb, gr, red, yellow, whi ]}, year);
-}
-  // Map.addLayer(ee.ImageCollection(Gunarso_age), {min: 0, max: 30,
-  //   palette:[db, lb, gr, yellow, red, whi ]}, "test");
+// var t=1;
+// printthis(t);
+// var printthis = function(t){
+//   var year = String(2000+t);
+//   var img = ee.Image(Gunarso_age.get(t));
+//   Map.addLayer(img, {min: 0, max: 25,
+//     palette:[db, lb, gr, red, yellow, whi ]}, year);
+//   return(3);
+// };
+// // for (var t =5; t >=0; --t){
+// //   var year = String(2000+t);
+// //   var img = ee.Image(Gunarso_age.get(t));
+// //   Map.addLayer(img, {min: 0, max: 25,
+// //     palette:[db, lb, gr, red, yellow, whi ]}, year);
+// // // }
+//   // Map.addLayer(ee.ImageCollection(Gunarso_age), {min: 0, max: 30,
+//   //   palette:[db, lb, gr, yellow, red, whi ]}, "test");
 
 
