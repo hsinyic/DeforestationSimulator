@@ -10,6 +10,7 @@ Map.setCenter(102.10693359375, 3.973860975839102, 6);
 var scale = ee.Number(1000); 
 var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
+lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
 
@@ -32,12 +33,11 @@ var OP00 = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1).rename(
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(['OP10']);
 
-
-var lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
+// Define parameters 
 var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
 var Target = ee.List([0, 0.2,0.5,0.6,0.9,1.0]);
 
-
+//Minimum cost mapping 
 var source = OP00;
 source = source.updateMask(source);
 var cost = blank.add(1).clip(totalarea); 
@@ -47,12 +47,12 @@ var cumulativeCost = cost.cumulativeCost({
   });
 Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost");
-
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 Map.addLayer(costmap, {min: 0, max: 5e4,
     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost2");
 
+//Get a series of threshold corresponding to the percentage 
 var mincostmapping = function(t){
   t= ee.Number(t);
   var N_target = ee.Number(Target.get(t));
@@ -69,6 +69,8 @@ var lossYear1 = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var threshold = Target.map(mincostmapping);
 print('percentile threshold', threshold);
 
+
+//Update Hansen lossyear layer  
 var execute = function(x){
   x=ee.Number(x).toInt();
 var cuttoff = ee.Number(threshold.get(x));
@@ -80,19 +82,22 @@ var Binary = blank.where(costmap.lte(cuttoff).and(costmap.gte(cuttoff_before)), 
 var lossYear_update = lossYear.where(Binary.eq(1), x);
 print(lossYear_update);
 };
-
 var x=1;
 execute(x);
 x=2;
 execute(x);
 x=3;
 execute(x);
+x=4;
+execute(x);
+x=5;
+execute(x);
 
-
-
+//Try to use iterate() 
 var lossYear_update = function(list, prevlossYear) {
     var cuttoff = ee.Number(list);
     // print(cuttoff);
+    // Need to get the previous element on the list 
     var cuttoff_before = ee.Number(list.get(-1));
     // print(cuttoff_before);
     prevlossYear = ee.Image(prevlossYear); 
@@ -100,8 +105,5 @@ var lossYear_update = function(list, prevlossYear) {
     return ee.Image(lossYear_update);
 };
 
-
-var iterate = threshold.iterate(lossYear_update, lossYear1);
-
-
+// var iterate = threshold.iterate(lossYear_update, lossYear1);
 
