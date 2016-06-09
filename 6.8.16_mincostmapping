@@ -46,10 +46,6 @@ var red=String('ff510f');
 var yellow=String('#fff832');
 var gr= String('#4cff62');
 var whi=String('#ffffff');
-
-//##########
-//# Data  Preprocessing 
-//##########
 AFTER = AFTER.where(AFTER.eq(3),4);
 BEFORE = BEFORE.where(BEFORE.eq(3),4);
 var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
