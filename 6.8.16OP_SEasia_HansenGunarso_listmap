@@ -28,6 +28,7 @@ var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']);
 var treecover2000 = gfcImage.select(['treecover2000']);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
+var lossindicator = blank.where(lossYear.gte(1).and(lossYear.lte(0)), 1).clip(totalarea); // lossyear indicator of 0 and 
 // //add color scheme 
 var db= String('0000FF');
 var lb= String('#11ffff');
@@ -175,7 +176,7 @@ var lossyear05_10= Gunarso.expression(
 // #########################
 //Intermediate and Final Images. 
 var Gunarso_intermediate = ee.Image([lossYear]);
-Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000, year_2005, blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
+Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000, year_2005, blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05,lossindicator]);
 var Gunarso_final =ee.Image([lossYear,year_2000]);
 
 var yr = ee.List.sequence(1, 10, 1);
@@ -196,7 +197,6 @@ var annual = function(t){
         't': t,
       }
   );
-
   var executeNOP_OP = Gunarso_intermediate.expression(
     'lossYear>t && basemap==F_color? F\
       : lossYear>t && basemap==NF_color?NF\
@@ -254,43 +254,56 @@ var Gunarso = yr.map(annual);
 print('Gunarso_final, 2000-2005', Gunarso);
 
 
-
-
 // Palm oil age map 
 var age = function(t){
   t = ee.Number(t);
   // boundaries of age map
   var agemap = blank.where(OP10.eq(1),1);
   agemap = agemap.updateMask(agemap);
-  
   var ageNOP_NOP = Gunarso_intermediate.expression(
-  ' basemap==F_color && (lossYear>t || lossYear==0)? F\
-    :basemap==F_color && (lossYear<=t && lossYear>0)? NF\
-          :basemap==NF_color ? NF\
-            :OTH',
+  ' (lossindicator ==0 && t>=5)? t-5 \
+  : (lossindicator ==0 && t< 5)? 99 \
+    : (lossindicator == 1  && t< lossYear )? 99 \
+    : (lossindicator == 1  && t>=lossYear )? t-lossYear \
+      :OTH',
       {  
-        'F': Gunarso_intermediate.select('blank').add(F_color),
-        'NF': Gunarso_intermediate.select('blank').add(NF_color),
-        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
-        'lossYear': lossyear,
-        'basemap': basemap,
+        'lossYear': ee.Image(lossyear),
+        'lossindicator': lossindicator,
         't': t,
-        'NF_color': NF_color,
-        'F_color': F_color
       }
   );
-
-
-
-  var ageNOP_OP =
-  var ageOP_OP = 
+  var ageNOP_OP = Gunarso_intermediate.expression(
+  ' (lossindicator ==0 ? t+5 \
+    : (lossindicator == 1  && t< lossYear )? 25- t+ lossYear \
+    : (lossindicator == 1  && t>=lossYear )? t-lossYear \
+      :OTH',
+      {  
+        'lossYear': Gunarso_intermediate.select('lossyear'),
+        't': t,
+      }
+  );
+  var ageOP_OP =Gunarso_intermediate.expression(
+  ' (lossindicator ==0 ? t+13 \
+    : (lossindicator == 1  && t< lossYear )? 25- t+ lossYear \
+    : (lossindicator == 1  && t>=lossYear )? t-lossYear \
+      :OTH',
+      {  
+        'lossYear': Gunarso_intermediate.select('lossyear'),
+        't': t,
+      }
+  );
   
   agemap = agemap
   .where(OP90.eq(0).and(OP00.eq(0)), ageNOP_NOP)
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
-  .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP)
+  .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP);
 
 
+  // var agemap2 = agemap
+  // .where(lossYear.eq(0).or(lossYear.gt(10)), ageNOLOSS)
+  // .where(lossYear.neq(0).and(lossYear.lt(10)), ageNOLOSS)
+  // .where(lossYear.neq(0).and(lossYear.lt(10)), ageNOLOSS)
+  return(ee.Image(agemap));
 };
 var Gunarso_annual = yr.map(age);
 
