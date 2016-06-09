@@ -279,5 +279,4 @@ var sumarea = function(t){
   
 };
 var p = ee.Dictionary(yr.map(sumarea));
-
 print(p);
