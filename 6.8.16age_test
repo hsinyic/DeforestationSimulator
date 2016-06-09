@@ -43,10 +43,10 @@ var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.fi
 var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
 var OP05_raster = Pen05.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
 var OP10_raster = Pen10.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
-var OP90_raster = blank.where(OP90_raster.eq(1), 1);
-var OP00_raster = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1);
-var OP05_raster = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1);
-var OP10_raster = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1);
+ OP90_raster = blank.where(OP90_raster.eq(1), 1);
+ OP00_raster = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1);
+ OP05_raster = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1);
+ OP10_raster = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1);
 var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']);
 var OP00 = blank.where(OP00_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']);
@@ -131,7 +131,7 @@ print(Gunarso_age);
 // });
 
 for (var t =10; t >=0; --t){
-  var year = String(2000+t)
+  var year = String(2000+t);
   var img = ee.Image(Gunarso_age.get(t));
   Map.addLayer(img, {min: 0, max: 25,
     palette:[db, lb, gr, red, yellow, whi ]}, year);
