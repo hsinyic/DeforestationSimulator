@@ -47,14 +47,14 @@ var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
 
 // //add color scheme 
-var db= String('0000FF');
-var lb= String('#11ffff');
-var red=String('ff510f');
-var lr = String("#ff8f7d");
-var yellow=String('#fff832');
-var gr= String('#4cff62');
-var whi=String('#f7f7f7');
-var black = String('#101010');
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ("#ff8f7d").toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
 // Data Processing 
 var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
 var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
