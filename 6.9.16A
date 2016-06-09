@@ -35,19 +35,19 @@ var gr= String('#4cff62');
 var whi=String('#f7f7f7');
 var black = String('#101010');
 // NOT IMPORTANT  Data Processing 
-var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
-var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
-var OP05_raster = Pen05.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
-var OP10_raster = Pen10.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP90_raster = Pen90.reduceToImage({properties: ['first'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP00_raster = Pen00.reduceToImage({properties: ['first'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP05_raster = Pen05.reduceToImage({properties: ['first'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP10_raster = Pen10.reduceToImage({properties: ['first'],reducer: ee.Reducer.first()}).multiply(0).add(1);
 var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']);
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(['OP10']);
-Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
-    palette:[whi, lb ]}, "costmap");
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
-    palette:[whi, lb ]}, "costmap");
-
+// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "costmap");
+// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "costmap");
+// // print('here')
 
 
 
@@ -65,8 +65,10 @@ source = source.updateMask(source);
 var cost = blank.add(1).clip(totalarea); 
 var cumulativeCost = cost.cumulativeCost({
     source: source,
-    maxDistance: 50 * 1000 // 50 kilometers
+    maxDistance: 500 * 1000 // 50 kilometers
   });
+
+
 // Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost");
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
@@ -90,6 +92,7 @@ var mincostmapping = function(t){
 var threshold = Target.map(mincostmapping);
 
 
+
 // Update Hansen lossyear layer  
 var execute = function(x){
   x=ee.Number(x).toInt();
@@ -109,6 +112,7 @@ x=4;
 lossYear = execute(x);
 x=5;
 lossYear = execute(x);
+
 
 
 //Try to use iterate() 
@@ -152,6 +156,10 @@ var NOP_NOP= 1;//NonOP to NonOP
 var NOP_OP= 2;//NonOP to OP
 var OP_NOP= 3;//OP to NonOP
 var OP_OP= 4;//OP to OP
+
+// print('here2');
+
+
 var OP_00_05 = Gunarso.expression(
     "(OP2000==1 && OP2005==1) ? OP_OP \
       : (OP2000==1 && OP2005==0) ? OP_NOP \
@@ -166,6 +174,9 @@ var OP_00_05 = Gunarso.expression(
         'NOP_OP': Gunarso.select('blank').add(NOP_OP),
         }
     ).rename(['OP_00_05']);
+  
+
+
 
 var OP_05_10 = Gunarso.expression(
   "(OP2005==1 && OP2010==1) ? OP_OP\
@@ -181,8 +192,8 @@ var OP_05_10 = Gunarso.expression(
         'NOP_OP': Gunarso.select('blank').add(NOP_OP),
         }
     ).rename(['OP_05_10']);
-Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
-Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
+// Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
+// Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
 
 
 // ############
@@ -444,27 +455,27 @@ var Gunarso_age = yr.map(age);
 //     palette:[db, lb, gr, red, yellow, whi ]}, year);
 //   return(3);
 // };
-var t= 1;
-var printhis = function(t){
-  t = ee.Number(t);
-  var img = ee.Image(Gunarso_age.get(t));
-  var index = t.add(ee.Number(2000)).int().format('year_%d');
-  // print(index);
-  Map.addLayer(img, {min: 0, max: 25, palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF','#101010' ]}, 'hey');
-    return(img);
-};
-var r = printhis(t);
-t=2;
-r= printhis(t);
+// var t= 1;
+// var printhis = function(t){
+//   t = ee.Number(t);
+//   var img = ee.Image(Gunarso_age.get(t));
+//   var index = t.add(ee.Number(2000)).int().format('year_%d');
+//   // print(index);
+//   Map.addLayer(img, {min: 0, max: 25, palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF','#101010' ]}, 'hey');
+//     return(img);
+// };
+// var r = printhis(t);
+// t=2;
+// r= printhis(t);
 
-t=3;
-r= printhis(t);
+// t=3;
+// r= printhis(t);
 
-t=4;
-r= printhis(t);
+// t=4;
+// r= printhis(t);
 
-t=5;
-r= printhis(t);
+// t=5;
+// r= printhis(t);
 
 
 // for (var t =5; t >=0; --t){
