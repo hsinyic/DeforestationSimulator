@@ -256,6 +256,42 @@ print('Gunarso_final, 2000-2005', Gunarso);
 
 
 
+// Palm oil age map 
+var age = function(t){
+  t = ee.Number(t);
+  // boundaries of age map
+  var agemap = blank.where(OP10.eq(1),1);
+  agemap = agemap.updateMask(agemap);
+  
+  var ageNOP_NOP = Gunarso_intermediate.expression(
+  ' basemap==F_color && (lossYear>t || lossYear==0)? F\
+    :basemap==F_color && (lossYear<=t && lossYear>0)? NF\
+          :basemap==NF_color ? NF\
+            :OTH',
+      {  
+        'F': Gunarso_intermediate.select('blank').add(F_color),
+        'NF': Gunarso_intermediate.select('blank').add(NF_color),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        'lossYear': lossyear,
+        'basemap': basemap,
+        't': t,
+        'NF_color': NF_color,
+        'F_color': F_color
+      }
+  );
 
+
+
+  var ageNOP_OP =
+  var ageOP_OP = 
+  
+  agemap = agemap
+  .where(OP90.eq(0).and(OP00.eq(0)), ageNOP_NOP)
+  .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
+  .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP)
+
+
+};
+var Gunarso_annual = yr.map(age);
 
 
