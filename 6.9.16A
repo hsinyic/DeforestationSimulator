@@ -71,12 +71,12 @@ var cumulativeCost = cost.cumulativeCost({
     source: source,
     maxDistance: 100 * 1000 // 50 kilometers
   });
-Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost");
+// Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost");
 
 
-Map.addLayer(source, {min: 0, max: 5e3,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "source");
+// Map.addLayer(source, {min: 0, max: 5e3,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
 
 
 // Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
@@ -84,8 +84,8 @@ Map.addLayer(source, {min: 0, max: 5e3,
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 
-Map.addLayer(costmap, {min: 0, max: 5e4,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
+// Map.addLayer(costmap, {min: 0, max: 5e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
 
 
@@ -489,12 +489,12 @@ var Gunarso_age = yr.map(age);
 // t=5;
 // r= printhis(t);
 
-// for (var t =5; t >=0; --t){
-//   var year = String(2000+t);
-//   var img = ee.Image(Gunarso_age.get(t));
-//   Map.addLayer(img, {min: 0, max: 25,
-//     palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF' ]}, year);
-// }
+for (var t =5; t >=0; --t){
+  var year = String(2000+t);
+  var img = ee.Image(Gunarso_age.get(t));
+  Map.addLayer(img, {min: 0, max: 25,
+    palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF' ]}, year);
+}
 
   // Map.addLayer(ee.ImageCollection(Gunarso_age), {min: 0, max: 30,
   //   palette:[db, lb, gr, yellow, red, whi ]}, "test");
