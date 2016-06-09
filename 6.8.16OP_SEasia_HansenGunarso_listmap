@@ -254,34 +254,34 @@ var Gunarso = yr.map(annual);
 print('Annual Classification Maps, 2000-2010', Gunarso);
 
 
-var targetarea = Peninsula_outline;
+// var targetarea = Peninsula_outline;
 
 
-print(ee.Image(Gunarso.get(0)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
-        .multiply(ee.Image.pixelArea())
-        .reduceRegion({
-            reducer: ee.Reducer.sum().forEachElement(),
-            geometry: targetarea,
-            scale: 500
-}));
-print(ee.Image(Gunarso.get(1)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
-        .multiply(ee.Image.pixelArea())
-        .reduceRegion({
-            reducer: ee.Reducer.sum().forEachElement(),
-            geometry: targetarea,
-            scale: 500
-}));
+// print(ee.Image(Gunarso.get(0)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
+//         .multiply(ee.Image.pixelArea())
+//         .reduceRegion({
+//             reducer: ee.Reducer.sum().forEachElement(),
+//             geometry: targetarea,
+//             scale: 500
+// }));
+// print(ee.Image(Gunarso.get(1)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
+//         .multiply(ee.Image.pixelArea())
+//         .reduceRegion({
+//             reducer: ee.Reducer.sum().forEachElement(),
+//             geometry: targetarea,
+//             scale: 500
+// }));
 
-var sumarea = function(t){
-  t = ee.Number(t);
-  var summary=  ee.Image(Gunarso.get(t)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
-         .reduceRegion({
-            reducer: ee.Reducer.sum().forEachElement(),
-            geometry: targetarea,
-            scale: 500});
+// var sumarea = function(t){
+//   t = ee.Number(t);
+//   var summary=  ee.Image(Gunarso.get(t)).eq(ee.Image(ee.Array([0, 1, 2, 3, 4, 5])))
+//         .reduceRegion({
+//             reducer: ee.Reducer.sum().forEachElement(),
+//             geometry: targetarea,
+//             scale: 500});
             
-  return ee.List(summary);
+//   return ee.List(summary);
   
-};
-var p = ee.Dictionary(yr.map(sumarea));
-print(p);
+// };
+// var p = ee.Dictionary(yr.map(sumarea));
+// print(p);
