@@ -55,55 +55,56 @@ var coverByGrid = function(geom, dx, dy) {
   
   return generateGrid(xmin, ymin, xmax, ymax, dx, dy).filterBounds(geom).map(function(c) { return ee.Feature(c).intersection(geom) })
 }
+// print('malaysia',malaysia);
 
-var states = ee.FeatureCollection(Peninsula_outline);
+var states = ee.FeatureCollection(malaysia);
 
 Map.addLayer(ee.Image().paint(states, 1, 1), {}, 'Peninsula_outline')
 
-print(Peninsula_outline);
+print(malaysia);
 
 
-var areaDiff = function(feature) {
-  // Compute area in sq. km. directly from the geometry.
-  var area = feature.geometry().area().divide(1000 * 1000);
-  // Compute the differece between computed area and the area property.
-  // Return the feature with the squared difference set to the 'diff' property.
-  return ee.Feature(area);
-};
+// var areaDiff = function(feature) {
+//   // Compute area in sq. km. directly from the geometry.
+//   var area = feature.geometry().area().divide(1000 * 1000);
+//   // Compute the differece between computed area and the area property.
+//   // Return the feature with the squared difference set to the 'diff' property.
+//   return ee.Feature(area);
+// };
 
-// var filterPenn = ee.Number(Peninsula_outline
-//     .map(areaDiff)
-//     // Reduce to get the mean squared difference.
-//     .reduceColumns(ee.Reducer.mean(), ['diff'])
-//     .get('mean'))
-//     // Compute the square root of the mean square to get RMSE.
-//     .sqrt();
+// // var filterPenn = ee.Number(Peninsula_outline
+// //     .map(areaDiff)
+// //     // Reduce to get the mean squared difference.
+// //     .reduceColumns(ee.Reducer.mean(), ['diff'])
+// //     .get('mean'))
+// //     // Compute the square root of the mean square to get RMSE.
+// //     .sqrt();
 
-// var test = ee.FeatureCollection(Peninsula_outline).map(areaDiff);
-// print(test)
+// // var test = ee.FeatureCollection(Peninsula_outline).map(areaDiff);
+// // print(test)
 
-// var state = states.filter(ee.Filter.or(ee.Filter.eq('Soil', 'Mineral'))).geometry();
-// var state = states.select(0).geometry();
+var state = states.filter(ee.Filter.or(ee.Filter.eq('Soil', 'Mineral'))).geometry();
+// // var state = states.select(0).geometry();
 
 
-// var islandsWithArea = islandsprep.map(function(f) {
+// // var islandsWithArea = islandsprep.map(function(f) {
+// // return f.set('area', f.geometry().area(5))});
+// // // addToMap(withArea);
+
+// // var islands = islandsWithArea.filterMetadata('area', 'greater_than', resolution.multiply(resolution).multiply(numberofbands));
+// // // addToMap(islands, {color: '900000'}, 'Big Islands');
+
+
+// var Pennarea = Peninsula_outline.map(function(f) {
 // return f.set('area', f.geometry().area(5))});
 // // addToMap(withArea);
 
-// var islands = islandsWithArea.filterMetadata('area', 'greater_than', resolution.multiply(resolution).multiply(numberofbands));
+// var resolution = ee.Number(300); 
+// var NewPenn = Pennarea.filterMetadata('area', 'greater_than', resolution.multiply(resolution));
 // // addToMap(islands, {color: '900000'}, 'Big Islands');
 
 
-var Pennarea = Peninsula_outline.map(function(f) {
-return f.set('area', f.geometry().area(5))});
-// addToMap(withArea);
-
-var resolution = ee.Number(300); 
-var NewPenn = Pennarea.filterMetadata('area', 'greater_than', resolution.multiply(resolution).multiply(numberofbands));
-// addToMap(islands, {color: '900000'}, 'Big Islands');
-
-
-var stateGrid = coverByGrid(NewPenn, 3, 3)
+var stateGrid = coverByGrid(Peninsula_outline, 3, 3)
 Map.addLayer(stateGrid, {color:'222299'}, 'grid')
 
 Map.centerObject(center, 6)
