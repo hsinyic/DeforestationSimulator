@@ -94,10 +94,11 @@ var areaDiff = function(feature) {
 // // addToMap(islands, {color: '900000'}, 'Big Islands');
 
 
-var Pennarea = Penninsula_outline.map(function(f) {
+var Pennarea = Peninsula_outline.map(function(f) {
 return f.set('area', f.geometry().area(5))});
 // addToMap(withArea);
 
+var resolution = ee.Number(300); 
 var NewPenn = Pennarea.filterMetadata('area', 'greater_than', resolution.multiply(resolution).multiply(numberofbands));
 // addToMap(islands, {color: '900000'}, 'Big Islands');
 
