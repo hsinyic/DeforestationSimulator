@@ -21,7 +21,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
           [103.08952331542969, 4.127970187726043]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
-Map.setCenter(102.59239196777344,3.94029555672408, 12);
+Map.setCenter(102.59239196777344,3.94029555672408, 10);
 var printmap = function(t, folder){
   var year = (2000+t).toString();
   t= ee.Number(t);
@@ -48,21 +48,23 @@ var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 
-var scale = ee.Number(500); 
-var totalarea = geometry;
+var scale = ee.Number(1000); 
+var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
-lossYear =lossYear.min(lossYear.focal_mode(10, 'square'));
+lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
 lossYear = lossYear.toInt();
-// Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear3');
-// Export.image.toDrive({
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'lossYear3');
+
+// Export.image.toAsset({
 //   image: lossYear,
 //   description: 'lossYear',
 //   scale: 30,
-//   region: Peninsula_outline.geometry().bounds(),
-//   maxPixels: 9e12
+//   region: totalarea.geometry().bounds(),
+//   maxPixels: 9e12,
 // });
+// 7B3ZLSTEIDKQWB5BO3HBUYXM is the current task asset ID. Took 23 minutes to go through
 
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
@@ -91,15 +93,15 @@ source = source.updateMask(source);
 var cost = blank.add(1).clip(totalarea); 
 var cumulativeCost = cost.cumulativeCost({
     source: source,
-    maxDistance: 50 * 1000 // 50 kilometers
+    maxDistance: 30 * 1000 // 50 kilometers
   });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 // Map.addLayer(source, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
-// Map.addLayer(cumulativeCost, {min: 0, max: 5e4,
-//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
-// Map.addLayer(costmap, {min: 0, max: 5e4,
+Map.addLayer(cumulativeCost, {min: 0, max: 5e3,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
+// Map.addLayer(costmap, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
 
@@ -146,7 +148,20 @@ lossYear = execute(x);
 x=5;
 lossYear = execute(x);
 
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'lossYear_buffer');
 
+
+
+// Export.image.toAsset({
+//   image: lossYear,
+//   description: 'lossYear_buffered',
+//   scale: 30,
+//   region: totalarea.geometry().bounds(),
+//   maxPixels: 9e12,
+// });
+
+//M3Y4SHLGNT5YD2MB57P62RM3; the last one took a while to run 
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
@@ -362,19 +377,19 @@ var annual = function(t){
 var Gunarso = yr.map(annual);
 
 
-var t=5;
-var p0= printmap2(t, Gunarso);
+// var t=5;
+// var p0= printmap2(t, Gunarso);
 
-t=4;
-p0= printmap2(t, Gunarso);
-t=3;
-p0= printmap2(t, Gunarso);
-t=2;
-p0= printmap2(t, Gunarso);
-t=1;
-p0= printmap2(t, Gunarso);
-t=0;
-p0= printmap2(t, Gunarso);
+// t=4;
+// p0= printmap2(t, Gunarso);
+// t=3;
+// p0= printmap2(t, Gunarso);
+// t=2;
+// p0= printmap2(t, Gunarso);
+// t=1;
+// p0= printmap2(t, Gunarso);
+// t=0;
+// p0= printmap2(t, Gunarso);
 
 
 // // ####################
