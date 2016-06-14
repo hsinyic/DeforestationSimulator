@@ -21,26 +21,26 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
           [103.08952331542969, 4.127970187726043]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
-Map.setCenter(102.59239196777344,3.94029555672408, 10);
+Map.setCenter(102.59239196777344,3.94029555672408, 9);
 var printmap = function(t, folder){
-  var year = (2000+t).toString();
+  // var year = (2000+t).toString();
   t= ee.Number(t);
   var img = ee.Image(folder.get(t));
   // Take out area that is >40 or 100 even 
-  img = blank.where(img.lte(25), img.add(3));
-  img = img.updateMask(img);
-  img = img.subtract(3);
+  // img = blank.where(img.lte(25), img.add(3));
+  // img = img.updateMask(img);
+  // img = img.subtract(3);
   Map.addLayer(img, {min: 0, max: 25,
     // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-    palette:[ red, yellow, gr, dg,lb,  db]}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'age');
   return(3);
 };
 var printmap2 = function(t, folder){
-  var year = (2000+t).toString();
+  // var year = (2000+t).toString();
   t= ee.Number(t);
   var img = ee.Image(folder.get(t));
   Map.addLayer(img, {min: 0, max: 5,
-    palette:[ db, lb, gr,  yellow, red, whi]}, year);
+    palette:[ db, lb, gr,  yellow, red, whi]}, 'annual classification');
   return(3);
 };
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
