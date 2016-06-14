@@ -377,25 +377,25 @@ var annual = function(t){
 var Gunarso = yr.map(annual);
 
 
-var t=5;
-var p0= printmap2(t, Gunarso);
+// var t=5;
+// var p0= printmap2(t, Gunarso);
 
-t=4;
-p0= printmap2(t, Gunarso);
-t=3;
-p0= printmap2(t, Gunarso);
-t=2;
-p0= printmap2(t, Gunarso);
-t=1;
-p0= printmap2(t, Gunarso);
-t=0;
-p0= printmap2(t, Gunarso);
+// t=4;
+// p0= printmap2(t, Gunarso);
+// t=3;
+// p0= printmap2(t, Gunarso);
+// t=2;
+// p0= printmap2(t, Gunarso);
+// t=1;
+// p0= printmap2(t, Gunarso);
+// t=0;
+// p0= printmap2(t, Gunarso);
 
 
 // // ####################
 // // # Step5: OP Age map 
 // // ####################
-/*var noloss = blank.where(lossYear.gt(5).and(lossYear.lt(1)), 1).clip(totalarea).rename(['noloss']); // lossyear indicator of 0 and 
+var noloss = blank.where(lossYear.gt(5).and(lossYear.lt(1)), 1).clip(totalarea).rename(['noloss']); // lossyear indicator of 0 and 
 // .and(OP00.eq(0).and(OP05.eq(1)))
 
 var Gunarso_age = ee.Image([lossYear,OP90, OP00, OP05,
@@ -464,7 +464,7 @@ var age = function(t){
   return(ee.Image(agemap));
 };
 
-var Gunarso_age = yr.map(age);*/
+var Gunarso_age = yr.map(age);
 
 // var db= ('0000FF').toString();
 // var lb= ('#11ffff').toString();
@@ -476,18 +476,18 @@ var Gunarso_age = yr.map(age);*/
 // var black = ('#101010').toString();
 
 
-// var t=5;
-// var p = printmap(t, Gunarso_age);
-// t=4;
-// p = printmap(t, Gunarso_age);
-// t=3;
-// p = printmap(t, Gunarso_age);
+var t=5;
+var p = printmap(t, Gunarso_age);
+t=4;
+p = printmap(t, Gunarso_age);
+t=3;
+p = printmap(t, Gunarso_age);
 
-// t=2;
-// p = printmap(t, Gunarso_age);
+t=2;
+p = printmap(t, Gunarso_age);
 
-// t=1;
-// p = printmap(t, Gunarso_age);
+t=1;
+p = printmap(t, Gunarso_age);
 
-// t=0;
-// p = printmap(t, Gunarso_age);
+t=0;
+p = printmap(t, Gunarso_age);
