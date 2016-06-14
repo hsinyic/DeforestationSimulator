@@ -34,7 +34,7 @@ var printmap2 = function(t, folder){
   var year = (2000+t).toString();
   t= ee.Number(t);
   var img = ee.Image(folder.get(t));
-  Map.addLayer(img, {min: 0, max: 25,
+  Map.addLayer(img, {min: 0, max: 5,
     palette:[ db, lb, gr,  yellow, red, whi]}, year);
   return(3);
 };
@@ -48,14 +48,21 @@ var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 
-var scale = ee.Number(10000); 
-var totalarea = Peninsula_outline;
+var scale = ee.Number(500); 
+var totalarea = geometry;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 lossYear =lossYear.min(lossYear.focal_mode(10, 'square'));
 lossYear = lossYear.toInt();
 // Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear3');
+// Export.image.toDrive({
+//   image: lossYear,
+//   description: 'lossYear',
+//   scale: 30,
+//   region: Peninsula_outline.geometry().bounds(),
+//   maxPixels: 9e12
+// });
 
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
@@ -76,8 +83,7 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(
 //     palette:[whi, lb ]}, "OP05");
 
 
-var lossYear1 = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
-var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear1.gt(5)), 1).clip(totalarea); 
+var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
 var Target = ee.List([0, 0.2,0.4,0.6,0.8,1.00]);
 //Minimum cost mapping 
 var source = OP00;
@@ -85,7 +91,7 @@ source = source.updateMask(source);
 var cost = blank.add(1).clip(totalarea); 
 var cumulativeCost = cost.cumulativeCost({
     source: source,
-    maxDistance: 30 * 1000 // 50 kilometers
+    maxDistance: 50 * 1000 // 50 kilometers
   });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
@@ -344,6 +350,13 @@ var annual = function(t){
   .where(OP_05_10.eq(2),executeNOP_OP)
   .where(OP_05_10.eq(1),executeNOP_NOP);
   var yearmap = ee.Algorithms.If(t.gt(5), yearmap05_10, yearmap00_05);
+  // Export.image.toDrive({
+  //   image: yearmap,
+  //   description: 'year',
+  //   scale: 30,
+  //   region: Peninsula_outline.geometry().bounds(),
+  //   maxPixels: 9e12
+  // });
   return ee.Image(yearmap).clip(totalarea);
 };
 var Gunarso = yr.map(annual);
@@ -351,6 +364,7 @@ var Gunarso = yr.map(annual);
 
 var t=5;
 var p0= printmap2(t, Gunarso);
+
 t=4;
 p0= printmap2(t, Gunarso);
 t=3;
@@ -363,16 +377,10 @@ t=0;
 p0= printmap2(t, Gunarso);
 
 
-// for (var t =5; t >=0; --t){
-//   var year = (2000+t).toString();
-//   var img = ee.Image(Gunarso.get(t));
-//   Map.addLayer(img, {min: 0, max: 5,
-//     palette:[db, lb, gr,  yellow, red, whi ]}, year);
-// }
 // // ####################
-// // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
+// // # Step5: OP Age map 
 // // ####################
-var noloss = blank.where(lossYear.gt(5).and(lossYear.lt(1)), 1).clip(totalarea).rename(['noloss']); // lossyear indicator of 0 and 
+/*var noloss = blank.where(lossYear.gt(5).and(lossYear.lt(1)), 1).clip(totalarea).rename(['noloss']); // lossyear indicator of 0 and 
 // .and(OP00.eq(0).and(OP05.eq(1)))
 
 var Gunarso_age = ee.Image([lossYear,OP90, OP00, OP05,
@@ -441,7 +449,7 @@ var age = function(t){
   return(ee.Image(agemap));
 };
 
-var Gunarso_age = yr.map(age);
+var Gunarso_age = yr.map(age);*/
 
 // var db= ('0000FF').toString();
 // var lb= ('#11ffff').toString();
@@ -453,18 +461,18 @@ var Gunarso_age = yr.map(age);
 // var black = ('#101010').toString();
 
 
-var t=5;
-var p = printmap(t, Gunarso_age);
-t=4;
-p = printmap(t, Gunarso_age);
-t=3;
-p = printmap(t, Gunarso_age);
+// var t=5;
+// var p = printmap(t, Gunarso_age);
+// t=4;
+// p = printmap(t, Gunarso_age);
+// t=3;
+// p = printmap(t, Gunarso_age);
 
-t=2;
-p = printmap(t, Gunarso_age);
+// t=2;
+// p = printmap(t, Gunarso_age);
 
-t=1;
-p = printmap(t, Gunarso_age);
+// t=1;
+// p = printmap(t, Gunarso_age);
 
-t=0;
-p = printmap(t, Gunarso_age);
+// t=0;
+// p = printmap(t, Gunarso_age);
