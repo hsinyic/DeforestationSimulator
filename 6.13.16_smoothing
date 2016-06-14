@@ -51,8 +51,8 @@ var OP00 = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1).rename(
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(['OP10']);
 
-Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
-    palette:[ red, yellow, gr ,db]}, 'lossYear1');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear1');
 var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
 
 
@@ -66,8 +66,8 @@ var lossYear2 = lossYear.where(segmentSize.lt(minSize), lossYear.not());
 
 var lossYear3 =lossYear.min(lossYear.focal_mode(10, 'square'));
 lossYear3 = lossYear3.toInt();
-Map.addLayer(lossYear3.updateMask(lossYear3.neq(99)), {min: 1, max: 14,
-    palette:[ red, yellow, gr ,db]}, 'lossYear3');
+// Map.addLayer(lossYear3.updateMask(lossYear3.neq(99)), {min: 1, max: 14,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear3');
 
 var indyear=lossYear3.eq(12);
 Map.addLayer(indyear.updateMask(indyear), {min: 0, max: 1,
