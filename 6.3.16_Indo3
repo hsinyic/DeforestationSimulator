@@ -39,8 +39,8 @@ var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 lossYear =lossYear.min(lossYear.focal_mode(10, 'square'));
 lossYear = lossYear.toInt();
-// Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear3');
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'lossYear3');
 
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
