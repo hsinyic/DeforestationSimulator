@@ -58,8 +58,16 @@ var scale = ee.Number(1000);
 var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
-lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
-// lossYear = lossYear.focal_max(3).focal_min(10).focal_max(3);
+// lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
+// lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
+
+
+
+lossYear =lossYear.min(lossYear.focal_median(10, 'circle'));
+lossYear = lossYear.focal_mode();
+lossYear = lossYear.focal_mode();
+lossYear = lossYear.focal_max(3).focal_min(5).focal_max(3);
+
 
 
 lossYear = lossYear.toInt();
@@ -386,19 +394,19 @@ var annual = function(t){
 var Gunarso = yr.map(annual);
 
 
-// var t=5;
-// var p0= printmap2(t, Gunarso);
+var t=5;
+var p0= printmap2(t, Gunarso);
 
-// t=4;
-// p0= printmap2(t, Gunarso);
-// t=3;
-// p0= printmap2(t, Gunarso);
-// t=2;
-// p0= printmap2(t, Gunarso);
-// t=1;
-// p0= printmap2(t, Gunarso);
-// t=0;
-// p0= printmap2(t, Gunarso);
+t=4;
+p0= printmap2(t, Gunarso);
+t=3;
+p0= printmap2(t, Gunarso);
+t=2;
+p0= printmap2(t, Gunarso);
+t=1;
+p0= printmap2(t, Gunarso);
+t=0;
+p0= printmap2(t, Gunarso);
 
 
 // // ####################
