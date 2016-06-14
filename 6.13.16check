@@ -17,7 +17,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
     
-Map.setCenter(102.10693359375, 3.973860975839102, 9);
+Map.setCenter(102.10693359375, 3.973860975839102, 13);
 var scale = ee.Number(500); 
 var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
@@ -102,14 +102,17 @@ var mincostmapping = function(t){
 };
 var threshold = Target.map(mincostmapping);
 
-
 // Update Hansen lossyear layer  
 var execute = function(x){
   x=ee.Number(x).toInt();
 var cuttoff = ee.Number(threshold.get(x));
-var cuttoff_before = ee.Number(threshold.get(x.subtract(1).toInt()));
-var Binary = blank.where(costmap.lte(cuttoff).and(costmap.gte(cuttoff_before)), 1 ).clip(totalarea);
-var lossYear_update = lossYear.where(Binary.eq(1), x);
+var cuttoff_before = ee.Algorithms.If(x.neq(0), ee.Number(threshold.get(x.subtract(1).toInt())), ee.Number(0.0));
+print('year', x, cuttoff_before, cuttoff );
+var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea);
+// print(Binary);
+var lossYear_update = lossYear.where(Binary.neq(0), x);
+var Binary_show = Binary.eq(1);
+Map.addLayer(Binary.updateMask(Binary), {min: 0, max: 5, palette: [whi, yellow, red, lb, db]}, 'Binary');
 return lossYear_update;
 };
 var x=0;
@@ -266,26 +269,32 @@ var lossyear00_05= Gunarso.expression(
     {  
       'OP_00_05': Gunarso.select('OP_00_05'),
       'lossyear': Gunarso.select('lossyear'),
-      'orphan': Gunarso.select('blank').add(1),
+      'orphan': Gunarso.select('blank').add(33),
       'NOP_OP': NOP_OP
     }
 ).rename(['lossyear00_05']);
+Map.addLayer(lossyear00_05.eq(33), {min: 0, max: 1,
+palette:[db, lb, gr, yellow, red, whi, black ]},'lossyear00_05');
+
 var lossyear05_10= Gunarso.expression(
 ' OP_05_10==NOP_OP && (lossyear >10 || lossyear <=5) ? orphan\
   :lossyear',
     {  
       'OP_05_10': Gunarso.select('OP_05_10'),
       'lossyear': Gunarso.select('lossyear'),
-      'orphan': Gunarso.select('blank').add(8),
+      'orphan': Gunarso.select('blank').add(33),
       'NOP_OP': NOP_OP
     }
 ).rename(['lossyear05_10']);
+Map.addLayer(lossyear05_10.eq(33), {min: 0, max: 1,
+palette:[db, lb, gr, yellow, red, whi, black ]},'lossyear05_10');
+
+
 
 // #########################
 // #Step4 : Create yearly maps (stored in Gunarso_final),  2000 <= t <= 2005
 // #########################
-//Intermediate and Final Images. 
-var Gunarso_intermediate = ee.Image([lossYear]);
+/*var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000, year_2005, blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 var Gunarso_final =ee.Image([lossYear,year_2000]);
 
@@ -441,10 +450,16 @@ var age = function(t){
   return(ee.Image(agemap));
 };
 var Gunarso_age = yr.map(age);
-for (var t =5; t >=0; --t){
+// for (var t =5; t >=0; --t){
+//   var year = (2000+t).toString();
+//   var img = ee.Image(Gunarso_age.get(t));
+//   Map.addLayer(img, {min: 0, max: 25,
+//     palette:[red, lr, yellow, gr, lb ,db]}, year);
+// }
+var t= 1;
   var year = (2000+t).toString();
   var img = ee.Image(Gunarso_age.get(t));
   Map.addLayer(img, {min: 0, max: 25,
     palette:[red, lr, yellow, gr, lb ,db]}, year);
-}
+*/
 
