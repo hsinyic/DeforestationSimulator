@@ -22,7 +22,22 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 Map.setCenter(102.59239196777344,3.94029555672408, 12);
-
+var printmap = function(t, folder){
+  var year = (2000+t).toString();
+  t= ee.Number(t);
+  var img = ee.Image(folder.get(t));
+  Map.addLayer(img, {min: 0, max: 25,
+    palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+  return(3);
+};
+var printmap2 = function(t, folder){
+  var year = (2000+t).toString();
+  t= ee.Number(t);
+  var img = ee.Image(folder.get(t));
+  Map.addLayer(img, {min: 0, max: 25,
+    palette:[ db, lb, gr,  yellow, red, whi]}, year);
+  return(3);
+};
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
 var db= ('0000FF').toString();
 var lb= ('#11ffff').toString();
@@ -333,12 +348,27 @@ var annual = function(t){
 };
 var Gunarso = yr.map(annual);
 
-for (var t =5; t >=0; --t){
-  var year = (2000+t).toString();
-  var img = ee.Image(Gunarso.get(t));
-  Map.addLayer(img, {min: 0, max: 5,
-    palette:[db, lb, gr,  yellow, red, whi ]}, year);
-}
+
+var t=5;
+var p0= printmap2(t, Gunarso);
+t=4;
+p0= printmap2(t, Gunarso);
+t=3;
+p0= printmap2(t, Gunarso);
+t=2;
+p0= printmap2(t, Gunarso);
+t=1;
+p0= printmap2(t, Gunarso);
+t=0;
+p0= printmap2(t, Gunarso);
+
+
+// for (var t =5; t >=0; --t){
+//   var year = (2000+t).toString();
+//   var img = ee.Image(Gunarso.get(t));
+//   Map.addLayer(img, {min: 0, max: 5,
+//     palette:[db, lb, gr,  yellow, red, whi ]}, year);
+// }
 // // ####################
 // // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
 // // ####################
@@ -412,14 +442,6 @@ var age = function(t){
 };
 
 var Gunarso_age = yr.map(age);
-var printmap = function(t){
-  var year = (2000+t).toString();
-  t= ee.Number(t);
-  var img = ee.Image(Gunarso_age.get(t));
-  Map.addLayer(img, {min: 0, max: 25,
-    palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  return(3);
-};
 
 // var db= ('0000FF').toString();
 // var lb= ('#11ffff').toString();
@@ -432,14 +454,17 @@ var printmap = function(t){
 
 
 var t=5;
-printmap(t);
+var p = printmap(t, Gunarso_age);
 t=4;
-printmap(t);
+p = printmap(t, Gunarso_age);
 t=3;
-printmap(t);
+p = printmap(t, Gunarso_age);
+
 t=2;
-printmap(t);
+p = printmap(t, Gunarso_age);
+
 t=1;
-printmap(t);
+p = printmap(t, Gunarso_age);
+
 t=0;
-printmap(t);
+p = printmap(t, Gunarso_age);
