@@ -14,7 +14,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: 00ffff */ee.Geometry.Polygon(
+    geometry = /* color: 98ff00 */ee.Geometry.Polygon(
         [[[102.15225219726562, 4.136873372175124],
           [102.14744567871094, 3.6244418715038584],
           [103.2000732421875, 3.6593900720416443],
@@ -41,7 +41,7 @@ Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
     palette:[ red, yellow, gr ,db]}, 'lossYear original');
 var blank = lossYear.multiply(0);
 
-var lossYear1 =lossYear.min(lossYear.focal_median(10, 'octagon'));
+var lossYear1 =lossYear.min(lossYear.focal_median(10, 'circle'));
 lossYear1 = lossYear1.toInt();
 Map.addLayer(lossYear1.updateMask(lossYear.neq(99)), {min: 1, max: 14,
     palette:[ red, yellow, gr ,db]}, 'lossYear1');
@@ -61,20 +61,20 @@ Map.addLayer(image4.updateMask(image4.neq(99)), {min: 1, max: 14,
     
 var image5 = lossYear1.focal_mode();
 // Further smooth the image via focal_max and focal_min. 
-var image6 = image5.focal_max(3).focal_min(9).focal_max(3);
+var image6 = image5.focal_max(3).focal_min(5).focal_max(3);
 // var image7 = image5.focal_max(5).focal_min(9).focal_max(5);
-var image8 = image5.focal_max(8).focal_min(9).focal_max(8);
+var image8 = image5.focal_max(2).focal_min(6).focal_max(2);
 
 
 Map.addLayer(image6.updateMask(image6.neq(99)), {min: 1, max: 14,
-    palette:[ red, yellow, gr ,db]}, 'Trial2 Median focal max 2');
+    palette:[ red, yellow, gr ,db]}, 'Trial2 image6');
 
 
 // Map.addLayer(image7.updateMask(image7.neq(99)), {min: 1, max: 14,
 //     palette:[ red, yellow, gr ,db]}, 'Trial3 Median focal max 5');
     
 Map.addLayer(image8.updateMask(image8.neq(99)), {min: 1, max: 14,
-    palette:[ red, yellow, gr ,db]}, 'Trial3 Median focal max 8');
+    palette:[ red, yellow, gr ,db]}, 'Trial3 image8');
 
 
 
