@@ -71,7 +71,7 @@ lossYear = lossYear.focal_max(3).focal_min(5).focal_max(3);
 
 
 lossYear = lossYear.toInt();
-Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
     palette:[ red, yellow, gr ,db]}, 'lossYear3');
 
 // Export.image.toAsset({
