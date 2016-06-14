@@ -20,8 +20,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
           [103.2000732421875, 3.6593900720416443],
           [103.08952331542969, 4.127970187726043]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(102.59239196777344,3.94029555672408, 14);
-Map.setCenter(102.59239196777344,3.94029555672408, 10);
+Map.setCenter(102.59239196777344,3.94029555672408, 12);
+// Map.setCenter(102.59239196777344,3.94029555672408, 10);
 
 
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
@@ -34,19 +34,17 @@ var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 
-var scale = ee.Number(1000); 
 var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
     palette:[ red, yellow, gr ,db]}, 'lossYear original');
+var blank = lossYear.multiply(0);
 
-
-
-lossYear =lossYear.min(lossYear.focal_mode(40, 'circle'));
-lossYear = lossYear.toInt();
-Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
-    palette:[ red, yellow, gr ,db]}, 'lossYear3');
+var lossYear1 =lossYear.min(lossYear.focal_median(5, 'octagon'));
+lossYear1 = lossYear1.toInt();
+Map.addLayer(lossYear1.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'lossYear1');
 
 
 // Run a focal_mode convolution on the image. 
@@ -57,7 +55,28 @@ var image4 = image3.focal_max(3).focal_min(5).focal_max(3);
 
 
 Map.addLayer(image4.updateMask(image4.neq(99)), {min: 1, max: 14,
-    palette:[ red, yellow, gr ,db]}, 'image4');
+    palette:[ red, yellow, gr ,db]}, 'Trial1 Mode');
+    
+    
+    
+var image5 = lossYear1.focal_mode(5, 'circle');
+// Further smooth the image via focal_max and focal_min. 
+var image6 = image5.focal_max(3).focal_min(4).focal_max(3);
+var image7 = image5.focal_max(3).focal_min(6).focal_max(3);
+
+Map.addLayer(image6.updateMask(image6.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'Trial2 Median focal min 4');
+
+
+Map.addLayer(image7.updateMask(image7.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'Trial3 Median focal min 5');
+    
+    
+// var lossYear4 = blank.where(lossYear.connectedPixelCount(500).gte(500),lossYear );
+// Map.addLayer(lossYear4, {min: 1, max: 14, palette:[ red, yellow, gr ,db ]},"lossYear_connectedpixel");
+
+
+
 
 // Map.addLayer(image3, vis_params, 'Mode');
 // Map.addLayer(image4, vis_params, 'Smooth');
