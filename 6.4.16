@@ -21,7 +21,9 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
           [103.08952331542969, 4.127970187726043]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
-Map.setCenter(102.59239196777344,3.94029555672408, 9);
+// Map.setCenter(102.59239196777344,3.94029555672408, 9);
+Map.setCenter(101.14837646484375,3.888917295949231, 12);
+
 var printmap = function(t, folder){
   var year = (2000+t).toString();
   t= ee.Number(t);
@@ -64,6 +66,11 @@ lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 
 
 lossYear =lossYear.min(lossYear.focal_median(10, 'circle'));
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
+    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+
+
+
 lossYear = lossYear.focal_mode();
 lossYear = lossYear.focal_mode();
 lossYear = lossYear.focal_max(3).focal_min(5).focal_max(3);
@@ -72,7 +79,7 @@ lossYear = lossYear.focal_max(3).focal_min(5).focal_max(3);
 
 lossYear = lossYear.toInt();
 Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-    palette:[ red, yellow, gr ,db]}, 'lossYear3');
+    palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
 
 // Export.image.toAsset({
 //   image: lossYear,
