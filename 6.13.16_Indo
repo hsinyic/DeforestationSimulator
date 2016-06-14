@@ -66,9 +66,7 @@ var Target = ee.List([0, 0.2,0.4,0.6,0.8,1.00]);
 //Minimum cost mapping 
 var source = OP00;
 source = source.updateMask(source);
-
 var cost = blank.add(1).clip(totalarea); 
-
 var cumulativeCost = cost.cumulativeCost({
     source: source,
     maxDistance: 100 * 1000 // 50 kilometers
@@ -448,7 +446,6 @@ var age = function(t){
   // .where(noloss.eq(0).and(OP00.eq(1)), ageNOP_OP)
   // .where(noloss.eq(1).and(OP00.eq(1)), ageOP_OP);
 
-
   return(ee.Image(agemap));
 };
 var Gunarso_age = yr.map(age);
@@ -467,8 +464,8 @@ for (var t =5; t >=0; --t){
     palette:[ yellow, gr, lb ,db]}, year);
 }
 
-// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
-//     palette:[whi, lb ]}, "OP00");
-// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
-//     palette:[whi, lb ]}, "OP05");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
+    palette:[whi, lb ]}, "OP00");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
+    palette:[whi, lb ]}, "OP05");
 
