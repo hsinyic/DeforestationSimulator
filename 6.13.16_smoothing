@@ -22,11 +22,10 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.59239196777344,3.94029555672408, 14);
 
-       Map.setCenter(102.75877475738525,
-            3.9492436138362192, 14) ;    
+Map.setCenter(102.75877475738525,3.9492436138362192, 12) ;    
 
 var scale = ee.Number(500); 
-var totalarea = geometry;
+var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
@@ -77,7 +76,6 @@ Map.addLayer(indyear.updateMask(indyear), {min: 0, max: 1,
 
 var lossYear4 = indyear.mask(indyear.connectedPixelCount(500).gte(500));
 Map.addLayer(lossYear4.updateMask(lossYear4), {min: 1, max: 14, palette:[ red, yellow, gr ,db ]},"lossYear4");
-
 
 
 // var lossYear4 = lossYear3.mask(lossYear3.connectedPixelCount(100).gte(100));
