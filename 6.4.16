@@ -26,9 +26,10 @@ var printmap = function(t, folder){
   var year = (2000+t).toString();
   t= ee.Number(t);
   var img = ee.Image(folder.get(t));
-  // img = blank.where(img.lte(25), img.add(3));
-  // img = img.updateMask(img);
-  // img = img.subtract(3);
+  // Take out area that is >40 or 100 even 
+  img = blank.where(img.lte(25), img.add(3));
+  img = img.updateMask(img);
+  img = img.subtract(3);
   Map.addLayer(img, {min: 0, max: 25,
     // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
     palette:[ red, yellow, gr, dg,lb,  db]}, year);
@@ -58,6 +59,9 @@ var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
+// lossYear = lossYear.focal_max(3).focal_min(10).focal_max(3);
+
+
 lossYear = lossYear.toInt();
 Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
     palette:[ red, yellow, gr ,db]}, 'lossYear3');
