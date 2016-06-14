@@ -1,0 +1,113 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
+    BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
+    geometry = /* color: d63000 */ee.Geometry({
+      "type": "GeometryCollection",
+      "geometries": [
+        {
+          "type": "LinearRing",
+          "coordinates": [
+            [
+              101.3983154296875,
+              1.016182073033441
+            ],
+            [
+              101.3983154296875,
+              -0.21972602392079613
+            ],
+            [
+              102.821044921875,
+              -0.2252191465717146
+            ],
+            [
+              102.81005859375,
+              1.0106897682409128
+            ],
+            [
+              101.3983154296875,
+              1.016182073033441
+            ]
+          ]
+        },
+        {
+          "type": "Point",
+          "coordinates": [
+            102.0849609375,
+            0.39550467153201946
+          ]
+        }
+      ]
+    });
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+centerMap(102.0849609375, 0.39550467153201946, 9);
+var db= String('0000FF');
+var lb= String('#11ffff');
+var red=String('ff510f');
+var yellow=String('#fff832');
+var gr= String('#4cff62');
+var whi=String('#ffffff');
+AFTER = AFTER.where(AFTER.eq(3),4);
+BEFORE = BEFORE.where(BEFORE.eq(3),4);
+
+//area to dilate to 
+var expansion_area = AFTER.gte(3).and((BEFORE.lte(2))); 
+// Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+// Map.addLayer(expansion_area, {min: 0, max: 4, palette:[ db, gr, yellow, red ]},"expansion_area");
+// Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+
+//##########
+//# Minimum cost mapping: 
+//##########
+var sources =BEFORE.eq(4);
+Map.addLayer(sources.updateMask(sources), {min: 0, max: 3, palette:[ whi, red, db, gr]},"sources");
+
+
+//eliminate small patches 
+var sources2= BEFORE.eq(4);
+sources2 = sources2.mask(sources.connectedPixelCount(1024).gte(1024));
+Map.addLayer(sources2.updateMask(sources2), {min: 0, max: 3, palette:[ whi, red, db, gr ]},"sources + filter");
+// sources = sources.updateMask(sources);
+
+
+
+/*//Unifrom cost data
+var cost = BEFORE.multiply(0).add(1); 
+var cumulativeCost = cost.cumulativeCost({
+  source: sources,
+  maxDistance: 100 * 1000 
+});
+Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'cumulativeCost');
+
+// Keep only the designated area  
+var costmap = cumulativeCost.where(expansion_area.eq(0),0);
+costmap = costmap.updateMask(costmap);
+Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'costmap');
+
+//Calculate the percentile threshold 
+var percentile_threshold = function(p){
+  var Dictionary = costmap.reduceRegion({
+    reducer: ee.Reducer.percentile([p]),
+    geometry: geometry}); 
+  return ee.Number(Dictionary.get('cumulative_cost'))};
+var N30 = percentile_threshold(30);
+var N60 = percentile_threshold(60);
+var N90 = percentile_threshold(90);
+
+var E30 = costmap.where(cumulativeCost.gte(N30),0);
+var E60 = costmap.where(cumulativeCost.gte(N60),0);
+var E90 = costmap.where(cumulativeCost.gte(N90),0);
+
+// // Visualize BEFORE, INTERMEDIATE, and AFTER 
+var T30 = BEFORE.where(E30.neq(0), 4);
+var T60 = BEFORE.where(E60.neq(0), 4);
+var T90 = BEFORE.where(E90.neq(0), 4);
+AFTER = AFTER.where((BEFORE.eq(2).and(AFTER.neq(4))),2);
+Map.addLayer(AFTER, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"AFTER");
+Map.addLayer(T90, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE90');
+Map.addLayer(T60, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE60');
+Map.addLayer(T30, {min: 1, max: 4, palette:[ db, gr, yellow, red ] }, 'INTERMEDIATE30');
+Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+
+*/
+
+
