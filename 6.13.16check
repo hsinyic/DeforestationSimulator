@@ -371,12 +371,12 @@ print('test', test);
 */
 
 
-for (var t =5; t >=0; --t){
-  var year = (2000+t).toString();
-  var img = ee.Image(Gunarso.get(t));
-  Map.addLayer(img, {min: 0, max: 5,
-    palette:[db, lb, gr,  yellow, red, whi ]}, year);
-}
+// for (var t =5; t >=0; --t){
+//   var year = (2000+t).toString();
+//   var img = ee.Image(Gunarso.get(t));
+//   Map.addLayer(img, {min: 0, max: 5,
+//     palette:[db, lb, gr,  yellow, red, whi ]}, year);
+// }
 
 
 // // ####################
@@ -397,8 +397,8 @@ var age = function(t){
   agemap = agemap.updateMask(agemap);
   var ageNOP_NOP = Gunarso_age.expression(
   ' (noloss ==1 && t>=5)? t-5 \
-  : (noloss ==1 && t< 5)? 26 \
-    : (noloss == 0  && t<lossYear )? 26 \
+  : (noloss ==1 && t< 5)? 40 \
+    : (noloss == 0  && t<lossYear )? 40 \
     : (noloss == 0  && t>=lossYear )? t-lossYear \
       :OTH',
       {  
@@ -439,7 +439,7 @@ var age = function(t){
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
   .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP);
   
-  
+  // agemap = agemap.eq(26);
   // var agemap2 = agemap
   // .where(noloss.eq(0).and(OP00.eq(0)), ageNOP_NOP)
   // .where(noloss.eq(0).and(OP00.eq(1)), ageNOP_OP)
@@ -448,10 +448,18 @@ var age = function(t){
   return(ee.Image(agemap));
 };
 var Gunarso_age = yr.map(age);
+// for (var t =5; t >=0; --t){
+//   var year = (2000+t).toString();
+//   var img = ee.Image(Gunarso_age.get(t));
+//   Map.addLayer(img, {min: 0, max: 40,
+//     palette:[ yellow, gr, lb ,db]}, year);
+// }
+
 for (var t =5; t >=0; --t){
   var year = (2000+t).toString();
   var img = ee.Image(Gunarso_age.get(t));
-  Map.addLayer(img, {min: 0, max: 25,
+  var img_indicate = img.gt(25); 
+  Map.addLayer(img_indicate.updateMask(img_indicate), {min: 0, max: 1,
     palette:[ yellow, gr, lb ,db]}, year);
 }
 // var t= 1;
