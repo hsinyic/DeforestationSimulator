@@ -463,7 +463,7 @@ var Gunarso_age = yr.map(age);
 // var t=1;
 // printthis(t);
 // var printthis = function(t){
-//   var year = String(2000+t);
+//   var year = (2000+t).toString();
 //   var img = ee.Image(Gunarso_age.get(t));
 //   Map.addLayer(img, {min: 0, max: 25,
 //     palette:[db, lb, gr, red, yellow, whi ]}, year);
