@@ -87,8 +87,6 @@ costmap = costmap.updateMask(costmap);
 // Map.addLayer(costmap, {min: 0, max: 5e4,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
-
-
 //Get a series of threshold corresponding to the percentage 
 var mincostmapping = function(t){
   t= ee.Number(t);
@@ -129,37 +127,37 @@ lossYear = execute(x);
 
 
 
-//Try to use iterate() 
-// var placeholder = ee.Number(50);
-// var lossYear_2= lossYear.where(lossYear.eq(0), 99);
-// lossYear_2 = lossYear_2.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear1.gt(5)), placeholder) ;
-// var lossYear_update = function(list, prevlossYear) {
-//     var cuttoff = ee.Number(list);
-//     // print(cuttoff);
-//     // Need to get the previous element on the list 
-//     // var cuttoff_before = ee.Number(list.get(-1));
-//     // print(cuttoff_before);
-//     prevlossYear = ee.Image(prevlossYear); 
-//     var lossYear_update = prevlossYear.where(costmap.lte(cuttoff).and(prevlossYear.eq(50)), x );
-//     return ee.Image(lossYear_update);
-// };
+// Try to use iterate() 
+/*var placeholder = ee.Number(50);
+var lossYear_2= lossYear.where(lossYear.eq(0), 99);
+lossYear_2 = lossYear_2.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear1.gt(5)), placeholder) ;
+var lossYear_update = function(list, prevlossYear) {
+    var cuttoff = ee.Number(list);
+    // print(cuttoff);
+    // Need to get the previous element on the list 
+    // var cuttoff_before = ee.Number(list.get(-1));
+    // print(cuttoff_before);
+    prevlossYear = ee.Image(prevlossYear); 
+    var lossYear_update = prevlossYear.where(costmap.lte(cuttoff).and(prevlossYear.eq(50)), x );
+    return ee.Image(lossYear_update);
+};
 
-// var iterate = threshold.iterate(lossYear_update, lossYear1);
-// print(iterate);
+var iterate = threshold.iterate(lossYear_update, lossYear1);
+print(iterate);
 
-// var list_iterate = function(list, prev){
-//   var A = ee.Number(list); // should be 1,3,5,7,9,11
-//   var B = ee.Number(list.get(-1)); // should be  1,3,5,7,9,11
-//   prev = ee.Image(prev);
-//   return ee.Image(blank.where(lossYear.lte(A).and(lossYear.gte(B),1)));
-// };
+var list_iterate = function(list, prev){
+  var A = ee.Number(list); // should be 1,3,5,7,9,11
+  var B = ee.Number(list.get(-1)); // should be  1,3,5,7,9,11
+  prev = ee.Image(prev);
+  return ee.Image(blank.where(lossYear.lte(A).and(lossYear.gte(B),1)));
+};
 
-// var list = ee.List([1,3,5,7,9,11]);
-// var list_lag = ee.List([0, 2, 2, 2, 2, 2])
-// //where it has not been labeled with the right kind, do it!!! 
-// var result = list.iterate(list_iterate, lossYear)
+var list = ee.List([1,3,5,7,9,11]);
+var list_lag = ee.List([0, 2, 2, 2, 2, 2])
+//where it has not been labeled with the right kind, do it!!! 
+var result = list.iterate(list_iterate, lossYear)
 
-
+*/
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
@@ -188,10 +186,6 @@ var OP_00_05 = Gunarso.expression(
         'NOP_OP': Gunarso.select('blank').add(NOP_OP),
         }
     ).rename(['OP_00_05']);
-  
-
-
-
 var OP_05_10 = Gunarso.expression(
   "(OP2005==1 && OP2010==1) ? OP_OP\
       : (OP2005==1 && OP2010==0) ? OP_NOP \
@@ -371,14 +365,12 @@ var Gunarso = yr.map(annual);
 // print('Annual Classification Maps, 2000-2010', Gunarso);
 
 
-for (var t =5; t >=0; --t){
-  var year = (2000+t).toString();
-  var img = ee.Image(Gunarso.get(t));
-  Map.addLayer(img, {min: 0, max: 5,
-    palette:[db, lb, gr,  yellow, red, whi ]}, year);
-}
-// // complex geometry shape is really hard to go over. Maybe we should smooth it before operation..? 
-
+// for (var t =5; t >=0; --t){
+//   var year = (2000+t).toString();
+//   var img = ee.Image(Gunarso.get(t));
+//   Map.addLayer(img, {min: 0, max: 5,
+//     palette:[db, lb, gr,  yellow, red, whi ]}, year);
+// }
 
 // // ####################
 // // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
@@ -445,56 +437,13 @@ var age = function(t){
   .where(lossindicator.eq(0).and(OP00.eq(1)), ageNOP_OP)
   .where(lossindicator.eq(1).and(OP00.eq(1)), ageOP_OP);
 
-
-
   return(ee.Image(agemap));
 };
 var Gunarso_age = yr.map(age);
-// print(Gunarso_age);
-
-// Export.image.toDrive({
-//   image: lossYear,
-//   description: 'lossYear',
-//   scale: 30,
-//   region: totalarea.geometry().bounds(),
-//   maxPixels: 9e12
-// });
-
-// var t=1;
-// printthis(t);
-// var printthis = function(t){
-//   var year = (2000+t).toString();
-//   var img = ee.Image(Gunarso_age.get(t));
-//   Map.addLayer(img, {min: 0, max: 25,
-//     palette:[db, lb, gr, red, yellow, whi ]}, year);
-//   return(3);
-// };
-// var t= 1;
-// var printhis = function(t){
-//   t = ee.Number(t);
-//   var img = ee.Image(Gunarso_age.get(t));
-//   var index = t.add(ee.Number(2000)).int().format('year_%d');
-//   // print(index);
-//   Map.addLayer(img, {min: 0, max: 25, palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF','#101010' ]}, 'hey');
-//     return(img);
-// };
-// var r = printhis(t);
-// t=2;
-// r= printhis(t);
-
-// t=3;
-// r= printhis(t);
-
-// t=4;
-// r= printhis(t);
-
-// t=5;
-// r= printhis(t);
-
 for (var t =5; t >=0; --t){
   var year = (2000+t).toString();
   var img = ee.Image(Gunarso_age.get(t));
   Map.addLayer(img, {min: 0, max: 25,
-    palette:['#fff832', 'ff510f', '#4cff62', '#11ffff', '0000FF' ]}, year);
+    palette:[red, lr, yellow, gr, lb ,db]}, year);
 }
 
