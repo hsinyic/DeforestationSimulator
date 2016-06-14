@@ -39,8 +39,8 @@ var printmap2 = function(t, folder){
   var year = (2000+t).toString();
   t= ee.Number(t);
   var img = ee.Image(folder.get(t));
-  Map.addLayer(img, {min: 0, max: 5,
-    palette:[ db, lb, gr,  yellow, red, whi]}, year);
+  // Map.addLayer(img, {min: 0, max: 5,
+  //   palette:[ db, lb, gr,  yellow, red, whi]}, year);
   return(3);
 };
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
@@ -165,8 +165,8 @@ lossYear = execute(x);
 x=5;
 lossYear = execute(x);
 
-Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
-    palette:[ red, yellow, gr ,db]}, 'lossYear_buffer');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear_buffer');
 
 
 
