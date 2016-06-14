@@ -20,8 +20,10 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
           [103.2000732421875, 3.6593900720416443],
           [103.08952331542969, 4.127970187726043]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(102.59239196777344,3.94029555672408, 11);
+// Map.setCenter(102.59239196777344,3.94029555672408, 14);
 
+       Map.setCenter(102.75877475738525,
+            3.9492436138362192, 14) ;    
 
 var scale = ee.Number(500); 
 var totalarea = geometry;
@@ -49,10 +51,9 @@ var OP00 = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1).rename(
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(['OP10']);
 
-var lossYear1 = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
-Map.addLayer(lossYear1.updateMask(lossYear1.neq(99)), {min: 1, max: 14,
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
     palette:[ red, yellow, gr ,db]}, 'lossYear1');
-var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear1.gt(5)), 1).clip(totalarea); 
+var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(5)), 1).clip(totalarea); 
 
 
 var minForestSize = 30;
@@ -61,8 +62,24 @@ var segmentSize = lossYear.connectedPixelCount(Math.max(minForestSize, minDefore
 // Invert pixels that are part of a too-small island
 var minSize = ee.Image(minForestSize).where(lossYear, minDeforestSize);
 var lossYear2 = lossYear.where(segmentSize.lt(minSize), lossYear.not());
-print(lossYear2);
-Map.addLayer(lossYear2.updateMask(lossYear2.neq(99)), {min: 1, max: 14,
-    palette:[ red, yellow, gr ,db]}, 'lossYear2');
 
-var lossYear3 =lossYear.min(lossYear.focal_mode(1, 'square'));
+
+var lossYear3 =lossYear.min(lossYear.focal_mode(10, 'square'));
+lossYear3 = lossYear3.toInt();
+Map.addLayer(lossYear3.updateMask(lossYear3.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'lossYear3');
+
+var indyear=lossYear3.eq(12);
+Map.addLayer(indyear.updateMask(indyear), {min: 0, max: 1,
+    palette:[ red, yellow, gr ,db]}, 'indyear');
+
+
+
+var lossYear4 = indyear.mask(indyear.connectedPixelCount(500).gte(500));
+Map.addLayer(lossYear4.updateMask(lossYear4), {min: 1, max: 14, palette:[ red, yellow, gr ,db ]},"lossYear4");
+
+
+
+// var lossYear4 = lossYear3.mask(lossYear3.connectedPixelCount(100).gte(100));
+// Map.addLayer(lossYear4.updateMask(lossYear4), {min: 1, max: 14, palette:[ red, yellow, gr ,db ]},"lossYear4");
+
