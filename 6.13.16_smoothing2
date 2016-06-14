@@ -22,7 +22,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.59239196777344,3.94029555672408, 14);
 // Map.setCenter(102.59239196777344,3.94029555672408, 10);
-Map.setCenter(102.59239196777344,3.94029555672408, 10);
+// Map.setCenter(102.59239196777344,3.94029555672408, 14);
 
 
 
@@ -67,7 +67,7 @@ var image5 = lossYear1.focal_mode();
 var image8 = image5.focal_max(1).focal_min(7).focal_max(1);
 
 image5 = image5.focal_mode();
-var image6 = image5.focal_max(3).focal_min(5).focal_max(3);
+var image6 = image5.focal_max(3).focal_min(6).focal_max(3);
 
 
 Map.addLayer(image6.updateMask(image6.neq(99)), {min: 1, max: 14,
