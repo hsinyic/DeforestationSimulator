@@ -372,12 +372,12 @@ print('test', test);
 */
 
 
-for (var t =5; t >=0; --t){
-  var year = (2000+t).toString();
-  var img = ee.Image(Gunarso.get(t));
-  Map.addLayer(img, {min: 0, max: 5,
-    palette:[db, lb, gr,  yellow, red, whi ]}, year);
-}
+// for (var t =5; t >=0; --t){
+//   var year = (2000+t).toString();
+//   var img = ee.Image(Gunarso.get(t));
+//   Map.addLayer(img, {min: 0, max: 5,
+//     palette:[db, lb, gr,  yellow, red, whi ]}, year);
+// }
 
 
 // // ####################
@@ -451,24 +451,47 @@ var age = function(t){
 
   return(ee.Image(agemap));
 };
+
+
 var Gunarso_age = yr.map(age);
-for (var t =5; t >=0; --t){
+// for (var t =5; t >=0; --t){
+//   var year = (2000+t).toString();
+//   var img = ee.Image(Gunarso_age.get(t));
+//   Map.addLayer(img, {min: 0, max: 25,
+//     palette:[ yellow, gr, lb ,db]}, year);
+// }
+
+
+var printmap = function(t){
   var year = (2000+t).toString();
+  t= ee.Number(t);
   var img = ee.Image(Gunarso_age.get(t));
   Map.addLayer(img, {min: 0, max: 25,
     palette:[ yellow, gr, lb ,db]}, year);
-}
+  return(3);
+};
 
-for (var t =5; t >=0; --t){
-  var year = (2000+t).toString();
-  var img = ee.Image(Gunarso_age.get(t));
-  var img_indicate = img.gt(25); 
-  Map.addLayer(img_indicate, {min: 0, max: 1,
-    palette:[ yellow, gr, lb ,db]}, year);
-}
+var t=0;
+printmap(t);
+t=1;
+printmap(t);
+t=2;
+printmap(t);
+t=3;
+printmap(t);
+t=4;
+printmap(t);
+t=5;
+// for (var t =5; t >=0; --t){
+//   var year = (2000+t).toString();
+//   var img = ee.Image(Gunarso_age.get(t));
+//   var img_indicate = img.gt(25); 
+//   Map.addLayer(img_indicate, {min: 0, max: 1,
+//     palette:[ yellow, gr, lb ,db]}, year);
+// }
 
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
-    palette:[whi, lb ]}, "OP00");
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
-    palette:[whi, lb ]}, "OP05");
+// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "OP00");
+// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "OP05");
 
