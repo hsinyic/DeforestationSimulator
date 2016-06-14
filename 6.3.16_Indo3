@@ -99,8 +99,8 @@ var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 // Map.addLayer(source, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
-Map.addLayer(cumulativeCost, {min: 0, max: 5e3,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
+// Map.addLayer(cumulativeCost, {min: 0, max: 5e3,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
 // Map.addLayer(costmap, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
@@ -119,7 +119,7 @@ var mincostmapping = function(t){
   return ee.Number(output.get('blank'));
 };
 var threshold = Target.map(mincostmapping);
-print(threshold);
+// print(threshold);
 // Update Hansen lossyear layer  
 var execute = function(x){
   x=ee.Number(x).toInt();
@@ -377,19 +377,19 @@ var annual = function(t){
 var Gunarso = yr.map(annual);
 
 
-// var t=5;
-// var p0= printmap2(t, Gunarso);
+var t=5;
+var p0= printmap2(t, Gunarso);
 
-// t=4;
-// p0= printmap2(t, Gunarso);
-// t=3;
-// p0= printmap2(t, Gunarso);
-// t=2;
-// p0= printmap2(t, Gunarso);
-// t=1;
-// p0= printmap2(t, Gunarso);
-// t=0;
-// p0= printmap2(t, Gunarso);
+t=4;
+p0= printmap2(t, Gunarso);
+t=3;
+p0= printmap2(t, Gunarso);
+t=2;
+p0= printmap2(t, Gunarso);
+t=1;
+p0= printmap2(t, Gunarso);
+t=0;
+p0= printmap2(t, Gunarso);
 
 
 // // ####################
