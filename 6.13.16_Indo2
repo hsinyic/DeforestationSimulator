@@ -51,7 +51,7 @@ var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']);
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1).rename(['OP10']);
-/*Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,
     palette:[whi, lb ]}, "OP10");
 Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
     palette:[whi, lb ]}, "OP00");
@@ -60,7 +60,7 @@ Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
 Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
     palette:[whi, lb ]}, "OP90");
 
-*/
+
 
 // Define parameters 
 var lossYear1 = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
@@ -269,9 +269,9 @@ var lossyear00_05= Gunarso.expression(
       'NOP_OP': NOP_OP
     }
 ).rename(['lossyear00_05']);
-// var inconsistent = lossyear00_05.eq(33); 
-// Map.addLayer(inconsistent, {min: 0, max: 1,
-// palette:[db, lb, gr, yellow, red, whi, black ]},'lossyear00_05');
+var inconsistent = lossyear00_05.eq(33); 
+Map.addLayer(inconsistent, {min: 0, max: 1,
+palette:[db, lb, gr, yellow, red, whi, black ]},'lossyear00_05');
 
 var lossyear05_10= Gunarso.expression(
 ' OP_05_10==NOP_OP && (lossyear >10 || lossyear <=5) ? orphan\
@@ -288,7 +288,7 @@ var lossyear05_10= Gunarso.expression(
 // palette:[db, lb, gr, yellow, red, whi, black ]},'lossyear05_10');
 
 
-
+/*
 // #########################
 // #Step4 : Create yearly maps (stored in Gunarso_final),  2000 <= t <= 2005
 // #########################
@@ -365,11 +365,11 @@ var annual = function(t){
 var Gunarso = yr.map(annual);
 // print('Annual Classification Maps, 2000-2010', Gunarso);
 
-/*var test = annual(6);
-print('test', test);
-    Map.addLayer(test, {min: 0, max: 5,
-    palette:[db, lb, gr, yellow, red, whi ]}, "test");
-*/
+// var test = annual(6);
+// print('test', test);
+//     Map.addLayer(test, {min: 0, max: 5,
+//     palette:[db, lb, gr, yellow, red, whi ]}, "test");
+
 
 
 // for (var t =5; t >=0; --t){
@@ -495,3 +495,4 @@ t=5;
 // Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
 //     palette:[whi, lb ]}, "OP05");
 
+*/
