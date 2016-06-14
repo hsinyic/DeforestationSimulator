@@ -14,7 +14,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: 98ff00 */ee.Geometry.Polygon(
+    geometry = /* color: 0B4A8B */ee.Geometry.Polygon(
         [[[102.15225219726562, 4.136873372175124],
           [102.14744567871094, 3.6244418715038584],
           [103.2000732421875, 3.6593900720416443],
@@ -24,7 +24,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 Map.setCenter(102.59239196777344,3.94029555672408, 11);
 
 var scale = ee.Number(500); 
-var totalarea = geometry;
+var totalarea = Peninsula_outline;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 lossYear =lossYear.min(lossYear.focal_mode(50, 'square'));
