@@ -20,8 +20,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
           [103.2000732421875, 3.6593900720416443],
           [103.08952331542969, 4.127970187726043]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Map.setCenter(102.10693359375, 3.973860975839102, 9);
-Map.setCenter(102.59239196777344,3.94029555672408, 9);
+Map.setCenter(102.10693359375, 3.973860975839102, 9);
+// Map.setCenter(102.59239196777344,3.94029555672408, 9);
 // Map.setCenter(101.14837646484375,3.888917295949231, 12);
 
 var printmap = function(t, folder){
@@ -41,8 +41,8 @@ var printmap2 = function(t, folder){
   var year = (2000+t).toString();
   t= ee.Number(t);
   var img = ee.Image(folder.get(t));
-  // Map.addLayer(img, {min: 0, max: 5,
-  //   palette:[ db, lb, gr,  yellow, red, whi]}, year);
+  Map.addLayer(img, {min: 0, max: 5,
+    palette:[ db, lb, gr,  yellow, red, whi]}, year);
   return(3);
 };
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
