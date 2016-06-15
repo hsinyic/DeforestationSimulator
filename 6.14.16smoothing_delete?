@@ -1,0 +1,49 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    geometry = /* color: 98ff00 */ee.Geometry.Polygon(
+        [[[102.53986358642578, 4.032425929210449],
+          [102.53746032714844, 3.845072035101843],
+          [102.88215637207031, 3.8505528165616494],
+          [102.88387298583984, 4.037220534660507]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.setCenter(102.75877475738525,3.9492436138362192, 12) ;    
+
+// var totalarea = Peninsula_outline.geometry().bounds();
+var totalarea = geometry; 
+var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
+lossYear = lossYear.where(lossYear.eq(0), 99);
+var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
+var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
+
+// NOT IMPORTANT add name string for colors, so I don't have to input the colors   
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ('#ff8f7d').toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
+
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+
+
+var minForestSize = 30;
+var minDeforestSize = 3;
+var segmentSize = lossYear.connectedPixelCount(Math.max(minForestSize, minDeforestSize), false);
+// Invert pixels that are part of a too-small island
+var minSize = ee.Image(minForestSize).where(lossYear, minDeforestSize);
+var lossYear2 = lossYear.where(segmentSize.lt(minSize), lossYear.not());
+
+
+var lossYear3 =lossYear.min(lossYear.focal_mode(20, 'circle'));
+lossYear3 = lossYear3.toInt();
+Map.addLayer(lossYear3.updateMask(lossYear3.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'lossYear3');
+
+var lossYear4 = blank.where(lossYear3.connectedPixelCount(500).gte(500),lossYear3 );
+Map.addLayer(lossYear4, {min: 1, max: 14, palette:[ red, yellow, gr ,db ]},"lossYear4");
+
