@@ -13,16 +13,15 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    Indonesia_1 = ee.FeatureCollection("ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
+// var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
 var Bungo = Indonesia_1.filterMetadata('NAME_2', 'equals', 'Bungo');
 
 Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
-
-
 // Malaysia 
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 // Map.setCenter(102.59239196777344,3.94029555672408, 9);
@@ -61,7 +60,7 @@ var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 
 var scale = ee.Number(1000); 
-var totalarea = Jambi;
+var totalarea = Bungo;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 // lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
