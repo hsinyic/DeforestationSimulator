@@ -16,9 +16,6 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     Indo = ee.FeatureCollection("ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
-// var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
-// var Bungo = Indonesia_1.filterMetadata('NAME_2', 'equals', 'Bungo');
 
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
