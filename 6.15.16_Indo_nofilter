@@ -73,8 +73,8 @@ lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 
 
 // lossYear =lossYear.min(lossYear.focal_median(10, 'circle'));
-// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear original');
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
+    palette:[ red, yellow, gr ,db]}, 'lossYear original');
 // lossYear = lossYear.focal_mode();
 // lossYear = lossYear.focal_mode();
 // lossYear = lossYear.focal_max(3).focal_min(5).focal_max(3);
