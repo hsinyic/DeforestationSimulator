@@ -13,16 +13,14 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    Indo = ee.FeatureCollection("ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk");
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
 var Bungo = Indonesia_1.filterMetadata('NAME_2', 'equals', 'Bungo');
 
-Map.setCenter(            101.337890625,
-            0.6481795331595092, 8);
+Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 
 
 // Malaysia 
@@ -74,15 +72,9 @@ lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 lossYear =lossYear.min(lossYear.focal_median(10, 'circle'));
 Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
     palette:[ red, yellow, gr ,db]}, 'lossYear original');
-
-
-
 lossYear = lossYear.focal_mode();
 lossYear = lossYear.focal_mode();
 lossYear = lossYear.focal_max(3).focal_min(5).focal_max(3);
-
-
-
 lossYear = lossYear.toInt();
 Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
