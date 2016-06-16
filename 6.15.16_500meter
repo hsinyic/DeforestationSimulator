@@ -16,7 +16,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(101.744384765625,0.4669137773332418, 8);
-Map.setCenter(101.964111328125, -1.5324100450044358, 9);
+Map.setCenter(101.964111328125, -1.5324100450044358, 10);
 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
@@ -41,8 +41,8 @@ var printmap2 = function(t, folder){
   var year = (2000+t).toString();
   t= ee.Number(t);
   var img = ee.Image(folder.get(t));
-  Map.addLayer(img, {min: 0, max: 5,
-    palette:[ db, lb, gr,  yellow, red, whi]}, year);
+  // Map.addLayer(img, {min: 0, max: 5,
+  //   palette:[ db, lb, gr,  yellow, red, whi]}, year);
   return(3);
 };
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
@@ -55,7 +55,7 @@ var yellow=('#fff832').toString();
 var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
-var scale = ee.Number(100); 
+var scale = ee.Number(500); 
 
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
@@ -159,8 +159,8 @@ var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 // Map.addLayer(source, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
-Map.addLayer(cumulativeCost, {min: 0, max: 5e2,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
+// Map.addLayer(cumulativeCost, {min: 0, max: 5e2,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
 // Map.addLayer(costmap, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
