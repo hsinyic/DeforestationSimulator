@@ -15,8 +15,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.744384765625,0.4669137773332418, 8);
-
+// Map.setCenter(101.744384765625,0.4669137773332418, 8);
+Map.setCenter(101.964111328125, -1.5324100450044358, 12);
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 // Map.setCenter(102.59239196777344,3.94029555672408, 9);
