@@ -214,13 +214,14 @@ lossYear = execute(x);
 
 
 
-// Export.image.toAsset({
-//   image: lossYear,
-//   description: 'lossYear_buffered',
-//   scale: 30,
-//   region: totalarea.geometry().bounds(),
-//   maxPixels: 9e12,
-// });
+Export.image.toAsset({
+  image: lossYear,
+  description: 'lossYear_buffered',
+  scale: 30,
+  region: totalarea.geometry().bounds(),
+  maxPixels: 9e12,
+});
+
 
 //M3Y4SHLGNT5YD2MB57P62RM3; the last one took a while to run 
 
