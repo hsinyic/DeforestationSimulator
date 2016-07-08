@@ -35,7 +35,6 @@ var printmap = function(t, folder){
     palette:[ red, yellow, gr, dg,lb,  db]}, year);
   return(3);
 };
-
 var printmap2 = function(t, folder){
   var year = t.toString();
   t= ee.Number(t);
