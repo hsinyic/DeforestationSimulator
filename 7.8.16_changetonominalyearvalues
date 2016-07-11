@@ -574,16 +574,16 @@ p = age(t);
 
 
 
-var Gunarso_age = yr.map(age);
+var Gunarso_agefinal = yr.map(age);
 var t=2005;
-var p = printmap(t, Gunarso_age);
+var p = printmap(t, Gunarso_agefinal);
 t=2004;
-p = printmap(t, Gunarso_age);
+p = printmap(t, Gunarso_agefinal);
 t=2003;
-p = printmap(t, Gunarso_age);
+p = printmap(t, Gunarso_agefinal);
 t=2002;
-p = printmap(t, Gunarso_age);
+p = printmap(t, Gunarso_agefinal);
 t=2001;
-p = printmap(t, Gunarso_age);
+p = printmap(t, Gunarso_agefinal);
 t=2000;
-p = printmap(t, Gunarso_age);
+p = printmap(t, Gunarso_agefinal);
