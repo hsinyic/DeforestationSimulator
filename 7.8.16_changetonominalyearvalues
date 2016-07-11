@@ -502,9 +502,6 @@ var age = function(t){
   return(ee.Image(agemap));
 };
 
-
-
-
 var Gunarso_age = yr.map(age);
 var t=2005;
 var p = printmap(t, Gunarso_age);
