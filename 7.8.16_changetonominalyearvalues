@@ -26,12 +26,7 @@ var printmap = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  // Take out area that is >40 or 100 even 
-  // img = blank.where(img.lte(25), img.add(3));
-  // img = img.updateMask(img);
-  // img = img.subtract(3);
   Map.addLayer(img, {min: 0, max: 5,
-    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
     palette:[ red, yellow, gr, dg,lb,  db]}, year);
   return(3);
 };
@@ -495,12 +490,89 @@ var age = function(t){
         'OTH': Gunarso_age.select('blank').add(100),
       }
   );
+
+
+
   agemap = agemap
   .where(OP90.eq(0).and(OP00.eq(0)), ageNOP_NOP)
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
   .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP);
+
+  // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
+  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, '1');
+
+  // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
+  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, '2');
+
+  // Map.addLayer(OP90.eq(1).and(OP00.eq(1)), {min: 0, max: 1,
+  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, '3');
+
+
+
+  // Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
+  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
+
+
+  // Map.addLayer(ageNOP_OP, {min: 0, max: 25,
+  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
+
+
+  // Map.addLayer(ageOP_OP, {min: 0, max: 25,
+  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
+
+
+
   return(ee.Image(agemap));
 };
+
+
+var t = 2005;
+var p = age(t);
+  Map.addLayer(p, {min: 0, max: 25,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'agemap');
+
+t = 2004;
+p = age(t);
+  Map.addLayer(p, {min: 0, max: 25,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'agemap');
+
+
+var t = 2003;
+var p = age(t);
+  Map.addLayer(p, {min: 0, max: 25,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'agemap');
+
+
+t = 2002;
+p = age(t);
+  Map.addLayer(p, {min: 0, max: 25,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'agemap');
+
+
+t = 2001;
+p = age(t);
+  Map.addLayer(p, {min: 0, max: 25,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'agemap');
+
+
+t = 2000;
+p = age(t);
+  Map.addLayer(p, {min: 0, max: 25,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'agemap');
+
+
 
 var Gunarso_age = yr.map(age);
 var t=2005;
