@@ -183,7 +183,7 @@ var execute = function(x){
   var lossYear_update = lossYear.where(Binary.eq(1), ee.Number(x));
 // print(lossYear_update);
   var Binary_show = blank.where(Binary.eq(1), ee.Number(x));
-  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 0, max: 5, palette: [whi, yellow, red, lb, db, black]}, 'Binary');
+  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 0, max: 5, palette: [whi, yellow, red, lb, db, black]}, 'Binary');
   return lossYear_update;
 };
 // var x=0;
