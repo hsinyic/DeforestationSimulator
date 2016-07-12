@@ -149,8 +149,8 @@ var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 // Map.addLayer(source, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
-Map.addLayer(cumulativeCost, {min: 0, max: 5e2,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
+// Map.addLayer(cumulativeCost, {min: 0, max: 5e2,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
 // Map.addLayer(costmap, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
