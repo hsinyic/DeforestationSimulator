@@ -61,7 +61,7 @@ var Riau = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Riau');
 
 var totalarea = Riau;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
-lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
+lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
 // lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
 // lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
 // lossYear =lossYear.min(lossYear.focal_median(10, 'circle'));
@@ -185,7 +185,11 @@ lossYear = execute(x, offset); x=1998; lossYear = execute(x, offset); x=1999; lo
 // # 2000 to 2005 annual maps 
 // ########
 
-Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.lte(2000).or(lossYear.gt(2005))), 1).clip(totalarea); 
+Designated = blank.where(
+  (OP00.eq(0).and(OP05.eq(1)))
+  .and(
+    (lossYear.lte(2000)).or(lossYear.gt(2005)).or(lossYear.eq(99))), 1)
+  .clip(totalarea); 
 Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 source = OP00;
 source = source.updateMask(source);
@@ -217,7 +221,11 @@ x=2005; lossYear = execute(x, offset);
 // # 2005 to 2010 annual maps 
 // ########
 
-Designated = blank.where(OP05.eq(0).and(OP10.eq(1)).and(lossYear.lte(2005).or(lossYear.gt(2010))), 1).clip(totalarea); 
+Designated = blank.where(
+  (OP05.eq(0).and(OP10.eq(1)))
+  .and(
+    (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1)
+  .clip(totalarea); 
 Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 source = OP05;
 source = source.updateMask(source);
@@ -290,7 +298,7 @@ var age = function(t){
   );
 
 
-  agemap = ee.Image([100])
+  var agemap = ee.Image([100])
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
   .where(OP00.eq(0).and(OP05.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
   .where(OP05.eq(0).and(OP10.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
@@ -310,7 +318,7 @@ var age = function(t){
   Map.addLayer(agemap.updateMask(agemap.neq(100)), {min: 0, max: 25,
   palette:[ yellow, gr, dg]}, timestamp);
 
-  var agemap = agemap.updateMask(agemap.neq(100));
+  agemap = agemap.updateMask(agemap.neq(100));
   return(ee.Image(agemap));
 };
 
