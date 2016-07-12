@@ -510,37 +510,37 @@ var age = function(t){
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
   // Map.addLayer(ageNOP_OP, {min: 0, max: 25,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
-  Map.addLayer(ageOP_OP, {min: 0, max: 25,
-    palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
+  // Map.addLayer(ageOP_OP, {min: 0, max: 25,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
 
   return(ee.Image(agemap));
 };
 
 
-var t = 2005;
-var p = age(t);
-t = 2004;
-p = age(t);
-t = 2003;
-p = age(t);
-t = 2002;
-p = age(t);
-t = 2001;
-p = age(t);
-t = 2000;
-p = age(t);
+// var t = 2005;
+// var p = age(t);
+// t = 2004;
+// p = age(t);
+// t = 2003;
+// p = age(t);
+// t = 2002;
+// p = age(t);
+// t = 2001;
+// p = age(t);
+// t = 2000;
+// p = age(t);
 
-// var Gunarso_agefinal = yr.map(age);
-// var t=2005;
-// var p = printage(t, Gunarso_agefinal);
-// t=2004;
-// p = printage(t, Gunarso_agefinal);
-// t=2003;
-// p = printage(t, Gunarso_agefinal);
-// t=2002;
-// p = printage(t, Gunarso_agefinal);
-// t=2001;
-// p = printage(t, Gunarso_agefinal);
-// t=2000;
-// p = printage(t, Gunarso_agefinal);
+var Gunarso_agefinal = yr.map(age);
+var t=2005;
+var p = printage(t, Gunarso_agefinal);
+t=2004;
+p = printage(t, Gunarso_agefinal);
+t=2003;
+p = printage(t, Gunarso_agefinal);
+t=2002;
+p = printage(t, Gunarso_agefinal);
+t=2001;
+p = printage(t, Gunarso_agefinal);
+t=2000;
+p = printage(t, Gunarso_agefinal);
 
