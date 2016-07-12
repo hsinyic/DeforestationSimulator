@@ -490,13 +490,10 @@ var age = function(t){
       }
   );
 
-
-
   agemap = agemap
   .where(OP90.eq(0).and(OP00.eq(0)), ageNOP_NOP)
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
   .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP);
-
   // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP NOP');
   // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
@@ -509,7 +506,6 @@ var age = function(t){
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
   // Map.addLayer(ageOP_OP, {min: 0, max: 25,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
-
   return(ee.Image(agemap));
 };
 
