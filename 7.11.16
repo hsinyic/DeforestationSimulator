@@ -122,6 +122,9 @@ Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
     palette:[whi, lb ]}, "OP00");
 Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
     palette:[whi, lb ]}, "OP05");
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,
+    palette:[whi, lb ]}, "OP10");
+
 
 // ########
 // # 1990 to 2000 annual maps 
@@ -249,12 +252,15 @@ var yr = ee.List.sequence(1990, 2010, 1);
 
 // Palm oil age map 
 var age = function(t){
+  var timestamp = t.toString();
   t = ee.Number(t);
-  var agemap = blank.where(OP10.eq(1),1);
-  agemap = agemap.updateMask(agemap);
+  var agemap2 = ee.Algorithms.If(t.gt(2000), OP05 , OP00 );
+  agemap2 = ee.Image(agemap2);
+  var agemap = ee.Algorithms.If(t.gt(2005), OP10, agemap2 );
+  agemap = ee.Image(agemap).updateMask(agemap);
   var ageNOP_OP = Gunarso_age.expression(
   ' noloss ==1 ? OTH \
-    : (noloss == 0 && t< lossYear )? (25+t-lossYear+1) \
+    : (noloss == 0 && t< lossYear )? OTH \
     : (noloss == 0 && t>=lossYear )? (t-lossYear) \
       :OTH',
       {  
@@ -278,10 +284,10 @@ var age = function(t){
   );
 
   agemap = agemap
-  .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
-  .where(OP00.eq(0).and(OP05.eq(1)), ageNOP_OP)
-  .where(OP05.eq(0).and(OP10.eq(1)), ageNOP_OP)
-  .where(OP90.eq(1).and(OP10.eq(1)), ageOP_OP);
+  .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
+  .where(OP00.eq(0).and(OP05.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
+  .where(OP05.eq(0).and(OP10.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
+  .where(OP90.eq(1).and(OP10.eq(1)), ageOP_OP.updateMask(ageNOP_OP.neq(100)));
   // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP NOP');
   // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
@@ -290,35 +296,47 @@ var age = function(t){
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'OP OP');
   // Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
-  // Map.addLayer(ageNOP_OP, {min: 0, max: 25,
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
-  // Map.addLayer(ageOP_OP, {min: 0, max: 25,
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
+  // Map.addLayer(ageNOP_OP.updateMask(ageNOP_OP.neq(100)), {min: 0, max: 25,
+  //   palette:[ yellow, gr, dg]}, 'ageNOP_OP');
+  // Map.addLayer(ageOP_OP.updateMask(ageNOP_OP.neq(100)), {min: 0, max: 25,
+  //   palette:[ yellow, gr, dg]}, 'ageOP_OP');
+  // Map.addLayer(agemap.updateMask(ageNOP_OP.neq(100)), {min: 0, max: 25,
+  //   palette:[ yellow, gr, dg]}, timestamp);
+
+
   return(ee.Image(agemap));
 };
+
+// var test = age(1993);
+// var test = age(1993);
+// var test = age(1997);
+// var test = age(2000);
+
+
+
 
 var Gunarso_agefinal = yr.map(age);
 var t=2010;
 var p = printage(t, Gunarso_agefinal);
-t=2009; p = printage(t, Gunarso_agefinal);
+// t=2009; p = printage(t, Gunarso_agefinal);
 t=2008; p = printage(t, Gunarso_agefinal);
-t=2007; p = printage(t, Gunarso_agefinal);
+// t=2007; p = printage(t, Gunarso_agefinal);
 t=2006; p = printage(t, Gunarso_agefinal);
-t=2005; p = printage(t, Gunarso_agefinal);
+// t=2005; p = printage(t, Gunarso_agefinal);
 t=2004; p = printage(t, Gunarso_agefinal);
-t=2003; p = printage(t, Gunarso_agefinal);
+// t=2003; p = printage(t, Gunarso_agefinal);
 t=2002; p = printage(t, Gunarso_agefinal);
-t=2001; p = printage(t, Gunarso_agefinal);
+// t=2001; p = printage(t, Gunarso_agefinal);
 t=2000; p = printage(t, Gunarso_agefinal);
-t=1999; p = printage(t, Gunarso_agefinal);
+// t=1999; p = printage(t, Gunarso_agefinal);
 t=1998; p = printage(t, Gunarso_agefinal);
-t=1997; p = printage(t, Gunarso_agefinal);
+// t=1997; p = printage(t, Gunarso_agefinal);
 t=1996; p = printage(t, Gunarso_agefinal);
-t=1995; p = printage(t, Gunarso_agefinal);
+// t=1995; p = printage(t, Gunarso_agefinal);
 t=1994; p = printage(t, Gunarso_agefinal);
-t=1993; p = printage(t, Gunarso_agefinal);
+// t=1993; p = printage(t, Gunarso_agefinal);
 t=1992; p = printage(t, Gunarso_agefinal);
-t=1991; p = printage(t, Gunarso_agefinal);
+// t=1991; p = printage(t, Gunarso_agefinal);
 t=1990; p = printage(t, Gunarso_agefinal);
 
 
