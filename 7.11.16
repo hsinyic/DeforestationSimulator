@@ -137,7 +137,7 @@ var source = OP90; source = source.updateMask(source);
 var cost = blank.add(1).clip(totalarea);
 var cumulativeCost = cost.cumulativeCost({
     source: source,
-    maxDistance: 50 * 1000 // 50 kilometers
+    maxDistance: 70 * 1000 // 70 kilometers to cover that patchy area 
   });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
@@ -346,23 +346,23 @@ print(Gunarso_agefinal);
 var t=2010;
 var p = printage(t, Gunarso_agefinal);
 // t=2009; p = printage(t, Gunarso_agefinal);
-t=2008; p = printage(t, Gunarso_agefinal);
-// t=2007; p = printage(t, Gunarso_agefinal);
-t=2006; p = printage(t, Gunarso_agefinal);
-// t=2005; p = printage(t, Gunarso_agefinal);
-t=2004; p = printage(t, Gunarso_agefinal);
+// t=2008; p = printage(t, Gunarso_agefinal);
+t=2007; p = printage(t, Gunarso_agefinal);
+// t=2006; p = printage(t, Gunarso_agefinal);
+t=2005; p = printage(t, Gunarso_agefinal);
+// t=2004; p = printage(t, Gunarso_agefinal);
 // t=2003; p = printage(t, Gunarso_agefinal);
 t=2002; p = printage(t, Gunarso_agefinal);
 // t=2001; p = printage(t, Gunarso_agefinal);
 t=2000; p = printage(t, Gunarso_agefinal);
 // t=1999; p = printage(t, Gunarso_agefinal);
-t=1998; p = printage(t, Gunarso_agefinal);
+// t=1998; p = printage(t, Gunarso_agefinal);
 // t=1997; p = printage(t, Gunarso_agefinal);
-t=1996; p = printage(t, Gunarso_agefinal);
-// t=1995; p = printage(t, Gunarso_agefinal);
-t=1994; p = printage(t, Gunarso_agefinal);
+// t=1996; p = printage(t, Gunarso_agefinal);
+t=1995; p = printage(t, Gunarso_agefinal);
+// t=1994; p = printage(t, Gunarso_agefinal);
 // t=1993; p = printage(t, Gunarso_agefinal);
-t=1992; p = printage(t, Gunarso_agefinal);
+// t=1992; p = printage(t, Gunarso_agefinal);
 // t=1991; p = printage(t, Gunarso_agefinal);
 t=1990; p = printage(t, Gunarso_agefinal);
 
