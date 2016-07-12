@@ -16,7 +16,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.Point([101.08245301691568, 0.7909959458718788]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 0.7909959458718788, 12);// Riau 
+Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
@@ -27,8 +27,8 @@ var printage = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  Map.addLayer(img, {min: 0, max: 5,
-    palette:[ red, yellow, gr, dg,lb,  db]}, year);
+  Map.addLayer(img, {min: 0, max: 25,
+    palette:[ yellow, gr, dg]}, year);
   return(3);
 };
 var printclass = function(t, folder){
@@ -167,7 +167,7 @@ var execute = function(x, offset){
   var lossYear_update = lossYear.where(Binary.eq(1), t);
 // print(lossYear_update);
   var Binary_show = blank.where(Binary.eq(1), t);
-  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
@@ -238,5 +238,87 @@ x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
 
+
+
+// ####################
+// # Step5: OP Age map 
+// ####################
+var noloss = blank.where(lossYear.gt(2010).or(lossYear.lt(1991)), 1).clip(totalarea).rename(['noloss']); 
+var Gunarso_age = ee.Image([lossYear,OP90, OP00, OP05, OP10,blank,noloss]);
+var yr = ee.List.sequence(1990, 2010, 1);
+
+// Palm oil age map 
+var age = function(t){
+  t = ee.Number(t);
+  var agemap = blank.where(OP10.eq(1),1);
+  agemap = agemap.updateMask(agemap);
+  var ageNOP_OP = Gunarso_age.expression(
+  ' noloss ==1 ? OTH \
+    : (noloss == 0 && t< lossYear )? (25+t-lossYear+1) \
+    : (noloss == 0 && t>=lossYear )? (t-lossYear) \
+      :OTH',
+      {  
+        'lossYear': Gunarso_age.select('lossyear'),
+        'noloss': Gunarso_age.select('noloss'),
+        't': t,
+        'OTH': Gunarso_age.select('blank').add(100),
+      }
+  );
+  var ageOP_OP =Gunarso_age.expression(
+  ' noloss == 1 ? t-1990 \
+    : noloss == 0 && t< lossYear ? (25+t-lossYear+1) \
+    : noloss == 0 && t>=lossYear ? (t-lossYear) \
+      :OTH',
+      {  
+        'lossYear': Gunarso_age.select('lossyear'),
+        'noloss': Gunarso_age.select('noloss'),
+        't': t,
+        'OTH': Gunarso_age.select('blank').add(100),
+      }
+  );
+
+  agemap = agemap
+  .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
+  .where(OP00.eq(0).and(OP05.eq(1)), ageNOP_OP)
+  .where(OP05.eq(0).and(OP10.eq(1)), ageNOP_OP)
+  .where(OP90.eq(1).and(OP10.eq(1)), ageOP_OP);
+  // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP NOP');
+  // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP OP ');
+  // Map.addLayer(OP90.eq(1).and(OP00.eq(1)), {min: 0, max: 1,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'OP OP');
+  // Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
+  // Map.addLayer(ageNOP_OP, {min: 0, max: 25,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
+  // Map.addLayer(ageOP_OP, {min: 0, max: 25,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
+  return(ee.Image(agemap));
+};
+
+var Gunarso_agefinal = yr.map(age);
+var t=2010;
+var p = printage(t, Gunarso_agefinal);
+t=2009; p = printage(t, Gunarso_agefinal);
+t=2008; p = printage(t, Gunarso_agefinal);
+t=2007; p = printage(t, Gunarso_agefinal);
+t=2006; p = printage(t, Gunarso_agefinal);
+t=2005; p = printage(t, Gunarso_agefinal);
+t=2004; p = printage(t, Gunarso_agefinal);
+t=2003; p = printage(t, Gunarso_agefinal);
+t=2002; p = printage(t, Gunarso_agefinal);
+t=2001; p = printage(t, Gunarso_agefinal);
+t=2000; p = printage(t, Gunarso_agefinal);
+t=1999; p = printage(t, Gunarso_agefinal);
+t=1998; p = printage(t, Gunarso_agefinal);
+t=1997; p = printage(t, Gunarso_agefinal);
+t=1996; p = printage(t, Gunarso_agefinal);
+t=1995; p = printage(t, Gunarso_agefinal);
+t=1994; p = printage(t, Gunarso_agefinal);
+t=1993; p = printage(t, Gunarso_agefinal);
+t=1992; p = printage(t, Gunarso_agefinal);
+t=1991; p = printage(t, Gunarso_agefinal);
+t=1990; p = printage(t, Gunarso_agefinal);
 
 
