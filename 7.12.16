@@ -35,8 +35,8 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(1990);
   var img = ee.Image(folder.get(t));
-  Map.addLayer(img, {min: 0, max: 5,
-    palette:[ db, lb, gr,  yellow, red, whi]}, year);
+  Map.addLayer(img, {min: 0, max: 6,
+    palette:[ db, lb, gr,  yellow, red, whi, db]}, year);
   return(3);
 };
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
@@ -268,7 +268,8 @@ var NF_color = 1;
 var F_color = 2;
 var OPReplant_color = 3; 
 var OP_color = 4; 
-var OTH_color = 5;
+var NOP_color = 5
+var OTH_color = 6;
 // Create year_2000 and year_2005 classified layer of OP, F, NF  
 var year_2000 = Gunarso.expression(
 '(OP00 ==1)? OP\
@@ -307,9 +308,11 @@ var year_2005 = Gunarso.expression(
 // print('year_2005',year_2005);
     // Map.addLayer(year_2005, {min: 0, max: 6,
     // palette:[db, lb, gr, yellow, red, whi, black ]},'year_2005');
+var year_1990 = ee.Image([NOP_color]).clip(totalarea).where(OP90.eq(1), OP_color);
+
 
 //Create separate lossyear00_05 and lossyear05_10
-Gunarso= Gunarso.addBands([OP_00_05, OP_05_10]);
+/*Gunarso= Gunarso.addBands([OP_00_05, OP_05_10]);
 var lossyear00_05= Gunarso.expression(
 ' OP_00_05== NOP_OP && (lossyear >2005 || lossyear<=2000) ? orphan\
   :lossyear',
@@ -320,9 +323,9 @@ var lossyear00_05= Gunarso.expression(
       'NOP_OP': NOP_OP
     }
 ).rename(['lossyear00_05']);
-// var inconsistent = lossyear00_05.eq(33); 
-// Map.addLayer(inconsistent, {min: 0, max: 1,
-// palette:[whi, black ]},'inconsistent lossyear00_05');
+var inconsistent = lossyear00_05.eq(33); 
+Map.addLayer(inconsistent, {min: 0, max: 1,
+palette:[whi, black ]},'inconsistent lossyear00_05');
 
 var lossyear05_10= Gunarso.expression(
 ' OP_05_10==NOP_OP && (lossyear >2010 || lossyear <=2005) ? orphan\
@@ -334,9 +337,10 @@ var lossyear05_10= Gunarso.expression(
       'NOP_OP': NOP_OP
     }
 ).rename(['lossyear05_10']);
-// var inconsistent = lossyear00_05.eq(33); 
-// Map.addLayer(inconsistent.updateMask(inconsistent), {min: 0, max: 1,
-// palette:[db, lb, gr, yellow, red, whi, black ]},'inconsistent lossyear05_10');
+var inconsistent = lossyear00_05.eq(33); 
+Map.addLayer(inconsistent.updateMask(inconsistent), {min: 0, max: 1,
+palette:[db, lb, gr, yellow, red, whi, black ]},'inconsistent lossyear05_10'); */
+
 
 
 
@@ -344,8 +348,7 @@ var lossyear05_10= Gunarso.expression(
 // #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2005
 // #########################
 var Gunarso_intermediate = ee.Image([lossYear]);
-Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000, year_2005, blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
-var Gunarso_final =ee.Image([lossYear,year_2000]);
+Gunarso_intermediate= Gunarso_intermediate.addBands([year_1990, year_2000, year_2005, blank, OP_00_05, OP_05_10, lossyear05_10,lossyear00_05]);
 
 var yr = ee.List.sequence(1990, 2010, 1);
 var annual = function(t){
