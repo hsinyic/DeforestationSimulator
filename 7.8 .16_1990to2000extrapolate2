@@ -167,7 +167,7 @@ var execute = function(x, offset){
   var lossYear_update = lossYear.where(Binary.eq(1), t);
 // print(lossYear_update);
   var Binary_show = blank.where(Binary.eq(1), t);
-  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
@@ -237,3 +237,5 @@ x=2007; lossYear = execute(x, offset);
 x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
+
+
