@@ -121,8 +121,8 @@ var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(i
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
 Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
     palette:[lb, pink ]}, "OP90");
-// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
-//     palette:[whi, lb ]}, "OP00");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
+    palette:[whi, lb ]}, "OP00");
 // Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
 //     palette:[whi, lb ]}, "OP05");
 // Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,
@@ -257,10 +257,13 @@ var yr = ee.List.sequence(1990, 2010, 1);
 var age = function(t){
   var timestamp = t.toString();
   t = ee.Number(t);
-  var agemap2 = ee.Algorithms.If(t.gt(2000), OP05 , OP00 );
+  var agemap2 = ee.Algorithms.If(t.gt(ee.Number(2000)), OP05 , OP00 );
   agemap2 = ee.Image(agemap2);
-  var agemap = ee.Algorithms.If(t.gt(2005), OP10, agemap2 );
+  var agemap = ee.Algorithms.If(t.gt(ee.Number(2005)), OP10, agemap2 );
   agemap = ee.Image(agemap).updateMask(agemap);
+  // Map.addLayer(agemap, {min: 0, max: 1,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'agemap original');
+
   var ageNOP_OP = Gunarso_age.expression(
   ' noloss ==1 ? OTH \
     : (noloss == 0 && t< lossYear )? OTH \
@@ -287,33 +290,39 @@ var age = function(t){
   );
 
 
-  agemap = agemap
+  agemap = ee.Image([100])
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
   .where(OP00.eq(0).and(OP05.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
   .where(OP05.eq(0).and(OP10.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
-  .where(OP90.eq(1).and(OP10.eq(1)), ageOP_OP);
+  .where(OP90.eq(1).and(OP10.eq(1)), ageOP_OP.updateMask(ageOP_OP.neq(100)));
   // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP NOP');
   // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP OP ');
-  Map.addLayer(OP90.eq(1).and(OP10.eq(1)), {min: 0, max: 1,
-    palette:[ red, yellow, gr, dg,lb,  db]}, 'OP OP');
-  // Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
-  Map.addLayer(ageNOP_OP.updateMask(ageNOP_OP.neq(100)), {min: 0, max: 25,
-    palette:[ yellow, gr, dg]}, 'ageNOP_OP');
-  Map.addLayer(ageOP_OP.updateMask(ageOP_OP.neq(100)), {min: 0, max: 25,
-    palette:[ yellow, gr, dg]}, 'ageOP_OP');
+  // Map.addLayer(OP90.eq(1).and(OP10.eq(1)), {min: 0, max: 1,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'OP OP');
+  // Map.addLayer(ageNOP_OP.updateMask(ageNOP_OP.neq(100)), {min: 0, max: 25,
+  //   palette:[ yellow, gr, dg]}, 'ageNOP_OP');
+  // Map.addLayer(ageOP_OP.updateMask(ageOP_OP.neq(100)), {min: 0, max: 25,
+  //   palette:[ yellow, gr, dg]}, 'ageOP_OP');
+  
+  
   Map.addLayer(agemap.updateMask(agemap.neq(100)), {min: 0, max: 25,
-    palette:[ yellow, gr, dg]}, timestamp);
+  palette:[ yellow, gr, dg]}, timestamp);
 
-
+  agemap = agemap.updateMask(agemap.neq(100));
   return(ee.Image(agemap));
 };
 
-var test = age(1993);
-var test = age(1997);
+var test = age(2009);
+var test = age(2006);
+var test = age(2003);
 var test = age(2000);
+var test = age(1997);
+var test = age(1993);
+
+
+
 
 
 
