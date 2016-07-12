@@ -137,7 +137,7 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(i
 //     palette:[whi, lb ]}, "OP05");
 
 
-var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.gt(2005)), 1).clip(totalarea); 
+var Designated = blank.where(OP00.eq(0).and(OP05.eq(1)).and(lossYear.lte(2000).or(lossYear.gt(2005))), 1).clip(totalarea); 
 var Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 //Minimum cost mapping 
 var source = OP00;
@@ -149,6 +149,10 @@ var cumulativeCost = cost.cumulativeCost({
   });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
+Map.addLayer(cumulativeCost, {min: 0, max: 5e2,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
+
+
 // Map.addLayer(source, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
 Map.addLayer(cumulativeCost, {min: 0, max: 5e2,
@@ -172,7 +176,7 @@ var mincostmapping = function(t){
   return ee.Number(output.get('blank'));
 };
 var threshold = Target.map(mincostmapping);
-// print(threshold);
+print(threshold);
 // Update Hansen lossyear layer  
 var execute = function(x, offset){
   x=ee.Number(x).toInt();
