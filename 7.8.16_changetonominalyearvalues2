@@ -339,7 +339,7 @@ var lossyear05_10= Gunarso.expression(
 // palette:[db, lb, gr, yellow, red, whi, black ]},'inconsistent lossyear05_10');
 
 
-/*
+
 // #########################
 // #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2005
 // #########################
@@ -435,7 +435,7 @@ p0= printclass(t, Gunarso);
 t=2000;
 p0= printclass(t, Gunarso);
 
-*/
+
 
 // // ####################
 // // # Step5: OP Age map 
