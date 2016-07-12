@@ -34,7 +34,7 @@ var printage = function(t, folder){
 };
 var printclass = function(t, folder){
   var year = t.toString();
-  t= ee.Number(t).subtract(2000);
+  t= ee.Number(t).subtract(1990);
   var img = ee.Image(folder.get(t));
   Map.addLayer(img, {min: 0, max: 5,
     palette:[ db, lb, gr,  yellow, red, whi]}, year);
