@@ -348,7 +348,7 @@ palette:[db, lb, gr, yellow, red, whi, black ]},'inconsistent lossyear05_10'); *
 // #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2005
 // #########################
 var Gunarso_intermediate = ee.Image([lossYear]);
-Gunarso_intermediate= Gunarso_intermediate.addBands([year_1990, year_2000, year_2005, blank, OP00, OP05, OP10, OP90 , lossyear05_10,lossyear00_05]);
+Gunarso_intermediate= Gunarso_intermediate.addBands([year_1990, year_2000, year_2005, blank, OP00, OP05, OP10, OP90 ]);
 
 var yr = ee.List.sequence(1990, 2010, 1);
 var annual = function(t){
@@ -403,22 +403,20 @@ var annual = function(t){
       }
   );
   // individual yearmap classifications  
-  var yearmap90_00 = blank.where(OP_00_05.eq(OP_OP),executeOP_OP)
-  .where(OP_00_05.eq(NOP_OP),executeNOP_OP)
-  .where(OP_00_05.eq(NOP_NOP),executeNOP_NOP);
-
-
+  var yearmap90_00 = blank
+  .where(OP90.eq(1).and(OP00.eq(1)),executeOP_OP)
+  .where(OP90.eq(0).and(OP00.eq(1)),executeNOP_OP)
+  .where(OP90.eq(0).and(OP00.eq(0)),executeNOP_NOP);
   
   var yearmap00_05= blank
-  .where(OP_00_05.eq(OP_OP),executeOP_OP)
-  .where(OP_00_05.eq(NOP_OP),executeNOP_OP)
-  .where(OP_00_05.eq(NOP_NOP),executeNOP_NOP);
-  // print(yearmap00_05);
-  
+  .where(OP00.eq(1).and(OP05.eq(1)),executeOP_OP)
+  .where(OP00.eq(0).and(OP05.eq(1)),executeNOP_OP)
+  .where(OP00.eq(0).and(OP05.eq(0)),executeNOP_NOP);
+
   var yearmap05_10 = blank
-  .where(OP_05_10.eq(OP_OP),executeOP_OP)
-  .where(OP_05_10.eq(NOP_OP),executeNOP_OP)
-  .where(OP_05_10.eq(NOP_NOP),executeNOP_NOP);
+  .where(OP05.eq(1).and(OP10.eq(1)),executeOP_OP)
+  .where(OP05.eq(0).and(OP10.eq(1)),executeNOP_OP)
+  .where(OP05.eq(0).and(OP10.eq(0)),executeNOP_NOP);
   var yearmap_intermediate = ee.Algorithms.If(t.gt(2000), yearmap90_00, yearmap00_05);
   var yearmap = ee.Algorithms.If(t.gt(2005), yearmap05_10, yearmap_intermediate);
   return ee.Image(yearmap).clip(totalarea);
