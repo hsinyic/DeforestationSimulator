@@ -502,18 +502,18 @@ var age = function(t){
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
   .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP);
 
-  Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
-    palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP NOP');
-  Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
-    palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP OP ');
+  // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP NOP');
+  // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
+  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP OP ');
   Map.addLayer(OP90.eq(1).and(OP00.eq(1)), {min: 0, max: 1,
     palette:[ red, yellow, gr, dg,lb,  db]}, 'OP OP');
   // Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
   // Map.addLayer(ageNOP_OP, {min: 0, max: 25,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
-  // Map.addLayer(ageOP_OP, {min: 0, max: 25,
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
+  Map.addLayer(ageOP_OP, {min: 0, max: 25,
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
 
   return(ee.Image(agemap));
 };
