@@ -257,10 +257,10 @@ var yr = ee.List.sequence(1990, 2010, 1);
 var age = function(t){
   var timestamp = t.toString();
   t = ee.Number(t);
-  var agemap2 = ee.Algorithms.If(t.gt(ee.Number(2000)), OP05 , OP00 );
-  agemap2 = ee.Image(agemap2);
-  var agemap = ee.Algorithms.If(t.gt(ee.Number(2005)), OP10, agemap2 );
-  agemap = ee.Image(agemap).updateMask(agemap);
+  // var agemap2 = ee.Algorithms.If(t.gt(ee.Number(2000)), OP05 , OP00 );
+  // agemap2 = ee.Image(agemap2);
+  // var agemap = ee.Algorithms.If(t.gt(ee.Number(2005)), OP10, agemap2 );
+  // agemap = ee.Image(agemap).updateMask(agemap);
   // Map.addLayer(agemap, {min: 0, max: 1,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'agemap original');
 
@@ -310,7 +310,7 @@ var age = function(t){
   Map.addLayer(agemap.updateMask(agemap.neq(100)), {min: 0, max: 25,
   palette:[ yellow, gr, dg]}, timestamp);
 
-  agemap = agemap.updateMask(agemap.neq(100));
+  var agemap = agemap.updateMask(agemap.neq(100));
   return(ee.Image(agemap));
 };
 
@@ -320,6 +320,7 @@ var test = age(2003);
 var test = age(2000);
 var test = age(1997);
 var test = age(1993);
+var test = age(1990);
 
 
 
@@ -328,6 +329,8 @@ var test = age(1993);
 
 
 // var Gunarso_agefinal = yr.map(age);
+// // var t= 1993;
+// // var p =printage(t,Gunarso_agefinal);
 // var t=2010;
 // var p = printage(t, Gunarso_agefinal);
 // // t=2009; p = printage(t, Gunarso_agefinal);
