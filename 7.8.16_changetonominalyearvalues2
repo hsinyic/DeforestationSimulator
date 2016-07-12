@@ -203,7 +203,7 @@ x=4;
 lossYear = execute(x, offset);
 x=5;
 lossYear = execute(x, offset);
-/*
+
 // Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear_buffer');
 
@@ -344,7 +344,7 @@ var lossyear05_10= Gunarso.expression(
 // palette:[db, lb, gr, yellow, red, whi, black ]},'inconsistent lossyear05_10');
 
 
-
+/*
 // #########################
 // #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2005
 // #########################
@@ -440,7 +440,7 @@ p0= printclass(t, Gunarso);
 t=2000;
 p0= printclass(t, Gunarso);
 
-
+*/
 
 // // ####################
 // // # Step5: OP Age map 
@@ -454,7 +454,7 @@ var yr = ee.List.sequence(2000, 2005, 1);
 
 // Palm oil age map 
 var age = function(t){
-  t = ee.Number(t).subtract(2000);
+  t = ee.Number(t);
   var agemap = blank.where(OP05.eq(1),1);
   agemap = agemap.updateMask(agemap);
   var ageNOP_NOP = Gunarso_age.expression(
@@ -502,23 +502,17 @@ var age = function(t){
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
   .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP);
 
-  // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, '1');
-  // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, '2');
-  // Map.addLayer(OP90.eq(1).and(OP00.eq(1)), {min: 0, max: 1,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, '3');
+  Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP NOP');
+  Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP OP ');
+  Map.addLayer(OP90.eq(1).and(OP00.eq(1)), {min: 0, max: 1,
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'OP OP');
   // Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
   // Map.addLayer(ageNOP_OP, {min: 0, max: 25,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
   // Map.addLayer(ageOP_OP, {min: 0, max: 25,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
 
   return(ee.Image(agemap));
@@ -566,7 +560,7 @@ p = age(t);
     palette:[ red, yellow, gr, dg,lb,  db]}, 'agemap');
 
 
-
+/*
 var Gunarso_agefinal = yr.map(age);
 var t=2005;
 var p = printage(t, Gunarso_agefinal);
