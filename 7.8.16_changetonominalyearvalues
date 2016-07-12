@@ -170,7 +170,7 @@ var mincostmapping = function(t){
   return ee.Number(output.get('blank'));
 };
 var threshold = Target.map(mincostmapping);
-// print(threshold);
+print(threshold);
 // Update Hansen lossyear layer  
 var execute = function(x){
   x=ee.Number(x).toInt();
@@ -183,7 +183,7 @@ var execute = function(x){
   var lossYear_update = lossYear.where(Binary.eq(1), ee.Number(x));
 // print(lossYear_update);
   var Binary_show = blank.where(Binary.eq(1), ee.Number(x));
-  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 0, max: 5, palette: [whi, yellow, red, lb, db, black]}, 'Binary');
+  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 0, max: 5, palette: [whi, yellow, red, lb, db, black]}, 'Binary');
   return lossYear_update;
 };
 // var x=0;
@@ -339,7 +339,6 @@ var lossyear05_10= Gunarso.expression(
 // Map.addLayer(inconsistent.updateMask(inconsistent), {min: 0, max: 1,
 // palette:[db, lb, gr, yellow, red, whi, black ]},'inconsistent lossyear05_10');
 
-
 /*
 // #########################
 // #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2005
@@ -438,6 +437,9 @@ p0= printclass(t, Gunarso);*/
 
 
 
+
+
+
 // // ####################
 // // # Step5: OP Age map 
 // // ####################
@@ -498,24 +500,24 @@ var age = function(t){
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
   .where(OP90.eq(1).and(OP00.eq(1)), ageOP_OP);
 
-  // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, '1');
-  // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, '2');
-  // Map.addLayer(OP90.eq(1).and(OP00.eq(1)), {min: 0, max: 1,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, '3');
-  // Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
-  // Map.addLayer(ageNOP_OP, {min: 0, max: 25,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
-  // Map.addLayer(ageOP_OP, {min: 0, max: 25,
-  //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
+  Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, '1');
+  Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, '2');
+  Map.addLayer(OP90.eq(1).and(OP00.eq(1)), {min: 0, max: 1,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, '3');
+  Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
+  Map.addLayer(ageNOP_OP, {min: 0, max: 25,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
+  Map.addLayer(ageOP_OP, {min: 0, max: 25,
+    // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
 
   return(ee.Image(agemap));
 };
@@ -563,16 +565,17 @@ p = age(t);
 
 
 
-var Gunarso_agefinal = yr.map(age);
-var t=2005;
-var p = printage(t, Gunarso_agefinal);
-t=2004;
-p = printage(t, Gunarso_agefinal);
-t=2003;
-p = printage(t, Gunarso_agefinal);
-t=2002;
-p = printage(t, Gunarso_agefinal);
-t=2001;
-p = printage(t, Gunarso_agefinal);
-t=2000;
-p = printage(t, Gunarso_agefinal);
+// var Gunarso_agefinal = yr.map(age);
+// var t=2005;
+// var p = printage(t, Gunarso_agefinal);
+// t=2004;
+// p = printage(t, Gunarso_agefinal);
+// t=2003;
+// p = printage(t, Gunarso_agefinal);
+// t=2002;
+// p = printage(t, Gunarso_agefinal);
+// t=2001;
+// p = printage(t, Gunarso_agefinal);
+// t=2000;
+// p = printage(t, Gunarso_agefinal);
+
