@@ -22,7 +22,7 @@ Map.setCenter(101.964111328125, -1.5324100450044358, 9);
 // Map.setCenter(102.59239196777344,3.94029555672408, 9);
 // Map.setCenter(101.14837646484375,3.888917295949231, 12);
 
-var printmap = function(t, folder){
+var printage = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
@@ -30,7 +30,7 @@ var printmap = function(t, folder){
     palette:[ red, yellow, gr, dg,lb,  db]}, year);
   return(3);
 };
-var printmap2 = function(t, folder){
+var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
@@ -424,17 +424,17 @@ var annual = function(t){
 
 var Gunarso = yr.map(annual);
 var t=2005;
-var p0= printmap2(t, Gunarso);
+var p0= printclass(t, Gunarso);
 t=2004;
-p0= printmap2(t, Gunarso);
+p0= printclass(t, Gunarso);
 t=2003;
-p0= printmap2(t, Gunarso);
+p0= printclass(t, Gunarso);
 t=2002;
-p0= printmap2(t, Gunarso);
+p0= printclass(t, Gunarso);
 t=2001;
-p0= printmap2(t, Gunarso);
+p0= printclass(t, Gunarso);
 t=2000;
-p0= printmap2(t, Gunarso);*/
+p0= printclass(t, Gunarso);*/
 
 
 
@@ -501,32 +501,21 @@ var age = function(t){
   // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
   //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
   //   palette:[ red, yellow, gr, dg,lb,  db]}, '1');
-
   // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
   //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
   //   palette:[ red, yellow, gr, dg,lb,  db]}, '2');
-
   // Map.addLayer(OP90.eq(1).and(OP00.eq(1)), {min: 0, max: 1,
   //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
   //   palette:[ red, yellow, gr, dg,lb,  db]}, '3');
-
-
-
   // Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
   //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
-
-
   // Map.addLayer(ageNOP_OP, {min: 0, max: 25,
   //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_OP');
-
-
   // Map.addLayer(ageOP_OP, {min: 0, max: 25,
   //   // palette:[ '#fff832', '#4cff62', '#11ffff' ,'0000FF']}, year);
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
-
-
 
   return(ee.Image(agemap));
 };
@@ -576,14 +565,14 @@ p = age(t);
 
 var Gunarso_agefinal = yr.map(age);
 var t=2005;
-var p = printmap(t, Gunarso_agefinal);
+var p = printage(t, Gunarso_agefinal);
 t=2004;
-p = printmap(t, Gunarso_agefinal);
+p = printage(t, Gunarso_agefinal);
 t=2003;
-p = printmap(t, Gunarso_agefinal);
+p = printage(t, Gunarso_agefinal);
 t=2002;
-p = printmap(t, Gunarso_agefinal);
+p = printage(t, Gunarso_agefinal);
 t=2001;
-p = printmap(t, Gunarso_agefinal);
+p = printage(t, Gunarso_agefinal);
 t=2000;
-p = printmap(t, Gunarso_agefinal);
+p = printage(t, Gunarso_agefinal);
