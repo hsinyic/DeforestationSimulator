@@ -51,7 +51,7 @@ var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
-var scale = ee.Number(500); 
+var scale = ee.Number(100); 
 
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
@@ -137,12 +137,12 @@ var source = OP90; source = source.updateMask(source);
 var cost = blank.add(1).clip(totalarea);
 var cumulativeCost = cost.cumulativeCost({
     source: source,
-    maxDistance: 70 * 1000 // 70 kilometers to cover that patchy area 
+    maxDistance: 90 * 1000 // 70 kilometers to cover that patchy area 
   });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
-// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
-//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990--2000");
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990--2000");
 //Get a series of threshold corresponding to the percentage 
 var mincostmapping = function(t){
   t= ee.Number(t);
@@ -194,14 +194,14 @@ source = OP00;
 source = source.updateMask(source);
 cumulativeCost = cost.cumulativeCost({
     source: source,
-    maxDistance: 50 * 1000 // 50 kilometers
+    maxDistance: 70 * 1000 // 50 kilometers
   });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 // Map.addLayer(source, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
-// Map.addLayer(cumulativeCost, {min: 0, max: 5e2,
-//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulative cost 2000-2005");
 // Map.addLayer(costmap, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
@@ -230,14 +230,14 @@ source = OP05;
 source = source.updateMask(source);
 cumulativeCost = cost.cumulativeCost({
     source: source,
-    maxDistance: 50 * 1000 // 50 kilometers
+    maxDistance: 70 * 1000 // 50 kilometers
   });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 // Map.addLayer(source, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
-// Map.addLayer(cumulativeCost, {min: 0, max: 5e2,
-//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost1");
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 2005--2010");
 // Map.addLayer(costmap, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
