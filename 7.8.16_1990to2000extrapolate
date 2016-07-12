@@ -48,7 +48,7 @@ var yellow=('#fff832').toString();
 var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
-var scale = ee.Number(60); 
+var scale = ee.Number(100); 
 
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
@@ -57,7 +57,7 @@ var Riau = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Riau');
 
 
 
-var totalarea = Bungo;
+var totalarea = Riau;
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 // lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
@@ -71,15 +71,6 @@ Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)),
 // lossYear = lossYear.toInt();
 // Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
-
-// Export.image.toAsset({
-//   image: lossYear,
-//   description: 'lossYear',
-//   scale: 30,
-//   region: totalarea.geometry().bounds(),
-//   maxPixels: 9e12,
-// });
-// 7B3ZLSTEIDKQWB5BO3HBUYXM is the current task asset ID. Took 23 minutes to go through
 
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
@@ -136,7 +127,6 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(i
 // ########
 
 var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea); 
-
 var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]);
 var source = OP90;
 source = source.updateMask(source);
@@ -180,22 +170,5 @@ var execute = function(x){
   return lossYear_update;
 };
 var x=1;
-lossYear = execute(x);
-x=2;
-lossYear = execute(x);
-x=3;
-lossYear = execute(x);
-x=4;
-lossYear = execute(x);
-x=5;
-lossYear = execute(x);
-x=6;
-lossYear = execute(x);
-x=7;
-lossYear = execute(x);
-x=8;
-lossYear = execute(x);
-x=9;
-lossYear = execute(x);
-x=10;
-lossYear = execute(x);
+lossYear = execute(x); x=2; lossYear = execute(x); x=3; lossYear = execute(x); x=4; lossYear = execute(x); x=5; lossYear = execute(x); x=6; lossYear = execute(x); x=7;
+lossYear = execute(x); x=8; lossYear = execute(x); x=9; lossYear = execute(x); x=10; lossYear = execute(x);
