@@ -13,14 +13,15 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    geometry = /* color: d63000 */ee.Geometry.Point([101.08245301691568, 0.7909959458718788]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Map.setCenter(101.744384765625,0.4669137773332418, 8);
-Map.setCenter(101.964111328125, -1.5324100450044358, 9);
+Map.setCenter(101.08245301691568, 0.7909959458718788, 12);// Riau 
+// Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
-// Map.setCenter(102.59239196777344,3.94029555672408, 9);
-// Map.setCenter(101.14837646484375,3.888917295949231, 12);
+// Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
+// Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
 
 var printage = function(t, folder){
   var year = t.toString();
@@ -76,13 +77,10 @@ var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
 
 // NOT IMPORTANT  Data Processing 
-// NOT IMPORTANT  Data Processing 
 var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
-
-
 
 var OP90_raster = blank.where(OP90_raster.eq(1), 1);
 var OP00_raster = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1);
@@ -117,10 +115,12 @@ var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(i
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
-// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
-//     palette:[whi, lb ]}, "OP00");
-// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
-//     palette:[whi, lb ]}, "OP05");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
+    palette:[whi, lb ]}, "OP90");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
+    palette:[whi, lb ]}, "OP00");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
+    palette:[whi, lb ]}, "OP05");
 
 // ########
 // # 1990 to 2000 annual maps 
@@ -128,8 +128,7 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(i
 
 var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea); 
 var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]);
-var source = OP90;
-source = source.updateMask(source);
+var source = OP90; source = source.updateMask(source);
 var cost = blank.add(1).clip(totalarea); 
 var cumulativeCost = cost.cumulativeCost({
     source: source,
@@ -138,7 +137,7 @@ var cumulativeCost = cost.cumulativeCost({
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 Map.addLayer(cumulativeCost, {min: 0, max: 5e2,
-    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990 2000 ");
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990--2000");
 //Get a series of threshold corresponding to the percentage 
 var mincostmapping = function(t){
   t= ee.Number(t);
@@ -155,7 +154,7 @@ var mincostmapping = function(t){
 };
 var threshold = Target.map(mincostmapping);
 print(threshold);
-var execute = function(x){
+var execute = function(x, offset){
   x=ee.Number(x).toInt();
   // print(x);
   var cuttoff = ee.Number(threshold.get(x));
@@ -163,12 +162,31 @@ var execute = function(x){
   // print('year', x, cuttoff_before, cuttoff );
   var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea);
 // print(Binary);
-  var lossYear_update = lossYear.where(Binary.eq(1), ee.Number(x));
+  var lossYear_update = lossYear.where(Binary.eq(1), ee.Number(x).add(offset));
 // print(lossYear_update);
   var Binary_show = blank.where(Binary.eq(1), ee.Number(x));
-  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 0, max: 5, palette: [whi, yellow, red, lb, db, black]}, 'Binary');
+  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 0, max: 10, palette: [whi, yellow, red, lb, db, black]}, 'Binary');
   return lossYear_update;
 };
+var offset = ee.Number(0);
 var x=1;
-lossYear = execute(x); x=2; lossYear = execute(x); x=3; lossYear = execute(x); x=4; lossYear = execute(x); x=5; lossYear = execute(x); x=6; lossYear = execute(x); x=7;
-lossYear = execute(x); x=8; lossYear = execute(x); x=9; lossYear = execute(x); x=10; lossYear = execute(x);
+lossYear = execute(x, offset); x=2; lossYear = execute(x, offset); x=3; lossYear = execute(x, offset); x=4; lossYear = execute(x, offset); x=5; lossYear = execute(x, offset); x=6; lossYear = execute(x, offset); x=7;
+lossYear = execute(x, offset); x=8; lossYear = execute(x, offset); x=9; lossYear = execute(x, offset); x=10; lossYear = execute(x, offset);
+
+
+
+/*var executeTEST = function(x){
+  x=ee.Number(x).toInt();
+  // print(x);
+  var cuttoff = ee.Number(threshold.get(x));
+  var cuttoff_before = ee.Algorithms.If(x.gt(1), ee.Number(threshold.get(x.subtract(1).toInt())), ee.Number(0.0));
+  // print('year', x, cuttoff_before, cuttoff );
+  var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea);
+// print(Binary);
+  var lossYear_update = lossYear.where(Binary.eq(1), ee.Number(x).add(-10));
+// print(lossYear_update);
+  var Binary_show = blank.where(Binary.eq(1), ee.Number(x));
+  return ee.Image(Binary);
+};
+var lossYearcompile = threshold.map(executeTEST);
+print(lossYearcompile);*/
