@@ -291,7 +291,7 @@ var age = function(t){
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
   .where(OP00.eq(0).and(OP05.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
   .where(OP05.eq(0).and(OP10.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
-  .where(OP90.eq(1).and(OP10.eq(1)), ageOP_OP.updateMask(ageOP_OP.neq(100)));
+  .where(OP90.eq(1).and(OP10.eq(1)), ageOP_OP);
   // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP NOP');
   // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
