@@ -65,14 +65,17 @@ lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 // lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
 // lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
 // lossYear =lossYear.min(lossYear.focal_median(10, 'circle'));
-Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+
 // lossYear = lossYear.focal_mode();
 // lossYear = lossYear.focal_mode();
 // lossYear = lossYear.focal_max(3).focal_min(5).focal_max(3);
 // lossYear = lossYear.toInt();
 // Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
+
+// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear original');
+
 
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
@@ -118,12 +121,12 @@ var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(i
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
 Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
     palette:[lb, pink ]}, "OP90");
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
-    palette:[whi, lb ]}, "OP00");
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
-    palette:[whi, lb ]}, "OP05");
-Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,
-    palette:[whi, lb ]}, "OP10");
+// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "OP00");
+// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "OP05");
+// Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,
+//     palette:[whi, lb ]}, "OP10");
 
 
 // ########
@@ -287,56 +290,55 @@ var age = function(t){
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
   .where(OP00.eq(0).and(OP05.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
   .where(OP05.eq(0).and(OP10.eq(1)), ageNOP_OP.updateMask(ageNOP_OP.neq(100)))
-  .where(OP90.eq(1).and(OP10.eq(1)), ageOP_OP.updateMask(ageNOP_OP.neq(100)));
+  .where(OP90.eq(1).and(OP10.eq(1)), ageOP_OP.updateMask(ageOP_OP.neq(100)));
   // Map.addLayer(OP90.eq(0).and(OP00.eq(0)), {min: 0, max: 1,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP NOP');
   // Map.addLayer(OP90.eq(0).and(OP00.eq(1)), {min: 0, max: 1,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'NOP OP ');
-  // Map.addLayer(OP90.eq(1).and(OP00.eq(1)), {min: 0, max: 1,
-  //   palette:[ red, yellow, gr, dg,lb,  db]}, 'OP OP');
+  Map.addLayer(OP90.eq(1).and(OP10.eq(1)), {min: 0, max: 1,
+    palette:[ red, yellow, gr, dg,lb,  db]}, 'OP OP');
   // Map.addLayer(ageNOP_NOP, {min: 0, max: 25,
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageNOP_NOP');
-  // Map.addLayer(ageNOP_OP.updateMask(ageNOP_OP.neq(100)), {min: 0, max: 25,
-  //   palette:[ yellow, gr, dg]}, 'ageNOP_OP');
-  // Map.addLayer(ageOP_OP.updateMask(ageNOP_OP.neq(100)), {min: 0, max: 25,
-  //   palette:[ yellow, gr, dg]}, 'ageOP_OP');
-  // Map.addLayer(agemap.updateMask(ageNOP_OP.neq(100)), {min: 0, max: 25,
-  //   palette:[ yellow, gr, dg]}, timestamp);
+  Map.addLayer(ageNOP_OP.updateMask(ageNOP_OP.neq(100)), {min: 0, max: 25,
+    palette:[ yellow, gr, dg]}, 'ageNOP_OP');
+  Map.addLayer(ageOP_OP.updateMask(ageOP_OP.neq(100)), {min: 0, max: 25,
+    palette:[ yellow, gr, dg]}, 'ageOP_OP');
+  Map.addLayer(agemap.updateMask(agemap.neq(100)), {min: 0, max: 25,
+    palette:[ yellow, gr, dg]}, timestamp);
 
 
   return(ee.Image(agemap));
 };
 
-// var test = age(1993);
-// var test = age(1993);
-// var test = age(1997);
-// var test = age(2000);
+var test = age(1993);
+var test = age(1997);
+var test = age(2000);
 
 
 
 
-var Gunarso_agefinal = yr.map(age);
-var t=2010;
-var p = printage(t, Gunarso_agefinal);
-// t=2009; p = printage(t, Gunarso_agefinal);
-t=2008; p = printage(t, Gunarso_agefinal);
-// t=2007; p = printage(t, Gunarso_agefinal);
-t=2006; p = printage(t, Gunarso_agefinal);
-// t=2005; p = printage(t, Gunarso_agefinal);
-t=2004; p = printage(t, Gunarso_agefinal);
-// t=2003; p = printage(t, Gunarso_agefinal);
-t=2002; p = printage(t, Gunarso_agefinal);
-// t=2001; p = printage(t, Gunarso_agefinal);
-t=2000; p = printage(t, Gunarso_agefinal);
-// t=1999; p = printage(t, Gunarso_agefinal);
-t=1998; p = printage(t, Gunarso_agefinal);
-// t=1997; p = printage(t, Gunarso_agefinal);
-t=1996; p = printage(t, Gunarso_agefinal);
-// t=1995; p = printage(t, Gunarso_agefinal);
-t=1994; p = printage(t, Gunarso_agefinal);
-// t=1993; p = printage(t, Gunarso_agefinal);
-t=1992; p = printage(t, Gunarso_agefinal);
-// t=1991; p = printage(t, Gunarso_agefinal);
-t=1990; p = printage(t, Gunarso_agefinal);
+// var Gunarso_agefinal = yr.map(age);
+// var t=2010;
+// var p = printage(t, Gunarso_agefinal);
+// // t=2009; p = printage(t, Gunarso_agefinal);
+// t=2008; p = printage(t, Gunarso_agefinal);
+// // t=2007; p = printage(t, Gunarso_agefinal);
+// t=2006; p = printage(t, Gunarso_agefinal);
+// // t=2005; p = printage(t, Gunarso_agefinal);
+// t=2004; p = printage(t, Gunarso_agefinal);
+// // t=2003; p = printage(t, Gunarso_agefinal);
+// t=2002; p = printage(t, Gunarso_agefinal);
+// // t=2001; p = printage(t, Gunarso_agefinal);
+// t=2000; p = printage(t, Gunarso_agefinal);
+// // t=1999; p = printage(t, Gunarso_agefinal);
+// t=1998; p = printage(t, Gunarso_agefinal);
+// // t=1997; p = printage(t, Gunarso_agefinal);
+// t=1996; p = printage(t, Gunarso_agefinal);
+// // t=1995; p = printage(t, Gunarso_agefinal);
+// t=1994; p = printage(t, Gunarso_agefinal);
+// // t=1993; p = printage(t, Gunarso_agefinal);
+// t=1992; p = printage(t, Gunarso_agefinal);
+// // t=1991; p = printage(t, Gunarso_agefinal);
+// t=1990; p = printage(t, Gunarso_agefinal);
 
 
