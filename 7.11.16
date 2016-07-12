@@ -254,7 +254,7 @@ x=2010; lossYear = execute(x, offset);
 
 
 
-Map.addLayer(lossYear, {min: 1990, max: 2200, palette: [whi, yellow, red, lb, db, black]}, 'updated Hansen');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2020, palette: [whi, yellow, red, lb, db, black]}, 'updated Hansen');
 
 
 // ####################
@@ -318,8 +318,8 @@ var age = function(t){
   //   palette:[ yellow, gr, dg]}, 'ageOP_OP');
   
   
-  Map.addLayer(agemap.updateMask(agemap.neq(100)), {min: 0, max: 25,
-  palette:[ yellow, gr, dg]}, timestamp);
+  // Map.addLayer(agemap.updateMask(agemap.neq(100)), {min: 0, max: 25,
+  // palette:[ yellow, gr, dg]}, timestamp);
 
   agemap = agemap.updateMask(agemap.neq(100));
   return(ee.Image(agemap));
@@ -340,30 +340,30 @@ var age = function(t){
 
 
 
-// var Gunarso_agefinal = yr.map(age);
-// // var t= 1993;
-// // var p =printage(t,Gunarso_agefinal);
-// var t=2010;
-// var p = printage(t, Gunarso_agefinal);
-// // t=2009; p = printage(t, Gunarso_agefinal);
-// t=2008; p = printage(t, Gunarso_agefinal);
-// // t=2007; p = printage(t, Gunarso_agefinal);
-// t=2006; p = printage(t, Gunarso_agefinal);
-// // t=2005; p = printage(t, Gunarso_agefinal);
-// t=2004; p = printage(t, Gunarso_agefinal);
-// // t=2003; p = printage(t, Gunarso_agefinal);
-// t=2002; p = printage(t, Gunarso_agefinal);
-// // t=2001; p = printage(t, Gunarso_agefinal);
-// t=2000; p = printage(t, Gunarso_agefinal);
-// // t=1999; p = printage(t, Gunarso_agefinal);
-// t=1998; p = printage(t, Gunarso_agefinal);
-// // t=1997; p = printage(t, Gunarso_agefinal);
-// t=1996; p = printage(t, Gunarso_agefinal);
-// // t=1995; p = printage(t, Gunarso_agefinal);
-// t=1994; p = printage(t, Gunarso_agefinal);
-// // t=1993; p = printage(t, Gunarso_agefinal);
-// t=1992; p = printage(t, Gunarso_agefinal);
-// // t=1991; p = printage(t, Gunarso_agefinal);
-// t=1990; p = printage(t, Gunarso_agefinal);
+var Gunarso_agefinal = yr.map(age);
+// var t= 1993;
+// var p =printage(t,Gunarso_agefinal);
+var t=2010;
+var p = printage(t, Gunarso_agefinal);
+// t=2009; p = printage(t, Gunarso_agefinal);
+t=2008; p = printage(t, Gunarso_agefinal);
+// t=2007; p = printage(t, Gunarso_agefinal);
+t=2006; p = printage(t, Gunarso_agefinal);
+// t=2005; p = printage(t, Gunarso_agefinal);
+t=2004; p = printage(t, Gunarso_agefinal);
+// t=2003; p = printage(t, Gunarso_agefinal);
+t=2002; p = printage(t, Gunarso_agefinal);
+// t=2001; p = printage(t, Gunarso_agefinal);
+t=2000; p = printage(t, Gunarso_agefinal);
+// t=1999; p = printage(t, Gunarso_agefinal);
+t=1998; p = printage(t, Gunarso_agefinal);
+// t=1997; p = printage(t, Gunarso_agefinal);
+t=1996; p = printage(t, Gunarso_agefinal);
+// t=1995; p = printage(t, Gunarso_agefinal);
+t=1994; p = printage(t, Gunarso_agefinal);
+// t=1993; p = printage(t, Gunarso_agefinal);
+t=1992; p = printage(t, Gunarso_agefinal);
+// t=1991; p = printage(t, Gunarso_agefinal);
+t=1990; p = printage(t, Gunarso_agefinal);
 
 
