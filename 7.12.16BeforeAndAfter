@@ -368,7 +368,7 @@ palette:[db, lb, gr, yellow, red, whi, black ]},'inconsistent lossyear05_10'); *
 
 
 // #########################
-// #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2005
+// #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2010
 // #########################
 var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_1990, year_2000, year_2005, blank, OP00, OP05, OP10, OP90 ]);
@@ -462,12 +462,7 @@ var annual = function(t){
   return ee.Image(yearmap).clip(totalarea);
 };
 
-var test = annual(2000);
-var test = annual(2003);
-var test = annual(2005);
-var test = annual(2007);
-
-
+// var test = annual(2000); test = annual(2003); test = annual(2005); test = annual(2007);
 
 // var Gunarso = yr.map(annual);
 // print(Gunarso);
