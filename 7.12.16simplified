@@ -61,6 +61,7 @@ var Riau = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Riau');
 
 
 var totalarea = Riau;
+var totalarea_outline = totalarea.geometry().bounds();
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
 // lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
