@@ -16,7 +16,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.Point([101.08245301691568, 0.7909959458718788]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
+Map.setCenter(101.08245301691568, 0.7909959458718788, 7);// Riau 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
@@ -62,6 +62,12 @@ var Riau = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Riau');
 
 var totalarea = Riau;
 var totalarea_outline = totalarea.geometry().bounds();
+Map.addLayer(totalarea_outline); // 
+
+
+// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
+
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
 // lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
@@ -136,14 +142,17 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,
 var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea); 
 var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
 var source = OP90; source = source.updateMask(source); 
-var cost = blank.add(1).clip(totalarea);
+var cost = ee.Image([0]).add(1);
+// Map.addLayer(cost, {min: 0, max: 1,
+//     palette:[db, red  ]}, "cost");
+cost = cost.clip(totalarea_outline);
 Map.addLayer(cost, {min: 0, max: 1,
     palette:[db, red  ]}, "cost");
 
 
 var cumulativeCost = cost.cumulativeCost({
     source: source,
-    maxDistance: 90 * 1000 // 70 kilometers to cover that patchy area 
+    maxDistance: 70 * 1000 // 70 kilometers to cover that patchy area 
   });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
@@ -178,7 +187,7 @@ var execute = function(x, offset){
   var lossYear_update = lossYear.where(Binary.eq(1), t);
 // print(lossYear_update);
   var Binary_show = blank.where(Binary.eq(1), t);
-  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
@@ -213,7 +222,7 @@ Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
 
 //Get a series of threshold corresponding to the percentage 
 threshold = Target.map(mincostmapping);
-// print(threshold);
+print(threshold);
 offset = ee.Number(2000); // new offset 
 x=2001; lossYear = execute(x, offset);
 x=2002; lossYear = execute(x, offset);
@@ -486,10 +495,10 @@ var annual = function(t){
   return ee.Image(yearmap).clip(totalarea);
 };
 
-var test = annual(2000);
-var test = annual(2003);
-var test = annual(2005);
-var test = annual(2007);
+// var test = annual(2000);
+// var test = annual(2003);
+// var test = annual(2005);
+// var test = annual(2007);
 
 
 
