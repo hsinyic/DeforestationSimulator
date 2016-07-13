@@ -136,6 +136,10 @@ var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea);
 var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
 var source = OP90; source = source.updateMask(source); 
 var cost = blank.add(1).clip(totalarea);
+Map.addLayer(cost, {min: 0, max: 1,
+    palette:[db, red  ]}, "cost");
+
+
 var cumulativeCost = cost.cumulativeCost({
     source: source,
     maxDistance: 90 * 1000 // 70 kilometers to cover that patchy area 
@@ -201,8 +205,8 @@ costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 // Map.addLayer(source, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "source");
-// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
-//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulative cost 2000-2005");
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulative cost 2000-2005");
 // Map.addLayer(costmap, {min: 0, max: 5e3,
 //     palette:[db, lb, gr, yellow, red, whi  ]}, "costmap");
 
