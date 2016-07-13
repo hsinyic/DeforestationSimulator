@@ -187,7 +187,7 @@ var execute = function(x, offset){
   var lossYear_update = lossYear.where(Binary.eq(1), t);
 // print(lossYear_update);
   var Binary_show = blank.where(Binary.eq(1), t);
-  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
@@ -222,7 +222,7 @@ Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
 
 //Get a series of threshold corresponding to the percentage 
 threshold = Target.map(mincostmapping);
-print(threshold);
+// print(threshold);
 offset = ee.Number(2000); // new offset 
 x=2001; lossYear = execute(x, offset);
 x=2002; lossYear = execute(x, offset);
@@ -396,8 +396,9 @@ var annual = function(t){
   );
 
   var executeNOP_OP = Gunarso_intermediate.expression(
-    'lossYear>t && basemap==F_color? F\
-      : lossYear>t && basemap==NF_color?NF\
+    // 'lossYear>t && basemap==F_color? F\
+    //   : lossYear>t && basemap==NF_color?NF\
+    'lossYear>t ? basemap\
         : lossYear<=t? OP\
           :OTH',
       {  
@@ -429,54 +430,6 @@ var annual = function(t){
       }
   );
   
-  // var executeOP_OP1 = Gunarso_intermediate.expression(
-  // 'lossYear==t ? OPR\
-  //   :(lossYear>t || lossYear<t) ? OP\
-  //   : OTH',
-  //     {  
-  //       'OP': Gunarso_intermediate.select('blank').add(OP_color),
-  //       'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
-  //       'lossYear': lossyear,
-  //       'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
-  //       't': t,
-  //     }
-  // );
-
-  // var executeNOP_OP1 = Gunarso_intermediate.expression(
-  //   'lossYear>t? NOP \
-  //       : lossYear<=t? OP\
-  //         :OTH',
-  //     {  
-  //       'OP': Gunarso_intermediate.select('blank').add(OP_color),
-  //       'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
-  //       'NOP': Gunarso_intermediate.select('blank').add(NOP_color),
-  //       'lossYear': lossyear,
-  //       't': t,
-  //     }
-  // );
-  // var executeNOP_NOP1 = Gunarso_intermediate.expression(
-  // ' year_2000==F_color? F\
-  //   :year_2000==NF_color ? NOP\
-  //     :OTH',
-  //     {  
-  //       'year_2000': Gunarso_intermediate.select('year_2000'),
-  //       'F': Gunarso_intermediate.select('blank').add(F_color),
-  //       'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
-  //       'NOP': Gunarso_intermediate.select('blank').add(NOP_color),
-  //       'lossYear': lossyear,
-  //       'basemap': basemap,
-  //       't': t,
-  //       'NF_color': NOP_color,
-  //       'NOP_color': NOP_color,
-  //       'F_color': F_color
-  //     }
-  // );
-
-  // individual yearmap classifications  
-  // var yearmap90_00 = blank
-  // .where(OP90.eq(1).and(OP00.eq(1)),executeOP_OP1)
-  // .where(OP90.eq(0).and(OP00.eq(1)),executeNOP_OP1)
-  // .where(OP90.eq(0).and(OP00.eq(0)),executeNOP_NOP1);
   
   var yearmap00_05= blank
   .where(OP00.eq(1).and(OP05.eq(1)),executeOP_OP)
@@ -495,10 +448,10 @@ var annual = function(t){
   return ee.Image(yearmap).clip(totalarea);
 };
 
-// var test = annual(2000);
-// var test = annual(2003);
-// var test = annual(2005);
-// var test = annual(2007);
+var test = annual(2000);
+var test = annual(2003);
+var test = annual(2005);
+var test = annual(2007);
 
 
 
