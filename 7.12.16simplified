@@ -34,6 +34,7 @@ var printage = function(t, folder){
 var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(1990);
+  print(t);
   var img = ee.Image(folder.get(t));
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ db, lb, gr,  yellow, red, whi, db]}, year);
@@ -50,7 +51,7 @@ var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
-var scale = ee.Number(500); 
+var scale = ee.Number(100); 
 
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
@@ -253,7 +254,15 @@ x=2010; lossYear = execute(x, offset);
 
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2020, palette: [whi, yellow, gr, dg, db, black ]}, 'updated Hansen');
 
-
+// ####################
+// # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
+// ####################
+var Gunarso = ee.Image([lossYear,OP90, OP00, OP05,OP10, treecover2000,blank]);
+//Define transition variables
+var NOP_NOP= 1;//NonOP to NonOP 
+var NOP_OP= 2;//NonOP to OP
+var OP_NOP= 3;//OP to NonOP
+var OP_OP= 4;//OP to OP
 
 // ############
 // # Step 3: Preliminary data processing 
@@ -268,7 +277,7 @@ var NF_color = 1;
 var F_color = 2;
 var OPReplant_color = 3; 
 var OP_color = 4; 
-var NOP_color = 5
+var NOP_color = 5;
 var OTH_color = 6;
 // Create year_2000 and year_2005 classified layer of OP, F, NF  
 var year_2000 = Gunarso.expression(
@@ -285,6 +294,7 @@ var year_2000 = Gunarso.expression(
       'treecover2000': Gunarso.select('treecover2000')
     }
 ).rename(['year_2000']);
+
 var year_2005 = Gunarso.expression(
 '(OP05 ==1)? OP\
   :( OP00==1&& OP05==0)? OTH2\
@@ -309,7 +319,6 @@ var year_2005 = Gunarso.expression(
     // Map.addLayer(year_2005, {min: 0, max: 6,
     // palette:[db, lb, gr, yellow, red, whi, black ]},'year_2005');
 var year_1990 = ee.Image([NOP_color]).clip(totalarea).where(OP90.eq(1), OP_color);
-
 
 //Create separate lossyear00_05 and lossyear05_10
 /*Gunarso= Gunarso.addBands([OP_00_05, OP_05_10]);
@@ -350,12 +359,15 @@ palette:[db, lb, gr, yellow, red, whi, black ]},'inconsistent lossyear05_10'); *
 var Gunarso_intermediate = ee.Image([lossYear]);
 Gunarso_intermediate= Gunarso_intermediate.addBands([year_1990, year_2000, year_2005, blank, OP00, OP05, OP10, OP90 ]);
 
-var yr = ee.List.sequence(1990, 2010, 1);
+var yr = ee.List.sequence(2000, 2010, 1);
 var annual = function(t){
+  var timestamp = t.toString();
   t= ee.Number(t);
   var lossyear = lossYear; 
-  var basemap_intermediate = ee.Algorithms.If(t.gt(2000), year_2000, year_1990);
-  var basemap = ee.Algorithms.If(t.gt(2005), year_2005, basemap_intermediate);
+  var basemap_intermediate = ee.Algorithms.If(t.gte(2000), year_2000, year_1990);
+  basemap_intermediate = ee.Image(basemap_intermediate);
+  var basemap = ee.Algorithms.If(t.gte(2005), year_2005, basemap_intermediate);
+  basemap = ee.Image(basemap);
   var executeOP_OP = Gunarso_intermediate.expression(
   'lossYear==t ? OPR\
     :(lossYear>t || lossYear<t) ? OP\
@@ -402,11 +414,55 @@ var annual = function(t){
         'F_color': F_color
       }
   );
+  
+  // var executeOP_OP1 = Gunarso_intermediate.expression(
+  // 'lossYear==t ? OPR\
+  //   :(lossYear>t || lossYear<t) ? OP\
+  //   : OTH',
+  //     {  
+  //       'OP': Gunarso_intermediate.select('blank').add(OP_color),
+  //       'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
+  //       'lossYear': lossyear,
+  //       'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+  //       't': t,
+  //     }
+  // );
+
+  // var executeNOP_OP1 = Gunarso_intermediate.expression(
+  //   'lossYear>t? NOP \
+  //       : lossYear<=t? OP\
+  //         :OTH',
+  //     {  
+  //       'OP': Gunarso_intermediate.select('blank').add(OP_color),
+  //       'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+  //       'NOP': Gunarso_intermediate.select('blank').add(NOP_color),
+  //       'lossYear': lossyear,
+  //       't': t,
+  //     }
+  // );
+  // var executeNOP_NOP1 = Gunarso_intermediate.expression(
+  // ' year_2000==F_color? F\
+  //   :year_2000==NF_color ? NOP\
+  //     :OTH',
+  //     {  
+  //       'year_2000': Gunarso_intermediate.select('year_2000'),
+  //       'F': Gunarso_intermediate.select('blank').add(F_color),
+  //       'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+  //       'NOP': Gunarso_intermediate.select('blank').add(NOP_color),
+  //       'lossYear': lossyear,
+  //       'basemap': basemap,
+  //       't': t,
+  //       'NF_color': NOP_color,
+  //       'NOP_color': NOP_color,
+  //       'F_color': F_color
+  //     }
+  // );
+
   // individual yearmap classifications  
-  var yearmap90_00 = blank
-  .where(OP90.eq(1).and(OP00.eq(1)),executeOP_OP)
-  .where(OP90.eq(0).and(OP00.eq(1)),executeNOP_OP)
-  .where(OP90.eq(0).and(OP00.eq(0)),executeNOP_NOP);
+  // var yearmap90_00 = blank
+  // .where(OP90.eq(1).and(OP00.eq(1)),executeOP_OP1)
+  // .where(OP90.eq(0).and(OP00.eq(1)),executeNOP_OP1)
+  // .where(OP90.eq(0).and(OP00.eq(0)),executeNOP_NOP1);
   
   var yearmap00_05= blank
   .where(OP00.eq(1).and(OP05.eq(1)),executeOP_OP)
@@ -417,15 +473,32 @@ var annual = function(t){
   .where(OP05.eq(1).and(OP10.eq(1)),executeOP_OP)
   .where(OP05.eq(0).and(OP10.eq(1)),executeNOP_OP)
   .where(OP05.eq(0).and(OP10.eq(0)),executeNOP_NOP);
-  var yearmap_intermediate = ee.Algorithms.If(t.gt(2000), yearmap90_00, yearmap00_05);
-  var yearmap = ee.Algorithms.If(t.gt(2005), yearmap05_10, yearmap_intermediate);
+  // var yearmap_intermediate = ee.Algorithms.If(t.gt(2000), yearmap90_00, yearmap00_05);
+  var yearmap = ee.Algorithms.If(t.gt(2005), yearmap05_10,yearmap00_05 );
+  Map.addLayer(ee.Image(yearmap), {min: 0, max: 6,
+    palette:[ db, lb, gr,  yellow, red, whi, db]}, timestamp);
+
   return ee.Image(yearmap).clip(totalarea);
 };
 
-var Gunarso = yr.map(annual);
-var t=2010; var p0= printclass(t, Gunarso);
-t=2005; p0= printclass(t, Gunarso);
-t=2000; p0= printclass(t, Gunarso);
-t=1995; p0= printclass(t, Gunarso);
-t=1990; p0= printclass(t, Gunarso);
+var test = annual(2000);
+var test = annual(2003);
+var test = annual(2005);
+var test = annual(2007);
+
+
+
+// var Gunarso = yr.map(annual);
+// print(Gunarso);
+// var t=2010; var p0= printclass(t, Gunarso);
+// print('here');
+// t=2007; p0= printclass(t, Gunarso);
+// t=2005; p0= printclass(t, Gunarso);
+// print('here');
+// t=2002; p0= printclass(t, Gunarso);
+// print('here');
+// t=2000; p0= printclass(t, Gunarso);
+
+// t=1995; p0= printclass(t, Gunarso);
+// t=1990; p0= printclass(t, Gunarso);
 
