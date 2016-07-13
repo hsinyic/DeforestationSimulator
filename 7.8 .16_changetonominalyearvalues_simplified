@@ -34,8 +34,8 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  Map.addLayer(img, {min: 0, max: 5,
-    palette:[ db, lb, gr,  yellow, red, whi]}, year);
+  Map.addLayer(img, {min: 0, max: 6,
+    palette:[ db, lb, gr,  yellow, red, whi, db]}, year);
   return(3);
 };
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
@@ -509,22 +509,6 @@ var age = function(t){
   //   palette:[ red, yellow, gr, dg,lb,  db]}, 'ageOP_OP');
   return(ee.Image(agemap));
 };
-
-
-var t = 2005;
-var p = age(t);
-t = 2004;
-p = age(t);
-t = 2003;
-p = age(t);
-t = 2002;
-p = age(t);
-t = 2001;
-p = age(t);
-t = 2000;
-p = age(t);
-
-
 
 var Gunarso_agefinal = yr.map(age);
 var t=2005;
