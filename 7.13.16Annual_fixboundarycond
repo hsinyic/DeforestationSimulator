@@ -64,7 +64,7 @@ var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 
 
 
-var totalarea = Riau;
+var totalarea = indonesia;
 var totalarea_outline = totalarea.geometry().bounds();
 Map.addLayer(totalarea_outline); // 
 
