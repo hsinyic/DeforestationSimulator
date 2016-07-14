@@ -392,13 +392,15 @@ var annual = function(t){
   
 
   var executeOP_OP = Gunarso_intermediate.expression(
-  'lossYear==t ? OPR\
+  'lossYear==t && OP90 == 1 ? OPR\
+    :lossYear==t && OP90 == 0 ? OP\
     :(lossYear>t || lossYear<t) ? OP\
     : OTH',
       {  
         'OP': Gunarso_intermediate.select('blank').add(OP_color),
         'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
         'lossYear': lossyear,
+        'OP90': Gunarso_intermediate.select('OP90'),
         'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
         't': t,
       }
