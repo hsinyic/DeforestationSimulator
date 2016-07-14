@@ -66,19 +66,27 @@ var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
 // lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
 // lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
+    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+
 
 
 
 lossYear =lossYear.min(lossYear.focal_median(10, 'circle'));
 Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+    palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
+
 lossYear = lossYear.focal_mode();
 Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-    palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
+    palette:[ red, yellow, gr ,db]}, 'lossYear filtered1');
 lossYear = lossYear.focal_mode();
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
+    palette:[ red, yellow, gr ,db]}, 'lossYear filtered2');
+
+
 lossYear = lossYear.focal_max(3).focal_min(5).focal_max(3);
 lossYear = lossYear.toInt();
-
+/*
 // Export.image.toAsset({
 //   image: lossYear,
 //   description: 'lossYear',
@@ -546,3 +554,4 @@ var Gunarso_age = yr.map(age);
 
 // t=0;
 // p = printmap(t, Gunarso_age);
+*/
