@@ -16,7 +16,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.Point([101.08245301691568, 0.7909959458718788]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
+Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
@@ -70,13 +70,8 @@ var totalarea_outline = totalarea.geometry().bounds();
 
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-    palette:[ red, yellow, gr ,db]}, 'lossYear original');
-
-lossYear =lossYear.min(lossYear.focal_mode(9, 'circle'));
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-    palette:[ red, yellow, gr ,db]}, 'lossYear processed');
-lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
+// lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
+// lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
 // lossYear =lossYear.min(lossYear.focal_median(10, 'circle'));
 
 // lossYear = lossYear.focal_mode();
@@ -86,8 +81,8 @@ lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
 // Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
 
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-    palette:[ red, yellow, gr ,db]}, 'lossYear processed');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear original');
 
 
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
@@ -123,11 +118,10 @@ var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(i
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
-// Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
-// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
-// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
-// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
-/*
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
 // ########
 // # 1990 to 2000 annual maps 
 // ########
@@ -140,6 +134,8 @@ var cumulativeCost = cost.cumulativeCost({ source: source,maxDistance: 200 * 100
 });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990--2000");
 var mincostmapping = function(t){
   t= ee.Number(t);
   var N_target = ee.Number(Target.get(t));
@@ -181,6 +177,8 @@ source = OP00; source = source.updateMask(source);
 cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 70 * 1000 });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulative cost 2000-2005");
 threshold = Target.map(mincostmapping);
 offset = ee.Number(2000);  
 x=2001; lossYear = execute(x, offset);
@@ -205,6 +203,8 @@ cumulativeCost = cost.cumulativeCost({
   });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
+// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 2005--2010");
 threshold = Target.map(mincostmapping);
 offset = ee.Number(2005);  
 x=2006; lossYear = execute(x, offset);
@@ -279,6 +279,38 @@ var year_2005 = Gunarso.expression(
     // Map.addLayer(year_2005, {min: 0, max: 6,
     // palette:[db, lb, gr, yellow, red, whi, black ]},'year_2005');
 var year_1990 = ee.Image([0]).clip(totalarea);
+//
+//Create separate lossyear00_05 and lossyear05_10
+/*Gunarso= Gunarso.addBands([OP_00_05, OP_05_10]);
+var lossyear00_05= Gunarso.expression(
+' OP_00_05== NOP_OP && (lossyear >2005 || lossyear<=2000) ? orphan\
+  :lossyear',
+    {  
+      'OP_00_05': Gunarso.select('OP_00_05'),
+      'lossyear': Gunarso.select('lossyear'),
+      'orphan': Gunarso.select('blank').add(33),
+      'NOP_OP': NOP_OP
+    }
+).rename(['lossyear00_05']);
+var inconsistent = lossyear00_05.eq(33); 
+Map.addLayer(inconsistent, {min: 0, max: 1,
+palette:[whi, black ]},'inconsistent lossyear00_05');
+
+var lossyear05_10= Gunarso.expression(
+' OP_05_10==NOP_OP && (lossyear >2010 || lossyear <=2005) ? orphan\
+  :lossyear',
+    {  
+      'OP_05_10': Gunarso.select('OP_05_10'),
+      'lossyear': Gunarso.select('lossyear'),
+      'orphan': Gunarso.select('blank').add(33),
+      'NOP_OP': NOP_OP
+    }
+).rename(['lossyear05_10']);
+var inconsistent = lossyear00_05.eq(33); 
+Map.addLayer(inconsistent.updateMask(inconsistent), {min: 0, max: 1,
+palette:[db, lb, gr, yellow, red, whi, black ]},'inconsistent lossyear05_10'); */
+
+
 
 
 // #########################
@@ -392,4 +424,3 @@ var test = annual(2000); test = annual(2003); test = annual(2005); test = annual
 // t=1995; p0= printclass(t, Gunarso);
 // t=1990; p0= printclass(t, Gunarso);
 
-*/
