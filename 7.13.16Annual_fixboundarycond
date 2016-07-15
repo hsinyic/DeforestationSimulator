@@ -16,7 +16,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.Point([101.08245301691568, 0.7909959458718788]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
+Map.setCenter(101.08245301691568, 0.7909959458718788, 12);// Riau 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
@@ -68,35 +68,14 @@ var totalarea_outline = totalarea.geometry().bounds();
 
 
 
-var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
-lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-    palette:[ red, yellow, gr ,db]}, 'lossYear original');
-
-var lossYear1 =lossYear.min(lossYear.focal_mode(9, 'circle'));
-Map.addLayer(lossYear1.updateMask(lossYear1.neq(2099)).updateMask(lossYear1.lte(2010)), {min: 2000, max: 2010,
-    palette:[ red, yellow, gr ,db]}, 'lossYear processed');
-// lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
-var lossYear2 =lossYear.min(lossYear.focal_median(10, 'circle'));
-Map.addLayer(lossYear2.updateMask(lossYear2.neq(2099)).updateMask(lossYear2.lte(2010)), {min: 2000, max: 2010,
-    palette:[ red, yellow, gr ,db]}, 'lossYear processed2');
-// lossYear = lossYear.focal_mode();
-// lossYear = lossYear.focal_mode();
-var lossYear3 = lossYear.focal_max(12,'octagon').focal_min(14,'octagon');
-Map.addLayer(lossYear3.updateMask(lossYear3.neq(2099)).updateMask(lossYear3.lte(2010)), {min: 2000, max: 2010,
-    palette:[ red, yellow, gr ,db]}, 'lossYear processed3');
 
 
-// lossYear = lossYear.toInt();
-// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
+    
 
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear processed3');
 
 
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
-var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
+var blank = ee.Image([0]).rename(['blank']).clip(totalarea);
 // NOT IMPORTANT  Data Processing 
 var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
@@ -128,10 +107,48 @@ var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(i
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
-// Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
-// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
-// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
-// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
+
+
+var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
+lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
+
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
+    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+
+var lossYear_SP = lossYear.updateMask(lossYear.connectedPixelCount(1024).gte(16));
+Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)).updateMask(lossYear_SP.lte(2010)), {min: 2000, max: 2010,
+    palette:[ red, yellow, gr ,db]}, 'lossYear_SP1');
+
+var lossYear_SP2 = lossYear.updateMask(lossYear.connectedPixelCount(32).gte(2));
+Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)).updateMask(lossYear_SP.lte(2010)), {min: 2000, max: 2010,
+    palette:[ red, yellow, gr ,db]}, 'lossYear_SP2');
+    
+
+var lossYear1 =lossYear.min(lossYear.focal_mode(9, 'circle'));
+Map.addLayer(lossYear1.updateMask(lossYear1.neq(2099)).updateMask(lossYear1.lte(2010)), {min: 2000, max: 2010,
+    palette:[ red, yellow, gr ,db]}, 'lossYear processed');
+// // lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
+// var lossYear2 =lossYear.min(lossYear.focal_median(10, 'circle'));
+// Map.addLayer(lossYear2.updateMask(lossYear2.neq(2099)).updateMask(lossYear2.lte(2010)), {min: 2000, max: 2010,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear processed2');
+// // lossYear = lossYear.focal_mode();
+// // lossYear = lossYear.focal_mode();
+// var lossYear3 = lossYear.focal_max(12,'octagon').focal_min(14,'octagon');
+// Map.addLayer(lossYear3.updateMask(lossYear3.neq(2099)).updateMask(lossYear3.lte(2010)), {min: 2000, max: 2010,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear processed3');
+
+
+// lossYear = lossYear.toInt();
+// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
+
+// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear processed3');
+
 /*
 // ########
 // # 1990 to 2000 annual maps 
