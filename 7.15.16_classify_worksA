@@ -134,7 +134,7 @@ var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
 // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear original');
-var lossYear_SP = lossYear.where(lossYear.connectedPixelCount(1024).lte(8), 2099); // tweak here
+var lossYear_SP = lossYear.where(lossYear.connectedPixelCount(1024).lte(500), 2099); // tweak here
 // Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)).updateMask(lossYear_SP.lte(2010)), {min: 2000, max: 2010,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear_SP1');
 var lossYear_smoothed =lossYear.min(lossYear.focal_mode(9, 'circle'));
