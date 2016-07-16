@@ -300,15 +300,6 @@ var annual = function(t){
   var timestamp = t.toString();
   t= ee.Number(t);
   var lossyear = lossYear; 
-  // var basemap_intermediate = ee.Algorithms.If(t.gte(2000), year_2000, year_1990);
-  // basemap_intermediate = ee.Image(basemap_intermediate);
-  // var basemap = ee.Algorithms.If(t.gte(2005), year_2005, basemap_intermediate);
-  // basemap = ee.Image(basemap);
-  // var aftermap_intermediate = ee.Algorithms.If(t.gte(2000), year_2000, year_1990);
-  // aftermap_intermediate = ee.Image(aftermap_intermediate);
-  // var aftermap = ee.Algorithms.If(t.gte(2005), year_2005, aftermap_intermediate);
-  // aftermap = ee.Image(aftermap);
-
   var basemap = year_2000;
   var executeOP_OP = Gunarso_intermediate.expression(
   'lossYear==t && OP90 == 1 ? OPR\
@@ -387,13 +378,9 @@ var annual = function(t){
 // var test = annual(2000); test = annual(2003); test = annual(2005); test = annual(2007);
 
 var Gunarso = yr.map(annual);
-print(Gunarso);
 var t=2010; var p0= printclass(t, Gunarso);
-print('here');
 t=2007; p0= printclass(t, Gunarso);
 t=2005; p0= printclass(t, Gunarso);
-print('here');
 t=2002; p0= printclass(t, Gunarso);
-print('here');
 t=2000; p0= printclass(t, Gunarso);
 
