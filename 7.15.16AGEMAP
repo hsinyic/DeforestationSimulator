@@ -27,8 +27,9 @@ var printage = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(1990);
   var img = ee.Image(folder.get(t));
-  Map.addLayer(img, {min: 0, max: 25,
-    palette:[ yellow, gr, dg]}, year);
+  Map.addLayer(img, {min: 0, max: 25, palette: [ yellow, gr, dg, db, black ]}, year);
+  // Map.addLayer(img, {min: 0, max: 25,
+  //   palette:[ yellow, gr, dg]}, year); if 1990 is 0 years old, then 2010 is 20 years old
   return(3);
 };
 var printclass = function(t, folder){
@@ -259,7 +260,7 @@ x=2010; lossYear = execute(x, offset);
 
 
 
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2020, palette: [whi, yellow, gr, dg, db, black ]}, 'updated Hansen');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: [ yellow, gr, dg, db, black ]}, 'updated Hansen');
 
 
 // ####################
