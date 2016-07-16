@@ -122,49 +122,20 @@ lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
     palette:[ red, yellow, gr ,db]}, 'lossYear original');
 
-var lossYear_SP = lossYear.where(lossYear.connectedPixelCount(1024).lte(16), 2099); // tweak here
+var lossYear_SP = lossYear.where(lossYear.connectedPixelCount(1024).lte(200), 2099); // tweak here
 Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)).updateMask(lossYear_SP.lte(2010)), {min: 2000, max: 2010,
     palette:[ red, yellow, gr ,db]}, 'lossYear_SP1');
-
-
 
 var lossYear_smoothed =lossYear.min(lossYear.focal_mode(9, 'circle'));
 Map.addLayer(lossYear_smoothed.updateMask(lossYear_smoothed.neq(2099)).updateMask(lossYear_smoothed.lte(2010)), {min: 2000, max: 2010,
     palette:[ red, yellow, gr ,db]}, 'lossYear processed');
-
-
-// var lossYear_SP2 = lossYear.updateMask(lossYear.connectedPixelCount(32).gte(2));
-// Map.addLayer(lossYear_SP2.updateMask(lossYear_SP2.neq(2099)).updateMask(lossYear_SP2.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear_SP2');
-// // lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
-// var lossYear2 =lossYear.min(lossYear.focal_median(10, 'circle'));
-// Map.addLayer(lossYear2.updateMask(lossYear2.neq(2099)).updateMask(lossYear2.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear processed2');
-// // lossYear = lossYear.focal_mode();
-// // lossYear = lossYear.focal_mode();
-// var lossYear3 = lossYear.focal_max(12,'octagon').focal_min(14,'octagon');
-// Map.addLayer(lossYear3.updateMask(lossYear3.neq(2099)).updateMask(lossYear3.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear processed3');
-
-
-// lossYear = lossYear.toInt();
-// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
-
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear processed3');
-
-
-
-
-
 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_smoothed).where(binary.eq(2),lossYear_SP);
 Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(lossYear_final.lte(2010)), {min: 2000, max: 2010,
     palette:[ red, yellow, gr ,db]}, 'lossYear final');
 
 
-/*
+
 // ########
 // # 1990 to 2000 annual maps 
 // ########
@@ -426,7 +397,3 @@ var test = annual(2000); test = annual(2003); test = annual(2005); test = annual
 // print('here');
 // t=2000; p0= printclass(t, Gunarso);
 
-// t=1995; p0= printclass(t, Gunarso);
-// t=1990; p0= printclass(t, Gunarso);
-
-*/
