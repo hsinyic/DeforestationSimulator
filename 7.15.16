@@ -66,6 +66,9 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 var totalarea = Peninsula_outline;
 var totalarea_outline = totalarea.geometry().bounds();
+var blank = ee.Image([0]).rename(['blank']).clip(totalarea);
+var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
+
 
 // Load Gunarso data 
 var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
@@ -106,8 +109,6 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(i
 // ########
 // # Load Hansen data. Filter for lossYear 
 // ########
-var blank = ee.Image([0]).rename(['blank']).clip(totalarea);
-var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var binary = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 ).clip(totalarea);
 Map.addLayer(binary, {min: 0, max: 2,
     palette:[ whi,gr , db]}, 'binary');
@@ -125,28 +126,6 @@ var lossYear_final = lossYear.where(binary.eq(1), lossYear_smoothed).where(binar
 Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(lossYear_final.lte(2010)), {min: 2000, max: 2010,
     palette:[ red, yellow, gr ,db]}, 'lossYear final');
 lossYear = lossYear_final; 
-
-// var lossYear_SP2 = lossYear.updateMask(lossYear.connectedPixelCount(32).gte(2));
-// Map.addLayer(lossYear_SP2.updateMask(lossYear_SP2.neq(2099)).updateMask(lossYear_SP2.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear_SP2');
-// // lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
-// var lossYear2 =lossYear.min(lossYear.focal_median(10, 'circle'));
-// Map.addLayer(lossYear2.updateMask(lossYear2.neq(2099)).updateMask(lossYear2.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear processed2');
-// // lossYear = lossYear.focal_mode();
-// // lossYear = lossYear.focal_mode();
-// var lossYear3 = lossYear.focal_max(12,'octagon').focal_min(14,'octagon');
-// Map.addLayer(lossYear3.updateMask(lossYear3.neq(2099)).updateMask(lossYear3.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear processed3');
-
-
-// lossYear = lossYear.toInt();
-// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
-
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear processed3');
-
 
 
 
