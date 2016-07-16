@@ -14,12 +14,10 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: ffc82d */ee.Geometry.MultiPoint(
-        [[101.08245301691568, 0.7909959458718788],
-         [101.436767578125, 0.5232166048991478]]);
+    geometry = /* color: d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
-Map.setCenter(101.436767578125, 0.5232166048991478, 12); //PekanBaru, Indo 
+Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
@@ -53,7 +51,7 @@ var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
-var scale = ee.Number(500); 
+var scale = ee.Number(1000); 
 
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
@@ -142,7 +140,7 @@ Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(201
 var lossYear_SP = lossYear.where(lossYear.connectedPixelCount(1024).lte(500), 2099); // tweak here
 // Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)).updateMask(lossYear_SP.lte(2010)), {min: 2000, max: 2010,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear_SP1');
-var lossYear_smoothed =lossYear.min(lossYear.focal_mode(9, 'circle'));
+var lossYear_smoothed =lossYear_SP.min(lossYear.focal_mode(9, 'circle'));
 // Map.addLayer(lossYear_smoothed.updateMask(lossYear_smoothed.neq(2099)).updateMask(lossYear_smoothed.lte(2010)), {min: 2000, max: 2010,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear processed');
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_smoothed).where(binary.eq(2),lossYear_SP);
