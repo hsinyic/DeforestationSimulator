@@ -128,6 +128,7 @@ var lossYear_final = lossYear.where(binary.eq(1), lossYear_smoothed).where(binar
 Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(lossYear_final.lte(2010)), {min: 2000, max: 2010,
     palette:[ red, yellow, gr ,db]}, 'lossYear final');
 
+lossYear = lossYear_final;
 
 
 // ########
@@ -142,6 +143,8 @@ var cumulativeCost = cost.cumulativeCost({ source: source,maxDistance: 200 * 100
 });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
+// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990--2000");
 var mincostmapping = function(t){
   t= ee.Number(t);
   var N_target = ee.Number(Target.get(t));
@@ -163,7 +166,7 @@ var execute = function(x, offset){
   var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea);
   var lossYear_update = lossYear.where(Binary.eq(1), t);
   var Binary_show = blank.where(Binary.eq(1), t);
-  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
@@ -183,6 +186,8 @@ source = OP00; source = source.updateMask(source);
 cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 70 * 1000 });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
+// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulative cost 2000-2005");
 threshold = Target.map(mincostmapping);
 offset = ee.Number(2000);  
 x=2001; lossYear = execute(x, offset);
@@ -207,6 +212,8 @@ cumulativeCost = cost.cumulativeCost({
   });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
+// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 2005--2010");
 threshold = Target.map(mincostmapping);
 offset = ee.Number(2005);  
 x=2006; lossYear = execute(x, offset);
@@ -214,7 +221,7 @@ x=2007; lossYear = execute(x, offset);
 x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2020, palette: [whi, yellow, gr, dg, db, black ]}, 'updated Hansen');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
@@ -294,6 +301,15 @@ var annual = function(t){
   var timestamp = t.toString();
   t= ee.Number(t);
   var lossyear = lossYear; 
+  // var basemap_intermediate = ee.Algorithms.If(t.gte(2000), year_2000, year_1990);
+  // basemap_intermediate = ee.Image(basemap_intermediate);
+  // var basemap = ee.Algorithms.If(t.gte(2005), year_2005, basemap_intermediate);
+  // basemap = ee.Image(basemap);
+  // var aftermap_intermediate = ee.Algorithms.If(t.gte(2000), year_2000, year_1990);
+  // aftermap_intermediate = ee.Image(aftermap_intermediate);
+  // var aftermap = ee.Algorithms.If(t.gte(2005), year_2005, aftermap_intermediate);
+  // aftermap = ee.Image(aftermap);
+
   var basemap = year_2000;
   var executeOP_OP = Gunarso_intermediate.expression(
   'lossYear==t && OP90 == 1 ? OPR\
@@ -346,17 +362,7 @@ var annual = function(t){
   );
   
   
-  // var yearmap00_05= blank
-  // .where(OP00.eq(1).and(OP05.eq(1)),executeOP_OP)
-  // .where(OP00.eq(0).and(OP05.eq(1)),executeNOP_OP)
-  // .where(OP00.eq(0).and(OP05.eq(0)),executeNOP_NOP);
 
-  // var yearmap05_10 = blank
-  // .where(OP05.eq(1).and(OP10.eq(1)),executeOP_OP)
-  // .where(OP05.eq(0).and(OP10.eq(1)),executeNOP_OP)
-  // .where(OP05.eq(0).and(OP10.eq(0)),executeNOP_NOP);
-  // var yearmap = ee.Algorithms.If(t.gt(2005), yearmap05_10,yearmap00_05 );
-  
   var yearmap = blank
   .where(OP00.eq(1).and(OP10.eq(1)),executeOP_OP)
   .where(OP00.eq(0).and(OP10.eq(1)),executeNOP_OP)
@@ -373,6 +379,8 @@ var annual = function(t){
 
 var Gunarso = yr.map(annual);
 var t=2010; var p0= printclass(t, Gunarso);
+t=2009; p0= printclass(t, Gunarso);
+t=2008; p0= printclass(t, Gunarso);
 t=2007; p0= printclass(t, Gunarso);
 t=2005; p0= printclass(t, Gunarso);
 t=2002; p0= printclass(t, Gunarso);
