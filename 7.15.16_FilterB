@@ -68,12 +68,6 @@ var totalarea_outline = totalarea.geometry().bounds();
 
 
 
-
-
-    
-
-
-
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 var blank = ee.Image([0]).rename(['blank']).clip(totalarea);
 // NOT IMPORTANT  Data Processing 
