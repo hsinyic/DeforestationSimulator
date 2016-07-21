@@ -16,7 +16,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.Point([101.08245301691568, 0.7909959458718788]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 0.7909959458718788, 12);// Riau 
+// Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
@@ -162,7 +162,7 @@ var execute = function(x, offset){
   var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea);
   var lossYear_update = lossYear.where(Binary.eq(1), t);
   var Binary_show = blank.where(Binary.eq(1), t);
-  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
@@ -214,7 +214,7 @@ x=2007; lossYear = execute(x, offset);
 x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2020, palette: [whi, yellow, gr, dg, db, black ]}, 'updated Hansen');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2020, palette: [whi, yellow, gr, dg, db, black ]}, 'updated Hansen');
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
@@ -352,18 +352,6 @@ var annual = function(t){
         'F_color': F_color
       }
   );
-  
-  
-  // var yearmap00_05= blank
-  // .where(OP00.eq(1).and(OP05.eq(1)),executeOP_OP)
-  // .where(OP00.eq(0).and(OP05.eq(1)),executeNOP_OP)
-  // .where(OP00.eq(0).and(OP05.eq(0)),executeNOP_NOP);
-
-  // var yearmap05_10 = blank
-  // .where(OP05.eq(1).and(OP10.eq(1)),executeOP_OP)
-  // .where(OP05.eq(0).and(OP10.eq(1)),executeNOP_OP)
-  // .where(OP05.eq(0).and(OP10.eq(0)),executeNOP_NOP);
-  // var yearmap = ee.Algorithms.If(t.gt(2005), yearmap05_10,yearmap00_05 );
   
   var yearmap = blank
   .where(OP00.eq(1).and(OP10.eq(1)),executeOP_OP)
