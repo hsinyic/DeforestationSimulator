@@ -14,14 +14,18 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: d63000 */ee.Geometry.Point([101.08245301691568, 0.7909959458718788]);
+    square = /* color: d63000 */ee.Geometry.Polygon(
+        [[[100.72746276855469, 4.017699464336852],
+          [100.72196960449219, 3.7779296177073167],
+          [101.59675598144531, 3.777244464062558],
+          [101.5960693359375, 4.016329547097038]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 // Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
-Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
+Map.setCenter(101.14837646484375,3.888917295949231, 11); // Malaysia, Penn
 
 var printage = function(t, folder){
   var year = t.toString();
@@ -51,7 +55,7 @@ var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
-var scale = ee.Number(1000); 
+var scale = ee.Number(2000); 
 
 // ########
 // # Load data 
@@ -64,8 +68,9 @@ var Riau = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Riau');
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
-var totalarea = Peninsula_outline;
-var totalarea_outline = totalarea.geometry().bounds();
+var totalarea = square;
+var totalarea_outline = totalarea;
+// var totalarea_outline = totalarea.geometry().bounds();
 var blank = ee.Image([0]).rename(['blank']).clip(totalarea);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
 
@@ -162,7 +167,7 @@ var execute = function(x, offset){
   var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea);
   var lossYear_update = lossYear.where(Binary.eq(1), t);
   var Binary_show = blank.where(Binary.eq(1), t);
-  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
