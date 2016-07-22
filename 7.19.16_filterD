@@ -140,7 +140,7 @@ var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099).updateMask(OP10
 Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear_replant round up bin 2');
 // Fill in  
-lossYear_replant =lossYear_replant.min(lossYear.focal_mode(10, 'square'));
+lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square'));
 Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear_replant square focal');
 // Remove Speckles 
