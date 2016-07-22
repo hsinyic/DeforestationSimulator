@@ -131,8 +131,20 @@ lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128)
 lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
 
 //Replant 
-var lossYear_replant =lossYear.min(lossYear.focal_mode(8, 'circle'));
-lossYear_replant= lossYear_replant.where(lossYear.connectedPixelCount(1024).lte(128), 2099);
+print(ee.Number(17).divide(2).ceil().multiply(2));
+var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099), lossYear.divide(2).ceil().multiply(2));
+Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)), {min: 2000, max: 2014,
+    palette:[ red, yellow, gr ,db]}, 'lossYear_replant round up bin 2');
+
+lossYear_replant =lossYear.min(lossYear.focal_mode(12, 'square'));
+Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)), {min: 2000, max: 2014,
+    palette:[ red, yellow, gr ,db]}, 'lossYear_replant square focal');
+
+
+lossYear_replant= lossYear_replant.where(lossYear.connectedPixelCount(256).lte(32), 2099);
+Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)), {min: 2000, max: 2014,
+    palette:[ red, yellow, gr ,db]}, 'lossYear_replant remove pixels');
+
 
 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
@@ -230,7 +242,7 @@ x=2007; lossYear = execute(x, offset);
 x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 /*
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
