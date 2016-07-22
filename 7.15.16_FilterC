@@ -25,7 +25,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 // Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
-Map.setCenter(101.14837646484375,3.888917295949231, 11); // Malaysia, Penn
+Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
 
 var printage = function(t, folder){
   var year = t.toString();
@@ -120,16 +120,16 @@ Map.addLayer(binary, {min: 0, max: 2,
     palette:[ whi,gr , db]}, 'binary');
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear original');
 var lossYear_SP = lossYear.where(lossYear.connectedPixelCount(1024).lte(8), 2099); // tweak here
-Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)), {min: 2000, max: 2014,
+Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear_SP1');
 var lossYear_smoothed =lossYear.min(lossYear.focal_mode(9, 'circle'));
-Map.addLayer(lossYear_smoothed.updateMask(lossYear_smoothed.neq(2099)), {min: 2000, max: 2014,
+Map.addLayer(lossYear_smoothed.updateMask(lossYear_smoothed.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear processed');
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_smoothed).where(binary.eq(2),lossYear_SP);
-Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)), {min: 2000, max: 2014,
+Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear final');
 lossYear = lossYear_final; 
 
@@ -220,8 +220,11 @@ x=2007; lossYear = execute(x, offset);
 x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 1999, palette: [whi, , orange, pink]}, 'updated Hansen 1990-2000');
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014, palette:[ red, yellow, gr ,db]}, 'updated Hansen 2000-2014');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)).updateMask(lossYear.lt(2000)), {min: 1990, max: 1999, palette: [whi, black]}, 'updated Hansen 1990-2000');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)).updateMask(lossYear.gte(2000)), {min: 2000, max: 2014, palette:[ red, yellow, gr ,db]}, 'updated Hansen 2000-2014');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2014, palette: [red, yellow, gr ,db]}, 'updated Hansen 1990-2014');
+
+
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
