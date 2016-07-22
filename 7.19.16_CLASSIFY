@@ -122,17 +122,21 @@ Map.addLayer(binary, {min: 0, max: 2,
     palette:[ whi,gr , db]}, 'binary');
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear original');
-var lossYear_SP = lossYear.where(lossYear.connectedPixelCount(1024).lte(500), 2099); // tweak here
-// Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)).updateMask(lossYear_SP.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear_SP1');
-var lossYear_smoothed =lossYear.min(lossYear.focal_mode(8, 'circle'));
-lossYear_smoothed= lossYear_smoothed.where(lossYear.connectedPixelCount(1024).lte(500), 2099);
-// Map.addLayer(lossYear_smoothed.updateMask(lossYear_smoothed.neq(2099)).updateMask(lossYear_smoothed.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear processed');
-var lossYear_final = lossYear.where(binary.eq(1), lossYear_smoothed).where(binary.eq(2),lossYear_SP);
-Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(lossYear_final.lte(2010)), {min: 2000, max: 2010,
+    
+//Expansion
+var lossYear_expand = lossYear.neq(2099); // make it binary 
+lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
+lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
+
+//Replant 
+var lossYear_replant =lossYear.min(lossYear.focal_mode(8, 'circle'));
+lossYear_replant= lossYear_replant.where(lossYear.connectedPixelCount(1024).lte(128), 2099);
+
+
+var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
+Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear final');
 lossYear = lossYear_final; 
 
