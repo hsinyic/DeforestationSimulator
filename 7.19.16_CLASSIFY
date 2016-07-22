@@ -136,22 +136,20 @@ lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
 print(ee.Number(17).divide(2).ceil().multiply(2));
 
 // Smooth by a bin of 2 years 
-var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099), lossYear.divide(2).ceil().multiply(2));
+var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099), lossYear.divide(2).ceil().multiply(2).toInt());
 Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear_replant round up bin 2');
-
 // Fill in  
-lossYear_replant =lossYear_replant.min(lossYear.focal_mode(12, 'square'));
+lossYear_replant =lossYear_replant.min(lossYear.focal_mode(10, 'square'));
 Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear_replant square focal');
-
 // Remove Speckles 
-lossYear_replant= lossYear_replant.where(lossYear.connectedPixelCount(256).lte(32), 2099);
+lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
 Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear_replant remove pixels');
 
 
-
+//Final assembling 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
 Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear final');
