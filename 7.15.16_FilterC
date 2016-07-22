@@ -38,7 +38,7 @@ var printage = function(t, folder){
 var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
-  print(t);
+  // print(t);
   var img = ee.Image(folder.get(t));
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ db, lb, gr,  yellow, red, whi, db]}, year);
@@ -55,6 +55,7 @@ var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
+var orange = ('#ed9143').toString();
 var scale = ee.Number(2000); 
 
 // ########
@@ -119,16 +120,16 @@ Map.addLayer(binary, {min: 0, max: 2,
     palette:[ whi,gr , db]}, 'binary');
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear original');
 var lossYear_SP = lossYear.where(lossYear.connectedPixelCount(1024).lte(8), 2099); // tweak here
-Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)).updateMask(lossYear_SP.lte(2010)), {min: 2000, max: 2010,
+Map.addLayer(lossYear_SP.updateMask(lossYear_SP.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear_SP1');
 var lossYear_smoothed =lossYear.min(lossYear.focal_mode(9, 'circle'));
-Map.addLayer(lossYear_smoothed.updateMask(lossYear_smoothed.neq(2099)).updateMask(lossYear_smoothed.lte(2010)), {min: 2000, max: 2010,
+Map.addLayer(lossYear_smoothed.updateMask(lossYear_smoothed.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear processed');
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_smoothed).where(binary.eq(2),lossYear_SP);
-Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(lossYear_final.lte(2010)), {min: 2000, max: 2010,
+Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)), {min: 2000, max: 2014,
     palette:[ red, yellow, gr ,db]}, 'lossYear final');
 lossYear = lossYear_final; 
 
@@ -167,7 +168,7 @@ var execute = function(x, offset){
   var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea);
   var lossYear_update = lossYear.where(Binary.eq(1), t);
   var Binary_show = blank.where(Binary.eq(1), t);
-  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2014, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
@@ -219,7 +220,8 @@ x=2007; lossYear = execute(x, offset);
 x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2020, palette: [whi, yellow, gr, dg, db, black ]}, 'updated Hansen');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 1999, palette: [whi, , orange, pink]}, 'updated Hansen 1990-2000');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014, palette:[ red, yellow, gr ,db]}, 'updated Hansen 2000-2014');
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
@@ -372,12 +374,12 @@ var annual = function(t){
 
 // var test = annual(2000); test = annual(2003); test = annual(2005); test = annual(2007);
 
-var Gunarso = yr.map(annual);
+// var Gunarso = yr.map(annual);
 // var t=2010; var p0= printclass(t, Gunarso);
 // t=2007; p0= printclass(t, Gunarso);
 // t=2005; p0= printclass(t, Gunarso);
 // t=2002; p0= printclass(t, Gunarso);
 // t=2000; p0= printclass(t, Gunarso);
-// t=1995; p0= printclass(t, Gunarso);
-// t=1990; p0= printclass(t, Gunarso);
+// // t=1995; p0= printclass(t, Gunarso);
+// // t=1990; p0= printclass(t, Gunarso);
 
