@@ -16,21 +16,6 @@ var landsatF7 = ee.ImageCollection("LANDSAT/LE7_L1T_TOA_FMASK"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-var lossYear = gfcImage.select(['lossyear']);
-lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'lossYear original');
-
-
-var showLandsat = function(t, folder){
-  var year = t.toString();
-  t= ee.Number(t);
-  var index= ee.Number(t).subtract(2000);
-  var img = ee.Image(folder.get(index));
-  Map.addLayer( image, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, year);
-  Map.addLayer(lossYear.eq(t), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'lossYear original');
-}
-
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
 var db= ('0000FF').toString();
 var lb= ('#11ffff').toString();
@@ -43,6 +28,23 @@ var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
 var scale = ee.Number(1000); 
+
+
+var lossYear = gfcImage.select(['lossyear']);
+lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'lossYear original');
+
+
+var showLandsat = function(t, folder){
+  var year = t.toString();
+  t= ee.Number(t);
+  var index= ee.Number(t).subtract(2000);
+  var img = ee.Image(folder.get(index));
+  Map.addLayer( img, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, year);
+  Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'Hansen');
+  return ee.Number(2);
+};
+
 
 // This LEDAPS SR works - https://explorer.earthengine.google.com/#detail/LEDAPS%2FLE7_L1T_SR
 var landsat7 = landsatF7
@@ -78,22 +80,28 @@ function display(time){
 
 
 
-var dates = ee.List.sequence(1,12,1);
-
+var dates = ee.List.sequence(0,12,1);
 var final = dates.map(display);
+showLandsat(2001,final);showLandsat(2002,final);showLandsat(2003,final);
+showLandsat(2004,final);showLandsat(2005,final);showLandsat(2006,final);showLandsat(2007,final);
+showLandsat(2008,final);showLandsat(2009,final);showLandsat(2010,final);showLandsat(2011,final);
+
+
+
+
 print(final);
-Map.addLayer( display(0), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2001');
-Map.addLayer( display(1), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2002');
-Map.addLayer( display(2), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2003');
-Map.addLayer( display(3), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2004');
-Map.addLayer( display(4), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2005');
-Map.addLayer( display(5), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2006');
-Map.addLayer( display(6), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2007');
-Map.addLayer( display(7), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2008');
-Map.addLayer( display(8), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2009');
-Map.addLayer( display(9), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2010');
-Map.addLayer( display(10), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2011');
-Map.addLayer( display(11), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2012');
+// Map.addLayer( display(0), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2001');
+// Map.addLayer( display(1), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2002');
+// Map.addLayer( display(2), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2003');
+// Map.addLayer( display(3), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2004');
+// Map.addLayer( display(4), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2005');
+// Map.addLayer( display(5), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2006');
+// Map.addLayer( display(6), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2007');
+// Map.addLayer( display(7), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2008');
+// Map.addLayer( display(8), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2009');
+// Map.addLayer( display(9), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2010');
+// Map.addLayer( display(10), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2011');
+// Map.addLayer( display(11), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2012');
 
 
 
