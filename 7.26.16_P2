@@ -32,7 +32,7 @@ var scale = ee.Number(1000);
 
 var lossYear = gfcImage.select(['lossyear']);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'lossYear original');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
 
 
 var showLandsat = function(t, folder){
@@ -41,7 +41,7 @@ var showLandsat = function(t, folder){
   var index= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(index));
   Map.addLayer( img, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, year);
-  Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'Hansen');
+  Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'Hansen');
   return ee.Number(2);
 };
 
@@ -106,6 +106,45 @@ print(final);
 
 
 
+// Data Processing 
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP90_raster = ee.Image([0]).where(OP90_raster.eq(1), 1);
+var OP00_raster = ee.Image([0]).where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1);
+var OP05_raster = ee.Image([0]).where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1);
+var OP10_raster = ee.Image([0]).where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1);
+// Convert Gunarso vector maps to a raster, Sabah and Sarawak
+var ma90_raster = ma90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma00_raster = ma00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma05_raster = ma05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma10_raster = ma10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma90_raster = ee.Image([0]).where(ma90_raster.eq(1), 1);
+var ma00_raster = ee.Image([0]).where(ma00_raster.eq(1), 1).where(ma90_raster.eq(1), 1);
+var ma05_raster = ee.Image([0]).where(ma05_raster.eq(1), 1).where(ma00_raster.eq(1), 1);
+var ma10_raster = ee.Image([0]).where(ma10_raster.eq(1), 1).where(ma05_raster.eq(1), 1);
+// Convert Gunarso vector maps to a raster, Indonesia and PNG
+var in90_raster = in90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in00_raster = in00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in05_raster = in05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in10_raster = in10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in90_raster = ee.Image([0]).where(in90_raster.eq(1), 1);
+var in00_raster = ee.Image([0]).where(in00_raster.eq(1), 1).where(in90_raster.eq(1), 1);
+var in05_raster = ee.Image([0]).where(in05_raster.eq(1), 1).where(in00_raster.eq(1), 1);
+var in10_raster = ee.Image([0]).where(in10_raster.eq(1), 1).where(in05_raster.eq(1), 1);
+var OP90 = ee.Image([0]).where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']);
+var OP00 = ee.Image([0]).where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
+var OP05 = ee.Image([0]).where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
+var OP10 = ee.Image([0]).where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
+// Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
+// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
+// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
+// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
+var binary = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
+Map.addLayer(binary, {min: 0, max: 2,
+    palette:[ whi,gr , db]}, 'binary');
+
 
 // Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
 Map.setCenter(101.436767578125, 0.5232166048991478, 11); //PekanBaru, Indo 
@@ -114,4 +153,6 @@ Map.setCenter(101.436767578125, 0.5232166048991478, 11); //PekanBaru, Indo
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 // Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
 // Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
+
+
 
