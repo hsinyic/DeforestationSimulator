@@ -84,10 +84,10 @@ var dates = ee.List.sequence(0,14,1);
 var final = dates.map(display);
 showLandsat(2001,final);showLandsat(2002,final);showLandsat(2003,final);
 showLandsat(2004,final);showLandsat(2005,final);
-/*showLandsat(2006,final);showLandsat(2007,final);
+showLandsat(2006,final);showLandsat(2007,final);
 showLandsat(2008,final);showLandsat(2009,final);showLandsat(2010,final);showLandsat(2011,final);
 showLandsat(2012,final);showLandsat(2013,final);showLandsat(2014,final);
-*/
+
 
 
 print(final);
@@ -143,7 +143,7 @@ var OP10 = ee.Image([0]).where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1)
 // Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
 var binary = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
 Map.addLayer(binary.updateMask(binary), {min: 0, max: 2,
-    palette:[ whi,gr , db]}, 'binary');
+    palette:[ whi,black , db]}, 'binary');
 
 
 // Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
