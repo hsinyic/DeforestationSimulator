@@ -73,19 +73,6 @@ var totalarea_outline = totalarea.geometry().bounds();
 
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
-// lossYear =lossYear.min(lossYear.focal_mode(10, 'circle'));
-// lossYear = lossYear.focal_max(8).focal_min(12).focal_max(8);
-// lossYear =lossYear.min(lossYear.focal_median(10, 'circle'));
-
-// lossYear = lossYear.focal_mode();
-// lossYear = lossYear.focal_mode();
-// lossYear = lossYear.focal_max(3).focal_min(5).focal_max(3);
-// lossYear = lossYear.toInt();
-// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear filtered');
-
-// Map.addLayer(lossYear.updateMask(lossYear.neq(99)).updateMask(lossYear.lte(10)), {min: 1, max: 10,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear original');
 
 
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
