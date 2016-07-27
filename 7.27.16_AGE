@@ -58,6 +58,7 @@ var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi');
 var Bungo = Indonesia_1.filterMetadata('NAME_2', 'equals', 'Bungo');
 var Riau = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Riau');
 var totalarea = Riau;
+var totalareaoutline = totalarea.geometry().bounds();
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
 
@@ -146,7 +147,7 @@ lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square')
 // Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear_replant square focal');
 // Remove Speckles 
-lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
+lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(64).lte(16), 2099);
 // Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear_replant remove pixels');
 
@@ -160,10 +161,10 @@ lossYear = lossYear_final;
 // ########
 // # 1990 to 2000 annual maps 
 // ########
-var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea); 
+var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalareaoutline); 
 var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
 var source = OP90; source = source.updateMask(source); 
-var cost = blank.add(1).clip(totalarea);
+var cost = blank.add(1).clip(totalareaoutline);
 var cumulativeCost = cost.cumulativeCost({
     source: source,
     maxDistance: 90 * 1000 // 70 kilometers to cover that patchy area 
@@ -217,7 +218,7 @@ Designated = blank.where(
   (OP00.eq(0).and(OP05.eq(1)))
   .and(
     (lossYear.lte(2000)).or(lossYear.gt(2005)).or(lossYear.eq(99))), 1)
-  .clip(totalarea); 
+  .clip(totalareaoutline); 
 Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 source = OP00;
 source = source.updateMask(source);
@@ -253,7 +254,7 @@ Designated = blank.where(
   (OP05.eq(0).and(OP10.eq(1)))
   .and(
     (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1)
-  .clip(totalarea); 
+  .clip(totalareaoutline); 
 Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 source = OP05;
 source = source.updateMask(source);
@@ -374,13 +375,13 @@ var Gunarso_agefinal = yr.map(age);
 // var p =printage(t,Gunarso_agefinal);
 
 
-Export.video.toDrive({
-  collection: Gunarso_agefinal,
-  description: 'Gunarso_agefinal',
-  dimensions: 720,
-  framesPerSecond: 12,
-  region: totalarea.geometry().bounds()
-});
+// Export.video.toDrive({
+//   collection: Gunarso_agefinal,
+//   description: 'Gunarso_agefinal',
+//   dimensions: 720,
+//   framesPerSecond: 12,
+//   region: totalarea.geometry().bounds()
+// });
 
 
 var t=2010;
