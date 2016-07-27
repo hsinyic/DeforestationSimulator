@@ -418,4 +418,12 @@ t=2000; p0= printclass(t, Gunarso);
 
 // t=1995; p0= printclass(t, Gunarso);
 // t=1990; p0= printclass(t, Gunarso);
+Export.video.toDrive({
+  collection: Gunarso,
+  description: 'Gunarso_classify',
+  dimensions: 720,
+  framesPerSecond: 12,
+  region: totalarea.geometry().bounds()
+});
+
 
