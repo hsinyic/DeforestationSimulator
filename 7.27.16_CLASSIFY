@@ -122,8 +122,8 @@ var binary = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0
 //     palette:[ whi,gr , db]}, 'binary');
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear original');
 
 
 //Expansion
@@ -152,8 +152,8 @@ lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(25
 
 //Final assembling 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
-Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
-    palette:[ red, yellow, gr ,db]}, 'lossYear final');
+// Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear final');
 lossYear = lossYear_final; 
 
 
@@ -247,7 +247,7 @@ x=2007; lossYear = execute(x, offset);
 x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
@@ -415,15 +415,5 @@ t=2003; p0= printclass(t, Gunarso);
 t=2002; p0= printclass(t, Gunarso);
 t=2001; p0= printclass(t, Gunarso);
 t=2000; p0= printclass(t, Gunarso);
-
-// t=1995; p0= printclass(t, Gunarso);
-// t=1990; p0= printclass(t, Gunarso);
-Export.video.toDrive({
-  collection: Gunarso,
-  description: 'Gunarso_classify',
-  dimensions: 720,
-  framesPerSecond: 12,
-  region: totalarea.geometry().bounds()
-});
 
 
