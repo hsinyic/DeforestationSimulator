@@ -39,15 +39,15 @@ var printclass = function(t, folder){
   var img = ee.Image(folder.get(t));
   var taskname = ee.String(year).cat(ee.String('Kalimantan'));
   export_image = export_image.addBands(img);
-  // Map.addLayer(img, {min: 0, max: 6,
-  //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
-  // Export.image.toDrive({
-  //   image: img,
-  //   description: taskname.getInfo(),
-  //   scale: 100,
-  //   region: totalarea_outline,
-  //   maxPixels: 1e13
-  // });
+  Map.addLayer(img, {min: 0, max: 6,
+    palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
+  Export.image.toDrive({
+    image: img,
+    description: taskname.getInfo(),
+    scale: 100,
+    region: totalarea_outline,
+    maxPixels: 1e13
+  });
 
   return(3);
 };
@@ -266,6 +266,7 @@ costmap = costmap.updateMask(costmap);
 Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 2005--2010");
 threshold = Target.map(mincostmapping);
+print(threshold);
 offset = ee.Number(2005);  
 x=2006; lossYear = execute(x, offset);
 x=2007; lossYear = execute(x, offset);
