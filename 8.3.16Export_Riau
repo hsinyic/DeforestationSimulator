@@ -268,10 +268,10 @@ x=2010; lossYear = execute(x, offset);
 // ####################
 var Gunarso = ee.Image([lossYear,OP90, OP00, OP05,OP10, treecover2000,blank]);
 //Define transition variables
-var NOP_NOP= 1;//NonOP to NonOP 
-var NOP_OP= 2;//NonOP to OP
-var OP_NOP= 3;//OP to NonOP
-var OP_OP= 4;//OP to OP
+var NOP_NOP= ee.Number( 1);//NonOP to NonOP 
+var NOP_OP= ee.Number( 2);//NonOP to OP
+var OP_NOP= ee.Number( 3);//OP to NonOP
+var OP_OP= ee.Number( 4);//OP to OP
 
 // ############
 // # Step 3: Preliminary data processing 
@@ -282,12 +282,13 @@ var OP_OP= 4;//OP to OP
 // ############
 
 // code NF, F, OPR, OP into numbers 
-var NF_color = 1;
-var F_color = 2;
-var OPReplant_color = 3; 
-var OP_color = 4; 
-var NOP_color = 5;
-var OTH_color = 6;
+var NF_color = ee.Number(1);
+var F_color = ee.Number(2);
+var OPReplant_color = ee.Number(3); 
+var OP_color = ee.Number(4); 
+var NOP_color = ee.Number(5);
+var OTH_color = ee.Number(6);
+
 // Create year_2000 and year_2005 classified layer of OP, F, NF  
 var year_2000 = Gunarso.expression(
 '(OP00 ==1)? OP\
