@@ -16,7 +16,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.MultiPoint(
         [[104.9853515625, -5.0909441750333855],
-         [58.00263047218323, 57.685787686385744]]);
+         [58.00263047218323, 57.685787686385744],
+         [120.234375, 4.434044005032582]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(101.08245301691568, 0.7909959458718788, 5);// Riau 
 // Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
