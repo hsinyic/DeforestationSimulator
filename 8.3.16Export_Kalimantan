@@ -81,6 +81,12 @@ var Kalimantan_Tengah = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimant
 var Kalimantan_Selatan = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Selatan');
 var Kalimantan = Kalimantan_Timur.merge(Kalimantan_Barat).merge(Kalimantan_Tengah).merge(Kalimantan_Selatan);
 
+
+var Papua_1 =Indonesia_1.filterMetadata('NAME_1', 'equals', 'Papua');
+var Papua_2 =Indonesia_1.filterMetadata('NAME_1', 'equals', 'Irian Jaya Barat');
+var Papua = Kalimantan_Timur.merge(Papua_2).merge(Papua_1);
+
+
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
@@ -185,8 +191,7 @@ var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]);
 var source = OP90; source = source.updateMask(source); 
 var cost = ee.Image([0]).add(1);
 cost = cost.clip(totalarea_outline);
-var cumulativeCost = cost.cumulativeCost({ source: source,maxDistance: 100 * 1000 // 70 kilometers to cover that patchy area 
-});
+var cumulativeCost = cost.cumulativeCost({ source: source,maxDistance: 300 * 1000 });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
@@ -258,8 +263,8 @@ source = source.updateMask(source);
 cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 100 * 1000 });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
-// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
-//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 2005--2010");
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 2005--2010");
 threshold = Target.map(mincostmapping);
 offset = ee.Number(2005);  
 x=2006; lossYear = execute(x, offset);
