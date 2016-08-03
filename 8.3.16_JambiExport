@@ -16,9 +16,9 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
+Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
 // Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
-Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Bungo 
+// Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 // Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
@@ -37,11 +37,13 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
+  var taskname = ee.String(year).cat(ee.String('Riau'));
+
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
   Export.image.toDrive({
     image: img,
-    description: year,
+    description: taskname.getInfo(),
     scale: 100,
     region: totalarea_outline
   });
@@ -74,7 +76,7 @@ var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 
 
 
-var totalarea = Jambi;
+var totalarea = Riau;
 var totalarea_outline = totalarea.geometry().bounds();
 
 
