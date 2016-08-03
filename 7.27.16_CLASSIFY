@@ -30,6 +30,7 @@ var printage = function(t, folder){
   var img = ee.Image(folder.get(t));
   Map.addLayer(img, {min: 0, max: 25,
     palette:[ yellow, gr, dg]}, year);
+
   return(3);
 };
 var printclass = function(t, folder){
@@ -38,6 +39,13 @@ var printclass = function(t, folder){
   var img = ee.Image(folder.get(t));
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
+  Export.image.toDrive({
+    image: img,
+    description: year,
+    scale: 30,
+    region: totalarea_outline
+  });
+
   return(3);
 };
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
