@@ -25,7 +25,7 @@ Map.setCenter(101.08245301691568, 0.7909959458718788, 5);// Riau
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 // Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
 // Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
-Map.setCenter(104.9853515625, -5.0909441750333855, 9) ;// Lampung
+// Map.setCenter(104.9853515625, -5.0909441750333855, 9) ;// Lampung
 var printage = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
@@ -207,7 +207,7 @@ var execute = function(x, offset){
   var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea);
   var lossYear_update = lossYear.where(Binary.eq(1), t);
   var Binary_show = blank.where(Binary.eq(1), t);
-  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
@@ -332,7 +332,7 @@ var year_2005 = Gunarso.expression(
 var year_1990 = ee.Image([0]).clip(totalarea);
 
 
-// #########################
+// #########################a
 // #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2010
 // #########################
 var Gunarso_intermediate = ee.Image([lossYear]);
