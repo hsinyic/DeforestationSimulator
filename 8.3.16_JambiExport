@@ -16,7 +16,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
+Map.setCenter(101.08245301691568, 0.7909959458718788, 5);// Riau 
 // Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
@@ -37,15 +37,16 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Riau'));
-
+  var taskname = ee.String(year).cat(ee.String('Lampung'));
+  export_image = export_image.addBands(img);
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
   Export.image.toDrive({
     image: img,
     description: taskname.getInfo(),
     scale: 100,
-    region: totalarea_outline
+    region: totalarea_outline,
+    maxPixels: 1e13
   });
 
   return(3);
@@ -68,7 +69,9 @@ var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi');
 var Bungo = Indonesia_1.filterMetadata('NAME_2', 'equals', 'Bungo');
 var Pekanbaru = Indonesia_1.filterMetadata('NAME_2', 'equals', 'Pekanbaru');
 
-
+var Lampung = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Lampung');
+var Sumatera_Selatan = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Selatan'); 
+var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
 var Riau = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Riau');
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
@@ -76,7 +79,7 @@ var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 
 
 
-var totalarea = Riau;
+var totalarea = Lampung;
 var totalarea_outline = totalarea.geometry().bounds();
 
 
@@ -414,6 +417,7 @@ var annual = function(t){
 // var test = annual(2000); test = annual(2003); test = annual(2005); test = annual(2007);
 
 var Gunarso = yr.map(annual);
+var export_image = ee.Image([0]);
 var t=2010; var p0= printclass(t, Gunarso);
 t=2009; p0= printclass(t, Gunarso);
 t=2008; p0= printclass(t, Gunarso);
