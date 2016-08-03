@@ -23,7 +23,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 // Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
 // Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
 // Map.setCenter(104.9853515625, -5.0909441750333855, 9) ;// Lampung
-Map.setCenter(114.43359375,-1.054627942275887, 8);// Kalimantan 
+Map.setCenter(114.43359375,-1.054627942275887, 6);// Kalimantan 
 var printage = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
@@ -37,10 +37,10 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Riau'));
+  var taskname = ee.String(year).cat(ee.String('Kalimantan'));
   export_image = export_image.addBands(img);
-  Map.addLayer(img, {min: 0, max: 6,
-    palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
+  // Map.addLayer(img, {min: 0, max: 6,
+  //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
   // Export.image.toDrive({
   //   image: img,
   //   description: taskname.getInfo(),
@@ -185,12 +185,12 @@ var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]);
 var source = OP90; source = source.updateMask(source); 
 var cost = ee.Image([0]).add(1);
 cost = cost.clip(totalarea_outline);
-var cumulativeCost = cost.cumulativeCost({ source: source,maxDistance: 200 * 1000 // 70 kilometers to cover that patchy area 
+var cumulativeCost = cost.cumulativeCost({ source: source,maxDistance: 100 * 1000 // 70 kilometers to cover that patchy area 
 });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
-// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
-//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990--2000");
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990--2000");
 var mincostmapping = function(t){
   t= ee.Number(t);
   var N_target = ee.Number(Target.get(t));
@@ -203,6 +203,8 @@ var mincostmapping = function(t){
   return ee.Number(output.get('blank'));
 };
 var threshold = Target.map(mincostmapping);
+
+print(threshold);
 var execute = function(x, offset){
   var year = x.toString();
   var t=ee.Number(x).toInt();
@@ -229,13 +231,13 @@ Designated = blank.where(
   .clip(totalarea); 
 Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 source = OP00; source = source.updateMask(source);
-cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 70 * 1000 });
+cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 100 * 1000 });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
-// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
-//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulative cost 2000-2005");
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulative cost 2000-2005");
 threshold = Target.map(mincostmapping);
-// print(threshold);
+print(threshold);
 offset = ee.Number(2000);  
 x=2001; lossYear = execute(x, offset);
 x=2002; lossYear = execute(x, offset);
@@ -245,30 +247,27 @@ x=2005; lossYear = execute(x, offset);
 // ########
 // # 2005 to 2010 annual maps 
 // ########
-// Designated = blank.where(
-//   (OP05.eq(0).and(OP10.eq(1)))
-//   .and(
-//     (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1)
-//   .clip(totalarea); 
-// Target = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
-// source = OP05;
-// source = source.updateMask(source);
-// cumulativeCost = cost.cumulativeCost({
-//     source: source,
-//     maxDistance: 70 * 1000 
-//   });
-// costmap = blank.where(Designated.eq(1), cumulativeCost);
-// costmap = costmap.updateMask(costmap);
-// // Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
-// //     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 2005--2010");
-// threshold = Target.map(mincostmapping);
-// offset = ee.Number(2005);  
-// x=2006; lossYear = execute(x, offset);
-// x=2007; lossYear = execute(x, offset);
-// x=2008; lossYear = execute(x, offset);
-// x=2009; lossYear = execute(x, offset);
-// x=2010; lossYear = execute(x, offset);
-// // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
+Designated = blank.where(
+  (OP05.eq(0).and(OP10.eq(1)))
+  .and(
+    (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1)
+  .clip(totalarea); 
+Target = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
+source = OP05;
+source = source.updateMask(source);
+cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 100 * 1000 });
+costmap = blank.where(Designated.eq(1), cumulativeCost);
+costmap = costmap.updateMask(costmap);
+// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 2005--2010");
+threshold = Target.map(mincostmapping);
+offset = ee.Number(2005);  
+x=2006; lossYear = execute(x, offset);
+x=2007; lossYear = execute(x, offset);
+x=2008; lossYear = execute(x, offset);
+x=2009; lossYear = execute(x, offset);
+x=2010; lossYear = execute(x, offset);
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
