@@ -30,16 +30,16 @@ var printage = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String('Age_Sumatera_Barat').cat(ee.String(year));
+  var taskname = ee.String('Age_Aceh').cat(ee.String(year));
   // Map.addLayer(img, {min: 0, max: 25,
   //   palette:[ yellow, gr, dg]}, year);
-  Export.image.toDrive({
-    image: img,
-    description: taskname.getInfo(),
-    scale: 100,
-    region: totalarea_outline,
-    maxPixels: 1e13
-  });
+  // Export.image.toDrive({
+  //   image: img,
+  //   description: taskname.getInfo(),
+  //   scale: 100,
+  //   region: totalarea_outline,
+  //   maxPixels: 1e13
+  // });
   return(3);
 };
 var printclass = function(t, folder){
@@ -109,7 +109,7 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 
 
-var totalarea = Sumatera_Barat;
+var totalarea = Aceh;
 var totalarea_outline = totalarea.geometry().bounds();
 
 
