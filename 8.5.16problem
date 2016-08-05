@@ -14,9 +14,11 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: d63000 */ee.Geometry.MultiPoint(
-        [[100.02776751691567, 0.7031128002633298],
-         [101.162109375, -1.8824432269136342]]);
+    geometry = /* color: d63000 */ee.Geometry.Polygon(
+        [[[99.11865234375, 0.5493079911125155],
+          [100.74462890625, -2.5699386165358713],
+          [102.01904296875, -2.657737790139788],
+          [101.953125, 0.5932511181408705]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(101.08245301691568, 0.7909959458718788, 5);// Riau 
 // Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
@@ -41,7 +43,8 @@ var printage = function(t, folder){
     image: img,
     description: taskname.getInfo(),
     scale: 100,
-    region: totalarea_outline,
+    region: geometry,
+    // region: totalarea_outline,
     maxPixels: 1e13
   });
   return(3);
