@@ -28,7 +28,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 // Map.setCenter(104.9853515625, -5.0909441750333855, 9) ;// Lampung
 Map.setCenter(114.43359375,-1.054627942275887, 6);// Kalimantan 
 Map.setCenter(96.6357421875, 4.718777551249855, 8);// Aceh
-Map.setCenter(101.162109375, -1.8824432269136342, 7)
+Map.setCenter(101.162109375, -1.8824432269136342, 7);// Barat
 var printage = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
@@ -457,15 +457,15 @@ var Gunarso_agefinal = yr.map(age);
 var t=2010;
 var p = printage(t, Gunarso_agefinal);
 t=2009; p = printage(t, Gunarso_agefinal);
-t=2008; p = printage(t, Gunarso_agefinal);
-t=2007; p = printage(t, Gunarso_agefinal);
-t=2006; p = printage(t, Gunarso_agefinal);
-t=2005; p = printage(t, Gunarso_agefinal);
-t=2004; p = printage(t, Gunarso_agefinal);
-t=2003; p = printage(t, Gunarso_agefinal);
-t=2002; p = printage(t, Gunarso_agefinal);
-t=2001; p = printage(t, Gunarso_agefinal);
-t=2000; p = printage(t, Gunarso_agefinal);
+// t=2008; p = printage(t, Gunarso_agefinal);
+// t=2007; p = printage(t, Gunarso_agefinal);
+// t=2006; p = printage(t, Gunarso_agefinal);
+// t=2005; p = printage(t, Gunarso_agefinal);
+// t=2004; p = printage(t, Gunarso_agefinal);
+// t=2003; p = printage(t, Gunarso_agefinal);
+// t=2002; p = printage(t, Gunarso_agefinal);
+// t=2001; p = printage(t, Gunarso_agefinal);
+// t=2000; p = printage(t, Gunarso_agefinal);
 // t=1999; p = printage(t, Gunarso_agefinal);
 // t=1998; p = printage(t, Gunarso_agefinal);
 // t=1997; p = printage(t, Gunarso_agefinal);
