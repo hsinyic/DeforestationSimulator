@@ -28,11 +28,12 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 // Map.setCenter(104.9853515625, -5.0909441750333855, 9) ;// Lampung
 Map.setCenter(114.43359375,-1.054627942275887, 6);// Kalimantan 
 Map.setCenter(96.6357421875, 4.718777551249855, 8);// Aceh
-Map.setCenter(101.162109375, -1.8824432269136342, 7);// Barat
+Map.setCenter(101.162109375, -1.8824432269136342, 6);// Barat
 var printage = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
+  // img = ee.Image([26]).where(img.lte(25).gte(0), img).clip(totalarea_outline)
   var taskname = ee.String('Age_Sumatera_Barat').cat(ee.String(year));
   Map.addLayer(img, {min: 0, max: 25,
     palette:[ yellow, gr, dg]}, year);
