@@ -34,8 +34,8 @@ var printage = function(t, folder){
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
   var taskname = ee.String('Age_Sumatera_Barat').cat(ee.String(year));
-  // Map.addLayer(img, {min: 0, max: 25,
-  //   palette:[ yellow, gr, dg]}, year);
+  Map.addLayer(img, {min: 0, max: 25,
+    palette:[ yellow, gr, dg]}, year);
   Export.image.toDrive({
     image: img,
     description: taskname.getInfo(),
