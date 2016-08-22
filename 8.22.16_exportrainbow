@@ -36,7 +36,7 @@ var printage = function(t, folder){
   t= ee.Number(t).subtract(1990);
   var img = ee.Image(folder.get(t));
   // img = ee.Image([26]).where(img.lte(25).gte(0), img).clip(totalarea_outline)
-  var taskname = ee.String('Age_Sumatera_Barat').cat(ee.String(year));
+  var taskname = ee.String('Age_Sumatera_Barat_Jambi_Riau').cat(ee.String(year));
   Map.addLayer(img, {min: 0, max: 25,
     palette:[ yellow, gr, dg]}, year);
   Export.image.toDrive({
@@ -98,6 +98,7 @@ var Sumatra = Jambi
 .merge(Sumatera_Barat)
 .merge(Bengkulu);
 
+var Sumatra_leftover = Riau.merge(Jambi).merge(Sumatera_Barat);
 
 // var Kalimantan_Timur = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Timur');
 // var Kalimantan_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Barat');
@@ -116,7 +117,7 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 
 
-var totalarea = Sumatra;
+var totalarea = Sumatra_leftover;
 var totalarea_outline = totalarea.geometry().bounds();
 
 
@@ -299,10 +300,10 @@ x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
-
+var taskname = ee.String('lossYear');
 Export.image.toDrive({
   image: lossYear,
-  description: ee.String('lossYear_rainbowed'),
+  description: 'lossYear',
   scale: 30,
   region: totalarea_outline,
   // region: totalarea_outline,
@@ -471,15 +472,15 @@ var Gunarso_agefinal = yr.map(age);
 var t=2010;
 var p = printage(t, Gunarso_agefinal);
 t=2009; p = printage(t, Gunarso_agefinal);
-// t=2008; p = printage(t, Gunarso_agefinal);
-// t=2007; p = printage(t, Gunarso_agefinal);
-// t=2006; p = printage(t, Gunarso_agefinal);
-// t=2005; p = printage(t, Gunarso_agefinal);
-// t=2004; p = printage(t, Gunarso_agefinal);
-// t=2003; p = printage(t, Gunarso_agefinal);
-// t=2002; p = printage(t, Gunarso_agefinal);
-// t=2001; p = printage(t, Gunarso_agefinal);
-// t=2000; p = printage(t, Gunarso_agefinal);
+t=2008; p = printage(t, Gunarso_agefinal);
+t=2007; p = printage(t, Gunarso_agefinal);
+t=2006; p = printage(t, Gunarso_agefinal);
+t=2005; p = printage(t, Gunarso_agefinal);
+t=2004; p = printage(t, Gunarso_agefinal);
+t=2003; p = printage(t, Gunarso_agefinal);
+t=2002; p = printage(t, Gunarso_agefinal);
+t=2001; p = printage(t, Gunarso_agefinal);
+t=2000; p = printage(t, Gunarso_agefinal);
 // t=1999; p = printage(t, Gunarso_agefinal);
 // t=1998; p = printage(t, Gunarso_agefinal);
 // t=1997; p = printage(t, Gunarso_agefinal);
