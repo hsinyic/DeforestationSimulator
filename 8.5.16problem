@@ -14,7 +14,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: d63000 */ee.Geometry.Polygon(
+    geometry = /* color: ffc82d */ee.Geometry.Polygon(
         [[[99.11865234375, 0.5493079911125155],
           [100.74462890625, -2.5699386165358713],
           [102.01904296875, -2.657737790139788],
@@ -33,7 +33,7 @@ Map.setCenter(96.6357421875, 4.718777551249855, 8);// Aceh
 Map.setCenter(101.162109375, -1.8824432269136342, 6);// Barat
 var printage = function(t, folder){
   var year = t.toString();
-  t= ee.Number(t).subtract(2000);
+  t= ee.Number(t).subtract(1990);
   var img = ee.Image(folder.get(t));
   // img = ee.Image([26]).where(img.lte(25).gte(0), img).clip(totalarea_outline)
   var taskname = ee.String('Age_Sumatera_Barat').cat(ee.String(year));
@@ -89,14 +89,14 @@ var Aceh = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Aceh');
 var Sumatera_Utara = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Utara');
 var Sumatera_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat');
 var Bengkulu = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Bengkulu');
-// var Sumatra = Jambi
-// .merge(Riau)
-// .merge(Lampung)
-// .merge(Sumatera_Selatan)
-// .merge(Aceh)
-// .merge(Sumatera_Utara)
-// .merge(Sumatera_Barat)
-// .merge(Bengkulu);
+var Sumatra = Jambi
+.merge(Riau)
+.merge(Lampung)
+.merge(Sumatera_Selatan)
+.merge(Aceh)
+.merge(Sumatera_Utara)
+.merge(Sumatera_Barat)
+.merge(Bengkulu);
 
 
 // var Kalimantan_Timur = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Timur');
@@ -116,7 +116,7 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 
 
-var totalarea = Sumatera_Barat;
+var totalarea = Sumatra;
 var totalarea_outline = totalarea.geometry().bounds();
 
 
@@ -298,6 +298,16 @@ x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
+
+
+Export.image.toDrive({
+  image: lossYear,
+  description: ee.String('lossYear_rainbowed'),
+  scale: 30,
+  region: totalarea_outline,
+  // region: totalarea_outline,
+  maxPixels: 1e13
+});
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
