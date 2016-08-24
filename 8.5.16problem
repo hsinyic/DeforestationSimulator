@@ -334,29 +334,6 @@ var year_2000 = Gunarso.expression(
     }
 ).rename(['year_2000']);
 
-var year_2005 = Gunarso.expression(
-'(OP05 ==1)? OP\
-  :( OP00==1&& OP05==0)? OTH2\
-  :( OP00==0&& OP05==0 && treecover2000<30)? NF\
-    :( OP00==0 && OP05==0 && treecover2000>=30 && lossYear==2000)? F\
-    :( OP00==0 && OP05==0 && treecover2000>=30 && lossYear>2005)? F\
-    :( OP00==0 && OP05==0 && treecover2000>=30 && lossYear<=2005 )? NF\
-        :OTH',
-    {  
-      'OP': Gunarso.select('blank').add(OP_color),
-      'F': Gunarso.select('blank').add(F_color),
-      'NF': Gunarso.select('blank').add(NF_color),
-      'OTH': Gunarso.select('blank').add(OTH_color),
-      'OTH2': Gunarso.select('blank').add(6),
-      'lossYear': Gunarso.select('lossyear'),
-      'OP00': Gunarso.select('OP00'),
-      'OP05': Gunarso.select('OP05'),
-      'treecover2000': Gunarso.select('treecover2000')
-    }
-).rename(['year_2005']);
-// print('year_2005',year_2005);
-    // Map.addLayer(year_2005, {min: 0, max: 6,
-    // palette:[db, lb, gr, yellow, red, whi, black ]},'year_2005');
 
 
 // ####################
