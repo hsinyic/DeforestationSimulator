@@ -14,10 +14,9 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: d63000 */ee.Geometry.MultiPoint();
+    geometry = /* color: 98ff00 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
-
+Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
 // Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
@@ -161,7 +160,6 @@ lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
 // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
 //     palette:[ red, yellow, gr ,db]}, 'lossYear original');
 
-
 //Expansion
 var lossYear_expand = lossYear.neq(2099); // make it binary 
 lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
@@ -218,8 +216,6 @@ var mincostmapping = function(t){
   return ee.Number(output.get('blank'));
 };
 var threshold = Target.map(mincostmapping);
-
-// print(threshold);
 var execute = function(x, offset){
   var year = x.toString();
   var t=ee.Number(x).toInt();
