@@ -43,7 +43,7 @@ var printage = function(t, folder){
     image: img,
     description: taskname.getInfo(),
     scale: 100,
-    region: geometry,
+    region: totalarea_outline,
     // region: totalarea_outline,
     maxPixels: 1e13
   });
@@ -88,8 +88,6 @@ var Sumatra = Jambi
 // var Kalimantan_Tengah = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Tengah');
 // var Kalimantan_Selatan = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Selatan');
 // var Kalimantan = Kalimantan_Timur.merge(Kalimantan_Barat).merge(Kalimantan_Tengah).merge(Kalimantan_Selatan);
-
-
 // var Papua_1 =Indonesia_1.filterMetadata('NAME_1', 'equals', 'Papua');
 // var Papua_2 =Indonesia_1.filterMetadata('NAME_1', 'equals', 'Irian Jaya Barat');
 // var Papua = Kalimantan_Timur.merge(Papua_2).merge(Papua_1);
@@ -100,7 +98,12 @@ var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 
 
-var totalarea = Sumatra;
+var Indonesia_2 = ee.FeatureCollection('ft:1Nh-DWDQzC4Wvh79jOZvNrSknlVYhCY4KUmMLK3V7', 'geometry');
+var Sumatera_Barat_2 = Indonesia_2.filterMetadata('name', 'equals', 'Sumatera barat');
+
+
+
+var totalarea = Sumatera_Barat_2;
 var totalarea_outline = totalarea.geometry().bounds();
 
 
