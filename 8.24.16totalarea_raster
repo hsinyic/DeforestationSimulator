@@ -31,17 +31,17 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Riau'));
+  var taskname = ee.String(year).cat(ee.String('Riau_NEW'));
   export_image = export_image.addBands(img);
   // Map.addLayer(img, {min: 0, max: 6,
   //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
-  // Export.image.toDrive({
-  //   image: img,
-  //   description: taskname.getInfo(),
-  //   scale: 100,
-  //   region: totalarea_outline,
-  //   maxPixels: 1e13
-  // });
+  Export.image.toDrive({
+    image: img,
+    description: taskname.getInfo(),
+    scale: 100,
+    region: totalarea_outline,
+    maxPixels: 1e13
+  });
 
   return(3);
 };
