@@ -33,8 +33,8 @@ var printclass = function(t, folder){
   var img = ee.Image(folder.get(t));
   var taskname = ee.String(year).cat(ee.String('Sumatra'));
   export_image = export_image.addBands(img);
-  Map.addLayer(img, {min: 0, max: 6,
-    palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
+  // Map.addLayer(img, {min: 0, max: 6,
+  //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
   // Export.image.toDrive({
   //   image: img,
   //   description: taskname.getInfo(),
@@ -208,7 +208,7 @@ var execute = function(x, offset){
   var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea_outline);
   var lossYear_update = lossYear.where(Binary.eq(1), t);
   var Binary_show = blank.where(Binary.eq(1), t);
-  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
