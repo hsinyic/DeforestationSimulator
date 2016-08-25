@@ -16,9 +16,9 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: 98ff00 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
+Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
 // Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
-Map.setCenter(101.964111328125, -1.5324100450044358, 5); //Bungo 
+// Map.setCenter(101.964111328125, -1.5324100450044358, 5); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 // Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
@@ -31,7 +31,7 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Sumatra'));
+  var taskname = ee.String(year).cat(ee.String('Riau'));
   export_image = export_image.addBands(img);
   // Map.addLayer(img, {min: 0, max: 6,
   //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
@@ -83,8 +83,9 @@ var Sumatra = Jambi
 .merge(Sumatera_Barat)
 .merge(Bengkulu);
 
-var totalarea = Sumatra;
-var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()});
+var totalarea = Riau_2;
+// var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+var totalarea_raster = totalarea.reduceToImage({properties: ['kode'],reducer: ee.Reducer.first()});
 var totalarea_outline = totalarea.geometry().bounds();
 
 
@@ -178,7 +179,7 @@ lossYear = lossYear_final;
 // ########
 var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea_outline); 
 var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
-var source = ee.Image([0]).where(totalarea_raster.neq(0),OP90); source = source.updateMask(source);
+var source = ee.Image([0]).where(totalarea_raster.neq(0),OP90).clip(totalarea_outline); source = source.updateMask(source);
 Map.addLayer(source, {min: 0, max: 1,palette:[lb, yellow ]}, "source 1990-2000");
 var cost = ee.Image([0]).add(1);
 cost = cost.clip(totalarea_outline);
@@ -208,7 +209,7 @@ var execute = function(x, offset){
   var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea_outline);
   var lossYear_update = lossYear.where(Binary.eq(1), t);
   var Binary_show = blank.where(Binary.eq(1), t);
-  Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
   return lossYear_update;
 };
 var offset = ee.Number(1990);
@@ -225,7 +226,7 @@ Designated = blank.where(
   .clip(totalarea_outline); 
 Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 // source = OP00.where(totalarea_raster.eq(0),0); source = source.updateMask(source);
-source = ee.Image([0]).where(totalarea_raster.neq(0),OP00); source = source.updateMask(source);
+source = ee.Image([0]).where(totalarea_raster.neq(0),OP00).clip(totalarea_outline); source = source.updateMask(source);
 cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 100 * 1000 });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
@@ -248,7 +249,7 @@ Designated = blank.where(
     (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1)
   .clip(totalarea_outline); 
 Target = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
-source = ee.Image([0]).where(totalarea_raster.neq(0),OP05); source = source.updateMask(source);
+source = ee.Image([0]).where(totalarea_raster.neq(0),OP05).clip(totalarea_outline); source = source.updateMask(source);
 cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 100 * 1000 });
 costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
