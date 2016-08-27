@@ -21,7 +21,6 @@ var scale = ee.Number(1000);
 // ########
 // # Step 0) Define Region of Interest, Name Hansen Layer, Import vector data and convert to raster
 // ########
-
 // # Define Region of Interest  
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var addprovinces = function(name, prev){
@@ -160,6 +159,13 @@ lossYear = Hansen_update;
 Hansen_update = buffer(Designated05, Target05,source05, years05); 
 lossYear = Hansen_update; 
 
+  Export.image.toDrive({
+    image: lossYear,
+    description: 'lossYear_buffered_rainbow',
+    scale: 100,
+    region: totalarea_outline,
+    maxPixels: 1e13
+  });
 
 // ########
 // # Step 3) Intermediate Layer : Create year_2000 land use clasfficiation  
@@ -257,7 +263,20 @@ var annual = function(t){
 };
 var Gunarso = yr.map(annual);
 
-
+var printclass = function(t, folder){
+  var year = t.toString();
+  t= ee.Number(t).subtract(2000);
+  var img = ee.Image(folder.get(t));
+  var taskname = ee.String(year).cat(ee.String('Test_Riau2_smaller'));
+  Export.image.toDrive({
+    image: img,
+    description: taskname.getInfo(),
+    scale: 100,
+    region: totalarea_outline,
+    maxPixels: 1e13
+  });
+  return(3);
+};
 //Display all maps, and export them 
 var t=2010; var p0= printclass(t, Gunarso);
 t=2009; p0= printclass(t, Gunarso);
@@ -273,17 +292,3 @@ t=2000; p0= printclass(t, Gunarso);
 
 
 
-var printclass = function(t, folder){
-  var year = t.toString();
-  t= ee.Number(t).subtract(2000);
-  var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Test_Riau2_smaller'));
-  Export.image.toDrive({
-    image: img,
-    description: taskname.getInfo(),
-    scale: 100,
-    region: totalarea_outline,
-    maxPixels: 1e13
-  });
-  return(3);
-};
