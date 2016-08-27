@@ -38,7 +38,7 @@ var printclass = function(t, folder){
 };
 
 
-// Define boundary 
+// Define Region of Interest  
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var addprovinces = function(name, prev){
   name = ee.String(name);
@@ -46,12 +46,12 @@ var addprovinces = function(name, prev){
   return ee.FeatureCollection(prev
           .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
 };
-// R1, R2 splits the province Riau, and doesn't work 
+// area_notworking: R1, R2 splits the province Riau, and doesn't work 
 var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
 var R2  =  ee.List(['Rokan Hulu','Rokan Hilir','Dumai','Bengkalis'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Siak'));
-// area_works, works, and is a bigger area 
+// area_working: works, and is a bigger area 
 var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
 var totalarea = ee.FeatureCollection(area_works);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
@@ -194,10 +194,6 @@ Hansen_update = buffer(Designated05, Target05,source05, years05);
 lossYear = Hansen_update; 
 
 
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
-
-
-
 var Gunarso = ee.Image([lossYear,OP90, OP00, OP05,OP10, treecover2000,blank]);
 
 // code NF, F, OPR, OP into numbers 
@@ -229,9 +225,7 @@ var year_2000 = Gunarso.expression(
 // #########################a
 // #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2010
 // #########################
-var Gunarso_intermediate = ee.Image([lossYear]);
-Gunarso_intermediate= Gunarso_intermediate.addBands([year_2000, blank, OP00, OP05, OP10, OP90 ]);
-
+var Gunarso_intermediate = ee.Image([lossYear,year_2000, blank, OP00, OP05, OP10, OP90]);
 var yr = ee.List.sequence(2000, 2010, 1);
 var annual = function(t){
   var timestamp = t.toString();
@@ -293,10 +287,10 @@ var annual = function(t){
   var final_yearmap = ee.Image([0]).where(totalarea_raster.neq(0), yearmap);
   return ee.Image(final_yearmap).clip(totalarea_outline);
 };
-
-
 var Gunarso = yr.map(annual);
-var export_image = ee.Image([0]);
+
+
+//Display all maps, and export them 
 var t=2010; var p0= printclass(t, Gunarso);
 t=2009; p0= printclass(t, Gunarso);
 t=2008; p0= printclass(t, Gunarso);
