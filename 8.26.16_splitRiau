@@ -82,16 +82,16 @@ var Sumatra = Jambi
 .merge(Sumatera_Utara)
 .merge(Sumatera_Barat)
 .merge(Bengkulu);
-print()
 
-// var addprovinces = function(riau, image){
-//   riau = ee.Number(index);
-//   image = ee.Image(image);
-//   var after = ee.Number(external_list.get(index));// 1, 3, 5, 
-//   var before = ee.Number(ee.Algorithms.If(index.neq(0), external_list.get(index.subtract(1)), 0));
-//   // 0, 1, 3, 
-//   return ee.Image(image.add(after.subtract(before)));
-// };
+
+var addprovinces = function(fea, prev){
+  fea = ee.String(fea);
+  image = ee.Image(image);
+  var after = ee.Number(external_list.get(index));// 1, 3, 5, 
+  var before = ee.Number(ee.Algorithms.If(index.neq(0), external_list.get(index.subtract(1)), 0));
+  // 0, 1, 3, 
+  return ee.Image(image.add(after.subtract(before)));
+};
 
 // var R1 =  ee.List('Indragiri Hilir','Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru');
 // var R2  =  ee.List('Siak','Rokan Hulu','Rokan Hilir','Dumai','Bengkalis');
