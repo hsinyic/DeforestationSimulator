@@ -167,7 +167,7 @@ lossYear = Hansen_update;
   });
   
 // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), 
-// {min: 1990, max: 2010, palette: ['ff510f', '#fff832', '#4cff62' ,'0000FF' ]}, 'updated Hansen');
+// {min: 1990, max: 2010, palette: ['ff510f', '#fff832', '#4cff62' ,'0000FF' ]}, 'lossYear layer');
 
 
 
