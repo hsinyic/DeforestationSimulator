@@ -93,7 +93,7 @@ var addprovinces = function(index, image){
   return ee.Image(image.add(after.subtract(before)));
 };
 
-var R1 =  ee.List(': Indragiri Hilir','','');
+var R1 =  ee.List('Indragiri Hilir','Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar');
 var R2  =  ee.List('','','');
 
 var R1
