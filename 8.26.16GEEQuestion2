@@ -38,7 +38,7 @@ var addprovinces = function(name, prev){
     // area_notworking: R1, R2 splits the province Riau, and doesn't work 
 var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru'])
           .iterate(addsubprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
-var R2  =  ee.List(['Rokan Hilir','Bengkalis'])//,'Dumai','Siak'])
+var R2  =  ee.List(['Rokan Hilir','Bengkalis','Dumai','Siak'])
           .iterate(addsubprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
     // area_working: works, and is a bigger area 
 var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); // Individual province 
@@ -48,7 +48,7 @@ var largearea_works =  ee.List(['Kalimantan Timur','Kalimantan Barat', 'Kalimant
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(area_works);
+var totalarea = ee.FeatureCollection(R2);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
