@@ -19,13 +19,25 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
 Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Jambi 
 
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ('#ff8f7d').toString();
+var dg= ('#196e0a').toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
+var pink = ('#ff50f1').toString();
+var scale = ee.Number(1000); 
+
 var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Test_Jambi'));
-  // Map.addLayer(img, {min: 0, max: 6,
-  //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
+  var taskname = ee.String(year).cat(ee.String('Test_Riau2'));
+  Map.addLayer(img, {min: 0, max: 6,
+    palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
   Export.image.toDrive({
     image: img,
     description: taskname.getInfo(),
@@ -52,7 +64,7 @@ var R2  =  ee.List(['Rokan Hulu','Rokan Hilir','Dumai','Bengkalis'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Siak'));
 // area_working: works, and is a bigger area 
 var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
-var totalarea = ee.FeatureCollection(area_works);
+var totalarea = ee.FeatureCollection(R2);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -191,6 +203,9 @@ source05 = source05.updateMask(source05);
 var years05  = ee.List.sequence(2006, 2010,1);
 Hansen_update = buffer(Designated05, Target05,source05, years05); 
 lossYear = Hansen_update; 
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
+
+
 
 
 var Gunarso = ee.Image([lossYear,OP90, OP00, OP05,OP10, treecover2000,blank]);
