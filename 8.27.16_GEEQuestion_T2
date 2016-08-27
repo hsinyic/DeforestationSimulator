@@ -35,6 +35,7 @@ var R2  =  ee.List(['Rokan Hilir','Bengkalis','Dumai','Siak'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
     // area_working: works, and is a bigger area 
 var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+
     // define totalarea 
 var totalarea = ee.FeatureCollection(R2);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
