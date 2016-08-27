@@ -96,8 +96,6 @@ var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', '
 var R2  =  ee.List(['Rokan Hulu','Rokan Hilir','Dumai','Bengkalis'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Siak'));
 
-// print(R1,R2);
-
 
 var totalarea = ee.FeatureCollection(R1);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
