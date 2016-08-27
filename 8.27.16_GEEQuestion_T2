@@ -31,7 +31,7 @@ var addprovinces = function(name, prev){
     // area_notworking: R1, R2 splits the province Riau, and doesn't work 
 var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
-var R2  =  ee.List(['Rokan Hilir','Bengkalis'])//,'Dumai','Siak'])
+var R2  =  ee.List(['Rokan Hilir','Bengkalis','Dumai','Siak'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
     // area_working: works, and is a bigger area 
 var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
