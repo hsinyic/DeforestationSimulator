@@ -16,7 +16,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
     geometry = /* color: d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
+// Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
 // Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 5); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
@@ -26,7 +26,7 @@ Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau
 // Map.setCenter(104.9853515625, -5.0909441750333855, 9) ;// Lampung
 // Map.setCenter(114.43359375,-1.054627942275887, 6);// Kalimantan 
 // Map.setCenter(96.6357421875, 4.718777551249855, 8);// Aceh
-// Map.setCenter(101.162109375, -1.8824432269136342, 6);// Barat
+Map.setCenter(101.162109375, -1.8824432269136342, 6);// Barat
 var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
@@ -97,7 +97,7 @@ var R2  =  ee.List(['Rokan Hulu','Rokan Hilir','Dumai','Bengkalis'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Siak'));
 
 
-var totalarea = ee.FeatureCollection(R2);
+var totalarea = ee.FeatureCollection(Sumatera_Utara);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 // var totalarea_raster = totalarea.reduceToImage({properties: ['kode'],reducer: ee.Reducer.first()});
 var totalarea_outline = totalarea.geometry().bounds();
@@ -201,14 +201,11 @@ var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]);
 var source = ee.Image([0]).where(totalarea_raster.neq(0),OP90).clip(totalarea_outline); source = source.updateMask(source);
 var years = ee.List.sequence(1991, 2000,1);
 
-
 var buffer = function(Designated, Target,source, years ){
   var offset = ee.Number(years.get(0)).subtract(1);
   var cumulativeCost = ee.Image([1]).clip(totalarea_outline).cumulativeCost({source: source,maxDistance: 100 * 1000 });
   var costmap = blank.where(Designated.eq(1), cumulativeCost);
   costmap = costmap.updateMask(costmap);
-  Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
-      palette:[db, lb, gr, yellow, red, whi  ]}, "cumulative cost 2000-2005");
   var mincostmapping = function(t){
     t= ee.Number(t);
     var N_target = ee.Number(Target.get(t));
@@ -238,7 +235,6 @@ var buffer = function(Designated, Target,source, years ){
     return ee.Image(lossYear_update);
   };
   var map = ee.Image(years.iterate(execute, lossYear)); 
-
   return map;
 };
 
@@ -277,8 +273,8 @@ lossYear = Hansen_update;
 
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
-/*
 
+/*
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
 // ####################
@@ -415,7 +411,6 @@ t=2003; p0= printclass(t, Gunarso);
 t=2002; p0= printclass(t, Gunarso);
 t=2001; p0= printclass(t, Gunarso);
 t=2000; p0= printclass(t, Gunarso);
-
 
 
 */
