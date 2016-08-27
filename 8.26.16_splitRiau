@@ -93,8 +93,11 @@ var addprovinces = function(fea, prev){
   return ee.Image(image.add(after.subtract(before)));
 };
 
-// var R1 =  ee.List('Indragiri Hilir','Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru');
-// var R2  =  ee.List('Siak','Rokan Hulu','Rokan Hilir','Dumai','Bengkalis');
+var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru'])
+          .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
+var R2  =  ee.List(['Rokan Hulu','Rokan Hilir','Dumai','Bengkalis'])
+          .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Siak'));
+
 
 
 var totalarea = Riau_2;
@@ -102,6 +105,7 @@ var totalarea = Riau_2;
 var totalarea_raster = totalarea.reduceToImage({properties: ['kode'],reducer: ee.Reducer.first()});
 var totalarea_outline = totalarea.geometry().bounds();
 
+/*
 
 //Import Hansen Global Data set 
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
@@ -420,3 +424,4 @@ t=2000; p0= printclass(t, Gunarso);
 
 
 
+*/
