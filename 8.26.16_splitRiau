@@ -86,11 +86,9 @@ var Sumatra = Jambi
 
 var addprovinces = function(name, prev){
   name = ee.String(name);
-  prev = ee.Feature(image);
-  var after = ee.Number(external_list.get(index));// 1, 3, 5, 
-  var before = ee.Number(ee.Algorithms.If(index.neq(0), external_list.get(index.subtract(1)), 0));
-  // 0, 1, 3, 
-  return ee.Image(image.add(after.subtract(before)));
+  prev = ee.FeatureCollection(prev);
+  return ee.FeatureCollection(prev
+          .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
 };
 
 var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru'])
@@ -98,14 +96,15 @@ var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', '
 var R2  =  ee.List(['Rokan Hulu','Rokan Hilir','Dumai','Bengkalis'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Siak'));
 
+print(R1,R2);
 
 
-var totalarea = Riau_2;
+var totalarea = ee.FeatureCollectionR1;
 // var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_raster = totalarea.reduceToImage({properties: ['kode'],reducer: ee.Reducer.first()});
 var totalarea_outline = totalarea.geometry().bounds();
 
-/*
+
 
 //Import Hansen Global Data set 
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
@@ -424,4 +423,3 @@ t=2000; p0= printclass(t, Gunarso);
 
 
 
-*/
