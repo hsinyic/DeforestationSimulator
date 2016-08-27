@@ -17,25 +17,12 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Jambi 
 
-
 var scale = ee.Number(1000); 
-var printclass = function(t, folder){
-  var year = t.toString();
-  t= ee.Number(t).subtract(2000);
-  var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Test_Riau2_smaller'));
-  Export.image.toDrive({
-    image: img,
-    description: taskname.getInfo(),
-    scale: 100,
-    region: totalarea_outline,
-    maxPixels: 1e13
-  });
-  return(3);
-};
+// ########
+// # Step 0) Define Region of Interest, Name Hansen Layer, Import vector data and convert to raster
+// ########
 
-
-// Define Region of Interest  
+// # Define Region of Interest  
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
 var addprovinces = function(name, prev){
   name = ee.String(name);
@@ -56,14 +43,14 @@ var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee
 var totalarea_outline = totalarea.geometry().bounds();
 
 
-//Import Hansen Global Data set 
+// #Import Hansen  Data set 
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
-var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea_outline);
+var blank = ee.Image([0]).rename(['blank']).clip(totalarea_outline);
 
 
-//Import Vector Data and convert to Raster 
+// #Import Vector Data and convert to Raster 
 var convert_to_image = function(feature){
   feature = ee.FeatureCollection(feature);
   return feature.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
@@ -86,7 +73,7 @@ OP05 = OP05.where(OP00.eq(1), 1);
 OP10 = OP10.where(OP05.eq(1), 1);
 
 // ########
-// # Load Hansen of lossYear, perform speckle filtering and majority sampling 
+// # Step 1) Intermediate Layer Load Hansen of lossYear, perform speckle filtering and majority sampling 
 // ########
 var binary_pre = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 ).clip(totalarea_outline);
 var binary = ee.Image([0]).where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
@@ -103,14 +90,8 @@ var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary
 lossYear = lossYear_final; 
 
 
-// ############
-// # Step 2: Preliminary data processing 
-// # 1) Buffer by field treatment 
-// # 2) Create 2000 Basemap  
-// ############
-
 // ########
-// # Step 2)Preliminary data processing  1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
+// # Step 2) Intermediate Layer :  1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
 // ########
 // Set scale for buffering (e.g.,reduceRegion percentile operation)
 var scale = ee.Number(1000); 
@@ -210,7 +191,7 @@ var year_2000 = Gunarso.expression(
 
 
 // #########################a
-// #Step4 : Land use classifications,  2000 to 2010 
+// #Step4 : Final Product: Land use classifications,  2000 to 2010 
 // #########################
 var Gunarso_intermediate = ee.Image([lossYear,year_2000, blank, OP00, OP05, OP10, OP90]);
 var yr = ee.List.sequence(2000, 2010, 1);
@@ -292,3 +273,17 @@ t=2000; p0= printclass(t, Gunarso);
 
 
 
+var printclass = function(t, folder){
+  var year = t.toString();
+  t= ee.Number(t).subtract(2000);
+  var img = ee.Image(folder.get(t));
+  var taskname = ee.String(year).cat(ee.String('Test_Riau2_smaller'));
+  Export.image.toDrive({
+    image: img,
+    description: taskname.getInfo(),
+    scale: 100,
+    region: totalarea_outline,
+    maxPixels: 1e13
+  });
+  return(3);
+};
