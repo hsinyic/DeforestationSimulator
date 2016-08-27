@@ -113,6 +113,8 @@ var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea_outline);
 
 
 //Import Vector Data  
+
+
 var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
 var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
@@ -274,7 +276,7 @@ lossYear = Hansen_update;
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
 
-/*
+
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
 // ####################
@@ -413,4 +415,4 @@ t=2001; p0= printclass(t, Gunarso);
 t=2000; p0= printclass(t, Gunarso);
 
 
-*/
+
