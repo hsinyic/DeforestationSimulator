@@ -196,46 +196,14 @@ lossYear = lossYear_final;
 // // ########
 // // # 1990 to 2000 annual maps 
 // // ########
-// var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea_outline); 
-// var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
-// var source = ee.Image([0]).where(totalarea_raster.neq(0),OP90).clip(totalarea_outline); source = source.updateMask(source);
-// var mincostmapping = function(t){
-//   t= ee.Number(t);
-//   var N_target = ee.Number(Target.get(t));
-//   var output = costmap.reduceRegion({
-//     reducer: ee.Reducer.percentile([t.multiply(100)]),
-//     geometry: totalarea,
-//     scale: scale,
-//     maxPixels: 12e9,
-//   });
-//   return ee.Number(output.get('blank'));
-// };
-// var threshold = Target.map(mincostmapping);
-
-
-// var years = ee.List.sequence(1991, 2000,1);
-// var Hansen_update = ee.Image(years.iterate(execute, lossYear)); 
-// lossYear = Hansen_update;
-
-// ########
-// # 2000 to 2005 annual maps 
-// ########
-//Set aparameters 
-var Designated = blank.where(
-  (OP00.eq(0).and(OP05.eq(1)))
-  .and(
-    (lossYear.lte(2000)).or(lossYear.gt(2005)).or(lossYear.eq(99))), 1)
-  .clip(totalarea_outline); 
-var Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
-var source = ee.Image([0]).where(totalarea_raster.neq(0),OP00).clip(totalarea_outline); source = source.updateMask(source);
-var years = ee.List.sequence(2001, 2005,1);
-
-
-
+var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea_outline); 
+var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
+var source = ee.Image([0]).where(totalarea_raster.neq(0),OP90).clip(totalarea_outline); source = source.updateMask(source);
+var years = ee.List.sequence(1991, 2000,1);
 
 
 var buffer = function(Designated, Target,source, years ){
-  var offset = ee.Number(years.get(0));//2001 as offset 
+  var offset = ee.Number(years.get(0)).subtract(1);
   var cumulativeCost = ee.Image([1]).clip(totalarea_outline).cumulativeCost({source: source,maxDistance: 100 * 1000 });
   var costmap = blank.where(Designated.eq(1), cumulativeCost);
   costmap = costmap.updateMask(costmap);
@@ -252,9 +220,9 @@ var buffer = function(Designated, Target,source, years ){
     });
     return ee.Number(output.get('blank'));
   };
-  print('here1');
+  // print('here1');
   var threshold = Target.map(mincostmapping); // get cumulative cost maps AND threshold 
-  print(threshold);
+  // print(threshold);
   var execute = function(x, prev){
     x= ee.Number(x);
     prev = ee.Image(prev);
@@ -276,24 +244,36 @@ var buffer = function(Designated, Target,source, years ){
 
 
 var Hansen_update = buffer(Designated, Target,source, years); 
+lossYear = Hansen_update;
+
+// ########
+// # 2000 to 2005 annual maps 
+// ########
+//Set aparameters 
+var Designated = blank.where(
+  (OP00.eq(0).and(OP05.eq(1)))
+  .and(
+    (lossYear.lte(2000)).or(lossYear.gt(2005)).or(lossYear.eq(99))), 1)
+  .clip(totalarea_outline); 
+var Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
+var source = ee.Image([0]).where(totalarea_raster.neq(0),OP00).clip(totalarea_outline); source = source.updateMask(source);
+var years = ee.List.sequence(2001, 2005,1);
+var Hansen_update = buffer(Designated, Target,source, years); 
 lossYear = Hansen_update; 
 
-// // ########
-// // # 2005 to 2010 annual maps 
-// // ########
-// Designated = blank.where(
-//   (OP05.eq(0).and(OP10.eq(1)))
-//   .and(
-//     (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1)
-//   .clip(totalarea_outline); 
-// Target = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
-// source = ee.Image([0]).where(totalarea_raster.neq(0),OP05).clip(totalarea_outline); source = source.updateMask(source);
-// years = ee.List.sequence(2006, 2010,1);
-
-
-// Hansen_update = buffer(Designated, Target,source, years); 
-// lossYear = Hansen_update; 
-
+// ########
+// # 2005 to 2010 annual maps 
+// ########
+Designated = blank.where(
+  (OP05.eq(0).and(OP10.eq(1)))
+  .and(
+    (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1)
+  .clip(totalarea_outline); 
+Target = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
+source = ee.Image([0]).where(totalarea_raster.neq(0),OP05).clip(totalarea_outline); source = source.updateMask(source);
+years = ee.List.sequence(2006, 2010,1);
+Hansen_update = buffer(Designated, Target,source, years); 
+lossYear = Hansen_update; 
 
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
