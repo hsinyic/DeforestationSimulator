@@ -9,14 +9,6 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     fusionTable = ee.FeatureCollection("ft:1S4EB6319wWW2sWQDPhDvmSBIVrD3iEmCLYB7nMM"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
-var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
-var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
-var totalarea = malaysia.merge(indonesia).merge(PNG);
-
-
-
-
 /***
  * Generates a regular grid using given bounds.
  */
@@ -55,73 +47,41 @@ var coverByGrid = function(geom, dx, dy) {
   
   return generateGrid(xmin, ymin, xmax, ymax, dx, dy).filterBounds(geom).map(function(c) { return ee.Feature(c).intersection(geom) })
 }
-// print('malaysia',malaysia);
 
-var states = ee.FeatureCollection(malaysia);
-
-Map.addLayer(ee.Image().paint(states, 1, 1), {}, 'Peninsula_outline')
-
-print(malaysia);
+var states = ee.FeatureCollection('ft:1S4EB6319wWW2sWQDPhDvmSBIVrD3iEmCLYB7nMM')
+var states_indo = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry')
+// Map.addLayer(ee.Image().paint(states, 1, 1), {}, 'states')
+Map.addLayer(ee.Image().paint(states_indo, 1, 1), {}, 'states')
 
 
-// var areaDiff = function(feature) {
-//   // Compute area in sq. km. directly from the geometry.
-//   var area = feature.geometry().area().divide(1000 * 1000);
-//   // Compute the differece between computed area and the area property.
-//   // Return the feature with the squared difference set to the 'diff' property.
-//   return ee.Feature(area);
-// };
-
-// // var filterPenn = ee.Number(Peninsula_outline
-// //     .map(areaDiff)
-// //     // Reduce to get the mean squared difference.
-// //     .reduceColumns(ee.Reducer.mean(), ['diff'])
-// //     .get('mean'))
-// //     // Compute the square root of the mean square to get RMSE.
-// //     .sqrt();
-
-// // var test = ee.FeatureCollection(Peninsula_outline).map(areaDiff);
-// // print(test)
-
-var state = states.filter(ee.Filter.or(ee.Filter.eq('Soil', 'Mineral'))).geometry();
-// // var state = states.select(0).geometry();
+// var state = states_indo.filter(ee.Filter.eq('NAME_1', 'Riau')).union(100).geometry();
+var Riau = states_indo.filterMetadata('NAME_1', 'equals', 'Riau').union(100).geometry();
+Riau = Riau.bounds();
+// state = Riau ;
+// print(state);
+print(Riau)
+Map.addLayer(ee.Image().paint(Riau, 1, 1), {}, 'states')
 
 
-// // var islandsWithArea = islandsprep.map(function(f) {
-// // return f.set('area', f.geometry().area(5))});
-// // // addToMap(withArea);
-
-// // var islands = islandsWithArea.filterMetadata('area', 'greater_than', resolution.multiply(resolution).multiply(numberofbands));
-// // // addToMap(islands, {color: '900000'}, 'Big Islands');
-
-
-// var Pennarea = Peninsula_outline.map(function(f) {
-// return f.set('area', f.geometry().area(5))});
-// // addToMap(withArea);
-
-// var resolution = ee.Number(300); 
-// var NewPenn = Pennarea.filterMetadata('area', 'greater_than', resolution.multiply(resolution));
-// // addToMap(islands, {color: '900000'}, 'Big Islands');
-
-
-var stateGrid = coverByGrid(Peninsula_outline, 3, 3)
+var stateGrid = coverByGrid(Riau, 2, 2)
 Map.addLayer(stateGrid, {color:'222299'}, 'grid')
+print(stateGrid);
+Map.centerObject(center, 5)
 
-Map.centerObject(center, 6)
 
+/*
+var input = image.eq(classes.get('forest')).multiply(ee.Image.pixelArea().divide(1000000))
 
-
-/*var input = image.eq(classes.get('forest')).multiply(ee.Image.pixelArea().divide(1000000))
-*/
 // 1 degree cells
-// var area = stateGrid.map(function(c) {
-//     return ee.Feature(null, 
-//       input.reduceRegion({
-//           reducer: ee.Reducer.sum(), 
-//           geometry: ee.Feature(c).geometry(), 
-//           scale: 30,
-//           maxPixels: 1e9}))
-//   })
-// }).flatten()
+var area = stateGrid.map(function(c) {
+    return ee.Feature(null, 
+      input.reduceRegion({
+          reducer: ee.Reducer.sum(), 
+          geometry: ee.Feature(c).geometry(), 
+          scale: 30,
+          maxPixels: 1e9}))
+  })
+}).flatten()
 
+*/
 
