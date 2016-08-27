@@ -12,12 +12,11 @@ var algo = function(index, image){
 
 
 // var initial_state = gfc.select(['lossyear']);
-var initial_state = ee.Image([0]);
+var initial_state = ee.Image([2]);
 var external_list = ee.List([1,3,5,7]);
 
 var result = ee.List([0,1,2]).iterate(algo, initial_state);
 print(result);
 
 
-//Success 
 
