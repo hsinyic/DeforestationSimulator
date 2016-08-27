@@ -84,9 +84,9 @@ var Sumatra = Jambi
 .merge(Bengkulu);
 
 
-var addprovinces = function(fea, prev){
-  fea = ee.String(fea);
-  image = ee.Image(image);
+var addprovinces = function(name, prev){
+  name = ee.String(name);
+  prev = ee.Feature(image);
   var after = ee.Number(external_list.get(index));// 1, 3, 5, 
   var before = ee.Number(ee.Algorithms.If(index.neq(0), external_list.get(index.subtract(1)), 0));
   // 0, 1, 3, 
