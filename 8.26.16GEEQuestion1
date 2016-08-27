@@ -24,7 +24,6 @@ var printclass = function(t, folder){
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
   var taskname = ee.String(year).cat(ee.String('Test_Jambi'));
-  export_image = export_image.addBands(img);
   // Map.addLayer(img, {min: 0, max: 6,
   //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
   Export.image.toDrive({
@@ -204,7 +203,7 @@ var OP_color = 4;
 var NOP_color = 5;
 var OTH_color = 6;
 
-// Create year_2000 and year_2005 classified layer of OP, F, NF  
+// Create year_2000 classified layer of OP, F, NF  
 var year_2000 = Gunarso.expression(
 '(OP00 ==1)? OP\
   :((OP00==0) && treecover2000>=30)? F\
@@ -223,7 +222,7 @@ var year_2000 = Gunarso.expression(
 
 
 // #########################a
-// #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2010
+// #Step4 : Land use classifications,  2000 to 2010 
 // #########################
 var Gunarso_intermediate = ee.Image([lossYear,year_2000, blank, OP00, OP05, OP10, OP90]);
 var yr = ee.List.sequence(2000, 2010, 1);
