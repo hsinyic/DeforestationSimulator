@@ -17,24 +17,12 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     geometry = /* color: d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
-// Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
-// Map.setCenter(101.964111328125, -1.5324100450044358, 5); //Bungo 
-// Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
-// Map.setCenter(102.10693359375, 3.973860975839102, 9);
-// Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
-// Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
-// Map.setCenter(104.9853515625, -5.0909441750333855, 9) ;// Lampung
-// Map.setCenter(114.43359375,-1.054627942275887, 6);// Kalimantan 
-// Map.setCenter(96.6357421875, 4.718777551249855, 8);// Aceh
-// Map.setCenter(101.162109375, -1.8824432269136342, 6);// Barat
 var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Test_Sumatera_Barat'));
+  var taskname = ee.String(year).cat(ee.String('Test_Riau1'));
   export_image = export_image.addBands(img);
-  // Map.addLayer(img, {min: 0, max: 6,
-  //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
   Export.image.toDrive({
     image: img,
     description: taskname.getInfo(),
@@ -45,44 +33,9 @@ var printclass = function(t, folder){
 
   return(3);
 };
-// NOT IMPORTANT add name string for colors, so I don't have to input the colors   
-var db= ('0000FF').toString();
-var lb= ('#11ffff').toString();
-var red=('ff510f').toString();
-var lr = ('#ff8f7d').toString();
-var dg= ('#196e0a').toString();
-var yellow=('#fff832').toString();
-var gr= ('#4cff62').toString();
-var whi=('#f7f7f7').toString();
-var black = ('#101010').toString();
-var pink = ('#ff50f1').toString();
+
 var scale = ee.Number(1000); 
-
-
-var Indonesia_2 = ee.FeatureCollection('ft:1Nh-DWDQzC4Wvh79jOZvNrSknlVYhCY4KUmMLK3V7', 'geometry');
-var Sumatera_Barat_2 = Indonesia_2.filterMetadata('name', 'equals', 'Sumatera barat');
-var Jambi_2 = Indonesia_2.filterMetadata('name', 'equals', 'Jambi');
-var Riau_2 = Indonesia_2.filterMetadata('name', 'equals', 'Riau');
-var Aceh_2 = Indonesia_2.filterMetadata('name', 'equals', 'Aceh');
-
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
-var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
-var Lampung = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Lampung');
-var Sumatera_Selatan = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Selatan'); 
-var Riau = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Riau');
-var Aceh = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Aceh');
-var Sumatera_Utara = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Utara');
-var Sumatera_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat');
-var Bengkulu = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Bengkulu');
-var Sumatra = Jambi
-.merge(Riau)
-.merge(Lampung)
-.merge(Sumatera_Selatan)
-.merge(Aceh)
-.merge(Sumatera_Utara)
-.merge(Sumatera_Barat)
-.merge(Bengkulu);
-
 
 var addprovinces = function(name, prev){
   name = ee.String(name);
@@ -90,16 +43,14 @@ var addprovinces = function(name, prev){
   return ee.FeatureCollection(prev
           .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
 };
-
 var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
 var R2  =  ee.List(['Rokan Hulu','Rokan Hilir','Dumai','Bengkalis'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Siak'));
 
 
-var totalarea = ee.FeatureCollection(Sumatera_Barat);
+var totalarea = ee.FeatureCollection(R1);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
-// var totalarea_raster = totalarea.reduceToImage({properties: ['kode'],reducer: ee.Reducer.first()});
 var totalarea_outline = totalarea.geometry().bounds();
 
 
@@ -113,6 +64,23 @@ var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea_outline);
 
 
 //Import Vector Data  
+
+var convert_to_image = function(feature){
+  feature = ee.FeatureCollection(feature);
+  return feature.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+};
+var concatenate = function(map, prev){
+  map = ee.Image(map);
+  return ee.Image(prev.where(map.eq(1),1));
+};
+var layer90 = ee.List([Pen90, ma90,in90]).map(convert_to_image);
+var layer00 = ee.List([Pen00, ma00,in00]).map(convert_to_image);
+var layer05 = ee.List([Pen05, ma05,in05]).map(convert_to_image);
+var layer10 = ee.List([Pen10, ma10,in10]).map(convert_to_image);
+
+
+var OP90_new = ee.List.sequence(1,3,1).iterate(concatenate, blank) ;
+print(OP90_new);
 
 
 var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
@@ -145,10 +113,6 @@ var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(i
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
-// Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
-// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
-// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
-// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
 
 
 // ########
@@ -156,38 +120,16 @@ var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(i
 // ########
 var binary_pre = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 ).clip(totalarea_outline);
 var binary = ee.Image([0]).where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
-// Map.addLayer(binary, {min: 0, max: 2,palette:[ whi,gr , db]}, 'binary');
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear original');
-
 //Expansion
 var lossYear_expand = lossYear.neq(2099); // make it binary 
 lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
 lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
-
 //Replant 
-
-// Tester -- round up number 
-// print(ee.Number(17).divide(2).ceil().multiply(2));
-
-// Smooth by a bin of 2 years 
 var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
-// Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)), {min: 2000, max: 2014,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear_replant round up bin 2');
-// Fill in  
 lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square'));
-// Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear_replant square focal');
-// Remove Speckles 
 lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
-// Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear_replant remove pixels');
-
-
 //Final assembling 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
-// Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear final');
 lossYear = lossYear_final; 
 
 
@@ -195,9 +137,9 @@ lossYear = lossYear_final;
 
 
 
-// // ########
-// // # 1990 to 2000 annual maps 
-// // ########
+// ########
+// # 1990 to 2000 annual maps 
+// ########
 var Designated90 = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea_outline); 
 var Target90 = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
 var source90 = ee.Image([0]).where(totalarea_raster.neq(0),OP90).clip(totalarea_outline); 
@@ -274,7 +216,6 @@ var years05  = ee.List.sequence(2006, 2010,1);
 Hansen_update = buffer(Designated05, Target05,source05, years05); 
 lossYear = Hansen_update; 
 
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
 
 
