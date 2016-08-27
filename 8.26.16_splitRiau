@@ -94,7 +94,7 @@ var addprovinces = function(index, image){
 };
 
 var R1 =  ee.List('Indragiri Hilir','Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru');
-var R2  =  ee.List('','','');
+var R2  =  ee.List('Siak','Rokan Hulu','Rokan Hilir','Dumai','Bengkalis');
 
 var R1
 var R2
