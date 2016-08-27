@@ -195,10 +195,8 @@ lossYear = lossYear_final;
 var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea_outline); 
 var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
 var source = ee.Image([0]).where(totalarea_raster.neq(0),OP90).clip(totalarea_outline); source = source.updateMask(source);
-Map.addLayer(source, {min: 0, max: 1,palette:[lb, yellow ]}, "source 1990-2000");
-var cost = ee.Image([0]).add(1);
-cost = cost.clip(totalarea_outline);
-var cumulativeCost = cost.cumulativeCost({ source: source,maxDistance: 200 * 1000 });
+var cumulativeCost = ee.Image([1]).clip(totalarea_outline)
+                          .cumulativeCost({ source: source,maxDistance: 200 * 1000 });
 var costmap = blank.where(Designated.eq(1), cumulativeCost);
 costmap = costmap.updateMask(costmap);
 Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
@@ -214,24 +212,30 @@ var mincostmapping = function(t){
   });
   return ee.Number(output.get('blank'));
 };
+
 var threshold = Target.map(mincostmapping);
-var execute = function(x, offset){
-  var year = x.toString();
-  var t=ee.Number(x).toInt();
-  x=ee.Number(x).subtract(offset).toInt();
-  var cuttoff = ee.Number(threshold.get(x));
-  var cuttoff_before = ee.Algorithms.If(x.gt(1), ee.Number(threshold.get(x.subtract(1).toInt())), ee.Number(0.0));
-  var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea_outline);
-  var lossYear_update = lossYear.where(Binary.eq(1), t);
-  var Binary_show = blank.where(Binary.eq(1), t);
-  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+var execute = function(x, prev){
+  x= ee.Number(x);
+  prev = ee.Image(prev);
+  var t=x.toInt(); // year stamp 
+  var index =ee.Number(x).subtract(offset).toInt(); // index 
+  var cuttoff = ee.Number(threshold.get(index)); 
+  var cuttoff_before = ee.Number(
+                ee.Algorithms.If(index.gt(1), ee.Number(threshold.get(index.subtract(1).toInt())), ee.Number(0.0))
+                );
+                
+  var Binary = ee.Image([0]).
+            where(costmap.lte(cuttoff).and(costmap.gt(cuttoff_before)), 1).clip(totalarea_outline);
+  var lossYear_update = prev.where(Binary.eq(1), t);
   return lossYear_update;
 };
-var offset = ee.Number(1990);
-var x=1991;
-lossYear = execute(x, offset); x=1992; lossYear = execute(x, offset); x=1993; lossYear = execute(x, offset); x=1994; lossYear = execute(x, offset); x=1995; lossYear = execute(x, offset); x=1996; lossYear = execute(x, offset); x=1997;
-lossYear = execute(x, offset); x=1998; lossYear = execute(x, offset); x=1999; lossYear = execute(x, offset); x=2000; lossYear = execute(x, offset);
-// ########
+
+var years = ee.List.sequence(1990, 2000,1);
+var offset = ee.Number(years.get(0));
+var updated_hansen = years.iterate(execute, lossYear); 
+
+
+/*// ########
 // # 2000 to 2005 annual maps 
 // ########
 Designated = blank.where(
@@ -278,9 +282,11 @@ x=2007; lossYear = execute(x, offset);
 x=2008; lossYear = execute(x, offset);
 x=2009; lossYear = execute(x, offset);
 x=2010; lossYear = execute(x, offset);
+*/
+
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
-
+/*
 
 // ####################
 // # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
@@ -421,3 +427,4 @@ t=2000; p0= printclass(t, Gunarso);
 
 
 
+*/
