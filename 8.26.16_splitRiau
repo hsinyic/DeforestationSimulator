@@ -35,13 +35,13 @@ var printclass = function(t, folder){
   export_image = export_image.addBands(img);
   // Map.addLayer(img, {min: 0, max: 6,
   //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
-  Export.image.toDrive({
-    image: img,
-    description: taskname.getInfo(),
-    scale: 100,
-    region: totalarea_outline,
-    maxPixels: 1e13
-  });
+  // Export.image.toDrive({
+  //   image: img,
+  //   description: taskname.getInfo(),
+  //   scale: 100,
+  //   region: totalarea_outline,
+  //   maxPixels: 1e13
+  // });
 
   return(3);
 };
@@ -96,12 +96,12 @@ var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', '
 var R2  =  ee.List(['Rokan Hulu','Rokan Hilir','Dumai','Bengkalis'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Siak'));
 
-print(R1,R2);
+// print(R1,R2);
 
 
-var totalarea = ee.FeatureCollectionR1;
-// var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
-var totalarea_raster = totalarea.reduceToImage({properties: ['kode'],reducer: ee.Reducer.first()});
+var totalarea = ee.FeatureCollection(R1);
+var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+// var totalarea_raster = totalarea.reduceToImage({properties: ['kode'],reducer: ee.Reducer.first()});
 var totalarea_outline = totalarea.geometry().bounds();
 
 
@@ -157,8 +157,8 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
 var binary_pre = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 ).clip(totalarea_outline);
 var binary = ee.Image([0]).where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
 // Map.addLayer(binary, {min: 0, max: 2,palette:[ whi,gr , db]}, 'binary');
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-//     palette:[ red, yellow, gr ,db]}, 'lossYear original');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
+    palette:[ red, yellow, gr ,db]}, 'lossYear original');
 
 //Expansion
 var lossYear_expand = lossYear.neq(2099); // make it binary 
