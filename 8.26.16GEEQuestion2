@@ -19,19 +19,18 @@ Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau
 
 
 var scale = ee.Number(1000); 
-
 var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Test_Riau2'));
-  // Export.image.toDrive({
-  //   image: img,
-  //   description: taskname.getInfo(),
-  //   scale: 100,
-  //   region: totalarea_outline,
-  //   maxPixels: 1e13
-  // });
+  var taskname = ee.String(year).cat(ee.String('Test_Riau2_smaller'));
+  Export.image.toDrive({
+    image: img,
+    description: taskname.getInfo(),
+    scale: 100,
+    region: totalarea_outline,
+    maxPixels: 1e13
+  });
   return(3);
 };
 
@@ -47,8 +46,8 @@ var addprovinces = function(name, prev){
     // area_notworking: R1, R2 splits the province Riau, and doesn't work 
 var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
-var R2  =  ee.List(['Rokan Hulu','Rokan Hilir','Dumai','Bengkalis'])
-          .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Siak'));
+var R2  =  ee.List(['Rokan Hilir','Bengkalis'])//,'Dumai','Siak'])
+          .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
     // area_working: works, and is a bigger area 
 var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
     // define totalarea 
@@ -105,13 +104,13 @@ lossYear = lossYear_final;
 
 
 // ############
-// # Step 3: Preliminary data processing 
+// # Step 2: Preliminary data processing 
 // # 1) Buffer by field treatment 
 // # 2) Create 2000 Basemap  
 // ############
 
 // ########
-// # 1) 1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
+// # Step 2)Preliminary data processing  1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
 // ########
 // Set scale for buffering (e.g.,reduceRegion percentile operation)
 var scale = ee.Number(1000); 
@@ -182,9 +181,8 @@ lossYear = Hansen_update;
 
 
 // ########
-// # 2) Create year_2000 land use clasfficiation  
+// # Step 3) Intermediate Layer : Create year_2000 land use clasfficiation  
 // ########
-
 var Gunarso = ee.Image([lossYear,OP90, OP00, OP05,OP10, treecover2000,blank]);
 // code NF, F, OPR, OP into numbers 
 var NF_color = 1;
