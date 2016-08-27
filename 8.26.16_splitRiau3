@@ -31,17 +31,17 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Riau_NEW2'));
+  var taskname = ee.String(year).cat(ee.String('Test_Sumatera_Barat'));
   export_image = export_image.addBands(img);
   // Map.addLayer(img, {min: 0, max: 6,
   //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
-  // Export.image.toDrive({
-  //   image: img,
-  //   description: taskname.getInfo(),
-  //   scale: 100,
-  //   region: totalarea_outline,
-  //   maxPixels: 1e13
-  // });
+  Export.image.toDrive({
+    image: img,
+    description: taskname.getInfo(),
+    scale: 100,
+    region: totalarea_outline,
+    maxPixels: 1e13
+  });
 
   return(3);
 };
@@ -145,10 +145,10 @@ var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(i
 var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
 var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
 var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
-Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
-Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
+// Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
+// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
+// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
+// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
 
 
 // ########
@@ -157,8 +157,8 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
 var binary_pre = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 ).clip(totalarea_outline);
 var binary = ee.Image([0]).where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
 // Map.addLayer(binary, {min: 0, max: 2,palette:[ whi,gr , db]}, 'binary');
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
-    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear original');
 
 //Expansion
 var lossYear_expand = lossYear.neq(2099); // make it binary 
@@ -220,14 +220,12 @@ var buffer = function(Designated, Target,source, years ){
     });
     return ee.Number(output.get('blank'));
   };
-  // print('here1');
-  var threshold = Target.map(mincostmapping); // get cumulative cost maps AND threshold 
-  // print(threshold);
+  var threshold = Target.map(mincostmapping); 
   var execute = function(x, prev){
     x= ee.Number(x);
     prev = ee.Image(prev);
-    var t=x.toInt(); // year stamp 
-    var index =ee.Number(x).subtract(offset).toInt(); // index 
+    var t=x.toInt();  
+    var index =ee.Number(x).subtract(offset).toInt();
     var cuttoff = ee.Number(threshold.get(index)); 
     var cuttoff_before = ee.Number(
                   ee.Algorithms.If(index.gt(1), ee.Number(threshold.get(index.subtract(1).toInt())), ee.Number(0.0))
@@ -276,7 +274,7 @@ var years05  = ee.List.sequence(2006, 2010,1);
 Hansen_update = buffer(Designated05, Target05,source05, years05); 
 lossYear = Hansen_update; 
 
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
+// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
 
 
 
