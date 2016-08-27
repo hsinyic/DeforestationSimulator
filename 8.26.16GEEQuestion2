@@ -48,7 +48,7 @@ var largearea_works =  ee.List(['Kalimantan Timur','Kalimantan Barat', 'Kalimant
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(largearea_works);
+var totalarea = ee.FeatureCollection(area_works);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -278,7 +278,7 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Test_Riau2_smaller'));
+  var taskname = ee.String(year).cat(ee.String('Test_Kalimantan'));
   Export.image.toDrive({
     image: img,
     description: taskname.getInfo(),
