@@ -61,12 +61,13 @@ var addprovinces = function(name, prev){
           .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
 };
     // area_notworking: R1, R2 splits the province Riau, and doesn't work 
-var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
-          .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
-var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
+var R1  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
-var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
+var R2  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
+var R3 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
+          .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
+
 
 
     // area_working: works, and is a bigger area 
