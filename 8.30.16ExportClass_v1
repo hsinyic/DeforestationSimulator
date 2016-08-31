@@ -27,13 +27,13 @@ var printclass = function(t, folder){
   var taskname = ee.String(year).cat(ee.String('Sumatra_Barat'));
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ '#11ffff', '0000FF', '#4cff62',  '#fff832', 'ff510f', '#f7f7f7', '0000FF']}, year);
-  Export.image.toDrive({
-    image: img,
-    description: taskname.getInfo(),
-    scale: 100,
-    region: totalarea_outline,
-    maxPixels: 1e13
-  });
+  // Export.image.toDrive({
+  //   image: img,
+  //   description: taskname.getInfo(),
+  //   scale: 100,
+  //   region: totalarea_outline,
+  //   maxPixels: 1e13
+  // });
   return(3);
 };
 
@@ -61,7 +61,7 @@ var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Bar
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(Sumatra_Barat);
+var totalarea = ee.FeatureCollection(Jambi);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
