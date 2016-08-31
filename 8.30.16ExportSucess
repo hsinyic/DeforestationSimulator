@@ -36,7 +36,7 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Riau_PartIII'));
+  var taskname = ee.String(year).cat(ee.String('Riau_PartI'));
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
 
@@ -74,7 +74,10 @@ var R3 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
 var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
     // define totalarea 
 var totalarea = ee.FeatureCollection(R1);
-var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+var totalarea_raster = totalarea.reduceToImage({
+  properties: ['ID_0'],
+  reducer: ee.Reducer.first()
+}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
 
