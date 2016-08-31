@@ -12,23 +12,11 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
-    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru");
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
+    geometry = /* color: d63000 */ee.Geometry.Point([102.227783203125, -0.4064907305738824]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
+Map.setCenter(102.08245301691568, -0.4909959458718788, 8);// Riau 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Jambi 
-
-
-var db= ('0000FF').toString();
-var lb= ('#11ffff').toString();
-var red=('ff510f').toString();
-var lr = ('#ff8f7d').toString();
-var dg= ('#196e0a').toString();
-var yellow=('#fff832').toString();
-var gr= ('#4cff62').toString();
-var whi=('#f7f7f7').toString();
-var black = ('#101010').toString();
-var pink = ('#ff50f1').toString();
-
 
 
 var scale = ee.Number(1000); 
@@ -208,7 +196,7 @@ lossYear = Hansen_update;
 Hansen_update = buffer(Designated05, Target05,source05, years05); 
 lossYear = Hansen_update; 
 
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','0000FF' ]}, 'updated Hansen');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','0000FF' ]}, 'updated Hansen');
 
 
 // ########
@@ -217,12 +205,12 @@ Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {m
 
 var Gunarso = ee.Image([lossYear,OP90, OP00, OP05,OP10, treecover2000,blank]);
 // code NF, F, OPR, OP into numbers 
-var NF_color = 1;
-var F_color = 2;
-var OPReplant_color = 3; 
-var OP_color = 4; 
-var NOP_color = 5;
-var OTH_color = 6;
+var NF_color = ee.Number(1);
+var F_color = ee.Number(2);
+var OPReplant_color = ee.Number(3); 
+var OP_color = ee.Number(4); 
+var NOP_color = ee.Number(5);
+var OTH_color = ee.Number(6);
 
 // Create year_2000 classified layer of OP, F, NF  
 var year_2000 = Gunarso.expression(
@@ -247,10 +235,7 @@ var year_2000 = Gunarso.expression(
 var Gunarso_intermediate = ee.Image([lossYear,year_2000, blank, OP00, OP05, OP10, OP90]);
 var yr = ee.List.sequence(2000, 2010, 1);
 var annual = function(t){
-  var timestamp = t.toString();
   t= ee.Number(t);
-  var lossyear = lossYear; 
-  var basemap = year_2000;
   var executeOP_OP = Gunarso_intermediate.expression(
   'lossYear==t && OP90 == 1 ? OPR\
     :lossYear==t && OP90 == 0 ? OP\
@@ -259,7 +244,7 @@ var annual = function(t){
       {  
         'OP': Gunarso_intermediate.select('blank').add(OP_color),
         'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
-        'lossYear': lossyear,
+        'lossYear': Gunarso_intermediate.select('lossyear'),
         'OP90': Gunarso_intermediate.select('OP90'),
         'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
         't': t,
@@ -275,8 +260,8 @@ var annual = function(t){
         'OP': Gunarso_intermediate.select('blank').add(OP_color),
         'NF': Gunarso_intermediate.select('blank').add(NF_color),
         'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
-        'lossYear': lossyear,
-        'basemap': basemap,
+        'lossYear': Gunarso_intermediate.select('lossyear'),
+        'basemap': Gunarso_intermediate.select('year_2000'),
         't': t,
         'NF_color': NF_color,
         'F_color': F_color
@@ -291,8 +276,8 @@ var annual = function(t){
         'F': Gunarso_intermediate.select('blank').add(F_color),
         'NF': Gunarso_intermediate.select('blank').add(NF_color),
         'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
-        'lossYear': lossyear,
-        'basemap': basemap,
+        'lossYear': Gunarso_intermediate.select('lossyear'),
+        'basemap': Gunarso_intermediate.select('year_2000'),
         't': t,
         'NF_color': NF_color,
         'F_color': F_color
@@ -304,7 +289,7 @@ var annual = function(t){
   .where(OP00.eq(0).and(OP10.eq(0)),executeNOP_NOP);
   
   var final_yearmap = blank.where(totalarea_raster.neq(0), yearmap);
-  return final_yearmap;
+  return ee.Image(final_yearmap);
 };
 var Gunarso = yr.map(annual);
 
@@ -321,6 +306,7 @@ t=2003; p0= printclass(t, Gunarso);
 t=2002; p0= printclass(t, Gunarso);
 t=2001; p0= printclass(t, Gunarso);
 t=2000; p0= printclass(t, Gunarso);
+
 
 
 
