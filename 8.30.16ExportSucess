@@ -36,7 +36,7 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Test_Riau2_smaller'));
+  var taskname = ee.String(year).cat(ee.String('Riau_PartIII'));
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
 
@@ -61,14 +61,18 @@ var addprovinces = function(name, prev){
           .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
 };
     // area_notworking: R1, R2 splits the province Riau, and doesn't work 
-var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru'])
+var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
-var R2  =  ee.List(['Rokan Hilir','Bengkalis'])//,'Dumai','Siak'])
+var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
+var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
+          .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
+
+
     // area_working: works, and is a bigger area 
 var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
     // define totalarea 
-var totalarea = ee.FeatureCollection(R2);
+var totalarea = ee.FeatureCollection(R1);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
