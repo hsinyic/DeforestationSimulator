@@ -41,13 +41,13 @@ var printclass = function(t, folder){
     palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
 
 
-  Export.image.toDrive({
-    image: img,
-    description: taskname.getInfo(),
-    scale: 100,
-    region: totalarea_outline,
-    maxPixels: 1e13
-  });
+  // Export.image.toDrive({
+  //   image: img,
+  //   description: taskname.getInfo(),
+  //   scale: 100,
+  //   region: totalarea_outline,
+  //   maxPixels: 1e13
+  // });
   return(3);
 };
 
@@ -73,7 +73,7 @@ var R3 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
     // area_working: works, and is a bigger area 
 var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
     // define totalarea 
-var totalarea = ee.FeatureCollection(R1);
+var totalarea = ee.FeatureCollection(R2);
 var totalarea_raster = totalarea.reduceToImage({
   properties: ['ID_0'],
   reducer: ee.Reducer.first()
@@ -317,8 +317,8 @@ var Gunarso = yr.map(annual);
 
 //Display all maps, and export them 
 var t=2010; var p0= printclass(t, Gunarso);
-t=2009; p0= printclass(t, Gunarso);
-t=2008; p0= printclass(t, Gunarso);
+// t=2009; p0= printclass(t, Gunarso);
+// t=2008; p0= printclass(t, Gunarso);
 t=2007; p0= printclass(t, Gunarso);
 t=2006; p0= printclass(t, Gunarso);
 t=2005; p0= printclass(t, Gunarso);
