@@ -13,10 +13,10 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    geometry = /* color: d63000 */ee.Geometry.Point([102.227783203125, -0.4064907305738824]);
+    geometry = /* color: d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(102.08245301691568, -0.4909959458718788, 8);// Riau 
-// Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Jambi 
+// Map.setCenter(102.08245301691568, -0.4909959458718788, 8);// Riau 
+Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Jambi 
 
 
 var scale = ee.Number(1000); 
@@ -24,7 +24,7 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Riau_PartIII'));
+  var taskname = ee.String(year).cat(ee.String('Jambi'));
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ '#11ffff', '0000FF', '#4cff62',  '#fff832', 'ff510f', '#f7f7f7', '0000FF']}, year);
   Export.image.toDrive({
@@ -56,9 +56,12 @@ var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
 
 
     // area_working: works, and is a bigger area 
-var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatra Barat'); 
+
+
     // define totalarea 
-var totalarea = ee.FeatureCollection(R1);
+var totalarea = ee.FeatureCollection(Jambi);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
