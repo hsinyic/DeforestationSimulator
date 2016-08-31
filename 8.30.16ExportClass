@@ -48,7 +48,7 @@ var printclass = function(t, folder){
   //   region: totalarea_outline,
   //   maxPixels: 1e13
   // });
-  // return(3);
+  return(3);
 };
 
 
@@ -75,7 +75,7 @@ var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Bar
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(R2);
+var totalarea = ee.FeatureCollection(R1);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -316,16 +316,16 @@ var Gunarso = yr.map(annual);
 
 //Display all maps, and export them 
 var t=2010; var p0= printclass(t, Gunarso);
-t=2009; p0= printclass(t, Gunarso);
-t=2008; p0= printclass(t, Gunarso);
+// t=2009; p0= printclass(t, Gunarso);
+// t=2008; p0= printclass(t, Gunarso);
 t=2007; p0= printclass(t, Gunarso);
 t=2006; p0= printclass(t, Gunarso);
-t=2005; p0= printclass(t, Gunarso);
-t=2004; p0= printclass(t, Gunarso);
-t=2003; p0= printclass(t, Gunarso);
-t=2002; p0= printclass(t, Gunarso);
-t=2001; p0= printclass(t, Gunarso);
-t=2000; p0= printclass(t, Gunarso);
+// t=2005; p0= printclass(t, Gunarso);
+// t=2004; p0= printclass(t, Gunarso);
+// t=2003; p0= printclass(t, Gunarso);
+// t=2002; p0= printclass(t, Gunarso);
+// t=2001; p0= printclass(t, Gunarso);
+// t=2000; p0= printclass(t, Gunarso);
 
 
 
