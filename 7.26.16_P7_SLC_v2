@@ -166,7 +166,7 @@ Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.eq(1)), {mi
 
 
 // ########
-// # SLC correction 
+// # Majority Sampling correction 
 // ########
 var totalarea_outline = geometry.bounds();
 var binary = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 ).clip(totalarea_outline);
