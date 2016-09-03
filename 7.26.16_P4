@@ -148,7 +148,7 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
 
 // Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
 Map.setCenter(101.436767578125, 0.5232166048991478, 12); //PekanBaru, Indo 
-Map.setCenter(101.53358459472656,0.5366056196135927, 6); //PekanBaru, Indo P2
+// Map.setCenter(101.53358459472656,0.5366056196135927, 6); //PekanBaru, Indo P2
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
@@ -157,6 +157,6 @@ Map.setCenter(101.53358459472656,0.5366056196135927, 6); //PekanBaru, Indo P2
 
 
 Map.setCenter(112.21229553222656,-2.538727288468332, 10); // Pembuang, Central Kalimantan
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099).updateMask(OP10.eq(1))), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
 
 
