@@ -113,18 +113,18 @@ var binary = ee.Image([0]).where(totalarea_raster.neq(0),binary_pre).clip(totala
 //Expansion
 var lossYear_expand = lossYear.neq(2099); // make it binary 
 lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
-lossYear_expand = lossYear_expand.min(lossYear_expand.focal_mode(50, 'square')); // Need to solve for SLC effect too 
+lossYear_expand = lossYear_expand.min(lossYear_expand.focal_mode(20, 'square')); // Need to solve for SLC effect too 
 lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
 //Replant 
 var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
-lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(50, 'square'));
+lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(20, 'square'));
 lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
 //Final assembling 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
 lossYear = lossYear_final; 
 
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
-Map.setCenter(109.59136962890625, 1.3031408081468787, 11)// Momong, Indoensia -- Landsat SLC effect  ZOOM IN 
+Map.setCenter(109.59136962890625, 1.3031408081468787, 11);// Momong, Indoensia -- Landsat SLC effect  ZOOM IN 
 
 
 
