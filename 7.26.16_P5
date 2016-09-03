@@ -15,7 +15,10 @@ var landsatF7 = ee.ImageCollection("LANDSAT/LE7_L1T_TOA_FMASK"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: 98ff00 */ee.Geometry.Point([116.2298583984375, -2.3010169595723617]);
+    geometry = /* color: 98ff00 */ee.Geometry.MultiPoint(
+        [[116.2298583984375, -2.3010169595723617],
+         [103.3974838256836, -1.6645378394831336],
+         [104.710693359375, -4.740675384778361]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
 var db= ('0000FF').toString();
@@ -82,12 +85,14 @@ function display(time){
 
 var dates = ee.List.sequence(0,14,1);
 var final = dates.map(display);
-// showLandsat(2001,final);
-// showLandsat(2002,final);
-// showLandsat(2003,final);
+showLandsat(2001,final);
+showLandsat(2002,final);
+showLandsat(2003,final);
 // showLandsat(2004,final);showLandsat(2005,final);
 // showLandsat(2006,final);showLandsat(2007,final);
-// showLandsat(2008,final);showLandsat(2009,final);showLandsat(2010,final);showLandsat(2011,final);
+// showLandsat(2008,final);showLandsat(2009,final);
+showLandsat(2010,final);
+// showLandsat(2011,final);
 // showLandsat(2012,final);showLandsat(2013,final);showLandsat(2014,final);
 
 
@@ -163,5 +168,6 @@ Map.setCenter(101.53358459472656,0.5366056196135927, 10); //PekanBaru, Indo P2
 // Map.setCenter(118.245849609375, 4.477856485570586, 8); // Between Kunak and Tawau, Malaysia 
 // Map.setCenter(103.37825775146484, -1.6861579269987852, 12)// Muara Bulian, Jambi, Indonesia 
 // Map.setCenter(116.2298583984375, -2.3010169595723617, 10); //Pawing, East Kalimantan, Indonesia
+Map.setCenter(103.3974838256836, -1.6645378394831336, 12)// Muara Bulian, Jambi, Indonesia  
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.eq(1)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
 
