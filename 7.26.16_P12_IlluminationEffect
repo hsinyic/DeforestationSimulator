@@ -42,7 +42,7 @@ var showLandsat = function(t, folder){
   var index= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(index));
   Map.addLayer( img, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, year);
-  Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'Hansen');
+  // Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'Hansen');
   return ee.Number(2);
 };
 
@@ -51,7 +51,7 @@ var showLandsat = function(t, folder){
 var landsat7 = landsatF7
   .filterDate('2004-01-01', '2005-01-01');
   
-print('landsat7 LE7_L1T_TOA Band names: ', landsat7); // List of landsat7 band names
+// print('landsat7 LE7_L1T_TOA Band names: ', landsat7); // List of landsat7 band names
 
 function cloudmask(image) {
   return image.updateMask(image.select('fmask').eq(0)); // Mask out SHADOW, SNOW, and CLOUD classes.
@@ -83,16 +83,54 @@ function display(time){
 
 var dates = ee.List.sequence(0,14,1);
 var final = dates.map(display);
-// showLandsat(2001,final);showLandsat(2002,final);showLandsat(2003,final);
+showLandsat(2001,final);
+showLandsat(2002,final);
+showLandsat(2003,final);
 // showLandsat(2004,final);showLandsat(2005,final);showLandsat(2006,final);showLandsat(2007,final);
 // showLandsat(2008,final);showLandsat(2009,final);showLandsat(2010,final);showLandsat(2011,final);
 // showLandsat(2012,final);showLandsat(2013,final);showLandsat(2014,final);
 
 
 
+// Data Processing 
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP90_raster = ee.Image([0]).where(OP90_raster.eq(1), 1);
+var OP00_raster = ee.Image([0]).where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1);
+var OP05_raster = ee.Image([0]).where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1);
+var OP10_raster = ee.Image([0]).where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1);
+// Convert Gunarso vector maps to a raster, Sabah and Sarawak
+var ma90_raster = ma90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma00_raster = ma00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma05_raster = ma05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma10_raster = ma10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma90_raster = ee.Image([0]).where(ma90_raster.eq(1), 1);
+var ma00_raster = ee.Image([0]).where(ma00_raster.eq(1), 1).where(ma90_raster.eq(1), 1);
+var ma05_raster = ee.Image([0]).where(ma05_raster.eq(1), 1).where(ma00_raster.eq(1), 1);
+var ma10_raster = ee.Image([0]).where(ma10_raster.eq(1), 1).where(ma05_raster.eq(1), 1);
+// Convert Gunarso vector maps to a raster, Indonesia and PNG
+var in90_raster = in90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in00_raster = in00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in05_raster = in05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in10_raster = in10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in90_raster = ee.Image([0]).where(in90_raster.eq(1), 1);
+var in00_raster = ee.Image([0]).where(in00_raster.eq(1), 1).where(in90_raster.eq(1), 1);
+var in05_raster = ee.Image([0]).where(in05_raster.eq(1), 1).where(in00_raster.eq(1), 1);
+var in10_raster = ee.Image([0]).where(in10_raster.eq(1), 1).where(in05_raster.eq(1), 1);
+var OP90 = ee.Image([0]).where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']);
+var OP00 = ee.Image([0]).where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
+var OP05 = ee.Image([0]).where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
+var OP10 = ee.Image([0]).where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
+
 
 
 
 
 Map.setCenter(101.14837,3.88891, 12); // Malaysia, Penn
-Map.setCenter(101.31763458251953, 3.882751693368096, 13) // Malaysia, Penninsula
+Map.setCenter(101.31763458251953, 3.882751693368096, 13) // Felda Trolak-Utara, Malaysia, Penninsula
