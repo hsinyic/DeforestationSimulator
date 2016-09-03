@@ -15,9 +15,7 @@ var landsatF7 = ee.ImageCollection("LANDSAT/LE7_L1T_TOA_FMASK"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: 0B4A8B */ee.Geometry.MultiPoint(
-        [[112.21229553222656, -2.538727288468332],
-         [109.59136962890625, 1.3031408081468787]]);
+    geometry = /* color: 0B4A8B */ee.Geometry.Point([112.21229553222656, -2.538727288468332]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
 var db= ('0000FF').toString();
@@ -148,7 +146,7 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
 // Map.setCenter(102.10693359375, 3.973860975839102, 9);
 Map.setCenter(109.51789855957031,1.205660524693437, 12)// Momong, Indoensia -- Landsat SLC effect  
-Map.setCenter(109.59136962890625, 1.3031408081468787, 13)// Momong, Indoensia -- Landsat SLC effect  ZOOM IN 
+Map.setCenter(109.59136962890625, 1.3031408081468787, 11)// Momong, Indoensia -- Landsat SLC effect  ZOOM IN 
 
 // Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
 // Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
@@ -161,6 +159,27 @@ Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,pale
 // showLandsat(2006,final);showLandsat(2007,final);
 // showLandsat(2008,final);showLandsat(2009,final);showLandsat(2010,final);showLandsat(2011,final);
 // showLandsat(2012,final);showLandsat(2013,final);showLandsat(2014,final);
+
+
+// ########
+// # SLC correction 
+// ########
+var binary_pre = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
+var binary = ee.Image([0]).where(totalarea_raster.neq(0),binary_pre);
+//Expansion
+var lossYear_expand = lossYear.neq(2099); // make it binary 
+lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
+lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
+//Replant 
+var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
+lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square'));
+lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
+//Final assembling 
+var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
+lossYear = lossYear_final; 
+
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
+
 
 
 
