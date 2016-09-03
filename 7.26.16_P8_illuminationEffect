@@ -144,7 +144,7 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
 
 
 // Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// PekanBaru, Riau overall  
-Map.setCenter(102.436767578125, 0.5232166048991478, 12); //PekanBaru, Indo 
+Map.setCenter(102.036767578125, 0.5232166048991478, 12); //PekanBaru, Indo 
 // Map.setCenter(101.53358459472656,0.5366056196135927, 10); //PekanBaru, Indo P2
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 10);
@@ -160,9 +160,9 @@ Map.setCenter(102.436767578125, 0.5232166048991478, 12); //PekanBaru, Indo
 // Map.setCenter(116.2298583984375, -2.3010169595723617, 10); //Pawing, East Kalimantan, Indonesia
 // Map.setCenter(103.3974838256836, -1.6645378394831336, 12)// Muara Bulian, Jambi, Indonesia  
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.eq(1)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
-// showLandsat(2001,final);
-// showLandsat(2002,final);
-// showLandsat(2003,final);
+showLandsat(2001,final);
+showLandsat(2002,final);
+showLandsat(2003,final);
 // // showLandsat(2004,final);showLandsat(2005,final);
 // // showLandsat(2006,final);showLandsat(2007,final);
 // // showLandsat(2008,final);showLandsat(2009,final);
