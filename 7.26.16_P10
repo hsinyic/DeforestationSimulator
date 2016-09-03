@@ -166,7 +166,7 @@ Map.setCenter(101.53358459472656,0.5366056196135927, 6); //PekanBaru, Indo P2
 // Map.setCenter(118.245849609375, 4.477856485570586, 8); // Between Kunak and Tawau, Malaysia 
 Map.setCenter(116.83341979980469, 3.5881217226705777, 6);// Mensalong, North Kalimantan, Malaysia 
 Map.setCenter(111.2969970703125, -2.4492049339511506, 10);//Manismata,West Kalimantan, Malaysia  Normal layers 
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099).updateMask(OP10.eq(1))), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.eq(1)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
 
 
 
