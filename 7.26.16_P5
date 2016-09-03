@@ -161,8 +161,7 @@ Map.setCenter(101.53358459472656,0.5366056196135927, 10); //PekanBaru, Indo P2
 // Map.setCenter(116.52099609375,5.112829778499461, 12) // Nabawan, Malaysia 
 // Map.setCenter(112.21229553222656,-2.538727288468332, 10); // Pembuang, Central Kalimantan
 // Map.setCenter(118.245849609375, 4.477856485570586, 8); // Between Kunak and Tawau, Malaysia 
-// Map.setCenter(103.37825775146484, -1.6861579269987852, 12)// Jambi, Indonesia 
-Map.setCenter(116.2298583984375, -2.3010169595723617, 5); //Pawing, East Kalimantan, Indonesia
+// Map.setCenter(103.37825775146484, -1.6861579269987852, 12)// Muara Bulian, Jambi, Indonesia 
+// Map.setCenter(116.2298583984375, -2.3010169595723617, 10); //Pawing, East Kalimantan, Indonesia
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.eq(1)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
-
 
