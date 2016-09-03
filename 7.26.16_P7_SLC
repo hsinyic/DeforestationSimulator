@@ -164,8 +164,7 @@ Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,pale
 // ########
 // # SLC correction 
 // ########
-var binary_pre = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
-var binary = ee.Image([0]).where(totalarea_raster.neq(0),binary_pre);
+var binary = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
 //Expansion
 var lossYear_expand = lossYear.neq(2099); // make it binary 
 lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
