@@ -15,7 +15,7 @@ var landsatF7 = ee.ImageCollection("LANDSAT/LE7_L1T_TOA_FMASK"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: d63000 */ee.Geometry.Point([109.51789855957031, 1.205660524693437]);
+    geometry = /* color: 98ff00 */ee.Geometry.Point([103.37825775146484, -1.6861579269987852]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
 var db= ('0000FF').toString();
@@ -151,7 +151,8 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
 // Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// Riau 
 // Map.setCenter(101.436767578125, 0.5232166048991478, 12); //PekanBaru, Indo 
 // Map.setCenter(101.53358459472656,0.5366056196135927, 6); //PekanBaru, Indo P2
-Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
+// Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
+Map.setCenter( 102.8704833984375, -1.7245930431979002, 10);
 // Map.setCenter(102.10693359375, 3.973860975839102, 12);
 // Map.setCenter(102.59239196777344,3.94029555672408, 12); // East of Jerantut, Malaysia Penninsula
 // Map.setCenter(101.14837646484375,3.888917295949231, 6); // Teluk Intan, Malaysia, Penn
@@ -163,7 +164,7 @@ Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo
 // Map.setCenter(118.245849609375, 4.477856485570586, 8); // Between Kunak and Tawau, Malaysia 
 
 
-
+Map.setCenter(103.37825775146484, -1.6861579269987852, 12)// Jambi, Indonesia 
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.eq(1)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
 
 
