@@ -84,15 +84,8 @@ function display(time){
 
 var dates = ee.List.sequence(0,14,1);
 var final = dates.map(display);
-showLandsat(2001,final);showLandsat(2002,final);showLandsat(2003,final);
-showLandsat(2004,final);showLandsat(2005,final);
-// showLandsat(2006,final);showLandsat(2007,final);
-// showLandsat(2008,final);showLandsat(2009,final);showLandsat(2010,final);showLandsat(2011,final);
-// showLandsat(2012,final);showLandsat(2013,final);showLandsat(2014,final);
 
-
-
-print(final);
+// print(final);
 // Map.addLayer( display(0), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2001');
 // Map.addLayer( display(1), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2002');
 // Map.addLayer( display(2), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2003');
@@ -163,5 +156,13 @@ Map.setCenter(109.59136962890625, 1.3031408081468787, 13)// Momong, Indoensia --
 
 // Map.setCenter(112.21229553222656,-2.538727288468332, 10); // Pembuang, Central Kalimantan
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
+// showLandsat(2001,final);showLandsat(2002,final);showLandsat(2003,final);
+// showLandsat(2004,final);showLandsat(2005,final);
+// showLandsat(2006,final);showLandsat(2007,final);
+// showLandsat(2008,final);showLandsat(2009,final);showLandsat(2010,final);showLandsat(2011,final);
+// showLandsat(2012,final);showLandsat(2013,final);showLandsat(2014,final);
+
+
+
 
 
