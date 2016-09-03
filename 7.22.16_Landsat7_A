@@ -89,22 +89,6 @@ showLandsat(2012,final);showLandsat(2013,final);showLandsat(2014,final);
 
 
 
-print(final);
-// Map.addLayer( display(0), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2001');
-// Map.addLayer( display(1), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2002');
-// Map.addLayer( display(2), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2003');
-// Map.addLayer( display(3), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2004');
-// Map.addLayer( display(4), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2005');
-// Map.addLayer( display(5), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2006');
-// Map.addLayer( display(6), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2007');
-// Map.addLayer( display(7), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2008');
-// Map.addLayer( display(8), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2009');
-// Map.addLayer( display(9), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2010');
-// Map.addLayer( display(10), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2011');
-// Map.addLayer( display(11), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2012');
-
-
-
 
 
 
