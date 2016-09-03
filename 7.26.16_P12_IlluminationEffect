@@ -15,7 +15,7 @@ var landsatF7 = ee.ImageCollection("LANDSAT/LE7_L1T_TOA_FMASK"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: 0B4A8B */ee.Geometry.Point([101.31763458251953, 3.882751693368096]);
+    geometry = /* color: 0B4A8B */ee.Geometry.Point([101.28862380981445, 3.8430167329671927]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
 var db= ('0000FF').toString();
@@ -42,7 +42,7 @@ var showLandsat = function(t, folder){
   var index= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(index));
   Map.addLayer( img, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, year);
-  // Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'Hansen');
+  Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, yellow, gr ,db]}, 'Hansen');
   return ee.Number(2);
 };
 
@@ -61,7 +61,7 @@ var collection_masked = ee.ImageCollection(landsat7.map(cloudmask));
 // var mean_col_year = collection_masked.reduce(ee.Reducer.percentile([20]));
 var mean_col_year = collection_masked.reduce(ee.Reducer.median());
 
-Map.addLayer( mean_col_year, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2004-2005');
+// Map.addLayer( mean_col_year, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2004-2005');
 
 
 
@@ -81,11 +81,7 @@ function display(time){
 
 
 
-var dates = ee.List.sequence(0,14,1);
-var final = dates.map(display);
-showLandsat(2001,final);
-showLandsat(2002,final);
-showLandsat(2003,final);
+
 // showLandsat(2004,final);showLandsat(2005,final);showLandsat(2006,final);showLandsat(2007,final);
 // showLandsat(2008,final);showLandsat(2009,final);showLandsat(2010,final);showLandsat(2011,final);
 // showLandsat(2012,final);showLandsat(2013,final);showLandsat(2014,final);
@@ -123,14 +119,20 @@ var OP90 = ee.Image([0]).where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1)
 var OP00 = ee.Image([0]).where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
 var OP05 = ee.Image([0]).where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
 var OP10 = ee.Image([0]).where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
-Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
+// Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
+// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
+// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
 Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
 
 
 
+var dates = ee.List.sequence(0,14,1);
+var final = dates.map(display);
+showLandsat(2001,final);
+showLandsat(2002,final);
+showLandsat(2003,final);
 
-
+//
 Map.setCenter(101.14837,3.88891, 12); // Malaysia, Penn
-Map.setCenter(101.31763458251953, 3.882751693368096, 13) // Felda Trolak-Utara, Malaysia, Penninsula
+// Map.setCenter(101.31763458251953, 3.882751693368096, 13) // Felda Trolak-Utara, Malaysia, Penninsula
+Map.setCenter(101.28862380981445, 3.8430167329671927, 15)//Felda Gunung Besout1, Penninsula, Malaysia
