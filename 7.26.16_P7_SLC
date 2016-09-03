@@ -15,7 +15,11 @@ var landsatF7 = ee.ImageCollection("LANDSAT/LE7_L1T_TOA_FMASK"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: 0B4A8B */ee.Geometry.Point([112.21229553222656, -2.538727288468332]);
+    geometry = /* color: d63000 */ee.Geometry.Polygon(
+        [[[109.55154418945312, 1.4884800029826135],
+          [109.55360412597656, 1.2482227845146419],
+          [109.82276916503906, 1.2482227845146419],
+          [109.81864929199219, 1.5015218267212016]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // NOT IMPORTANT add name string for colors, so I don't have to input the colors   
 var db= ('0000FF').toString();
@@ -164,20 +168,26 @@ Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,pale
 // ########
 // # SLC correction 
 // ########
-var binary = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
+var totalarea_outline = geometry.bounds();
+var binary = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 ).clip(totalarea_outline);
+// var binary = ee.Image([0]).where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
 //Expansion
 var lossYear_expand = lossYear.neq(2099); // make it binary 
 lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
 lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
+lossYear_expand =lossYear_expand.min(lossYear_expand.focal_mode(20, 'square'));
+
+
 //Replant 
-var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
-lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square'));
-lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
+var lossYear_replant = ee.Image([2099])
+// .where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
+// lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square'));
+// lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
 //Final assembling 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
 lossYear = lossYear_final; 
 
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
+Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear processed');
 
 
 
