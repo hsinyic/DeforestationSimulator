@@ -42,12 +42,17 @@ var addprovinces = function(name, prev){
           .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
 };
     // area_notworking: R1, R2 splits the province Riau, and doesn't work 
+// South
 var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
+//North
 var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
+//  Middle
 var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
+
+
 
 
     // area_working: works, and is a bigger area 
@@ -56,7 +61,8 @@ var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Bar
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(Indonesia_1.filterMetadata('NAME_2', 'equals', 'Rokan Hilir'));
+// var totalarea = ee.FeatureCollection(Indonesia_1.filterMetadata('NAME_2', 'equals', 'Rokan Hilir'));
+var totalarea = ee.FeatureCollection(R3);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -362,7 +368,7 @@ var age = function(t){
   );
 
 
-  var agemap = ee.Image([100]).clip(totalarea_outline)
+  var agemap = ee.Image([9999]).clip(totalarea_outline)
   .where(OP90.eq(0).and(OP00.eq(1)), ageNOP_OP)
   .where(OP00.eq(0).and(OP05.eq(1)), ageNOP_OP)
   .where(OP05.eq(0).and(OP10.eq(1)), ageNOP_OP)
@@ -393,18 +399,18 @@ var printage = function(t, folder){
   t= ee.Number(t).subtract(1990);
   var img = ee.Image(folder.get(t));
   // img = ee.Image([26]).where(img.lte(25).gte(0), img).clip(totalarea_outline)
-  var taskname = ee.String('Age_RiauNorth').cat(ee.String(year));
+  var taskname = ee.String('Age_Riau_Middle').cat(ee.String(year));
   Map.addLayer(img.updateMask(img.neq(100)), {min: 0, max: 25,
     palette:[ '#fff832','#4cff62','#196e0a']}, year);
-  // Export.image.toDrive({
-  //   image: img,
-  //   description: taskname.getInfo(),
-  //   scale: 100,
-  //   region: totalarea_outline,
-  //   // region: totalarea_outline,
-  //   maxPixels: 1e13
-  // });
-  // return(3);
+  Export.image.toDrive({
+    image: img,
+    description: taskname.getInfo(),
+    scale: 100,
+    region: totalarea_outline,
+    // region: totalarea_outline,
+    maxPixels: 1e13
+  });
+  return(3);
 };
 
 var t=2010;
