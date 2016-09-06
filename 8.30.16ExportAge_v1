@@ -62,7 +62,7 @@ var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Bar
 
     // define totalarea 
 // var totalarea = ee.FeatureCollection(Indonesia_1.filterMetadata('NAME_2', 'equals', 'Rokan Hilir'));
-var totalarea = ee.FeatureCollection(R3);
+var totalarea = ee.FeatureCollection(R2);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -399,7 +399,7 @@ var printage = function(t, folder){
   t= ee.Number(t).subtract(1990);
   var img = ee.Image(folder.get(t));
   // img = ee.Image([26]).where(img.lte(25).gte(0), img).clip(totalarea_outline)
-  var taskname = ee.String('Age_Riau_Middle').cat(ee.String(year));
+  var taskname = ee.String('Age_Riau_South').cat(ee.String(year));
   Map.addLayer(img.updateMask(img.neq(100)), {min: 0, max: 25,
     palette:[ '#fff832','#4cff62','#196e0a']}, year);
   Export.image.toDrive({
