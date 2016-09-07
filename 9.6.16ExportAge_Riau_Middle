@@ -14,8 +14,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Map.setCenter(101.08245301691568, 1.5909959458718788, 9);// Riau 
-Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Jambi 
+Map.setCenter(101.08245301691568, 1.5909959458718788, 9);// Riau 
+// Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Jambi 
 
 
 var db= ('0000FF').toString();
@@ -418,10 +418,10 @@ var p = printage(t, Gunarso_agefinal);
 t=2009; p = printage(t, Gunarso_agefinal);
 t=2008; p = printage(t, Gunarso_agefinal);
 t=2007; p = printage(t, Gunarso_agefinal);
-t=2006; p = printage(t, Gunarso_agefinal);
+// t=2006; p = printage(t, Gunarso_agefinal);
 t=2005; p = printage(t, Gunarso_agefinal);
-t=2004; p = printage(t, Gunarso_agefinal);
+// t=2004; p = printage(t, Gunarso_agefinal);
 t=2003; p = printage(t, Gunarso_agefinal);
 t=2002; p = printage(t, Gunarso_agefinal);
-t=2001; p = printage(t, Gunarso_agefinal);
-t=2000; p = printage(t, Gunarso_agefinal);
+// t=2001; p = printage(t, Gunarso_agefinal);
+// t=2000; p = printage(t, Gunarso_agefinal);
