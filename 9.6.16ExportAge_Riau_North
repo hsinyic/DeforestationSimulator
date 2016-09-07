@@ -14,7 +14,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(101.08245301691568, 1.5909959458718788, 9);// Riau 
+Map.setCenter(101.08245301691568, 1.5909959458718788, 8);// Riau 
 // Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Jambi 
 
 
@@ -400,7 +400,7 @@ var printage = function(t, folder){
   var img = ee.Image(folder.get(t));
   // img = ee.Image([26]).where(img.lte(25).gte(0), img).clip(totalarea_outline)
   var taskname = ee.String('Age_Riau_North').cat(ee.String(year));
-  Map.addLayer(img.updateMask(img.neq(100)), {min: 0, max: 25,
+  Map.addLayer(img.updateMask(img.neq(9999)), {min: 0, max: 25,
     palette:[ '#fff832','#4cff62','#196e0a']}, year);
   // Export.image.toDrive({
   //   image: img,
