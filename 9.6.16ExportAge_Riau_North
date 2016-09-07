@@ -351,7 +351,7 @@ var age = function(t){
         'lossYear': Gunarso_age.select('lossyear'),
         'noloss': Gunarso_age.select('noloss'),
         't': t,
-        'OTH': Gunarso_age.select('blank').add(100),
+        'OTH': Gunarso_age.select('blank').add(9999),
       }
   );
   var ageOP_OP =Gunarso_age.expression(
@@ -363,7 +363,7 @@ var age = function(t){
         'lossYear': Gunarso_age.select('lossyear'),
         'noloss': Gunarso_age.select('noloss'),
         't': t,
-        'OTH': Gunarso_age.select('blank').add(100),
+        'OTH': Gunarso_age.select('blank').add(9999),
       }
   );
 
@@ -400,7 +400,7 @@ var printage = function(t, folder){
   var img = ee.Image(folder.get(t));
   // img = ee.Image([26]).where(img.lte(25).gte(0), img).clip(totalarea_outline)
   var taskname = ee.String('Age_Riau_North').cat(ee.String(year));
-  Map.addLayer(img.updateMask(img.neq(9999)), {min: 0, max: 25,
+  Map.addLayer(img, {min: 0, max: 25,
     palette:[ '#fff832','#4cff62','#196e0a']}, year);
   // Export.image.toDrive({
   //   image: img,
