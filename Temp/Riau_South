@@ -251,7 +251,7 @@ var year_2000 = Gunarso.expression(
 
 
 
-// #########################a
+/*// #########################a
 // #Step4 : Land use classifications,  2000 to 2010 
 // #########################
 
@@ -339,18 +339,18 @@ var printclass = function(t, folder){
 };
 
 //Display all maps, and export them 
-// var t=2010; var p0= printclass(t, Gunarso);
-// t=2009; p0= printclass(t, Gunarso);
-// t=2008; p0= printclass(t, Gunarso);
-// t=2007; p0= printclass(t, Gunarso);
-// t=2006; p0= printclass(t, Gunarso);
-// t=2005; p0= printclass(t, Gunarso);
-// t=2004; p0= printclass(t, Gunarso);
-// t=2003; p0= printclass(t, Gunarso);
-// t=2002; p0= printclass(t, Gunarso);
-// t=2001; p0= printclass(t, Gunarso);
-// t=2000; p0= printclass(t, Gunarso);
-
+var t=2010; var p0= printclass(t, Gunarso);
+t=2009; p0= printclass(t, Gunarso);
+t=2008; p0= printclass(t, Gunarso);
+t=2007; p0= printclass(t, Gunarso);
+t=2006; p0= printclass(t, Gunarso);
+t=2005; p0= printclass(t, Gunarso);
+t=2004; p0= printclass(t, Gunarso);
+t=2003; p0= printclass(t, Gunarso);
+t=2002; p0= printclass(t, Gunarso);
+t=2001; p0= printclass(t, Gunarso);
+t=2000; p0= printclass(t, Gunarso);
+*/
 
 
 
@@ -427,20 +427,18 @@ var printage = function(t, folder){
     // region: totalarea_outline,
     maxPixels: 1e13
   });
-  
-  
   return(3);
 };
 
 var t=2010;
 var p = printage(t, Gunarso_agefinal);
-t=2009; p = printage(t, Gunarso_agefinal);
+// t=2009; p = printage(t, Gunarso_agefinal);
 t=2008; p = printage(t, Gunarso_agefinal);
-t=2007; p = printage(t, Gunarso_agefinal);
-t=2006; p = printage(t, Gunarso_agefinal);
+// t=2007; p = printage(t, Gunarso_agefinal);
+// t=2006; p = printage(t, Gunarso_agefinal);
 t=2005; p = printage(t, Gunarso_agefinal);
 t=2004; p = printage(t, Gunarso_agefinal);
-t=2003; p = printage(t, Gunarso_agefinal);
-t=2002; p = printage(t, Gunarso_agefinal);
-t=2001; p = printage(t, Gunarso_agefinal);
-t=2000; p = printage(t, Gunarso_agefinal);
+// t=2003; p = printage(t, Gunarso_agefinal);
+// t=2002; p = printage(t, Gunarso_agefinal);
+// t=2001; p = printage(t, Gunarso_agefinal);
+// t=2000; p = printage(t, Gunarso_agefinal);
