@@ -53,11 +53,6 @@ var R_north  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
 //  Middle
 var R_middle  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
-
-
-
-
-    // area_working: works, and is a bigger area 
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
 var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat'); 
 
@@ -66,6 +61,8 @@ var Kalimantan_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimanta
 var Kalimantan_Tengah = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Tengah');
 var Kalimantan_Selatan = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Selatan');
 var Kalimantan = Kalimantan_Timur.merge(Kalimantan_Barat).merge(Kalimantan_Tengah).merge(Kalimantan_Selatan);
+
+
 
 
     // define totalarea 
