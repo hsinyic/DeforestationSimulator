@@ -45,7 +45,7 @@ var showLandsat = function(t, folder){
   var index= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(index));
   Map.addLayer( img, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, year);
-  // Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'Hansen');
+  Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'Hansen');
   return ee.Number(2);
 };
 
@@ -129,7 +129,7 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
 
 
 // Map.setCenter(101.08245301691568, 0.7909959458718788, 9);// PekanBaru, Riau overall  
-// Map.setCenter(102.036767578125, 0.5232166048991478, 12); //PekanBaru, Indo 
+Map.setCenter(102.036767578125, 0.5232166048991478, 12); //PekanBaru, Indo 
 // Map.setCenter(101.53358459472656,0.5366056196135927, 10); //PekanBaru, Indo P2
 // Map.setCenter(101.964111328125, -1.5324100450044358, 9); //Bungo 
 // Map.setCenter( 102.8704833984375, -1.7245930431979002, 10);
@@ -137,7 +137,7 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
 // Map.setCenter(102.59239196777344,3.94029555672408, 12); // East of Jerantut, Malaysia Penninsula
 // Map.setCenter(101.14837646484375,3.888917295949231, 6); // Teluk Intan, Malaysia, Penn
 // Map.setCenter(98.41690063476562, 3.7039299185334675, 12) // Medan, Indonesia 
-Map.setCenter(109.51789855957031,1.205660524693437, 10)// Momong, Indoensia -- Landsat SLC effect  
+// Map.setCenter(109.51789855957031,1.205660524693437, 10)// Momong, Indoensia -- Landsat SLC effect  
 // Map.setCenter(116.52099609375,5.112829778499461, 12) // Nabawan, Malaysia 
 // Map.setCenter(112.21229553222656,-2.538727288468332, 10); // Pembuang, Central Kalimantan
 // Map.setCenter(118.245849609375, 4.477856485570586, 8); // Between Kunak and Tawau, Malaysia 
