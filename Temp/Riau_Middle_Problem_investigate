@@ -19,16 +19,16 @@ Map.setCenter(101.08245301691568, 1.5909959458718788, 6);// Riau
 // Map.setCenter(114.43359375,-1.054627942275887, 6);// Kalimantan 
 
 
-// var db= ('0000FF').toString();
-// var lb= ('#11ffff').toString();
-// var red=('ff510f').toString();
-// var lr = ('#ff8f7d').toString();
-// var dg= ('#196e0a').toString();
-// var yellow=('#fff832').toString();
-// var gr= ('#4cff62').toString();
-// var whi=('#f7f7f7').toString();
-// var black = ('#101010').toString();
-// var pink = ('#ff50f1').toString();
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ('#ff8f7d').toString();
+var dg= ('#196e0a').toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
+var pink = ('#ff50f1').toString();
 
 
 var scale = ee.Number(1000); 
@@ -177,6 +177,9 @@ var years05  = ee.List.sequence(2006, 2010,1);
 var buffer = function(Designated, Target,source, years ){
   var offset = ee.Number(years.get(0)).subtract(1);
   var cumulativeCost = ee.Image([1]).clip(totalarea_outline).cumulativeCost({source: source,maxDistance: 200 * 1000 });
+Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+    palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990--2000");
+
   var costmap = blank.where(Designated.eq(1), cumulativeCost);
   costmap = costmap.updateMask(costmap);
   var mincostmapping = function(t){
@@ -417,8 +420,8 @@ var printage = function(t, folder){
   t= ee.Number(t).subtract(1990);
   var img = ee.Image(folder.get(t));
   var taskname = ee.String('Age_Riau_Middle_condensed_9.12').cat(ee.String(year));
-  // Map.addLayer(img.updateMask(img.neq(100)), {min: 0, max: 25,
-  //   palette:[ '#fff832','#4cff62','#196e0a']}, year);
+  Map.addLayer(img.updateMask(img.neq(100)), {min: 0, max: 25,
+    palette:[ '#fff832','#4cff62','#196e0a']}, year);
   // Export.image.toDrive({
   //   image: img,
   //   description: taskname.getInfo(),
