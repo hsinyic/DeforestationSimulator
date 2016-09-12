@@ -432,15 +432,15 @@ var printage = function(t, folder){
 
 var t=2010;
 var p = printage(t, Gunarso_agefinal);
-// t=2009; p = printage(t, Gunarso_agefinal);
+t=2009; p = printage(t, Gunarso_agefinal);
 t=2008; p = printage(t, Gunarso_agefinal);
-// t=2007; p = printage(t, Gunarso_agefinal);
-// t=2006; p = printage(t, Gunarso_agefinal);
+t=2007; p = printage(t, Gunarso_agefinal);
+t=2006; p = printage(t, Gunarso_agefinal);
 t=2005; p = printage(t, Gunarso_agefinal);
 t=2004; p = printage(t, Gunarso_agefinal);
-// t=2003; p = printage(t, Gunarso_agefinal);
-// t=2002; p = printage(t, Gunarso_agefinal);
-// t=2001; p = printage(t, Gunarso_agefinal);
-// t=2000; p = printage(t, Gunarso_agefinal);
+t=2003; p = printage(t, Gunarso_agefinal);
+t=2002; p = printage(t, Gunarso_agefinal);
+t=2001; p = printage(t, Gunarso_agefinal);
+t=2000; p = printage(t, Gunarso_agefinal);
 Map.addLayer(totalarea)
 Map.centerObject(totalarea, 8);
