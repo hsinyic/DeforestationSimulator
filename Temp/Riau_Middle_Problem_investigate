@@ -254,7 +254,7 @@ var year_2000 = Gunarso.expression(
 
 
 
-/*// #########################a
+// #########################a
 // #Step4 : Land use classifications,  2000 to 2010 
 // #########################
 
@@ -328,7 +328,7 @@ var printclass = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String(year).cat(ee.String('Riau_south'));
+  var taskname = ee.String(year).cat(ee.String('Riau_Middle_condensed_v2_'));
   Map.addLayer(img, {min: 0, max: 6,
     palette:[ '#11ffff', '0000FF', '#4cff62',  '#fff832', 'ff510f', '#f7f7f7', '0000FF']}, year);
   Export.image.toDrive({
@@ -353,7 +353,7 @@ t=2003; p0= printclass(t, Gunarso);
 t=2002; p0= printclass(t, Gunarso);
 t=2001; p0= printclass(t, Gunarso);
 t=2000; p0= printclass(t, Gunarso);
-*/
+
 
 
 
@@ -413,37 +413,37 @@ var age = function(t){
 
 
 
-var Gunarso_agefinal = yr.map(age);
+// var Gunarso_agefinal = yr.map(age);
 
 var printage = function(t, folder){
   var year = t.toString();
   t= ee.Number(t).subtract(1990);
   var img = ee.Image(folder.get(t));
-  var taskname = ee.String('Age_Riau_Middle_condensed_9.12').cat(ee.String(year));
+  var taskname = ee.String('Age_Riau_Middle_condensed_v2_').cat(ee.String(year));
   Map.addLayer(img.updateMask(img.neq(100)), {min: 0, max: 25,
     palette:[ '#fff832','#4cff62','#196e0a']}, year);
-  // Export.image.toDrive({
-  //   image: img,
-  //   description: taskname.getInfo(),
-  //   scale: 100,
-  //   region: totalarea_outline,
-  //   // region: totalarea_outline,
-  //   maxPixels: 1e13
-  // });
+  Export.image.toDrive({
+    image: img,
+    description: taskname.getInfo(),
+    scale: 100,
+    region: totalarea_outline,
+    // region: totalarea_outline,
+    maxPixels: 1e13
+  });
   return(3);
 };
 
-var t=2010;
-var p = printage(t, Gunarso_agefinal);
-t=2009; p = printage(t, Gunarso_agefinal);
-t=2008; p = printage(t, Gunarso_agefinal);
-t=2007; p = printage(t, Gunarso_agefinal);
-t=2006; p = printage(t, Gunarso_agefinal);
-t=2005; p = printage(t, Gunarso_agefinal);
-t=2004; p = printage(t, Gunarso_agefinal);
-t=2003; p = printage(t, Gunarso_agefinal);
-t=2002; p = printage(t, Gunarso_agefinal);
-t=2001; p = printage(t, Gunarso_agefinal);
-t=2000; p = printage(t, Gunarso_agefinal);
+// var t=2010;
+// var p = printage(t, Gunarso_agefinal);
+// t=2009; p = printage(t, Gunarso_agefinal);
+// t=2008; p = printage(t, Gunarso_agefinal);
+// t=2007; p = printage(t, Gunarso_agefinal);
+// t=2006; p = printage(t, Gunarso_agefinal);
+// t=2005; p = printage(t, Gunarso_agefinal);
+// t=2004; p = printage(t, Gunarso_agefinal);
+// t=2003; p = printage(t, Gunarso_agefinal);
+// t=2002; p = printage(t, Gunarso_agefinal);
+// t=2001; p = printage(t, Gunarso_agefinal);
+// t=2000; p = printage(t, Gunarso_agefinal);
 Map.addLayer(totalarea)
 Map.centerObject(totalarea, 8);
