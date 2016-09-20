@@ -1,0 +1,20 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var Jordon03 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/2003");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var trees = Jordon03.eq(4);
+
+var source = trees.updateMask(trees);
+var BBAP_filter = ee.Filter.inList('Country', ['Argentina', 'Brazil', 'Paraguay', 'Bolivia']);
+
+var BBAP = countries.filterMetadata(BBAP_filter);
+
+var totalarea = ee.FeatureCollection(BBAP);
+Map.addLayer(BBAP);
+Map.cet
+var totalarea_outline = totalarea.geometry().bounds();
+// var totalarea_raster = totalarea.reduceToImage({properties: ['0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+
+
+var cost = ee.Image([1]).clip
+var costMap = 
