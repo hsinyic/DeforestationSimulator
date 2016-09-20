@@ -7,7 +7,7 @@ var trees = Jordon03.eq(4);
 var source = trees.updateMask(trees);
 var BBAP_filter = ee.Filter.inList('Country', ['Argentina', 'Brazil', 'Paraguay', 'Bolivia']);
 
-var BBAP = countries.filterMetadata(BBAP_filter);
+var BBAP = countries.filter(BBAP_filter);
 
 var totalarea = ee.FeatureCollection(BBAP);
 Map.addLayer(BBAP);
@@ -15,18 +15,22 @@ Map.centerObject(BBAP);
 print(BBAP);
 var totalarea_outline = totalarea.geometry().bounds();
 // var totalarea_raster = totalarea.reduceToImage({properties: ['0'],reducer: ee.Reducer.first()}); // for Indonesia_1
-var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+var totalarea_raster = ee.Image([3]).clip(totalarea);
+totalarea_raster = ee.Image([0]).clip(totalarea_outline).where(totalarea_raster.eq(3), 1);
+Map.addLayer(totalarea_outline.updateMask(totalarea_outline));
 
 
 var cost = ee.Image([1]).clip(totalarea);
 var costMap = cost.cumulativeCost(
   { source: source,maxDistance: 300 * 1000 });
-  
+
+
+
   Export.image.toDrive({
     image:costMap ,
     description: 'cumulativeCost_SA',
     scale: 250,
-    region: totalarea,
+    region: totalarea_outline,
     maxPixels: 1e13
   });
   
@@ -34,6 +38,6 @@ var costMap = cost.cumulativeCost(
     image:Jordon03 ,
     description: 'Jordon_original_reexport',
     scale: 250,
-    region: totalarea,
+    region: totalarea_outline,
     maxPixels: 1e13
   });
