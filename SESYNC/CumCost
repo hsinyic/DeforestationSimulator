@@ -2,7 +2,20 @@
 var Jordon03 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/2003"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ('#ff8f7d').toString();
+var dg= ('#196e0a').toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
+var pink = ('#ff50f1').toString();
+
 var trees = Jordon03.eq(4);
+Map.addLayer(trees);
 
 var source = trees.updateMask(trees);
 var BBAP_filter = ee.Filter.inList('Country', ['Argentina', 'Brazil', 'Paraguay', 'Bolivia']);
@@ -11,23 +24,24 @@ var BBAP = countries.filter(BBAP_filter);
 
 var totalarea = ee.FeatureCollection(BBAP);
 Map.addLayer(BBAP);
-Map.centerObject(BBAP);
 print(BBAP);
 var totalarea_outline = totalarea.geometry().bounds();
 // var totalarea_raster = totalarea.reduceToImage({properties: ['0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_raster = ee.Image([3]).clip(totalarea);
 totalarea_raster = ee.Image([0]).clip(totalarea_outline).where(totalarea_raster.eq(3), 1);
-Map.addLayer(totalarea_outline.updateMask(totalarea_outline));
+Map.addLayer(totalarea_raster.updateMask(totalarea_raster));
 
 
 var cost = ee.Image([1]).clip(totalarea);
 var costMap = cost.cumulativeCost(
   { source: source,maxDistance: 300 * 1000 });
 
+Map.addLayer(costMap, {min: 0, max: 10,
+    palette:[db, lb  ]}, "cumulativeCost");
 
 
   Export.image.toDrive({
-    image:costMap ,
+    image:costMap.where(totalarea_raster.neq(1),9999) ,
     description: 'cumulativeCost_SA',
     scale: 250,
     region: totalarea_outline,
@@ -41,3 +55,5 @@ var costMap = cost.cumulativeCost(
     region: totalarea_outline,
     maxPixels: 1e13
   });
+
+Map.centerObject(BBAP,3);
