@@ -14,7 +14,42 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
     Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
-    geometry = /* color: d63000 */ee.Geometry.Point([139.89990234375, -3.4585910482810767]);
+    geometry = /* color: d63000 */ee.Geometry({
+      "type": "GeometryCollection",
+      "geometries": [
+        {
+          "type": "Point",
+          "coordinates": [
+            139.89990234375,
+            -3.4585910482810767
+          ]
+        },
+        {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                103.20556632243097,
+                1.8355091683561893
+              ],
+              [
+                103.17810050211847,
+                1.3577908295265286
+              ],
+              [
+                103.54614249430597,
+                1.2287343842727403
+              ],
+              [
+                103.83178702555597,
+                1.8272736311242657
+              ]
+            ]
+          ],
+          "evenOdd": true
+        }
+      ]
+    });
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(101.08245301691568, 0.7909959458718788, 5);// Riau 
 // Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
@@ -38,8 +73,8 @@ var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
 
-var taskname_string = ('Kulaijaya');
-var area_string = ee.String('Kulaijaya');
+var taskname_string = ('Kulaijaya_Pontian');
+var area_string = ee.String('Kulaijaya_Pontian');
 var folder_name = ('Penninsula_north');
 var forest_threshold = ee.Number(90);
 var scale = ee.Number(1000); 
@@ -118,23 +153,48 @@ var Malaysia_1 = ee.FeatureCollection('ft:1YBFUqpWfyHo-273yQ5biHUJARSHi-AwWRFmF3
                     var johor_south= Malaysia_2.filter(filter_johor_south);
                     var johor_single_state = Malaysia_2.filterMetadata('State', 'equals', 'Kulaijaya');
 
-var cropping = ee.FeatureCollection(Pen_middle).merge(ee.FeatureCollection(Pen_north)).merge(ee.FeatureCollection(Melaka_Negeri_Sembilan)).merge(johor_north).merge(johor_middle).merge(Malaysia_2.filter(ee.Filter.inList('State', [
-  'Muar', 'Segamat', 'Keluang', 'Batu Pahat', 'Ledang','Kota Tinggi', 'Mersing','Johor Baharu'])));
-Peninsula_outline.reducetoImage()
-var where(cropping.geometry());
-Map.addLayer(remaining);
+var cropping = ee.FeatureCollection(Pen_middle).merge(ee.FeatureCollection(Pen_north))
+.merge(ee.FeatureCollection(Melaka_Negeri_Sembilan));
+var cropping2 = ee.FeatureCollection(Malaysia_2.filter(
+  ee.Filter.inList('State', [
+  'Muar', 'Segamat', 'Keluang', 'Batu Pahat', 'Ledang',
+  'Kota Tinggi', 'Mersing','Johor Baharu'])));
+// print(cropping);
+// print(cropping2);
+
+var area = ee.Image([0]).clip(cropping.merge(cropping2));
+// Map.addLayer(cropping);
+// Map.addLayer(cropping2);
+// Map.addLayer(area);
+Map.addLayer(area, {min: 0, max: 1,palette:[red, db ]}, "johor_problematic_states");
+
+var johor_problematic_states = ee.Image([1]).clip(Peninsula_outline);
+// .where(area.neq(1),1);
+Map.addLayer(johor_problematic_states, {min: 0, max: 1,palette:[red, db ]}, "johor_problematic_states");
+johor_problematic_states = johor_problematic_states.where(area.eq(0), 0);
+Map.addLayer(johor_problematic_states.updateMask(johor_problematic_states), {min: 0, max: 2,palette:[red, db ]}, "johor_problematic_states");
+
+
+var final= ee.Image([0]).clip(geometry).where(johor_problematic_states.neq(0),1);
+Map.addLayer(final.updateMask(final), {min: 0, max: 2,palette:[red, db ]}, "johor_problematic_states");
+var final_vector = final.updateMask(final).reduceToVectors({scale: 30,});
+Map.addLayer(final_vector);
+// print(final_vector);
 var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
 var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
 var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 
 
-var totalarea = ee.FeatureCollection(johor_single_state);
+// var totalarea = ee.FeatureCollection(johor_single_state);
+// var totalarea_outline = totalarea.geometry().bounds();
+// // var totalarea_raster = totalarea.reduceToImage({properties: ['0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+// var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+
+var totalarea = ee.FeatureCollection(final_vector);
 var totalarea_outline = totalarea.geometry().bounds();
-// var totalarea_raster = totalarea.reduceToImage({properties: ['0'],reducer: ee.Reducer.first()}); // for Indonesia_1
-var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+var totalarea_raster = totalarea.reduceToImage({properties: ['count'],reducer: ee.Reducer.first()}); // for Indonesia_1
 
-
-// Map.addLayer(totalarea_raster.eq(1));
+Map.addLayer(totalarea_raster.eq(1));
 
 
 
@@ -323,6 +383,15 @@ x=2005; lossYear = execute(x, offset);
     folder: folder_name,
     maxPixels: 1e13
   });
+  
+    Export.image.toDrive({
+    image: ee.Image([2]).where(OP10.neq(1), 9999),
+    description: 'testexport',
+    scale: 100,
+    region: totalarea_outline,
+    folder: folder_name,
+    maxPixels: 1e13
+  });
 
 // var lossYear1 = lossYear.where(OP00.eq(1).and(lossYear.gt(2000)), 2000);   
 // var lossYear2 = lossYear1.where(OP05.eq(1).and(lossYear1.gt(2005)), 2005);   
@@ -442,37 +511,37 @@ var annual = function(t){
   return ee.Image([9999]).clip(totalarea_outline).where(totalarea_raster.neq(0), yearmap);
 };
 
-// var Gunarso = yr.map(annual);
+var Gunarso = yr.map(annual);
 
-// var printclass = function(t, folder){
-//   var year = t.toString();
-//   t= ee.Number(t).subtract(2000);
-//   var img = ee.Image(folder.get(t));
-//   var taskname = ee.String(year).cat(ee.String('_')).cat(ee.String(taskname_string));
-//   Map.addLayer(img, {min: 0, max: 6,
-//     palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
-//   Export.image.toDrive({
-//     image: img,
-//     description: taskname.getInfo(),
-//     scale: 100,
-//     folder:folder_name,
-//     region: totalarea_outline,
-//     maxPixels: 1e13
-//   });
-//   return(3);
-// };
+var printclass = function(t, folder){
+  var year = t.toString();
+  t= ee.Number(t).subtract(2000);
+  var img = ee.Image(folder.get(t));
+  var taskname = ee.String(year).cat(ee.String('_')).cat(ee.String(taskname_string));
+  Map.addLayer(img, {min: 0, max: 6,
+    palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
+  Export.image.toDrive({
+    image: img,
+    description: taskname.getInfo(),
+    scale: 100,
+    folder:folder_name,
+    region: totalarea_outline,
+    maxPixels: 1e13
+  });
+  return(3);
+};
 
-// var t=2010; var p0= printclass(t, Gunarso);
-// t=2009; p0= printclass(t, Gunarso);
-// t=2008; p0= printclass(t, Gunarso);
-// t=2007; p0= printclass(t, Gunarso);
-// t=2006; p0= printclass(t, Gunarso);
-// t=2005; p0= printclass(t, Gunarso);
-// t=2004; p0= printclass(t, Gunarso);
-// t=2003; p0= printclass(t, Gunarso);
-// t=2002; p0= printclass(t, Gunarso);
-// t=2001; p0= printclass(t, Gunarso);
-// t=2000; p0= printclass(t, Gunarso);
+var t=2010; var p0= printclass(t, Gunarso);
+t=2009; p0= printclass(t, Gunarso);
+t=2008; p0= printclass(t, Gunarso);
+t=2007; p0= printclass(t, Gunarso);
+t=2006; p0= printclass(t, Gunarso);
+t=2005; p0= printclass(t, Gunarso);
+t=2004; p0= printclass(t, Gunarso);
+t=2003; p0= printclass(t, Gunarso);
+t=2002; p0= printclass(t, Gunarso);
+t=2001; p0= printclass(t, Gunarso);
+t=2000; p0= printclass(t, Gunarso);
 
 
 
@@ -525,66 +594,65 @@ var age = function(t){
   return(agemap);
 };
 
-var Gunarso_agefinal = yr.map(age);
+// var Gunarso_agefinal = yr.map(age);
 
-var printage = function(t, folder){
-  var year = t.toString();
-  t= ee.Number(t).subtract(1990);
-  var img = ee.Image(folder.get(t));
-  var taskname = ee.String('Age_').cat(ee.String(taskname_string)).cat(ee.String(year));
-  Map.addLayer(img.updateMask(img.neq(100)), {min: 0, max: 25,
-    palette:[ '#fff832','#4cff62','#196e0a']}, year);
-  Export.image.toDrive({
-    image: img,
-    description: taskname.getInfo(),
-    scale: 100,
-    region: totalarea_outline,
-    folder: folder_name,
-    maxPixels: 1e13
-  });
-  return(3);
-};
+// var printage = function(t, folder){
+//   var year = t.toString();
+//   t= ee.Number(t).subtract(1990);
+//   var img = ee.Image(folder.get(t));
+//   var taskname = ee.String('Age_').cat(ee.String(taskname_string)).cat(ee.String(year));
+//   Map.addLayer(img.updateMask(img.neq(100)), {min: 0, max: 25,
+//     palette:[ '#fff832','#4cff62','#196e0a']}, year);
+//   Export.image.toDrive({
+//     image: img,
+//     description: taskname.getInfo(),
+//     scale: 100,
+//     region: totalarea_outline,
+//     folder: folder_name,
+//     maxPixels: 1e13
+//   });
+//   return(3);
+// };
 
-var t=2010;
-var p = printage(t, Gunarso_agefinal);
-t=2009; p = printage(t, Gunarso_agefinal);
-t=2008; p = printage(t, Gunarso_agefinal);
-t=2007; p = printage(t, Gunarso_agefinal);
-t=2006; p = printage(t, Gunarso_agefinal);
-t=2005; p = printage(t, Gunarso_agefinal);
-t=2004; p = printage(t, Gunarso_agefinal);
-t=2003; p = printage(t, Gunarso_agefinal);
-t=2002; p = printage(t, Gunarso_agefinal);
-t=2001; p = printage(t, Gunarso_agefinal);
-t=2000; p = printage(t, Gunarso_agefinal);
+// var t=2010;
+// var p = printage(t, Gunarso_agefinal);
+// t=2009; p = printage(t, Gunarso_agefinal);
+// t=2008; p = printage(t, Gunarso_agefinal);
+// t=2007; p = printage(t, Gunarso_agefinal);
+// t=2006; p = printage(t, Gunarso_agefinal);
+// t=2005; p = printage(t, Gunarso_agefinal);
+// t=2004; p = printage(t, Gunarso_agefinal);
+// t=2003; p = printage(t, Gunarso_agefinal);
+// t=2002; p = printage(t, Gunarso_agefinal);
+// t=2001; p = printage(t, Gunarso_agefinal);
+// t=2000; p = printage(t, Gunarso_agefinal);
 
-Map.centerObject(totalarea_outline, 8);
 
-Map.centerObject(totalarea_outline, 11);
-print( OP90.updateMask(OP90).reduceRegion({
-      reducer: ee.Reducer.count(),
-      geometry: totalarea_outline,
-      scale: 30,
-      maxPixels: 12e9,
-    }));
+Map.centerObject(totalarea_outline, 9);
+// print( OP90.updateMask(OP90).reduceRegion({
+//       reducer: ee.Reducer.count(),
+//       geometry: totalarea_outline,
+//       scale: 30,
+//       maxPixels: 12e9,
+//     }));
 
-print( OP90.eq(0).and(OP00.eq(1)).updateMask(OP90.eq(0).and(OP00.eq(1))).reduceRegion({
-      reducer: ee.Reducer.count(),
-      geometry: totalarea_outline,
-      scale: 30,
-      maxPixels: 12e9,
-    }));
+// print( OP90.eq(0).and(OP00.eq(1)).updateMask(OP90.eq(0).and(OP00.eq(1))).reduceRegion({
+//       reducer: ee.Reducer.count(),
+//       geometry: totalarea_outline,
+//       scale: 30,
+//       maxPixels: 12e9,
+//     }));
     
-print(OP00.eq(0).and(OP05.eq(1)).updateMask((OP00.eq(0).and(OP05.eq(1)))).reduceRegion({
-      reducer: ee.Reducer.count(),
-      geometry: totalarea_outline,
-      scale: 30,
-      maxPixels: 12e9,
-    }));
+// print(OP00.eq(0).and(OP05.eq(1)).updateMask((OP00.eq(0).and(OP05.eq(1)))).reduceRegion({
+//       reducer: ee.Reducer.count(),
+//       geometry: totalarea_outline,
+//       scale: 30,
+//       maxPixels: 12e9,
+//     }));
     
-print(OP05.eq(0).and(OP10.eq(1)).updateMask(OP05.eq(0).and(OP10.eq(1))).reduceRegion({
-      reducer: ee.Reducer.count(),
-      geometry: totalarea_outline,
-      scale: 30,
-      maxPixels: 12e9,
-    }));
+// print(OP05.eq(0).and(OP10.eq(1)).updateMask(OP05.eq(0).and(OP10.eq(1))).reduceRegion({
+//       reducer: ee.Reducer.count(),
+//       geometry: totalarea_outline,
+//       scale: 30,
+//       maxPixels: 12e9,
+//     }));
