@@ -75,7 +75,7 @@ var pink = ('#ff50f1').toString();
 
 var taskname_string = ('Kulaijaya_Pontian');
 var area_string = ee.String('Kulaijaya_Pontian');
-var folder_name = ('Test_Johor');
+var folder_name = ('Test_Johor_30');
 var forest_threshold = ee.Number(90);
 var scale = ee.Number(1000); 
 
@@ -124,7 +124,7 @@ Map.addLayer(totalarea_final_raster.updateMask(totalarea_final_raster), {min: 0,
     Export.image.toDrive({
     image: ee.Image([2]).clip(totalarea_final_outline),
     description: 'testexport_straightforward',
-    scale: 100,
+    scale: 30,
     region: totalarea_final_outline,
     folder: folder_name,
     maxPixels: 1e13
@@ -190,7 +190,7 @@ var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
 Export.image.toDrive({
     image: gfcImage.select(['lossyear']).clip(totalarea_final_outline),
     description: 'lossYear_straightforward',
-    scale: 100,
+    scale: 30,
     region: totalarea_final_outline,
     folder: folder_name,
     maxPixels: 1e13
@@ -199,7 +199,7 @@ Export.image.toDrive({
 Export.image.toDrive({
     image: gfcImage.select(['lossyear']).where(totalarea_raster.neq(1), 9999).clip(totalarea_final_outline),
     description: 'lossYear_straightforward_add_where',
-    scale: 100,
+    scale: 30,
     region: totalarea_final_outline,
     folder: folder_name,
     maxPixels: 1e13
@@ -244,7 +244,7 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
   Export.image.toDrive({
     image: lossYear,//.where(OP10.neq(1), 9999),
     description: 'hansenlayer_elaborate_cropping_no_where',
-    scale: 100,
+    scale: 30,
     region: totalarea_outline,
     folder: folder_name,
     maxPixels: 1e13
@@ -253,7 +253,7 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
     Export.image.toDrive({
     image: ee.Image([2]).clip(totalarea_outline),//.where(OP10.neq(1), 9999),
     description: 'testexport_elaborate_cropping_no_where',
-    scale: 100,
+    scale: 30,
     region: totalarea_outline,
     folder: folder_name,
     maxPixels: 1e13
@@ -263,11 +263,13 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
   Export.image.toDrive({
     image: lossYear.where(OP10.neq(1), 9999),
     description: 'lossYear_where_OP10_neq_1_9999)_v2',
-    scale: 100,
+    scale: 30,
     region: totalarea_outline,
     folder: folder_name,
     maxPixels: 1e13
   });
   
+
+
   
 Map.centerObject(totalarea, 9)
