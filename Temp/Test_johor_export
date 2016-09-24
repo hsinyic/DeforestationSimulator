@@ -168,11 +168,14 @@ var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
 // var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 
 var totalarea = final_vector;
+Map.addLayer({eeObject: totalarea, name:'v2 totalarea'});
+
+
 var totalarea_outline = totalarea.geometry().bounds();
-Map.addLayer({eeObject: totalarea_outline, name:'totalarea_outline'});
+Map.addLayer({eeObject: totalarea_outline, name:'v2 totalarea_outline'});
 var totalarea_raster = totalarea.reduceToImage({properties: ['count'],reducer: ee.Reducer.first()}); // for Indonesia_1
 
-Map.addLayer({eeObject: totalarea_raster.eq(1), name:'v2 totalarea_raster'});
+Map.addLayer({eeObject: totalarea_raster.eq(1), name:'v2 totalarea_raster, eq 1'});
 
 
 
