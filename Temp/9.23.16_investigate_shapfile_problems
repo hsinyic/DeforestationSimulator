@@ -1,0 +1,286 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
+    Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
+    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft"),
+    ma90 = ee.FeatureCollection("ft:1ClQZOLYbgQUpFlaj-IEM0H-HCYH2qgWB0IMgw67s"),
+    ma10 = ee.FeatureCollection("ft:1qnUbN9G35ty03brJzVL_bvwur5r0CrAORkHwZSak"),
+    ma05 = ee.FeatureCollection("ft:1_TjOWmEO3IJviMvrPnpmSf6-X3tbBCNg0rW8MZOb"),
+    ma00 = ee.FeatureCollection("ft:1dZpd04fr-TNZV_5BlsT6GgmDHXTLqoDwH4jg59vX"),
+    in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
+    in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
+    in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    geometry = /* color: d63000 */ee.Geometry({
+      "type": "GeometryCollection",
+      "geometries": [
+        {
+          "type": "Point",
+          "coordinates": [
+            139.89990234375,
+            -3.4585910482810767
+          ]
+        },
+        {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                103.20556632243097,
+                1.8355091683561893
+              ],
+              [
+                103.17810050211847,
+                1.3577908295265286
+              ],
+              [
+                103.54614249430597,
+                1.2287343842727403
+              ],
+              [
+                103.83178702555597,
+                1.8272736311242657
+              ]
+            ]
+          ],
+          "evenOdd": true
+        }
+      ]
+    });
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Map.setCenter(101.08245301691568, 0.7909959458718788, 5);// Riau 
+// Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
+// Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Bungo 
+// Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
+// Map.setCenter(102.10693359375, 3.973860975839102, 9);
+// Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
+// Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
+// Map.setCenter(104.9853515625, -5.0909441750333855, 9) ;// Lampung
+// Map.setCenter(114.43359375,-1.054627942275887, 6);// Kalimantan 
+// Map.setCenter(136.95556640625,-3.491489430459778, 6);// PNG
+
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ('#ff8f7d').toString();
+var dg= ('#196e0a').toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
+var pink = ('#ff50f1').toString();
+
+var taskname_string = ('Kulaijaya_Pontian');
+var area_string = ee.String('Kulaijaya_Pontian');
+var folder_name = ('Penninsula_north');
+var forest_threshold = ee.Number(90);
+var scale = ee.Number(1000); 
+
+// ########################
+// # Indoensia Boundaries 
+// ########################
+var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
+//Sumatra 
+var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+var Lampung = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Lampung');
+var Sumatera_Selatan = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Selatan'); 
+var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+var Aceh = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Aceh');
+var Sumatera_Utara = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Utara');
+var Sumatera_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat');
+var Bengkulu = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Bengkulu');
+      // Sumatra >> Riau 
+            var addprovinces_riau = function(name, prev){
+              name = ee.String(name);
+              prev = ee.FeatureCollection(prev);
+              return ee.FeatureCollection(prev
+                      .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
+            };
+                // area_notworking: R1, R2 splits the province Riau, and doesn't work 
+            // South
+            var R_south =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
+                      .iterate(addprovinces_riau, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
+            //North
+            var R_north  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
+                      .iterate(addprovinces_riau, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
+            //  Middle
+            var R_middle  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
+                      .iterate(addprovinces_riau, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
+
+//kalimantan
+var Kalimantan_Timur = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Timur');
+var Kalimantan_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Barat');
+var Kalimantan_Tengah = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Tengah');
+var Kalimantan_Selatan = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Selatan');
+var Kalimantan = Kalimantan_Timur.merge(Kalimantan_Barat).merge(Kalimantan_Tengah).merge(Kalimantan_Selatan);
+
+//Papua
+var Papua_1 =Indonesia_1.filterMetadata('NAME_1', 'equals', 'Papua');
+var Papua_2 =Indonesia_1.filterMetadata('NAME_1', 'equals', 'Irian Jaya Barat');
+var Papua = Papua_1.merge(Papua_2);
+
+
+//Malaysia 
+var Malaysia_1 = ee.FeatureCollection('ft:1YBFUqpWfyHo-273yQ5biHUJARSHi-AwWRFmF3JEK', 'Geometry');
+// var Malay_state = Malaysia_1.filterMetadata('State', 'equals', area_string); // only when you are doing Sarawak and Sabah
+
+          // Penninsula north and middle 
+          var addprovinces_Penninsula = function(name, prev){
+            name = ee.String(name);
+            prev = ee.FeatureCollection(prev);
+            return ee.FeatureCollection(prev
+                    .merge(Malaysia_1.filterMetadata('State', 'equals', name)));
+          };
+          var Pen_middle  =  ee.List([ 'Selangor'])
+                    .iterate(addprovinces_Penninsula, Malaysia_1.filterMetadata('State', 'equals', 'Pahang' ));
+          var Pen_north  =  ee.List(['Perak', 'Perlis', 'Pulau Pinang', 'Terengganu', 'Kelantan'])
+                    .iterate(addprovinces_Penninsula, Malaysia_1.filterMetadata('State', 'equals', 'Kedah' ));
+           
+          // Penninsula south 
+                    // Melaka_Negeri_Sembilan
+                    var filter_Melaka_Negeri_Sembilan = ee.Filter.inList('State', ['Melaka', 'Negeri Sembilan']);
+                    var Melaka_Negeri_Sembilan = Malaysia_1.filter(filter_Melaka_Negeri_Sembilan);
+                    // Johor export 
+                    var Malaysia_2 = ee.FeatureCollection('ft:1fuwiDkFZwQiPupEnXYnmbemCC8BKCeQt5C0yKPTC', 'geometry');
+                    var filter_johor_north = ee.Filter.inList('State', ['Muar', 'Segamat', 'Keluang', 'Batu Pahat', 'Ledang']);
+                    var johor_north = Malaysia_2.filter(filter_johor_north);
+                    var filter_johor_middle = ee.Filter.inList('State', ['Kota Tinggi', 'Mersing']);
+                    var johor_middle = Malaysia_2.filter(filter_johor_middle);
+                    var filter_johor_south = ee.Filter.inList('State', ['Johor Baharu', 'Kulaijaya', 'Pontian']);
+                    var johor_south= Malaysia_2.filter(filter_johor_south);
+                    var johor_single_state = Malaysia_2.filterMetadata('State', 'equals', 'Kulaijaya');
+
+
+var totalarea_final = Malaysia_2.filter(ee.Filter.inList('State', [ 'Kulaijaya', 'Pontian'])
+);
+var totalarea_final_outline = totalarea_final.geometry().bounds();
+var totalarea_final_raster = totalarea_final.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+Map.addLayer(totalarea_final);
+Map.addLayer(totalarea_final_outline);
+
+Map.addLayer(totalarea_final_raster);
+var cropping = ee.FeatureCollection(Pen_middle).merge(ee.FeatureCollection(Pen_north))
+.merge(ee.FeatureCollection(Melaka_Negeri_Sembilan));
+var cropping2 = ee.FeatureCollection(Malaysia_2.filter(
+  ee.Filter.inList('State', [
+  'Muar', 'Segamat', 'Keluang', 'Batu Pahat', 'Ledang',
+  'Kota Tinggi', 'Mersing','Johor Baharu'])));
+// print(cropping);
+// print(cropping2);
+
+var area = ee.Image([0]).clip(cropping.merge(cropping2));
+// Map.addLayer(cropping);
+// Map.addLayer(cropping2);
+// Map.addLayer(area);
+Map.addLayer(area, {min: 0, max: 1,palette:[red, db ]}, "johor_problematic_states");
+
+var johor_problematic_states = ee.Image([1]).clip(Peninsula_outline);
+// .where(area.neq(1),1);
+Map.addLayer(johor_problematic_states, {min: 0, max: 1,palette:[red, db ]}, "johor_problematic_states");
+johor_problematic_states = johor_problematic_states.where(area.eq(0), 0);
+Map.addLayer(johor_problematic_states.updateMask(johor_problematic_states), {min: 0, max: 2,palette:[red, db ]}, "johor_problematic_states");
+
+
+var final= ee.Image([0]).clip(geometry).where(johor_problematic_states.neq(0),1);
+Map.addLayer(final.updateMask(final), {min: 0, max: 2,palette:[red, db ]}, "johor_problematic_states");
+var final_vector = final.updateMask(final).reduceToVectors({scale: 30,});
+Map.addLayer(final_vector);
+// print(final_vector);
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
+var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
+
+
+// var totalarea = ee.FeatureCollection(johor_single_state);
+// var totalarea_outline = totalarea.geometry().bounds();
+// // var totalarea_raster = totalarea.reduceToImage({properties: ['0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+// var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+
+var totalarea = ee.FeatureCollection(final_vector);
+var totalarea_outline = totalarea.geometry().bounds();
+Map.addLayer(totalarea_outline);
+var totalarea_raster = totalarea.reduceToImage({properties: ['count'],reducer: ee.Reducer.first()}); // for Indonesia_1
+
+Map.addLayer(totalarea_raster.eq(1));
+
+
+
+
+
+
+var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
+lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea);
+
+
+var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea);
+var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
+// Data Processing 
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP90_raster = blank.where(OP90_raster.eq(1), 1);
+var OP00_raster = blank.where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1);
+var OP05_raster = blank.where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1);
+var OP10_raster = blank.where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1);
+// Convert Gunarso vector maps to a raster, Sabah and Sarawak
+var ma90_raster = ma90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma00_raster = ma00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma05_raster = ma05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma10_raster = ma10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma90_raster = blank.where(ma90_raster.eq(1), 1);
+var ma00_raster = blank.where(ma00_raster.eq(1), 1).where(ma90_raster.eq(1), 1);
+var ma05_raster = blank.where(ma05_raster.eq(1), 1).where(ma00_raster.eq(1), 1);
+var ma10_raster = blank.where(ma10_raster.eq(1), 1).where(ma05_raster.eq(1), 1);
+// Convert Gunarso vector maps to a raster, Indonesia and PNG
+var in90_raster = in90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in00_raster = in00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in05_raster = in05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in10_raster = in10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in90_raster = blank.where(in90_raster.eq(1), 1);
+var in00_raster = blank.where(in00_raster.eq(1), 1).where(in90_raster.eq(1), 1);
+var in05_raster = blank.where(in05_raster.eq(1), 1).where(in00_raster.eq(1), 1);
+var in10_raster = blank.where(in10_raster.eq(1), 1).where(in05_raster.eq(1), 1);
+var OP90 = blank.where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']);
+var OP00 = blank.where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
+var OP05 = blank.where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
+var OP10 = blank.where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
+
+
+  Export.image.toDrive({
+    image: lossYear.where(OP10.neq(1), 9999),
+    description: 'hansenlayer',
+    scale: 100,
+    region: totalarea_outline,
+    folder: folder_name,
+    maxPixels: 1e13
+  });
+  
+    Export.image.toDrive({
+    image: ee.Image([2]).where(OP10.neq(1), 9999),
+    description: 'testexport_elaborate_cropping',
+    scale: 100,
+    region: totalarea_outline,
+    folder: folder_name,
+    maxPixels: 1e13
+  });
+
+  
+    Export.image.toDrive({
+    image: ee.Image([2]).where(OP10.neq(1), 9999),
+    description: 'testexport_straightforward',
+    scale: 100,
+    region: totalarea_final,
+    folder: folder_name,
+    maxPixels: 1e13
+  });
+
+  
+Map.centerObject(totalarea, 9)
