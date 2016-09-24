@@ -262,7 +262,7 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP9
   
   Export.image.toDrive({
     image: lossYear.where(OP10.neq(1), 9999),
-    description: 'lossYear_where_OP10_neq_1_9999)_v2',
+    description: 'lossYear_where_OP10_neq_1_9999_v2',
     scale: 30,
     region: totalarea_outline,
     folder: folder_name,
