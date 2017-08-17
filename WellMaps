@@ -1,6 +1,10 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var points = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"),
+    points2 = ee.FeatureCollection("ft:1RIYeOTAYfc9tBE5q3cok9d_hZ-5LY3Fsp93ERN3e");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-var points = ee.FeatureCollection('ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta');
-var points2 = ee.FeatureCollection('ft:1RIYeOTAYfc9tBE5q3cok9d_hZ-5LY3Fsp93ERN3e');
+
+
 
 Map.addLayer(points2);
 
