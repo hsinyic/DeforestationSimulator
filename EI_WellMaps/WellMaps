@@ -2,7 +2,6 @@
 var HorizontalTrajectory = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"),
     HWell_Completion2013 = ee.FeatureCollection("ft:1JhvbiO9hDtNHLtBmHzs2b7mODicCGb4F7bLY0qmv"),
     D_UWells_Completion2013_1 = ee.FeatureCollection("ft:1B-3gfn2JEqLKRMLGwKti5Hmv2LUf1Q3ghupuyfHB"),
-    HorizontalTrajectory2 = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"),
     VWells_Gas_Completion_2013_LastProd_2011_1 = ee.FeatureCollection("ft:14EKqC1GVO6yY9qbEYpl1nrv_qA57462zZ1FI26Yz"),
     VWells_Gas_Completion_2013_2 = ee.FeatureCollection("ft:1dpypL_m1LZOjEy1oI8pBohWAp3DJ522u9QdtiDdo"),
     VWells_Gas_Completion_2013_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVDkr1XLKji6IrmY94rH5Rpg"),
@@ -19,13 +18,14 @@ var HorizontalTrajectory = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yr
 
 
 
+/*HorizontalTrajectoryWellsProducingWellIn*/
 
-// HorizontalTrajectoryWellsProducingWellIn
 /*HorizWell-Completion_2013_LastProd_2011P*/
+
 /*D_UWells_Completion_2013_LastProd_2011Pr*/
 // D_UWells_Completion_2013_LastProd_2011Pr_1
 // D_UWells_Completion_2013_LastProd_2011Pr_2
-// HorizontalTrajectoryWellsProducingWellIn
+/*HorizontalTrajectoryWellsProducingWellIn*/
 var HorizontalTrajectory = HorizontalTrajectory2;
 
 
@@ -68,3 +68,18 @@ var display=HorizontalTrajectory.filterMetadata("Production Type","equals","OIL"
 Map.addLayer(display);
 
 Map.centerObject(HorizontalTrajectory, 3);
+
+
+
+
+Map.addLayer(HWell_Completion2013);
+
+var notdisplay2=HWell_Completion2013.filterMetadata("Production Type","equals","GAS");
+
+Map.addLayer(notdisplay2);
+
+var display2=HWell_Completion2013.filterMetadata("Production Type","equals","OIL");
+
+Map.addLayer(display2);
+
+Map.centerObject(HorizontalTrajectory, 11);
