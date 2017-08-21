@@ -50,6 +50,10 @@ Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_eq
 
 
 
+var DUWellC = DUWellC_1.merge(DUWellC_2);
+Map.addLayer(DUWellC, 
+{'color':gr}, "DUWellC");
+
 
 
 
