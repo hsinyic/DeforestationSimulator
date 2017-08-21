@@ -1,29 +1,47 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var HorizontalTrajectory = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta");
+var HorizontalTrajectory = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"),
+    HWell_Completion2013 = ee.FeatureCollection("ft:1JhvbiO9hDtNHLtBmHzs2b7mODicCGb4F7bLY0qmv"),
+    D_UWells_Completion2013_1 = ee.FeatureCollection("ft:1B-3gfn2JEqLKRMLGwKti5Hmv2LUf1Q3ghupuyfHB"),
+    HorizontalTrajectory2 = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"),
+    VWells_Gas_Completion_2013_LastProd_2011_1 = ee.FeatureCollection("ft:14EKqC1GVO6yY9qbEYpl1nrv_qA57462zZ1FI26Yz"),
+    VWells_Gas_Completion_2013_2 = ee.FeatureCollection("ft:1dpypL_m1LZOjEy1oI8pBohWAp3DJ522u9QdtiDdo"),
+    VWells_Gas_Completion_2013_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVDkr1XLKji6IrmY94rH5Rpg"),
+    D_UWells_Completion_2013_LastProd_2011Pr_2 = ee.FeatureCollection("ft:1dX2r52HYfT22lCmA3JwTuDVy6rp4cJi2RgLLJJ-I"),
+    VWells_Gas_Completion_2013_LastProd_2011_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 /*HorizWell-Completion_2013_LastProd_2011P*/
-var HWell_Completion2013 = ee.FeatureCollection("ft:1JhvbiO9hDtNHLtBmHzs2b7mODicCGb4F7bLY0qmv");
+
 
 /*D_UWells_Completion_2013_LastProd_2011Pr*/
 // D_UWells_Completion_2013_LastProd_2011Pr_1
-var D_UWells_Completion2013_1 = ee.FeatureCollection("ft:1B-3gfn2JEqLKRMLGwKti5Hmv2LUf1Q3ghupuyfHB");
+
 // D_UWells_Completion_2013_LastProd_2011Pr_2
 
 
+
+
 // HorizontalTrajectoryWellsProducingWellIn
-var HorizontalTrajectory = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta");
+/*HorizWell-Completion_2013_LastProd_2011P*/
+/*D_UWells_Completion_2013_LastProd_2011Pr*/
+// D_UWells_Completion_2013_LastProd_2011Pr_1
+// D_UWells_Completion_2013_LastProd_2011Pr_2
+// HorizontalTrajectoryWellsProducingWellIn
+var HorizontalTrajectory = HorizontalTrajectory2;
 
 
 
 // VWells_Gas_Completion_2013_LastProd_201_1
 var VWells_Gas_Completion_2013_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVDkr1XLKji6IrmY94rH5Rpg");
 // VWells_Gas_Completion_2013_LastProd_201_2
-var VWells_Gas_Completion_2013_2 = ee.FeatureCollection("ft:1dpypL_m1LZOjEy1oI8pBohWAp3DJ522u9QdtiDdo");
+
+
 
 // VWells_Gas_Completion_2013_LastProd_2011_1.csv
-var VWells_Gas_Completion_2013_LastProd_2011_1 = ee.FeatureCollection("ft:14EKqC1GVO6yY9qbEYpl1nrv_qA57462zZ1FI26Yz");
+
 // VWells_Gas_Completion_2013_LastProd_2011_2.csv
-var VWells_Gas_Completion_2013_LastProd_2011_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb*/");
+
+
+
 
 
 
