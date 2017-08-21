@@ -68,29 +68,30 @@ var VWells_Gas_Completion_2013_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVD
 
 
 
-Map.addLayer(HorizontalTrajectory);
 
 var notdisplay=HorizontalTrajectory.filterMetadata("Production Type","equals","GAS");
 
-Map.addLayer(notdisplay);
+Map.addLayer(notdisplay, {'color':pink}, "HorizontalTrajectory GAS wells");
+
 
 var display=HorizontalTrajectory.filterMetadata("Production Type","equals","OIL");
 
-Map.addLayer(display);
+Map.addLayer(display, {'color':gr}, "HorizontalTrajectory OIL wells");
+
 
 Map.centerObject(HorizontalTrajectory, 3);
 
 
 
 
-Map.addLayer(HWell_Completion2013);
 
 var notdisplay2=HWell_Completion2013.filterMetadata("Production Type","equals","GAS");
 
-Map.addLayer(notdisplay2, {'color':pink}, "GAS wells");
+Map.addLayer(notdisplay2, {'color':db}, "HWell_Completion2013 GAS wells");
 
 var display2=HWell_Completion2013.filterMetadata("Production Type","equals","OIL");
 
-Map.addLayer(display2);
+Map.addLayer(display2, {'color':black}, "HWell_Completion2013 OIL wells");
+
 
 Map.centerObject(HorizontalTrajectory, 11);
