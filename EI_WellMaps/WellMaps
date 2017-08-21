@@ -8,6 +8,18 @@ var HorizontalTrajectory = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yr
     D_UWells_Completion_2013_LastProd_2011Pr_2 = ee.FeatureCollection("ft:1dX2r52HYfT22lCmA3JwTuDVy6rp4cJi2RgLLJJ-I"),
     VWells_Gas_Completion_2013_LastProd_2011_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ('#ff8f7d').toString();
+var dg= ('#196e0a').toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
+var pink = ('#ff50f1').toString();
+
 /*HorizWell-Completion_2013_LastProd_2011P*/
 
 
@@ -26,7 +38,6 @@ var HorizontalTrajectory = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yr
 // D_UWells_Completion_2013_LastProd_2011Pr_1
 // D_UWells_Completion_2013_LastProd_2011Pr_2
 /*HorizontalTrajectoryWellsProducingWellIn*/
-var HorizontalTrajectory = HorizontalTrajectory2;
 
 
 
@@ -76,7 +87,7 @@ Map.addLayer(HWell_Completion2013);
 
 var notdisplay2=HWell_Completion2013.filterMetadata("Production Type","equals","GAS");
 
-Map.addLayer(notdisplay2);
+Map.addLayer(notdisplay2, {'color':pink}, "GAS wells");
 
 var display2=HWell_Completion2013.filterMetadata("Production Type","equals","OIL");
 
