@@ -57,25 +57,12 @@ var Well_List_names = ee.List(['VWells_Gas', "VWells_NoneGas", "DUWellC", "HWell
 
 var Well_List_active = Well_List.map(activeProducingWells);
 var count = Well_List.map(well_count);
-print(Well_List_names.zip(count));
-
-
-var data = new ui.Chart(imageTable, 'Table');
-// data.addRows([
-//   ['Work', 11],
-//   ['Eat', 2],
-//   ['Commute', 2],
-//   ['Watch TV', 2],
-//   ['Sleep', {v:7, f:'7.000'}]
-// ]);
-print(data);
-
 
 
 var count_active = Well_List_active.map(well_count);
 
-print('Total well count unfiltered'); print(count);
-print('Total active producign well count'); print(count_active); 
+print('Total well count unfiltered'); print(Well_List_names.zip(count));
+print('Total active producign well count'); print(Well_List_names.zip(count_active)); 
 
 
 // Map.addLayer(VWells_Gas,  {'color':db}, "VWells_Gas");
