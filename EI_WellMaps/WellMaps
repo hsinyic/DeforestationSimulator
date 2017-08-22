@@ -62,6 +62,9 @@ Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_eq
 {'color':red}, "VWells_Gas_Completion_2013$GAS");
 Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_equals","OIL"), 
 {'color':whi}, "VWells_Gas_Completion_2013$OIL");
+Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_equals","OIL"), 
+{'color':whi}, "VWells_Gas_Completion_2013$OIL");
+
 
 
 
