@@ -20,11 +20,35 @@ var yellow=('#fff832').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
-// var VWells_Gas_Completion_2013_LastProd_2011 = 
-// VWells_Gas_Completion_2013_LastProd_2011_1
-// .merge(VWells_Gas_Completion_2013_LastProd_2011_2);
-// Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011, 
-// {'color':pink}, "VWells_Gas_Completion_2013_LastProd_2011");
+
+var activeProducingWells = function(fc) {
+  fc = ee.FeatureCollection(fc);
+  var output = fc.filterMetadata('Entity Type', 'not_equals', 'WELL')
+.filterMetadata('Producing Status', 'not_equals', 'ACTIVE')
+.filterMetadata ('Production Type', 'not_equals', ['GAS', 'O&G', 'OIL']);
+  return output;
+};
+
+
+
+// var activeProducingWells = ee.filter('Entity Type', 'not equals', 'WELL')
+// .and('Producing Status', 'not equals', 'ACTIVE')
+// .and ('Production Type', 'not equals', ['GAS', 'O&G', 'OIL']);
+
+
+var VWells_Gas_Completion_2013_LastProd_2011 = 
+VWells_Gas_Completion_2013_LastProd_2011_1
+.merge(VWells_Gas_Completion_2013_LastProd_2011_2);
+
+Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011, 
+{'color':pink}, "VWells_Gas_Completion_2013_LastProd_2011");
+
+Map.addLayer(activeProducingWells(VWells_Gas_Completion_2013_LastProd_2011), 
+{'color':lg}, "activeProducingWells");
+
+
+
+
 
 // Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011, 
 // {'color':pink}, "VWells_Gas_LastProd_2011");
