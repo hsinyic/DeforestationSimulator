@@ -26,14 +26,15 @@ var orange = ('#ff9d24').toString();
 var activeProducingWells = function(fc) {
   fc = ee.FeatureCollection(fc);
   var output = fc
-.filter(ee.Filter.inList('Producing Status', ['ACTIVE', 'INACTIVE']))
-// .filter(ee.Filter.inList('Production Type',  ['GAS', 'CBM']));
+.filter(ee.Filter.inList('Producing Status', ['ACTIVE']))
 .filter(ee.Filter.inList('Production Type',  ['GAS', 'O&G', 'OIL', 'CBM']));
   return output;
 };
 
 // // .filter(ee.Filter.inList('Entity Type', ['WELL', 'COM']))
 // .filter(ee.Filter.inList('Production Type',  ['GAS', 'O&G', 'OIL', 'CBM']));
+// .filter(ee.Filter.inList('Production Type',  ['GAS', 'CBM']));
+
 
 
 var count_elements = function(fc){
@@ -92,10 +93,16 @@ Map.addLayer(activeProducingWells(DUWellC),
 
 
 
-// print(activeProducingWells(VWells_Gas).size());
-// print(activeProducingWells(VWells_NoneGas).size());
-// print(activeProducingWells(DUWellC).size());
-// print(activeProducingWells(HWellC).size());
+print(activeProducingWells(VWells_Gas).size());
+print(activeProducingWells(VWells_NoneGas).size());
+print(activeProducingWells(DUWellC).size());
+print(activeProducingWells(HWellC).size());
+
+print(activeProducingWells(VWells_Gas).aggregate_sum());
+print(activeProducingWells(VWells_NoneGas).aggregate_sum());
+print(activeProducingWells(DUWellC).aggregate_sum());
+print(activeProducingWells(HWellC).aggregate_sum());
+
 
 
 
