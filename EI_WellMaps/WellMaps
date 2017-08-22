@@ -6,7 +6,7 @@ var HWellT = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"
     VWells_Gas_Completion_2013_2 = ee.FeatureCollection("ft:1dpypL_m1LZOjEy1oI8pBohWAp3DJ522u9QdtiDdo"),
     VWells_Gas_Completion_2013_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVDkr1XLKji6IrmY94rH5Rpg"),
     DUWellC_2 = ee.FeatureCollection("ft:1dX2r52HYfT22lCmA3JwTuDVy6rp4cJi2RgLLJJ-I"),
-    VWells_Gas_Completion_2013_LastProd_2011_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb");
+    VWells_Gas_LastProd_2011_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var db= ('0000FF').toString();
 var lb= ('#11ffff').toString();
@@ -38,7 +38,7 @@ var activeProducingWells = function(fc) {
 
 var VWells_Gas_Completion_2013_LastProd_2011 = 
 VWells_Gas_Completion_2013_LastProd_2011_1
-.merge(VWells_Gas_Completion_2013_LastProd_2011_2);
+.merge(VWells_Gas_LastProd_2011_2);
 
 Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011, 
 {'color':pink}, "VWells_Gas_Completion_2013_LastProd_2011");
