@@ -98,10 +98,17 @@ print(activeProducingWells(VWells_NoneGas).size());
 print(activeProducingWells(DUWellC).size());
 print(activeProducingWells(HWellC).size());
 
-print(activeProducingWells(VWells_Gas).aggregate_sum());
-print(activeProducingWells(VWells_NoneGas).aggregate_sum());
-print(activeProducingWells(DUWellC).aggregate_sum());
-print(activeProducingWells(HWellC).aggregate_sum());
+print(activeProducingWells(VWells_Gas).aggregate_sum('Well Count'));
+print(activeProducingWells(VWells_NoneGas).aggregate_sum('Well Count'));
+print(activeProducingWells(DUWellC).aggregate_sum('Well Count'));
+print(activeProducingWells(HWellC).aggregate_sum('Well Count'));
+
+
+print(VWells_Gas_1.aggregate_sum('Well Count'));
+print(VWells_Gas_2.aggregate_sum('Well Count'));
+print(VWells_NoneGas.aggregate_sum('Well Count'));
+print(DUWellC.aggregate_sum('Well Count'));
+print(HWellC.aggregate_sum('Well Count'));
 
 
 
