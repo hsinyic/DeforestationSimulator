@@ -30,6 +30,9 @@ var activeProducingWells = function(fc) {
 };
 
 
+
+
+
 var VWells_Gas_Completion_2013_LastProd_2011 = 
 VWells_Gas_LastProd_2011_1
 .merge(VWells_Gas_LastProd_2011_2);
@@ -39,9 +42,12 @@ VWells_Gas_Completion_2013_1
 var DUWellC = DUWellC_1.merge(DUWellC_2);
 
 
-
+var Well_List = ee.List([VWells_Gas_Completion_2013_LastProd_2011, 
+  ])
 // Map.addLayer(activeProducingWells(VWells_Gas_Completion_2013_LastProd_2011), 
 // {'color':lg}, "VWell_Gas");
+
+print(activeProducingWells(VWells_Gas_Completion_2013_LastProd_2011).aggregate_count('.all'));
 
 
 
