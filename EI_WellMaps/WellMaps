@@ -2,11 +2,11 @@
 var HWellT = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"),
     HWellC = ee.FeatureCollection("ft:1JhvbiO9hDtNHLtBmHzs2b7mODicCGb4F7bLY0qmv"),
     DUWellC_1 = ee.FeatureCollection("ft:1B-3gfn2JEqLKRMLGwKti5Hmv2LUf1Q3ghupuyfHB"),
-    VWells_Gas_LastProd_2011_1 = ee.FeatureCollection("ft:14EKqC1GVO6yY9qbEYpl1nrv_qA57462zZ1FI26Yz"),
-    VWells_Gas_Completion_2013_2 = ee.FeatureCollection("ft:1dpypL_m1LZOjEy1oI8pBohWAp3DJ522u9QdtiDdo"),
-    VWells_Gas_Completion_2013_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVDkr1XLKji6IrmY94rH5Rpg"),
+    VWells_Gas_1 = ee.FeatureCollection("ft:14EKqC1GVO6yY9qbEYpl1nrv_qA57462zZ1FI26Yz"),
+    VWells_NoneGas_2 = ee.FeatureCollection("ft:1dpypL_m1LZOjEy1oI8pBohWAp3DJ522u9QdtiDdo"),
+    VWells_NoneGas_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVDkr1XLKji6IrmY94rH5Rpg"),
     DUWellC_2 = ee.FeatureCollection("ft:1dX2r52HYfT22lCmA3JwTuDVy6rp4cJi2RgLLJJ-I"),
-    VWells_Gas_LastProd_2011_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb");
+    VWells_Gas_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var db= ('0000FF').toString();
 var lb= ('#11ffff').toString();
@@ -23,51 +23,45 @@ var pink = ('#ff50f1').toString();
 
 var activeProducingWells = function(fc) {
   fc = ee.FeatureCollection(fc);
-  var output = fc.filterMetadata('Entity Type', 'not_equals', 'WELL')
-.filterMetadata('Producing Status', 'not_equals', 'ACTIVE')
-.filterMetadata ('Production Type', 'not_equals', ['GAS', 'O&G', 'OIL']);
+  var type = ee.Filter.inList('Production Type',  ['GAS', 'O&G', 'OIL']);
+  var output = fc.filterMetadata('Entity Type', 'equals', 'WELL')
+.filter(ee.Filter.inList('Producing Status',[ 'ACTIVE', 'COM']))
+.filter(type);
+  return output;
+};
+
+var count_elements = function(fc){
+  fc = ee.FeatureCollection(fc);
+  var output = fc.size();
   return output;
 };
 
 
-
-
-
-var VWells_Gas_Completion_2013_LastProd_2011 = 
-VWells_Gas_LastProd_2011_1
-.merge(VWells_Gas_LastProd_2011_2);
-var VWells_Gas_Completion_2013 = 
-VWells_Gas_Completion_2013_1
-.merge(VWells_Gas_Completion_2013_2);
+var VWells_Gas = VWells_Gas_1.merge(VWells_Gas_2);
+var VWells_NoneGas = VWells_NoneGas_1.merge(VWells_NoneGas_2);
 var DUWellC = DUWellC_1.merge(DUWellC_2);
 
 
-var Well_List = ee.List([VWells_Gas_Completion_2013_LastProd_2011, 
-  ])
-// Map.addLayer(activeProducingWells(VWells_Gas_Completion_2013_LastProd_2011), 
-// {'color':lg}, "VWell_Gas");
+var Well_List = ee.List([VWells_Gas, VWells_NoneGas, DUWellC, HWellC]);
+var Well_List_active = Well_List.map(activeProducingWells);
+var count = Well_List.map(count_elements);
+var count_active = Well_List_active.map(count_elements);
+// print(count_active);
+// print(count);
 
-print(activeProducingWells(VWells_Gas_Completion_2013_LastProd_2011).aggregate_count('.all'));
+Map.addLayer(activeProducingWells(VWells_Gas), 
+{'color':lg}, "VWell_Gas_active");
 
-
-
-
-
-Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011, 
-{'color':pink}, "VWells_Gas_LastProd_2011");
-Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011.filterMetadata("Production Type","not_equals","GAS"), 
-{'color':dg}, "VWells_Gas_LastProd_2011$GAS");
-Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011.filterMetadata("Production Type","not_equals","OIL"), 
-{'color':yellow}, "VWells_Gas_LastProd_2011$OIL");
+print(activeProducingWells(VWells_Gas).size());
+print(activeProducingWells(VWells_NoneGas).size());
+print(activeProducingWells(DUWellC).size());
+print(activeProducingWells(HWellC).size());
 
 
 
-Map.addLayer(VWells_Gas_Completion_2013, 
-{'color':black}, "VWells_Gas_Completion_2013");
-Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_equals","GAS"), 
-{'color':red}, "VWells_Gas_Completion_2013$GAS");
-Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_equals","OIL"), 
-{'color':whi}, "VWells_Gas_Completion_2013$OIL");
+
+
+
 
 
 
