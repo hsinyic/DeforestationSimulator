@@ -52,33 +52,25 @@ var DUWellC = DUWellC_1.merge(DUWellC_2);
 
 
 var Well_List = ee.List([VWells_Gas, VWells_NoneGas, DUWellC, HWellC]);
+var Well_List_names = ee.List(['VWells_Gas', "VWells_NoneGas", "DUWellC", "HWellC"]);
+
+
 var Well_List_active = Well_List.map(activeProducingWells);
 var count = Well_List.map(well_count);
-
-var imageTable = {
-  cols: [{id: 'well', label: 'Well Type', type: 'string'},
-         {id: 'active', label: 'Active Producing Wells', type: 'string'}, 
-         ],
-  
-  rows:[]
-};
+print(Well_List_names.zip(count));
 
 
-var options = {
-  title: 'Summary'
-};
+var data = new ui.Chart(imageTable, 'Table');
+// data.addRows([
+//   ['Work', 11],
+//   ['Eat', 2],
+//   ['Commute', 2],
+//   ['Watch TV', 2],
+//   ['Sleep', {v:7, f:'7.000'}]
+// ]);
+print(data);
 
-var data = new ui.Chart(imageTable, 'dataTable', options);
-data.addColumn('string', 'Well Type');
-data.addColumn('active', 'Active Producing Wells');
-data.addRows([
-  ['Work', 11],
-  ['Eat', 2],
-  ['Commute', 2],
-  ['Watch TV', 2],
-  ['Sleep', {v:7, f:'7.000'}]
-]);
-print(data)
+
 
 var count_active = Well_List_active.map(well_count);
 
