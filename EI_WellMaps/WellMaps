@@ -6,8 +6,7 @@ var HWellT = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"
     VWells_Gas_Completion_2013_2 = ee.FeatureCollection("ft:1dpypL_m1LZOjEy1oI8pBohWAp3DJ522u9QdtiDdo"),
     VWells_Gas_Completion_2013_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVDkr1XLKji6IrmY94rH5Rpg"),
     DUWellC_2 = ee.FeatureCollection("ft:1dX2r52HYfT22lCmA3JwTuDVy6rp4cJi2RgLLJJ-I"),
-    VWells_Gas_Completion_2013_LastProd_2011_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb"),
-    geometry = /* color: #d63000 */ee.Geometry.Point([145.1953125, 54.470037612805754]);
+    VWells_Gas_Completion_2013_LastProd_2011_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var db= ('0000FF').toString();
 var lb= ('#11ffff').toString();
@@ -48,27 +47,6 @@ var pink = ('#ff50f1').toString();
 // {'color':whi}, "VWells_Gas_Completion_2013$GAS");
 
 
-
-var DUWellC = DUWellC_1.merge(DUWellC_2);
-// Map.addLayer(DUWellC, {'color':gr}, "Merged");
-Map.addLayer(DUWellC.filterMetadata("Production Type","not_equals","GAS"), 
-{'color':gr}, "Merged_Gas");
-Map.addLayer(DUWellC.filterMetadata("Production Type","not_equals","OIL"), 
-{'color':bl}, "Merged_Oil");
-
-var DUWellC_check1 = DUWellC_1;
-Map.addLayer(DUWellC_check1.filterMetadata("Production Type","not_equals","GAS"), 
-{'color':dg}, "1_gas");
-Map.addLayer(DUWellC_check1.filterMetadata("Production Type","not_equals","OIL"), 
-{'color':db}, "1_oil");
-
-
-var DUWellC_check2 = DUWellC_2;
-
-Map.addLayer(DUWellC_check2.filterMetadata("Production Type","not_equals","GAS"), 
-{'color':lg}, "2_gas");
-Map.addLayer(DUWellC_check2.filterMetadata("Production Type","not_equals","OIL"), 
-{'color':lb}, "2_oil");
 
 
 /*
