@@ -29,40 +29,39 @@ var activeProducingWells = function(fc) {
   return output;
 };
 
+
 var VWells_Gas_Completion_2013_LastProd_2011 = 
 VWells_Gas_LastProd_2011_1
 .merge(VWells_Gas_LastProd_2011_2);
-
-Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011, 
-{'color':pink}, "VWells_Gas_Completion_2013_LastProd_2011");
-
-Map.addLayer(activeProducingWells(VWells_Gas_Completion_2013_LastProd_2011), 
-{'color':lg}, "activeProducingWells");
-
-
-
-
-
-// Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011, 
-// {'color':pink}, "VWells_Gas_LastProd_2011");
-// Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011.filterMetadata("Production Type","not_equals","GAS"), 
-// {'color':dg}, "VWells_Gas_LastProd_2011$OIL");
-// Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011.filterMetadata("Production Type","not_equals","OIL"), 
-// {'color':yellow}, "VWells_Gas_LastProd_2011$GAS");
-
-
 var VWells_Gas_Completion_2013 = 
 VWells_Gas_Completion_2013_1
 .merge(VWells_Gas_Completion_2013_2);
+var DUWellC = DUWellC_1.merge(DUWellC_2);
 
-// Map.addLayer(VWells_Gas_Completion_2013, 
-// {'color':black}, "VWells_Gas_Completion_2013");
 
-// Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_equals","GAS"), 
-// {'color':red}, "VWells_Gas_Completion_2013$OIL");
-// Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_equals","OIL"), 
-// {'color':whi}, "VWells_Gas_Completion_2013$GAS");
 
+// Map.addLayer(activeProducingWells(VWells_Gas_Completion_2013_LastProd_2011), 
+// {'color':lg}, "VWell_Gas");
+
+
+
+
+
+Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011, 
+{'color':pink}, "VWells_Gas_LastProd_2011");
+Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011.filterMetadata("Production Type","not_equals","GAS"), 
+{'color':dg}, "VWells_Gas_LastProd_2011$GAS");
+Map.addLayer(VWells_Gas_Completion_2013_LastProd_2011.filterMetadata("Production Type","not_equals","OIL"), 
+{'color':yellow}, "VWells_Gas_LastProd_2011$OIL");
+
+
+
+Map.addLayer(VWells_Gas_Completion_2013, 
+{'color':black}, "VWells_Gas_Completion_2013");
+Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_equals","GAS"), 
+{'color':red}, "VWells_Gas_Completion_2013$GAS");
+Map.addLayer(VWells_Gas_Completion_2013.filterMetadata("Production Type","not_equals","OIL"), 
+{'color':whi}, "VWells_Gas_Completion_2013$OIL");
 
 
 
