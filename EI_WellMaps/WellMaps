@@ -24,8 +24,8 @@ var pink = ('#ff50f1').toString();
 var activeProducingWells = function(fc) {
   fc = ee.FeatureCollection(fc);
   var type = ee.Filter.inList('Production Type',  ['GAS', 'O&G', 'OIL']);
-  var output = fc.filterMetadata('Entity Type', 'equals', 'WELL')
-.filter(ee.Filter.inList('Producing Status',[ 'ACTIVE', 'COM']))
+  var output = fc.filter(ee.Filter.inList('Entity Type', ['WELL', 'COM']))
+.filterMetadata('Producing Status', 'equals', 'ACTIVE')
 .filter(type);
   return output;
 };
@@ -48,6 +48,17 @@ var count = Well_List.map(count_elements);
 var count_active = Well_List_active.map(count_elements);
 // print(count_active);
 // print(count);
+// This has only gas 
+Map.addLayer(VWells_Gas, 
+{'color':pink}, "VWells_Gas");
+
+
+// This has Oil, Oil and Gas, and other types of things 
+Map.addLayer(VWells_NoneGas, 
+{'color':black}, "VWells_NoneGas");
+
+
+
 
 Map.addLayer(activeProducingWells(VWells_Gas), 
 {'color':lg}, "VWell_Gas_active");
@@ -56,6 +67,7 @@ print(activeProducingWells(VWells_Gas).size());
 print(activeProducingWells(VWells_NoneGas).size());
 print(activeProducingWells(DUWellC).size());
 print(activeProducingWells(HWellC).size());
+
 
 
 
