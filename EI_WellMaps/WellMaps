@@ -7,7 +7,7 @@ var HWellT = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"
     VWells_NoneGas_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVDkr1XLKji6IrmY94rH5Rpg"),
     DUWellC_2 = ee.FeatureCollection("ft:1dX2r52HYfT22lCmA3JwTuDVy6rp4cJi2RgLLJJ-I"),
     VWells_Gas_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb"),
-    geometry = /* color: #d63000 */ee.Geometry.MultiPoint();
+    geometry = /* color: #00ffff */ee.Geometry.Point([-96.25396728515625, 31.53874903386096]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var db= ('0000FF').toString();
 var lb= ('#11ffff').toString();
@@ -21,15 +21,19 @@ var yellow=('#fff832').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
+var orange = ('#ff9d24').toString();
 
 var activeProducingWells = function(fc) {
   fc = ee.FeatureCollection(fc);
   var output = fc
-// .filter(ee.Filter.inList('Entity Type', ['WELL', 'COM']))
-.filter(ee.Filter.inList('Producing Status', ['ACTIVE']))
-.filter(ee.Filter.inList('Production Type',  ['GAS', 'O&G', 'OIL', 'CBM']));
+// .filter(ee.Filter.inList('Producing Status', ['ACTIVE', 'INACTIVE']))
+// .filter(ee.Filter.inList('Production Type',  ['GAS', 'CBM']));
   return output;
 };
+
+// // .filter(ee.Filter.inList('Entity Type', ['WELL', 'COM']))
+// .filter(ee.Filter.inList('Production Type',  ['GAS', 'O&G', 'OIL', 'CBM']));
+
 
 var count_elements = function(fc){
   fc = ee.FeatureCollection(fc);
@@ -41,7 +45,6 @@ var count_elements = function(fc){
 var VWells_Gas = VWells_Gas_1.merge(VWells_Gas_2); 
 // print(VWells_Gas.size());print(VWells_Gas_1.size());print(VWells_Gas_2.size());
 // Merging didnt create problems 
-
 var VWells_NoneGas = VWells_NoneGas_1.merge(VWells_NoneGas_2);
 var DUWellC = DUWellC_1.merge(DUWellC_2);
 
@@ -54,18 +57,40 @@ var count_active = Well_List_active.map(count_elements);
 // print(count); 
 
 
-// Map.addLayer(VWells_Gas, 
-// {'color':pink}, "VWells_Gas");
-// Map.addLayer(VWells_NoneGas, 
-// {'color':black}, "VWells_NoneGas");
-// Map.addLayer(HWellC, 
-// {'color':pink}, "HWellC");
-// Map.addLayer(DUWellC, 
-// {'color':black}, "DUWellC");
+Map.addLayer(VWells_Gas, 
+{'color':db}, "VWells_Gas");
+Map.addLayer(VWells_NoneGas, 
+{'color':dg}, "VWells_NoneGas");
+Map.addLayer(HWellC, 
+{'color':red}, "HWellC");
+Map.addLayer(DUWellC, 
+{'color':orange}, "DUWellC");
+
 
 /*Map.addLayer(activeProducingWells(VWells_Gas), 
-{'color':lg}, "VWell_Gas_active");
+{'color':lb}, "VWells_Gas_active");
+Map.addLayer(activeProducingWells(VWells_NoneGas), 
+{'color':lg}, "VWells_NoneGas_active");
+Map.addLayer(activeProducingWells(HWellC), 
+{'color':pink}, "HWellC_active");
+Map.addLayer(activeProducingWells(DUWellC), 
+{'color':yellow}, "DUWellC_active");
 */
+
+/*Map.addLayer(activeProducingWells(VWells_Gas), 
+{'color':black}, "VWells_Gas_active");
+Map.addLayer(activeProducingWells(VWells_NoneGas), 
+{'color':black}, "VWells_NoneGas_active");
+Map.addLayer(activeProducingWells(HWellC), 
+{'color':black}, "HWellC_active");
+Map.addLayer(activeProducingWells(DUWellC), 
+{'color':black}, "DUWellC_active");
+Map.addLayer(HWellT, 
+{'color':pink}, "HWellT");*/
+
+
+
+
 // print(activeProducingWells(VWells_Gas).size());
 // print(activeProducingWells(VWells_NoneGas).size());
 // print(activeProducingWells(DUWellC).size());
@@ -73,10 +98,11 @@ var count_active = Well_List_active.map(count_elements);
 
 
 
+// Map.centerObject(geometry, 11)
 
 
-Map.setCenter(-105.5,43.6, 9);
 
+Map.setCenter(-96.253967,31.538749, 6);
 
 
 
