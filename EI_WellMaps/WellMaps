@@ -104,8 +104,7 @@ print(activeProducingWells(DUWellC).aggregate_sum('Well Count'));
 print(activeProducingWells(HWellC).aggregate_sum('Well Count'));
 
 
-print(VWells_Gas_1.aggregate_sum('Well Count'));
-print(VWells_Gas_2.aggregate_sum('Well Count'));
+print(VWells_Gas.aggregate_sum('Well Count'));
 print(VWells_NoneGas.aggregate_sum('Well Count'));
 print(DUWellC.aggregate_sum('Well Count'));
 print(HWellC.aggregate_sum('Well Count'));
@@ -125,8 +124,9 @@ Map.centerObject(geometry, 12)
 
 
 
-
-
+///////
+//  HWellT includes HWellC >> HWellT is a projection to the future  
+//////
 
 /*Map.addLayer(HWellT.filterMetadata("Production Type","equals","GAS"), 
 {'color':pink}, "HorizontalTrajectory GAS wells");
