@@ -8,7 +8,6 @@ var HWellT = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"
     DUWellC_2 = ee.FeatureCollection("ft:1dX2r52HYfT22lCmA3JwTuDVy6rp4cJi2RgLLJJ-I"),
     VWells_Gas_Completion_2013_LastProd_2011_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
 var db= ('0000FF').toString();
 var lb= ('#11ffff').toString();
 var red=('ff510f').toString();
@@ -19,7 +18,6 @@ var gr= ('#4cff62').toString();
 var whi=('#f7f7f7').toString();
 var black = ('#101010').toString();
 var pink = ('#ff50f1').toString();
-
 
 
 // var VWells_Gas_Completion_2013_LastProd_2011 = 
@@ -61,23 +59,15 @@ Map.addLayer(DUWellC_check,
 
 
 /*
-
-
 Map.addLayer(HWellT.filterMetadata("Production Type","not_equals","GAS"), 
 {'color':pink}, "HorizontalTrajectory GAS wells");
-
 Map.addLayer(HWellT.filterMetadata("Production Type","not_equals","OIL"),
 {'color':gr}, "HorizontalTrajectory OIL wells");
 
 Map.centerObject(HWellT, 11);
 
-
-
-
 Map.addLayer(HWellC.filterMetadata("Production Type","not_equals","GAS")
 , {'color':db}, "HWell_Completion2013 GAS wells");
 Map.addLayer(HWellC.filterMetadata("Production Type","not_equals","OIL")
 , {'color':black}, "HWell_Completion2013 OIL wells");
-
-
 */
