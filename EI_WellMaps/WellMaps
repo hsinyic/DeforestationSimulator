@@ -104,6 +104,6 @@ Map.centerObject(geometry, 10);
 
 // Count Number Of Active Wells in each region 
 
-// Proximity to each others? 
+// Proximity to other oil/gas wells? 
 
 
