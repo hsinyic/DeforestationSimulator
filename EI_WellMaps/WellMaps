@@ -12,15 +12,10 @@ var HWellT = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"
 var db= ('0000FF').toString();
 var lb= ('#11ffff').toString();
 var bl = ('#538dd6').toString();
-
-
 var red=('ff510f').toString();
 var lr = ('#ff8f7d').toString();
 var gr= ('#4cff62').toString();
 var lg = ('#afff14').toString();
-
-
-
 var dg= ('#196e0a').toString();
 var yellow=('#fff832').toString();
 var whi=('#f7f7f7').toString();
