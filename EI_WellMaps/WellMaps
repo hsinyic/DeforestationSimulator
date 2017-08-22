@@ -45,48 +45,29 @@ var well_count = function(fc){
   return output;
 };
 
-var VWells_Gas = VWells_Gas_1.merge(VWells_Gas_2); 
-// print(VWells_Gas.size());print(VWells_Gas_1.size());print(VWells_Gas_2.size());// Merging didnt create problems 
+var VWells_Gas = VWells_Gas_1.merge(VWells_Gas_2); // print(VWells_Gas.size());print(VWells_Gas_1.size());print(VWells_Gas_2.size());// Merging didnt create problems 
 var VWells_NoneGas = VWells_NoneGas_1.merge(VWells_NoneGas_2);
 var DUWellC = DUWellC_1.merge(DUWellC_2);
 
-
-var Well_List = ee.List([VWells_Gas, VWells_NoneGas, DUWellC, HWellC]);
 var Well_List_names = ee.List(['VWells_Gas', "VWells_NoneGas", "DUWellC", "HWellC"]);
-
-
+var Well_List = ee.List([VWells_Gas, VWells_NoneGas, DUWellC, HWellC]);
 var Well_List_active = Well_List.map(activeProducingWells);
+
 var count = Well_List.map(well_count);
-
-
 var count_active = Well_List_active.map(well_count);
-
 print('Total well count unfiltered'); print(Well_List_names.zip(count));
 print('Total active producign well count'); print(Well_List_names.zip(count_active)); 
+
 
 
 // Map.addLayer(VWells_Gas,  {'color':db}, "VWells_Gas");
 // Map.addLayer(VWells_NoneGas,  {'color':dg}, "VWells_NoneGas");
 // Map.addLayer(HWellC,  {'color':red}, "HWellC");
 // Map.addLayer(DUWellC,  {'color':orange}, "DUWellC");
-
-
-Map.addLayer(activeProducingWells(VWells_Gas), {'color':lb}, "VWells_Gas_active");
-Map.addLayer(activeProducingWells(VWells_NoneGas),  {'color':lg}, "VWells_NoneGas_active");
-Map.addLayer(activeProducingWells(HWellC),  {'color':pink}, "HWellC_active");
+Map.addLayer(activeProducingWells(VWells_Gas), {'color':db}, "VWells_Gas_active");
+Map.addLayer(activeProducingWells(VWells_NoneGas),  {'color':red}, "VWells_NoneGas_active");
+Map.addLayer(activeProducingWells(HWellC),  {'color':orange}, "HWellC_active");
 Map.addLayer(activeProducingWells(DUWellC), {'color':yellow}, "DUWellC_active");
-
-
-
-
-
-
-Map.centerObject(geometry, 12)
-// Map.setCenter(-96.253967,31.538749, 6);
-
-
-
-
 
 
 
@@ -105,3 +86,11 @@ Map.addLayer(HWellC.filterMetadata("Production Type","equals","GAS")
 Map.addLayer(HWellC.filterMetadata("Production Type","not_equals","GAS")
 , {'color':black}, "HWell_Completion2013 OIL wells");
 */
+
+
+//////
+// Set map center 
+//////
+
+Map.centerObject(geometry, 10);
+
