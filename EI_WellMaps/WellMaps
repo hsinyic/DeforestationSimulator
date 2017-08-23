@@ -29,7 +29,13 @@ var lyellow = ('#fffcb0').toString();
 var activeProducingWells = function(fc) {
   fc = ee.FeatureCollection(fc);
   var output = fc
-.filter(ee.Filter.inList('Producing Status', ['ACTIVE']))
+.filter(ee.Filter.inList('Producing Status', ['ACTIVE' , 'DRILLING ACTIVE', 'PERMITTED', 'COMPLETED', 'AC', 'DRL', 'PLUNGER LIFT', 'DRILLING', 'ACTIVE GAS PROD', 
+'ACTIVE GAS STORAGE', 'GAS WELL', 'OIL WELL', 'TR',
+'PERM', 'ACTIVE GAS PROD', 'ACTIVE GAS STORAGE', 
+'FLOWING', 'WSW', 'DD', 'NEW DRILL', 'CONFIDENTIAL', 
+'GAS LIFT', 'COMPLETED, SERVICE', 'COMPLETED ISSUED', 
+'COMPLETED SERVICE', 'COMPLETED, GAS', 'PERMIT ISSUED', 
+'DRILLED, SERVICE']))
 // .filter(ee.Filter.inList('Entity Type', ['WELL', 'COM']))
 .filter(ee.Filter.inList('Production Type',  ['GAS', 'O&G', 'OIL', 'CBM']));
   return output;
