@@ -7,7 +7,7 @@ var HWellT = ee.FeatureCollection("ft:1eVBd9BT8qe323aQqH0JA-U2j9yrqdqam9-luyMta"
     VWell_NoneGas_1 = ee.FeatureCollection("ft:1P9YdVRHK0_ZoCGPaGVDkr1XLKji6IrmY94rH5Rpg"),
     DUWellC_2 = ee.FeatureCollection("ft:1dX2r52HYfT22lCmA3JwTuDVy6rp4cJi2RgLLJJ-I"),
     VWell_Gas_2 = ee.FeatureCollection("ft:1hnvKAkx7Tu4NrMdD7wuDlpP10MTz2H7JFTVPagwb"),
-    geometry = /* color: #bf04c2 */ee.Geometry.Point([-96.29130363464355, 31.544308446612657]);
+    geometry = /* color: #bf04c2 */ee.Geometry.Point([-98.57645988464355, 38.241146330442525]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Color scheme 
 var db= ('0000FF').toString();
@@ -67,10 +67,10 @@ Map.addLayer(VWell_Gas,  {'color':lb}, "VWell_Gas");
 Map.addLayer(VWell_NoneGas,  {'color':pink}, "VWell_NoneGas");
 Map.addLayer(HWellC,  {'color':lorange}, "HWellC");
 Map.addLayer(DUWellC,  {'color':lyellow}, "DUWellC");
-Map.addLayer(activeProducingWells(VWell_Gas), {'color':db}, "VWell_Gas_active");
-Map.addLayer(activeProducingWells(VWell_NoneGas),  {'color':red}, "VWell_NoneGas_active");
-Map.addLayer(activeProducingWells(HWellC),  {'color':orange}, "HWellC_active");
-Map.addLayer(activeProducingWells(DUWellC), {'color':yellow}, "DUWellC_active");
+// Map.addLayer(activeProducingWells(VWell_Gas), {'color':db}, "VWell_Gas_active");
+// Map.addLayer(activeProducingWells(VWell_NoneGas),  {'color':red}, "VWell_NoneGas_active");
+// Map.addLayer(activeProducingWells(HWellC),  {'color':orange}, "HWellC_active");
+// Map.addLayer(activeProducingWells(DUWellC), {'color':yellow}, "DUWellC_active");
 
 
 
