@@ -66,10 +66,10 @@ print('Total active producign well count'); print(Well_List_names.zip(count_acti
 
 
 
-Map.addLayer(VWell_Gas,  {'color':lb}, "VWell_Gas");
-Map.addLayer(VWell_NoneGas,  {'color':pink}, "VWell_NoneGas");
-Map.addLayer(HWellC,  {'color':lorange}, "HWellC");
-Map.addLayer(DUWellC,  {'color':lyellow}, "DUWellC");
+// Map.addLayer(VWell_Gas,  {'color':lb}, "VWell_Gas");
+// Map.addLayer(VWell_NoneGas,  {'color':pink}, "VWell_NoneGas");
+// Map.addLayer(HWellC,  {'color':lorange}, "HWellC");
+// Map.addLayer(DUWellC,  {'color':lyellow}, "DUWellC");
 // Map.addLayer(activeProducingWells(VWell_Gas), {'color':db}, "VWell_Gas_active");
 // Map.addLayer(activeProducingWells(VWell_NoneGas),  {'color':red}, "VWell_NoneGas_active");
 // Map.addLayer(activeProducingWells(HWellC),  {'color':orange}, "HWellC_active");
@@ -98,8 +98,10 @@ Map.addLayer(HWellC.filterMetadata("Production Type","not_equals","GAS")
 
 Map.centerObject(geometry, 10);
 
-Map.addLayer(HWellT.filterMetadata("Updated Production Type","equals","GAS")
+Map.addLayer(Active_all.filterMetadata("Updated Production Type","equals","GAS")
+.filterMetadata("Drill Type","equals","H"), 
+{'color':pink}, "Horizontal GAS wells"); 
+
+Map.addLayer(Active_all.filterMetadata("Updated Production Type","equals","GAS")
 .filterMetadata("Drill Type","equals","D"), 
-{'color':pink}, "Directional GAS wells"); 
-
-
+{'color':black}, "Directional GAS wells"); 
