@@ -75,8 +75,6 @@ Map.addLayer(DUWellC,  {'color':lyellow}, "DUWellC");
 // Map.addLayer(activeProducingWells(HWellC),  {'color':orange}, "HWellC_active");
 // Map.addLayer(activeProducingWells(DUWellC), {'color':yellow}, "DUWellC_active");
 
-
-
 ///////
 //  HWellT includes HWellC >> HWellT is projection of Horitzontal Wells into to the future  
 //////
@@ -100,13 +98,8 @@ Map.addLayer(HWellC.filterMetadata("Production Type","not_equals","GAS")
 
 Map.centerObject(geometry, 10);
 
-
-/////
-// Shale well counts 
-/////
-
-// Count Number Of Active Wells in each region 
-
-// Proximity to other oil/gas wells? 
+Map.addLayer(HWellT.filterMetadata("Updated Production Type","equals","GAS")
+.filterMetadata("Drill Type","equals","D"), 
+{'color':pink}, "Directional GAS wells"); 
 
 
