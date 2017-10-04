@@ -23,17 +23,28 @@ var lyellow = ('#fffcb0').toString();
 
 
 //select wells of certaint atrributes 
-var Well_List = ee.List([H_wells,D_Gas ]); 
-var Well_List_names = ee.List(["H_wells", "D_Gas"]);
+
 
 
 // Directional wells whose First Production Date is after the 2000s
-var D_Gas = Well.filterMetadata("First Production Date","equals","GAS").filterMetadata("Drill Type","equals","D"); 
+var D_Gas_post2000 = Well
+.filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
+.filterMetadata("Drill Type","equals","D"); 
 
+// Directional wells whose First Production Date is before the 2000s
+var D_Gas_pre2000 = Well
+.filterMetadata('First Prod Date','less_than', ee.Date('2000-01-01').millis())
+.filterMetadata("Drill Type","equals","D"); 
+
+
+ 
 //view horizontal wells with early dates 
 var H_wells = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata("Drill Type","equals","D"); 
+
+var Well_List = ee.List([H_wells,D_Gas_post2000,D_Gas_pre2000 ]); 
+var Well_List_names = ee.List(["H_wells", "D_Gas_post2000", "D_Gas_pre2000"]);
 
 
 
@@ -42,7 +53,9 @@ Map.centerObject(geometry, 10);
 
 // add Layers 
 Map.addLayer(H_wells, {'color':pink}, "Horizontal wells"); 
-Map.addLayer(D_Gas, {'color':black}, "Directional GAS wells"); 
+Map.addLayer(D_Gas_post2000, {'color':black}, "D_Gas_post2000"); 
+Map.addLayer(D_Gas_pre2000, {'color':lyellow}, "D_Gas_pre2000"); 
+
 
 // count number of wells 
 var well_count = function(fc){
