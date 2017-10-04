@@ -26,7 +26,7 @@ var H_Gas = Well.filterMetadata("Updated Production Type","equals","GAS")
 var D_Gas = Well.filterMetadata("Updated Production Type","equals","GAS")
 .filterMetadata("Drill Type","equals","D"); 
 
-var well_count = function(fc){
+/*var well_count = function(fc){
   fc = ee.FeatureCollection(fc);
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
@@ -36,7 +36,7 @@ var Well_List = ee.List([H_Gas,D_Gas ]);
 var Well_List_names = ee.List(["H_Gas", "D_Gas"]);
 var count = Well_List.map(well_count);
 print('Total well count by type'); print(Well_List_names.zip(count));
-
+*/
 
 Map.centerObject(geometry, 10);
 
