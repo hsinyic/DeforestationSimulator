@@ -43,7 +43,7 @@ var D_Gas_pre2000 = Well
 //view horizontal wells with early dates 
 var H_wells = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
-.filterMetadata("Drill Type","equals","D"); 
+.filterMetadata("Drill Type","equals","H"); 
 
 var Well_List = ee.List([H_wells,D_Gas_post2000,D_Gas_pre2000 ]); 
 var Well_List_names = ee.List(["H_wells", "D_Gas_post2000", "D_Gas_pre2000"]);
