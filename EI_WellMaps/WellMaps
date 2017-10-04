@@ -80,8 +80,6 @@ Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4);
 
 
 
-
-
 // count number of wells 
 var well_count = function(fc){
   fc = ee.FeatureCollection(fc);
