@@ -101,33 +101,20 @@ var saveAllJoin = ee.Join.saveAll({
 });
 
 var shaleplay_seg = shaleplay.union();// Map.addLayer(shaleplay_seg, {}, 'shaleplay_seg');
-var intersectJoined = saveAllJoin.apply( H_pre2000, shaleplay_seg , spatialFilter);
+var intersectJoined = saveAllJoin.apply( H_post2000 ,  shaleplay_seg, spatialFilter);
 var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
 
 // print(intersectJoined,'intersectJoined');
 // print(intersected,'intersected');
 
-Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
+Map.addLayer(H_post2000, {'color':db}, "H_post2000"); 
 Map.addLayer(intersectJoined, {'color':yellow}, "intersectJoined"); 
 Map.addLayer(intersected, {'color':dg}, "intersected"); 
 
-print(well_count(intersectJoined));
+print(well_count(intersectJoined)); // 
+print(well_count(intersected)); //0 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// (0, 4787 ) or (4787,0)
 
 
 //
