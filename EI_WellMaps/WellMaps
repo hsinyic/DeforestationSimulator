@@ -100,7 +100,10 @@ var spatialFilter = ee.Filter.intersects({
 var saveAllJoin = ee.Join.saveAll({
   matchesKey: 'scenes',
 });
-var intersectJoined = saveAllJoin.apply( H_pre2000,shaleplay, spatialFilter);
+
+var shaleplay_seg = shaleplay.union();
+Map.addLayer(shaleplay_seg, {}, 'shaleplay_seg');
+var intersectJoined = saveAllJoin.apply( H_pre2000,shaleplay_seg, spatialFilter);
 print(intersectJoined);
 var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
 print(intersected);
