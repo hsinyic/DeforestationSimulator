@@ -51,7 +51,7 @@ var Well_List_names = ee.List(["H_wells", "D_Gas_post2000", "D_Gas_pre2000"]);
 
 
 //center on Geometry on the map
-Map.centerObject(geometry, 8);
+Map.centerObject(geometry, 10);
 
 // add Layers 
 Map.addLayer(H_wells, {'color':pink}, "Horizontal wells"); 
