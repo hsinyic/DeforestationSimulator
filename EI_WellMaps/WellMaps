@@ -22,32 +22,47 @@ var orange = ('#ff9d24').toString();
 var lorange = ('#ffcc99').toString();
 var lyellow = ('#fffcb0').toString();
 
-
-Map.addLayer(shaleplay, {'color':dg}, "shale play boundaries"); 
-Map.addLayer(conventional_play, {'color':db}, "conventional_play", 1, 0.2); 
+Map.addLayer(conventional_play, {'color':lorange}, "conventional_play", 1, 1); 
+Map.addLayer(shaleplay, {'color':black}, "shale play boundaries"); 
 
 
 
 //select wells of certaint atrributes 
 // Directional wells whose First Production Date is after the 2000s
-var D_Gas_post2000 = Well
+var H_post2000 = Well
 .filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
-.filterMetadata("Drill Type","equals","D"); 
+.filterMetadata("Drill Type","equals","H"); 
 
 // Directional wells whose First Production Date is before the 2000s
-var D_Gas_pre2000 = Well
+var H_pre2000 = Well
 .filterMetadata('First Prod Date','less_than', ee.Date('2000-01-01').millis())
-.filterMetadata("Drill Type","equals","D"); 
+.filterMetadata("Drill Type","equals","H"); 
+
+var U_post2000 = Well
+.filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
+.filterMetadata("Drill Type","equals","U");
+
+var U_pre2000 = Well
+.filterMetadata('First Prod Date','less_than', ee.Date('2000-01-01').millis())
+.filterMetadata("Drill Type","equals","U");
+
+
 
 
  
 //view horizontal wells with early dates 
-var H_wells = Well
+var D_wells = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
-.filterMetadata("Drill Type","equals","H"); 
+.filterMetadata("Drill Type","equals","D"); 
 
-var Well_List = ee.List([H_wells,D_Gas_post2000,D_Gas_pre2000 ]); 
-var Well_List_names = ee.List(["H_wells", "D_Gas_post2000", "D_Gas_pre2000"]);
+var V_wells = Well
+.filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
+.filterMetadata("Drill Type","equals","V"); 
+
+
+
+var Well_List = ee.List([D_wells,V_wells, H_post2000, H_pre2000,U_post2000, U_pre2000 ]); 
+var Well_List_names = ee.List(["D_wells", "V_wells", 'H_post2000', 'H_pre2000','U_post2000', 'U_pre2000']);
 
 
 
@@ -55,9 +70,13 @@ var Well_List_names = ee.List(["H_wells", "D_Gas_post2000", "D_Gas_pre2000"]);
 Map.centerObject(geometry, 5);
 
 // add Layers 
-Map.addLayer(H_wells, {'color':pink}, "Horizontal wells"); 
-Map.addLayer(D_Gas_post2000, {'color':black}, "D_Gas_post2000"); 
-Map.addLayer(D_Gas_pre2000, {'color':lyellow}, "D_Gas_pre2000"); 
+Map.addLayer(V_wells, {'color':pink}, "V_wells", 1, 0.3); 
+Map.addLayer(D_wells, {'color':lb}, "D_wells",1, 0.3); 
+Map.addLayer(H_post2000, {'color':yellow}, "H_post2000"); 
+Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
+
+Map.addLayer(U_pre2000, {'color':dg}, "U_pre2000", 1, 0.4); 
+Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4); 
 
 
 
