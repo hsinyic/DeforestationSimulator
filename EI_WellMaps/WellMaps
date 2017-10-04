@@ -81,7 +81,7 @@ Map.centerObject(geometry, 5);
 
 
 // count number of wells 
-/*var well_count = function(fc){
+var well_count = function(fc){
   fc = ee.FeatureCollection(fc);
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
@@ -89,7 +89,45 @@ Map.centerObject(geometry, 5);
 
 var count = Well_List.map(well_count);
 print('Total well count by type'); print(Well_List_names.zip(count));
-*/
+
+var spatialFilter = ee.Filter.intersects({
+  leftField: '.geo',
+  rightField: '.geo',
+  maxError: 10
+});
+
+// Define a save all join.
+var saveAllJoin = ee.Join.saveAll({
+  matchesKey: 'scenes',
+});
+var intersectJoined = saveAllJoin.apply( H_pre2000,shaleplay, spatialFilter);
+print(intersectJoined);
+var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
+print(intersected);
+Map.addLayer(intersectJoined, {}, 'intersectJoined');
+Map.addLayer(intersected, {}, 'intersected');
+
+
+Map.addLayer(intersectJoined, {'color':yellow}, "H_post2000"); 
+Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //
 
@@ -105,10 +143,10 @@ print('Total well count by type'); print(Well_List_names.zip(count));
 
 // var image_shaleplay = shaleplay.map(convert_to_image);
 
-var image_shaleplay =shaleplay.reduceToImage(
-    {properties:['geometry_vertex_count'],
-    reducer:ee.Reducer.first()}
-    );
+// var image_shaleplay =shaleplay.reduceToImage(
+//     {properties:['geometry_vertex_count'],
+//     reducer:ee.Reducer.first()}
+//     );
     
 // var convert_shale = function(fc){
 //   fc = ee.FeatureCollection(fc);
@@ -121,19 +159,19 @@ var image_shaleplay =shaleplay.reduceToImage(
 // var convert_to_multiple_images_shaleplay = shaleplay.map(convert_shale);
 
 
-var shaleplay_again = image_shaleplay.reduceToVectors(
+// var shaleplay_again = image_shaleplay.reduceToVectors(
   
-  );
-print(shaleplay_again);
-/*image_shaleplay = image_shaleplay.subtract(image_shaleplay).add(1);
-Map.addLayer(image_shaleplay);
-// Map.addLayer(image_shaleplay.geometry().bounds());
+//   );
+// print(shaleplay_again);
+// image_shaleplay = image_shaleplay.subtract(image_shaleplay).add(1);
+// Map.addLayer(image_shaleplay);
+// // Map.addLayer(image_shaleplay.geometry().bounds());
 
 
-var count = image_shaleplay.reduceRegion({
-  reducer: ee.Reducer.sum(),
-  geometry: V_wells,
-  scale: 100
-  });
+// var count = image_shaleplay.reduceRegion({
+//   reducer: ee.Reducer.sum(),
+//   geometry: V_wells,
+//   scale: 100
+//   });
   
-print(count.getInfo());*/
+// print(count.getInfo());
