@@ -81,7 +81,7 @@ Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4);
 
 
 // count number of wells 
-var well_count = function(fc){
+/*var well_count = function(fc){
   fc = ee.FeatureCollection(fc);
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
@@ -89,3 +89,14 @@ var well_count = function(fc){
 
 var count = Well_List.map(well_count);
 print('Total well count by type'); print(Well_List_names.zip(count));
+*/
+
+//
+print(H_post2000);
+var count_inshale = H_post2000.reduceRegions({
+      reducer: ee.Reducer.countDistinct(),
+      geometry: shaleplay,
+      maxPixels: 12e9,
+    });
+    
+print(count_inshale);
