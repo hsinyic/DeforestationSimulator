@@ -143,11 +143,14 @@ Map.addLayer(H_pre2000, {'color':db}, "H_pre2000");
 
 // var image_shaleplay = shaleplay.map(convert_to_image);
 
-// var image_shaleplay =shaleplay.reduceToImage(
-//     {properties:['geometry_vertex_count'],
-//     reducer:ee.Reducer.first()}
-//     );
+var image_shaleplay =shaleplay.reduceToImage(
+    {properties:['geometry_vertex_count'],
+    reducer:ee.Reducer.first()}
+    );
     
+    
+var merge = ee.FeatureCollection(shaleplay.geometry());
+print(merge);
 // var convert_shale = function(fc){
 //   fc = ee.FeatureCollection(fc);
 //   var image = fc.reduceToImage(
@@ -159,9 +162,17 @@ Map.addLayer(H_pre2000, {'color':db}, "H_pre2000");
 // var convert_to_multiple_images_shaleplay = shaleplay.map(convert_shale);
 
 
-// var shaleplay_again = image_shaleplay.reduceToVectors(
-  
-//   );
+// var shaleplay_again = image_shaleplay.reduceToVectors({
+//   geometry: japan,
+//   crs: nl2012.projection(),
+//   scale: 1000,
+//   geometryType: 'polygon',
+//   eightConnected: false,
+//   labelProperty: 'zone',
+//   reducer: ee.Reducer.mean()
+// });
+
+
 // print(shaleplay_again);
 // image_shaleplay = image_shaleplay.subtract(image_shaleplay).add(1);
 // Map.addLayer(image_shaleplay);
