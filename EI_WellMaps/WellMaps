@@ -23,10 +23,12 @@ var lorange = ('#ffcc99').toString();
 var lyellow = ('#fffcb0').toString();
 
 
+Map.addLayer(shaleplay, {'color':dg}, "shale play boundaries"); 
+Map.addLayer(conventional_play, {'color':db}, "conventional_play", 1, 0.2); 
+
+
+
 //select wells of certaint atrributes 
-
-
-
 // Directional wells whose First Production Date is after the 2000s
 var D_Gas_post2000 = Well
 .filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
@@ -50,15 +52,13 @@ var Well_List_names = ee.List(["H_wells", "D_Gas_post2000", "D_Gas_pre2000"]);
 
 
 //center on Geometry on the map
-Map.centerObject(geometry, 10);
+Map.centerObject(geometry, 5);
 
 // add Layers 
 Map.addLayer(H_wells, {'color':pink}, "Horizontal wells"); 
 Map.addLayer(D_Gas_post2000, {'color':black}, "D_Gas_post2000"); 
 Map.addLayer(D_Gas_pre2000, {'color':lyellow}, "D_Gas_pre2000"); 
 
-Map.addLayer(shaleplay, {'color':db}, "shale play boundaries"); 
-Map.addLayer(conventional_play, {'color':dg}, "shale play boundaries"); 
 
 
 
