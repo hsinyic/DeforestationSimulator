@@ -92,11 +92,39 @@ print('Total well count by type'); print(Well_List_names.zip(count));
 */
 
 //
-print(H_post2000);
-var count_inshale = H_post2000.reduceRegions({
-      reducer: ee.Reducer.countDistinct(),
-      geometry: shaleplay,
-      maxPixels: 12e9,
-    });
+
+// var convert_to_image = function(plays){
+//   plays = ee.Feature(plays);
+//   var result= plays.reduceToImage(
+//     {properties:['geometry_vertex_count'],
+//     reducer:ee.Reducer.first()}
+//     );
+//   return(ee.Image(result));
+// };
+
+
+// var image_shaleplay = shaleplay.map(convert_to_image);
+
+var image_shaleplay =shaleplay.reduceToImage(
+    {properties:['geometry_vertex_count'],
+    reducer:ee.Reducer.first()}
+    );
     
-print(count_inshale);
+    
+    
+var image_convplay =conventional_play.reduceToImage(
+    {properties:['geometry_vertex_count'],
+    reducer:ee.Reducer.first()}
+    );
+print(image_shaleplay);
+Map.addLayer(image_shaleplay);
+image_shaleplay = image_shaleplay.subtract(image_shaleplay).add(1);
+
+var count = image_shaleplay.reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: V_wells,
+  scale: 100,
+  maxPixels: 12e9,
+  });
+  
+print(count.getInfo());
