@@ -107,12 +107,10 @@ var intersectJoined = saveAllJoin.apply( H_pre2000,shaleplay_seg, spatialFilter)
 print(intersectJoined);
 var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
 print(intersected);
-Map.addLayer(intersectJoined, {}, 'intersectJoined');
-Map.addLayer(intersected, {}, 'intersected');
 
 
-Map.addLayer(intersectJoined, {'color':yellow}, "H_post2000"); 
-Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
+Map.addLayer(intersectJoined, {'color':yellow}, "intersectJoined"); 
+Map.addLayer(H_pre2000, {'color':db}, "intersected"); 
 
 
 
