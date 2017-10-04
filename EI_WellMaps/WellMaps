@@ -1,10 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     geometry = /* color: #bf04c2 */ee.Geometry.Point([-95.93974113464355, 30.11038488561688]),
-    shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c");
+    shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
+    conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-
 
 // Color scheme 
 var db= ('0000FF').toString();
@@ -59,6 +58,8 @@ Map.addLayer(D_Gas_post2000, {'color':black}, "D_Gas_post2000");
 Map.addLayer(D_Gas_pre2000, {'color':lyellow}, "D_Gas_pre2000"); 
 
 Map.addLayer(shaleplay, {'color':db}, "shale play boundaries"); 
+Map.addLayer(conventional_play, {'color':dg}, "shale play boundaries"); 
+
 
 
 
