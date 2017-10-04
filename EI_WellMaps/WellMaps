@@ -70,13 +70,13 @@ var Well_List_names = ee.List(["D_wells", "V_wells", 'H_post2000', 'H_pre2000','
 Map.centerObject(geometry, 5);
 
 // add Layers 
-Map.addLayer(V_wells, {'color':pink}, "V_wells", 1, 0.3); 
-Map.addLayer(D_wells, {'color':lb}, "D_wells",1, 0.3); 
-Map.addLayer(H_post2000, {'color':yellow}, "H_post2000"); 
-Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
+// Map.addLayer(V_wells, {'color':pink}, "V_wells", 1, 0.3); 
+// Map.addLayer(D_wells, {'color':lb}, "D_wells",1, 0.3); 
+// Map.addLayer(H_post2000, {'color':yellow}, "H_post2000"); 
+// Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
 
-Map.addLayer(U_pre2000, {'color':dg}, "U_pre2000", 1, 0.4); 
-Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4); 
+// Map.addLayer(U_pre2000, {'color':dg}, "U_pre2000", 1, 0.4); 
+// Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4); 
 
 
 
@@ -110,21 +110,30 @@ var image_shaleplay =shaleplay.reduceToImage(
     reducer:ee.Reducer.first()}
     );
     
-    
-    
-var image_convplay =conventional_play.reduceToImage(
-    {properties:['geometry_vertex_count'],
-    reducer:ee.Reducer.first()}
-    );
-print(image_shaleplay);
+// var convert_shale = function(fc){
+//   fc = ee.FeatureCollection(fc);
+//   var image = fc.reduceToImage(
+//     {properties:['geometry_vertex_count'],reducer:ee.Reducer.first()}
+//     );
+//   image = image.subtract(image).add(1);
+//   return(image);
+// };
+// var convert_to_multiple_images_shaleplay = shaleplay.map(convert_shale);
+
+
+var shaleplay_again = image_shaleplay.reduceToVectors(
+  
+  );
+print(shaleplay_again);
+/*image_shaleplay = image_shaleplay.subtract(image_shaleplay).add(1);
 Map.addLayer(image_shaleplay);
-image_shaleplay = image_shaleplay.subtract(image_shaleplay).add(1);
+// Map.addLayer(image_shaleplay.geometry().bounds());
+
 
 var count = image_shaleplay.reduceRegion({
   reducer: ee.Reducer.sum(),
   geometry: V_wells,
-  scale: 100,
-  maxPixels: 12e9,
+  scale: 100
   });
   
-print(count.getInfo());
+print(count.getInfo());*/
