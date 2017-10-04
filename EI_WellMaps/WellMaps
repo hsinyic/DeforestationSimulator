@@ -23,22 +23,26 @@ var lyellow = ('#fffcb0').toString();
 
 
 //select wells of certaint atrributes 
-var H_Gas = Well.filterMetadata("Updated Production Type","equals","GAS")
-.filterMetadata("Drill Type","equals","H"); 
-var D_Gas = Well
+var Well_List = ee.List([H_wells,D_Gas ]); 
+var Well_List_names = ee.List(["H_wells", "D_Gas"]);
+
+
+// Directional wells whose First Production Date is after the 2000s
+var D_Gas = Well.filterMetadata("First Production Date","equals","GAS").filterMetadata("Drill Type","equals","D"); 
+
+//view horizontal wells with early dates 
+var H_wells = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata("Drill Type","equals","D"); 
+
 
 
 //center on Geometry on the map
 Map.centerObject(geometry, 10);
 
 // add Layers 
-Map.addLayer(H_Gas, 
-{'color':pink}, "Horizontal GAS wells"); 
-
-Map.addLayer(D_Gas, 
-{'color':black}, "Directional GAS wells"); 
+Map.addLayer(H_wells, {'color':pink}, "Horizontal wells"); 
+Map.addLayer(D_Gas, {'color':black}, "Directional GAS wells"); 
 
 // count number of wells 
 var well_count = function(fc){
@@ -47,7 +51,5 @@ var well_count = function(fc){
   return ee.Number(output);
 };
 
-var Well_List = ee.List([H_Gas,D_Gas ]); 
-var Well_List_names = ee.List(["H_Gas", "D_Gas"]);
 var count = Well_List.map(well_count);
 print('Total well count by type'); print(Well_List_names.zip(count));
