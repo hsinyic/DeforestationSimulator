@@ -22,7 +22,7 @@ var orange = ('#ff9d24').toString();
 var lorange = ('#ffcc99').toString();
 var lyellow = ('#fffcb0').toString();
 
-Map.addLayer(conventional_play, {'color':lorange}, "conventional_play", 1, 1); 
+// Map.addLayer(conventional_play, {'color':lorange}, "conventional_play"); 
 Map.addLayer(shaleplay, {'color':black}, "shale play boundaries"); 
 
 
@@ -79,7 +79,6 @@ Map.centerObject(geometry, 5);
 // Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4); 
 
 
-
 // count number of wells 
 var well_count = function(fc){
   fc = ee.FeatureCollection(fc);
@@ -101,17 +100,18 @@ var saveAllJoin = ee.Join.saveAll({
   matchesKey: 'scenes',
 });
 
-var shaleplay_seg = shaleplay.union();
-Map.addLayer(shaleplay_seg, {}, 'shaleplay_seg');
-var intersectJoined = saveAllJoin.apply( H_pre2000,shaleplay_seg, spatialFilter);
-print(intersectJoined);
+var shaleplay_seg = shaleplay.union();// Map.addLayer(shaleplay_seg, {}, 'shaleplay_seg');
+var intersectJoined = saveAllJoin.apply( H_pre2000, shaleplay_seg , spatialFilter);
 var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
-print(intersected);
 
+// print(intersectJoined,'intersectJoined');
+// print(intersected,'intersected');
 
+Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
 Map.addLayer(intersectJoined, {'color':yellow}, "intersectJoined"); 
-Map.addLayer(H_pre2000, {'color':db}, "intersected"); 
+Map.addLayer(intersected, {'color':dg}, "intersected"); 
 
+print(well_count(intersectJoined));
 
 
 
@@ -151,7 +151,7 @@ var image_shaleplay =shaleplay.reduceToImage(
     
     
 var merge = ee.FeatureCollection(shaleplay.geometry());
-print(merge);
+// print(merge);
 // var convert_shale = function(fc){
 //   fc = ee.FeatureCollection(fc);
 //   var image = fc.reduceToImage(
