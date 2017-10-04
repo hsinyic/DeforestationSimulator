@@ -1,6 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
-    geometry = /* color: #bf04c2 */ee.Geometry.Point([-98.57645988464355, 38.241146330442525]);
+    geometry = /* color: #bf04c2 */ee.Geometry.Point([-112.99052238464355, 41.47848967025996]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
@@ -21,21 +21,10 @@ var orange = ('#ff9d24').toString();
 var lorange = ('#ffcc99').toString();
 var lyellow = ('#fffcb0').toString();
 
-var activeProducingWells = function(fc) {
-  fc = ee.FeatureCollection(fc);
-  var output = fc
-.filter(ee.Filter.inList('Producing Status', ['ACTIVE']))
-// .filter(ee.Filter.inList('Entity Type', ['WELL', 'COM']))
-.filter(ee.Filter.inList('Production Type',  ['GAS', 'O&G', 'OIL', 'CBM']));
-  return output;
-};
-
-
-var entry_count = function(fc){
-  fc = ee.FeatureCollection(fc);
-  var output = fc.size();
-  return ee.Number(output);
-};
+var H_Gas = Well.filterMetadata("Updated Production Type","equals","GAS")
+.filterMetadata("Drill Type","equals","H"); 
+var D_Gas = Well.filterMetadata("Updated Production Type","equals","GAS")
+.filterMetadata("Drill Type","equals","D"); 
 
 var well_count = function(fc){
   fc = ee.FeatureCollection(fc);
@@ -43,58 +32,17 @@ var well_count = function(fc){
   return ee.Number(output);
 };
 
-var VWell_Gas = VWell_Gas_1.merge(VWell_Gas_2); // print(VWell_Gas.size());print(VWell_Gas_1.size());print(VWell_Gas_2.size());// Merging didnt create problems 
-var VWell_NoneGas = VWell_NoneGas_1.merge(VWell_NoneGas_2);
-var DUWellC = DUWellC_1.merge(DUWellC_2);
-
-var Well_List_names = ee.List(['VWell_Gas', "VWell_NoneGas", "DUWellC", "HWellC"]);
-var Well_List = ee.List([VWell_Gas, VWell_NoneGas, DUWellC, HWellC]);
-var Well_List_active = Well_List.map(activeProducingWells);
-
+var Well_List = ee.List([H_Gas,D_Gas ]); 
+var Well_List_names = ee.List(["H_Gas", "D_Gas"]);
 var count = Well_List.map(well_count);
-var count_active = Well_List_active.map(well_count);
-print('Total well count unfiltered'); print(Well_List_names.zip(count));
-print('Total active producign well count'); print(Well_List_names.zip(count_active)); 
+print('Total well count by type'); print(Well_List_names.zip(count));
 
-
-
-// Map.addLayer(VWell_Gas,  {'color':lb}, "VWell_Gas");
-// Map.addLayer(VWell_NoneGas,  {'color':pink}, "VWell_NoneGas");
-// Map.addLayer(HWellC,  {'color':lorange}, "HWellC");
-// Map.addLayer(DUWellC,  {'color':lyellow}, "DUWellC");
-// Map.addLayer(activeProducingWells(VWell_Gas), {'color':db}, "VWell_Gas_active");
-// Map.addLayer(activeProducingWells(VWell_NoneGas),  {'color':red}, "VWell_NoneGas_active");
-// Map.addLayer(activeProducingWells(HWellC),  {'color':orange}, "HWellC_active");
-// Map.addLayer(activeProducingWells(DUWellC), {'color':yellow}, "DUWellC_active");
-
-///////
-//  HWellT includes HWellC >> HWellT is projection of Horitzontal Wells into to the future  
-//////
-
-/*Map.addLayer(HWellT.filterMetadata("Production Type","equals","GAS"), 
-{'color':pink}, "HorizontalTrajectory GAS wells");
-Map.addLayer(HWellT.filterMetadata("Production Type","not_equals","GAS"),
-{'color':gr}, "HorizontalTrajectory OIL wells");
-
-
-Map.addLayer(HWellC.filterMetadata("Production Type","equals","GAS")
-, {'color':db}, "HWell_Completion2013 GAS wells");
-Map.addLayer(HWellC.filterMetadata("Production Type","not_equals","GAS")
-, {'color':black}, "HWell_Completion2013 OIL wells");
-*/
-
-
-//////
-// Set map center 
-//////
 
 Map.centerObject(geometry, 10);
 
-Map.addLayer(Active_all.filterMetadata("Updated Production Type","equals","GAS")
-.filterMetadata("Drill Type","equals","H"), 
+Map.addLayer(H_Gas, 
 {'color':pink}, "Horizontal GAS wells"); 
 
-Map.addLayer(Active_all.filterMetadata("Updated Production Type","equals","GAS")
-.filterMetadata("Drill Type","equals","D"), 
+Map.addLayer(D_Gas, 
 {'color':black}, "Directional GAS wells"); 
 
