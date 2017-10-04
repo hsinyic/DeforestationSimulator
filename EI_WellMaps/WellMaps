@@ -1,0 +1,4 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
+    geometry = /* color: #bf04c2 */ee.Geometry.Point([-98.57645988464355, 38.241146330442525]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
