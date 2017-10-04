@@ -1,6 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
-    geometry = /* color: #bf04c2 */ee.Geometry.Point([-99.10380363464355, 35.21280720597982]),
+    geometry = /* color: #bf04c2 */ee.Geometry.Point([-95.93974113464355, 30.11038488561688]),
     shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
@@ -51,7 +51,7 @@ var Well_List_names = ee.List(["H_wells", "D_Gas_post2000", "D_Gas_pre2000"]);
 
 
 //center on Geometry on the map
-Map.centerObject(geometry, 4);
+Map.centerObject(geometry, 8);
 
 // add Layers 
 Map.addLayer(H_wells, {'color':pink}, "Horizontal wells"); 
