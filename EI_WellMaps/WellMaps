@@ -4,6 +4,7 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
 //center on Geometry on the map
 Map.centerObject(geometry, 5);
 
@@ -32,13 +33,13 @@ Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5);
 
 //select wells of certaint atrributes 
 // Directional wells whose First Production Date is after the 2000s
-var H_post2000 = Well
-.filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
+var H_post2003 = Well
+.filterMetadata('First Prod Date','greater_than', ee.Date('2003-01-01').millis())
 .filterMetadata("Drill Type","equals","H"); 
 
 // Directional wells whose First Production Date is before the 2000s
-var H_pre2000 = Well
-.filterMetadata('First Prod Date','less_than', ee.Date('2000-01-01').millis())
+var H_pre2003 = Well
+.filterMetadata('First Prod Date','less_than', ee.Date('2003-01-01').millis())
 .filterMetadata("Drill Type","equals","H"); 
 
 var U_post2000 = Well
