@@ -4,6 +4,9 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+//center on Geometry on the map
+Map.centerObject(geometry, 5);
+
 
 // Color scheme 
 var db= ('0000FF').toString();
@@ -63,8 +66,7 @@ var Well_List_names = ee.List(["D_wells", "V_wells", 'H_post2000', 'H_pre2000','
 
 
 
-//center on Geometry on the map
-Map.centerObject(geometry, 5);
+
 
 // add Layers 
 // Map.addLayer(V_wells, {'color':pink}, "V_wells", 1, 0.3); 
