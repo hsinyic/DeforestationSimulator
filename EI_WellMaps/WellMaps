@@ -46,9 +46,6 @@ var U_pre2000 = Well
 .filterMetadata('First Prod Date','less_than', ee.Date('2000-01-01').millis())
 .filterMetadata("Drill Type","equals","U");
 
-
-
-
  
 //view horizontal wells with early dates 
 var D_wells = Well
