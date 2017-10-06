@@ -47,8 +47,6 @@ var V_wells = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata("Drill Type","equals","V"); 
 
-
-
 var Well_List = ee.List([D_wells,V_wells, H_post2000, H_pre2000,U_post2000, U_pre2000 ]); 
 var Well_List_names = ee.List(["D_wells", "V_wells", 'H_post2000', 'H_pre2000','U_post2000', 'U_pre2000']);
 
