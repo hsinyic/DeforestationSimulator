@@ -89,7 +89,7 @@ var play_bound = function(well_layer){
 
 var shale_wells = Well_List.map(play_bound);
 var shale_count = shale_wells.map(well_count);
-print(Well_List_names.zip(count).zip(shale_count));
+print(Well_List_names.zip(shale_count));
 
 
 /*var spatialFilter = ee.Filter.intersects({
