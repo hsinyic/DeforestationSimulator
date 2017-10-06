@@ -10,36 +10,23 @@ Map.centerObject(geometry, 5);
 
 
 // Color scheme 
-var db= ('0000FF').toString();
-var lb= ('#11ffff').toString();
-var bl = ('#538dd6').toString();
-var red=('ff510f').toString();
-var lr = ('#ff8f7d').toString();
-var gr= ('#4cff62').toString();
-var lg = ('#afff14').toString();
-var dg= ('#196e0a').toString();
-var yellow=('#ffeb00').toString();
-var whi=('#f7f7f7').toString();
-var black = ('#101010').toString();
-var pink = ('#ff50f1').toString();
-var orange = ('#ff9d24').toString();
-var lorange = ('#ffcc99').toString();
+var db= ('0000FF').toString();var lb= ('#11ffff').toString();var bl = ('#538dd6').toString();
+var red=('ff510f').toString();var lr = ('#ff8f7d').toString();var gr= ('#4cff62').toString();
+var lg = ('#afff14').toString();var dg= ('#196e0a').toString();var yellow=('#ffeb00').toString();
+var whi=('#f7f7f7').toString();var black = ('#101010').toString();var pink = ('#ff50f1').toString();var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
 var lyellow = ('#fffcb0').toString();
 
+shaleplay = shaleplay.union(); conventional_play= conventional_play.union();
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); 
-
-shaleplay = shaleplay.union();
 Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); 
 
 
 
 //select wells of certaint atrributes 
-// Directional wells whose First Production Date is after the 2000s
 var H_post2000 = Well
 .filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
 .filterMetadata("Drill Type","equals","H"); 
 
-// Directional wells whose First Production Date is before the 2000s
 var H_pre2000 = Well
 .filterMetadata('First Prod Date','less_than', ee.Date('2000-01-01').millis())
 .filterMetadata("Drill Type","equals","H"); 
@@ -52,8 +39,6 @@ var U_pre2000 = Well
 .filterMetadata('First Prod Date','less_than', ee.Date('2000-01-01').millis())
 .filterMetadata("Drill Type","equals","U");
 
- 
-//view horizontal wells with early dates 
 var D_wells = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata("Drill Type","equals","D"); 
