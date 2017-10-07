@@ -82,9 +82,9 @@ var play_bound = function(well_layer){
 };
 
 var shale_wells = Well_List.map(play_bound);
-print(shale_wells.get(1));
-print(shale_wells.get(2));
-print(shale_wells.get(3));
+Export.table.toDrive(shale_wells
+  )
+
 
 // var shale_count = shale_wells.map(well_count);
 // print(Well_List_names.zip(shale_count));
