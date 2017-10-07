@@ -51,13 +51,6 @@ var Well_List = ee.List([D_wells,V_wells, H_post2000, H_pre2000,U_post2000, U_pr
 var Well_List_names = ee.List(["D_wells", "V_wells", 'H_post2000', 'H_pre2000','U_post2000', 'U_pre2000']);
 
 
-// add Layers 
-// Map.addLayer(V_wells, {'color':pink}, "V_wells", 1, 0.3); 
-// Map.addLayer(D_wells, {'color':lb}, "D_wells",1, 0.3); 
-// Map.addLayer(H_post2000, {'color':yellow}, "H_post2000"); 
-// Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
-// Map.addLayer(U_pre2000, {'color':dg}, "U_pre2000", 1, 0.4); 
-// Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4); 
 
 
 // count number of wells 
@@ -84,12 +77,15 @@ var saveAllJoin = ee.Join.saveAll({
 var play_bound = function(well_layer){
   well_layer = ee.FeatureCollection(well_layer);
   var intersectJoined = saveAllJoin.apply(well_layer ,shaleplay,  spatialFilter);
-  return(intersectJoined);
+  // return(intersectJoined);
+  return(well_count(intersectJoined));
 };
 
 var shale_wells = Well_List.map(play_bound);
-var shale_count = shale_wells.map(well_count);
-print(Well_List_names.zip(shale_count));
+
+print(shale_wells);
+// var shale_count = shale_wells.map(well_count);
+// print(Well_List_names.zip(shale_count));
 
 
 /*var spatialFilter = ee.Filter.intersects({
@@ -111,3 +107,13 @@ Map.addLayer(intersected, {'color':dg}, "intersected");
 print(well_count(intersected)); // 
 print(well_count(intersectJoined)); //0 
 */
+
+
+// add Layers 
+// Map.addLayer(V_wells, {'color':pink}, "V_wells", 1, 0.3); 
+// Map.addLayer(D_wells, {'color':lb}, "D_wells",1, 0.3); 
+// Map.addLayer(H_post2000, {'color':yellow}, "H_post2000"); 
+// Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
+// Map.addLayer(U_pre2000, {'color':dg}, "U_pre2000", 1, 0.4); 
+// Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4); 
+
