@@ -78,17 +78,19 @@ var play_bound = function(well_layer){
   well_layer = ee.FeatureCollection(well_layer);
   var intersectJoined = saveAllJoin.apply(well_layer ,shaleplay,  spatialFilter);
   // return(intersectJoined);
-  return(well_count(intersectJoined));
+  return(intersectJoined);
 };
 
 var shale_wells = Well_List.map(play_bound);
+print(shale_wells.get(1));
+print(shale_wells.get(2));
+print(shale_wells.get(3));
 
-print(shale_wells);
 // var shale_count = shale_wells.map(well_count);
 // print(Well_List_names.zip(shale_count));
 
-
-/*var spatialFilter = ee.Filter.intersects({
+/*
+var spatialFilter = ee.Filter.intersects({
   leftField: '.geo',
   rightField: '.geo',
   maxError: 10
@@ -96,6 +98,9 @@ print(shale_wells);
 var saveAllJoin = ee.Join.saveAll({
   matchesKey: 'scenes',
 });
+
+
+
 var intersectJoined = saveAllJoin.apply(H_post2000 ,shaleplay,  spatialFilter);
 var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
 Map.addLayer(H_post2000, {'color':db}, "H_post2000"); 
@@ -106,7 +111,7 @@ Map.addLayer(intersected, {'color':dg}, "intersected");
 
 print(well_count(intersected)); // 
 print(well_count(intersectJoined)); //0 
-*/
+
 
 
 // add Layers 
@@ -117,3 +122,4 @@ print(well_count(intersectJoined)); //0
 // Map.addLayer(U_pre2000, {'color':dg}, "U_pre2000", 1, 0.4); 
 // Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4); 
 
+*/
