@@ -78,18 +78,11 @@ var play_bound = function(well_layer){
   well_layer = ee.FeatureCollection(well_layer);
   var intersectJoined = saveAllJoin.apply(well_layer ,shaleplay,  spatialFilter);
   // return(intersectJoined);
-  return(intersectJoined);
+  return(intersectJoined.aggregate_sum('Well Count'));
 };
 
 var shale_wells = Well_List.map(play_bound);
-Export.table.toDrive(shale_wells,{'description':'shale_wells'},
-{'fileFormat':'KML'});
-
-Export.table.toCloudStorage(shale_wells,{'description':'shale_wells'},
-{'fileFormat':'KML'});
-
-// var shale_count = shale_wells.map(well_count);
-// print(Well_List_names.zip(shale_count));
+print(Well_List_names.zip(shale_wells));
 
 /*
 var spatialFilter = ee.Filter.intersects({
