@@ -82,9 +82,11 @@ var play_bound = function(well_layer){
 };
 
 var shale_wells = Well_List.map(play_bound);
-Export.table.toDrive(shale_wells
-  )
+Export.table.toDrive(shale_wells,{'description':'shale_wells'},
+{'fileFormat':'KML'});
 
+Export.table.toCloudStorage(shale_wells,{'description':'shale_wells'},
+{'fileFormat':'KML'});
 
 // var shale_count = shale_wells.map(well_count);
 // print(Well_List_names.zip(shale_count));
