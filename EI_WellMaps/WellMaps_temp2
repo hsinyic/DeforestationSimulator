@@ -104,10 +104,10 @@ var well_count = function(fc){
   return ee.Number(output);
 };
 
-// var count = Well_List.map(well_count);
-// print('Total well count by type'); print(Well_List_names.zip(count));
+var count = Well_List.map(well_count);
+print('Total well count by type'); print(Well_List_names.zip(count));
 
-/*var spatialFilter = ee.Filter.intersects({
+var spatialFilter = ee.Filter.intersects({
   leftField: '.geo',
   rightField: '.geo',
   maxError: 10
@@ -121,12 +121,22 @@ var play_bound = function(well_layer){
   well_layer = ee.FeatureCollection(well_layer);
   var intersectJoined = saveAllJoin.apply(well_layer ,shaleplay,  spatialFilter);
   // return(intersectJoined);
-  return(intersectJoined.aggregate_sum('Well Count'));
+  return(intersectJoined);
 };
 
+
 var shale_wells = Well_List.map(play_bound);
-print(Well_List_names.zip(shale_wells));
-*/
+// Map.addLayer(shale_wells.get(1), {'color':lg}, Well_List_names.get(1), 1, 1); 
+// Map.addLayer(D_wells, {'color':pink}, "D_wells",1, 1); 
+// Map.addLayer(H_post2000, {'color':lb}, "H_post2000",1); 
+// Map.addLayer(H_pre2000, {'color':yellow}, "H_pre2000",1); 
+// Map.addLayer(U_pre2000, {'color':db}, "U_pre2000", 1, 1); 
+// Map.addLayer(U_post2000, {'color':dg}, "U_post2000", 1, 1); 
+
+
+
+
+/*
 
 var spatialFilter = ee.Filter.intersects({
   leftField: '.geo',
@@ -161,25 +171,15 @@ Map.addLayer(intersectJoined_H_pre2000, {'color':db}, "H_pre2000", 1, 0.3);
 Map.addLayer(intersectJoined_U_post2000, {'color':dg}, "U_shale_pre2000", 1, 0.4); 
 Map.addLayer(intersectJoined_U_pre2000, {'color':lg}, "U_shale_post2000", 1, 0.4); 
 
-
+*/
 
 // 4787/26225 pre 2000 H Wells in plays 
 // 94654/119710 post 2000 H wells in plays
 
 
-print(intersectJoined_V_wells.aggregate_sum('Well Count'));
 
 // Export.table.toDrive(intersectJoined_D_wells,"Test_intersectJoined_D_wells")
 // Export.table.toDrive(intersectJoined_U_pre2000,"intersectJoined_U_post2000")
 
 
-
-
-// add Layers 
-// Map.addLayer(V_wells, {'color':pink}, "V_wells", 1, 0.3); 
-// Map.addLayer(D_wells, {'color':lb}, "D_wells",1, 0.3); 
-// Map.addLayer(H_post2000, {'color':yellow}, "H_post2000"); 
-// Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
-// Map.addLayer(U_pre2000, {'color':dg}, "U_pre2000", 1, 0.4); 
-// Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4); 
 
