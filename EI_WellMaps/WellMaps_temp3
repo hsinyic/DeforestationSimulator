@@ -194,5 +194,5 @@ Map.addLayer(ee.FeatureCollection(shale_well_FB.get(9)), {'color':orange}, Well_
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(11)), {'color':lyellow}, Well_List_names.get(11).getInfo(), 1, 1); 
 var shale_well_FB_count = shale_well_FB.map(well_count);
-print('Total shale well count by type'); print(Well_List_names.zip(shale_well_FB_count));
+print('Total shale well count by type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 
