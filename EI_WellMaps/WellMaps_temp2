@@ -54,7 +54,6 @@ var H_OG_pre2003 = Well
 .filter(ee.Filter.inList('Updated Production Type',  [ 'O&G'])); 
 
 
-
 var U_post2000 = Well
 .filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
 .filterMetadata("Drill Type","equals","U");
@@ -79,21 +78,24 @@ var V_wells_post2000 = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata("Drill Type","equals","V"); 
 
-
+print(V_wells_post2000);
 
 
 
 
 
 var Well_List = ee.List([H_gas_post2003,H_gas_pre2003, H_oil_post2007,H_oil_pre2007
-, H_OG_post2003,H_OG_pre2003, U_post2000, U_pre2000, 
-, D_wells_post2000,D_wells_pre2000
-, V_wells_pre2000,V_wells_post2000]); 
+,H_OG_post2003,H_OG_pre2003, U_post2000, U_pre2000, 
+,D_wells_post2000,D_wells_pre2000
+,V_wells_pre2000,V_wells_post2000]); 
+print(Well_List);
+
+
 var Well_List_names = ee.List(['H_gas_post2003','H_gas_pre2003', 'H_oil_post2007','H_oil_pre2007'
 ,'H_OG_post2003','H_OG_pre2003', 'U_post2000', 'U_pre2000', 
 ,'D_wells_post2000','D_wells_pre2000'
 ,'V_wells_pre2000','V_wells_post2000']);
-
+print(Well_List_names);
 
 
 
@@ -180,6 +182,7 @@ Map.addLayer(intersectJoined_U_pre2000, {'color':lg}, "U_shale_post2000", 1, 0.4
 
 // Export.table.toDrive(intersectJoined_D_wells,"Test_intersectJoined_D_wells")
 // Export.table.toDrive(intersectJoined_U_pre2000,"intersectJoined_U_post2000")
+
 
 
 
