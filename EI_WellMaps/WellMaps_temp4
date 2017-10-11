@@ -24,7 +24,7 @@ var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
 shaleplay = shaleplay.union(); conventional_play= conventional_play.union();
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); 
 Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); 
-var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(50)))});
+var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(20)))});
 Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 
 
