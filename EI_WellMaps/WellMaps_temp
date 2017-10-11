@@ -1,12 +1,12 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
-    geometry = /* color: #bf04c2 */ee.Geometry.Point([-95.93974113464355, 30.11038488561688]),
+    geometry = /* color: #bf04c2 */ee.Geometry.Point([-107.40946769714355, 40.38290518181187]),
     shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //center on Geometry on the map
-Map.centerObject(geometry, 5);
+Map.centerObject(geometry, 10);
 
 
 // Color scheme 
@@ -67,7 +67,6 @@ var well_count = function(fc){
 var count = Well_List.map(well_count);
 print('Total well count by type'); print(Well_List_names.zip(count));
 
-
 /*var spatialFilter = ee.Filter.intersects({
   leftField: '.geo',
   rightField: '.geo',
@@ -107,20 +106,20 @@ var intersectJoined_U_post2000 = saveAllJoin.apply(U_post2000 ,shaleplay,  spati
 var intersectJoined_U_pre2000 = saveAllJoin.apply(U_pre2000 ,shaleplay,  spatialFilter);
 // var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
 
-Map.addLayer(V_wells, {'color':pink}, "V_wells", 1, 1); 
-// Map.addLayer(D_wells, {'color':lb}, "D_wells",1, 1); 
-// Map.addLayer(H_post2000, {'color':yellow}, "H_post2000",1); 
-// Map.addLayer(H_pre2000, {'color':db}, "H_pre2000",1); 
-// Map.addLayer(U_pre2000, {'color':dg}, "U_pre2000", 1, 1); 
-// Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 1); 
+Map.addLayer(V_wells, {'color':lg}, "V_wells", 1, 1); 
+Map.addLayer(D_wells, {'color':pink}, "D_wells",1, 1); 
+Map.addLayer(H_post2000, {'color':lb}, "H_post2000",1); 
+Map.addLayer(H_pre2000, {'color':yellow}, "H_pre2000",1); 
+Map.addLayer(U_pre2000, {'color':db}, "U_pre2000", 1, 1); 
+Map.addLayer(U_post2000, {'color':dg}, "U_post2000", 1, 1); 
 
 
 Map.addLayer(intersectJoined_V_wells, {'color':pink}, "V_shale_wells", 1, 0.3); 
-// Map.addLayer(intersectJoined_D_wells, {'color':lb}, "D_shale_wells",1, 0.3); 
-// Map.addLayer(intersectJoined_H_post2000, {'color':yellow}, "H_shale_post2000",1, 0.3); 
-// Map.addLayer(intersectJoined_H_pre2000, {'color':db}, "H_pre2000", 1, 0.3); 
-// Map.addLayer(intersectJoined_U_post2000, {'color':dg}, "U_shale_pre2000", 1, 0.4); 
-// Map.addLayer(intersectJoined_U_pre2000, {'color':lg}, "U_shale_post2000", 1, 0.4); 
+Map.addLayer(intersectJoined_D_wells, {'color':lb}, "D_shale_wells",1, 0.3); 
+Map.addLayer(intersectJoined_H_post2000, {'color':yellow}, "H_shale_post2000",1, 0.3); 
+Map.addLayer(intersectJoined_H_pre2000, {'color':db}, "H_pre2000", 1, 0.3); 
+Map.addLayer(intersectJoined_U_post2000, {'color':dg}, "U_shale_pre2000", 1, 0.4); 
+Map.addLayer(intersectJoined_U_pre2000, {'color':lg}, "U_shale_post2000", 1, 0.4); 
 
 
 
@@ -129,6 +128,10 @@ Map.addLayer(intersectJoined_V_wells, {'color':pink}, "V_shale_wells", 1, 0.3);
 
 
 print(intersectJoined_V_wells.aggregate_sum('Well Count'));
+
+Export.table.toDrive(intersectJoined_D_wells,"Test_intersectJoined_D_wells")
+Export.table.toDrive(intersectJoined_U_pre2000,"intersectJoined_U_post2000")
+
 
 
 
