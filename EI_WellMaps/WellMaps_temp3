@@ -47,12 +47,12 @@ var H_oil_pre2007 = Well
 var H_OG_post2003 = Well
 .filterMetadata('First Prod Date','greater_than', ee.Date('2003-01-01').millis())
 .filterMetadata("Drill Type","equals","H")
-.filter(ee.Filter.inList('Updated Production Type',  [ 'O&G'])); 
+.filter(ee.Filter.inList('Updated Production Type',  [ 'BOTH'])); 
 
 var H_OG_pre2003 = Well
 .filterMetadata('First Prod Date','not_greater_than', ee.Date('2003-01-01').millis())
 .filterMetadata("Drill Type","equals","H")
-.filter(ee.Filter.inList('Updated Production Type',  [ 'O&G'])); 
+.filter(ee.Filter.inList('Updated Production Type',  [ 'BOTH'])); 
 
 
 var U_post2000 = Well
@@ -193,6 +193,6 @@ Map.addLayer(ee.FeatureCollection(shale_well_FB.get(8)), {'color':whi}, Well_Lis
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(11)), {'color':lyellow}, Well_List_names.get(11).getInfo(), 1, 1); 
-var shale_well_FB_count = shale_well_FB.map(count);
+var shale_well_FB_count = shale_well_FB.map(well_count);
 print('Total shale well count by type'); print(Well_List_names.zip(shale_well_FB_count));
 
