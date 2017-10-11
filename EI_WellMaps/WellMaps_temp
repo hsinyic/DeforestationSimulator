@@ -64,8 +64,8 @@ var well_count = function(fc){
   return ee.Number(output);
 };
 
-var count = Well_List.map(well_count);
-print('Total well count by type'); print(Well_List_names.zip(count));
+// var count = Well_List.map(well_count);
+// print('Total well count by type'); print(Well_List_names.zip(count));
 
 /*var spatialFilter = ee.Filter.intersects({
   leftField: '.geo',
@@ -129,8 +129,8 @@ Map.addLayer(intersectJoined_U_pre2000, {'color':lg}, "U_shale_post2000", 1, 0.4
 
 print(intersectJoined_V_wells.aggregate_sum('Well Count'));
 
-Export.table.toDrive(intersectJoined_D_wells,"Test_intersectJoined_D_wells")
-Export.table.toDrive(intersectJoined_U_pre2000,"intersectJoined_U_post2000")
+// Export.table.toDrive(intersectJoined_D_wells,"Test_intersectJoined_D_wells")
+// Export.table.toDrive(intersectJoined_U_pre2000,"intersectJoined_U_post2000")
 
 
 
