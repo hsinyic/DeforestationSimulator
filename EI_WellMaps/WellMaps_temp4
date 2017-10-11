@@ -117,8 +117,9 @@ print('Total well count by type'); print(Well_List_names.zip(count));
 // #####################
 var in_shale = function(fc){
   fc = ee.FeatureCollection(fc);
-  // var output = fc.filterBounds(shaleplay);
-  var output = fc.filter(ee.Filter.bounds(shaleplay,16090000));
+  var output = fc.filterBounds(
+    shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(16090))}));
+  // var output = fc.filter(ee.Filter.bounds(shaleplay,16090000));
   return ee.FeatureCollection(output);
 };
 var shale_well_FB = Well_List.map(in_shale);
