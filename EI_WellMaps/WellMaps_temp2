@@ -6,7 +6,7 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //center on Geometry on the map
-Map.centerObject(geometry, 10);
+Map.centerObject(geometry, 6);
 
 
 // Color scheme 
@@ -78,24 +78,28 @@ var V_wells_post2000 = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata("Drill Type","equals","V"); 
 
-print(V_wells_post2000);
+
+
+
 
 
 
 
 
 var Well_List = ee.List([H_gas_post2003,H_gas_pre2003, H_oil_post2007,H_oil_pre2007
-,H_OG_post2003,H_OG_pre2003, U_post2000, U_pre2000, 
+,H_OG_post2003,H_OG_pre2003, U_post2000, U_pre2000
 ,D_wells_post2000,D_wells_pre2000
 ,V_wells_pre2000,V_wells_post2000]); 
-print(Well_List);
 
 
-var Well_List_names = ee.List(['H_gas_post2003','H_gas_pre2003', 'H_oil_post2007','H_oil_pre2007'
-,'H_OG_post2003','H_OG_pre2003', 'U_post2000', 'U_pre2000', 
-,'D_wells_post2000','D_wells_pre2000'
-,'V_wells_pre2000','V_wells_post2000']);
-print(Well_List_names);
+
+
+var Well_List_names = ee.List(['H_gas_post2003','H_gas_pre2003', 'H_oil_post2007','H_oil_pre2007',
+'H_OG_post2003','H_OG_pre2003', 'U_post2000', 'U_pre2000',
+'D_wells_post2000','D_wells_pre2000',
+'V_wells_pre2000','V_wells_post2000']);
+
+
 
 
 
@@ -128,12 +132,25 @@ var play_bound = function(well_layer){
 
 
 var shale_wells = Well_List.map(play_bound);
-// Map.addLayer(shale_wells.get(1), {'color':lg}, Well_List_names.get(1), 1, 1); 
-// Map.addLayer(D_wells, {'color':pink}, "D_wells",1, 1); 
-// Map.addLayer(H_post2000, {'color':lb}, "H_post2000",1); 
-// Map.addLayer(H_pre2000, {'color':yellow}, "H_pre2000",1); 
-// Map.addLayer(U_pre2000, {'color':db}, "U_pre2000", 1, 1); 
-// Map.addLayer(U_post2000, {'color':dg}, "U_post2000", 1, 1); 
+Map.addLayer(ee.FeatureCollection(shale_wells.get(1)), {'color':lg}, Well_List_names.get(1).getInfo(), 1, 1); 
+
+
+
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(1)),Well_List_names.get(1).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(2)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(3)),Well_List_names.get(3).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(4)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(5)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(6)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(7)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(8)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(9)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(10)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(11)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(12)),Well_List_names.get(2).getInfo())
+// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(13)),Well_List_names.get(2).getInfo())
+
+
 
 
 
@@ -182,6 +199,13 @@ Map.addLayer(intersectJoined_U_pre2000, {'color':lg}, "U_shale_post2000", 1, 0.4
 
 // Export.table.toDrive(intersectJoined_D_wells,"Test_intersectJoined_D_wells")
 // Export.table.toDrive(intersectJoined_U_pre2000,"intersectJoined_U_post2000")
+
+
+
+
+
+
+
 
 
 
