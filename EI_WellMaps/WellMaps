@@ -23,47 +23,29 @@ Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5);
 
 
 //select wells of certaint atrributes 
-
-
-var H_gas_post2003 = Well
-.filterMetadata('First Prod Date','greater_than', ee.Date('2003-01-01').millis())
-.filterMetadata("Drill Type","equals","H")
-.filter(ee.Filter.inList('Updated Production Type',  ['GAS'])); 
-
-var H_oil_post2007 = Well
-.filterMetadata('First Prod Date','greater_than', ee.Date('2007-01-01').millis())
-.filterMetadata("Drill Type","equals","H")
-.filter(ee.Filter.inList('Updated Production Type',  ['OIL'])); 
-
-var H_OG_post2003 = Well
-.filterMetadata('First Prod Date','greater_than', ee.Date('2003-01-01').millis())
-.filterMetadata("Drill Type","equals","H")
-.filter(ee.Filter.inList('Updated Production Type',  [ 'O&G'])); 
-
-var H_pre2003 = Well
-.filterMetadata('First Prod Date','less_than', ee.Date('2003-01-01').millis())
+var H_post2000 = Well
+.filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
+.filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
 .filterMetadata("Drill Type","equals","H"); 
 
-
+var H_pre2000 = Well
+.filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
+.filterMetadata('First Prod Date','less_than', ee.Date('2000-01-01').millis())
+.filterMetadata("Drill Type","equals","H"); 
 
 var U_post2000 = Well
+.filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
 .filterMetadata("Drill Type","equals","U");
 
 var U_pre2000 = Well
+.filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata('First Prod Date','less_than', ee.Date('2000-01-01').millis())
 .filterMetadata("Drill Type","equals","U");
 
-var D_wells_pre2000 = Well
+var D_wells = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata("Drill Type","equals","D"); 
-
-
-var D_wells_post2000 = Well
-.filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
-.filterMetadata("Drill Type","equals","D"); 
-
-
 
 var V_wells = Well
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
