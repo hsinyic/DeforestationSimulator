@@ -135,74 +135,18 @@ var shale_wells = Well_List.map(play_bound);
 Map.addLayer(ee.FeatureCollection(shale_wells.get(1)), {'color':lg}, Well_List_names.get(1).getInfo(), 1, 1); 
 
 
-
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(0)),Well_List_names.get(0).getInfo())
 Export.table.toDrive(ee.FeatureCollection(shale_wells.get(1)),Well_List_names.get(1).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(2)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(3)),Well_List_names.get(3).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(4)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(5)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(6)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(7)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(8)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(9)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(10)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(11)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(12)),Well_List_names.get(2).getInfo())
-// Export.table.toDrive(ee.FeatureCollection(shale_wells.get(13)),Well_List_names.get(2).getInfo())
-
-
-
-
-
-
-/*
-
-var spatialFilter = ee.Filter.intersects({
-  leftField: '.geo',
-  rightField: '.geo',
-  maxError: 10
-});
-var saveAllJoin = ee.Join.saveAll({
-  matchesKey: 'scenes',
-});
-
-
-var intersectJoined_D_wells = saveAllJoin.apply(D_wells ,shaleplay,  spatialFilter);
-var intersectJoined_V_wells = saveAllJoin.apply(V_wells ,shaleplay,  spatialFilter);
-var intersectJoined_H_post2000 = saveAllJoin.apply(H_post2000 ,shaleplay,  spatialFilter);
-var intersectJoined_H_pre2000 = saveAllJoin.apply(H_pre2000 ,shaleplay,  spatialFilter);
-var intersectJoined_U_post2000 = saveAllJoin.apply(U_post2000 ,shaleplay,  spatialFilter);
-var intersectJoined_U_pre2000 = saveAllJoin.apply(U_pre2000 ,shaleplay,  spatialFilter);
-// var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
-
-Map.addLayer(V_wells, {'color':lg}, "V_wells", 1, 1); 
-Map.addLayer(D_wells, {'color':pink}, "D_wells",1, 1); 
-Map.addLayer(H_post2000, {'color':lb}, "H_post2000",1); 
-Map.addLayer(H_pre2000, {'color':yellow}, "H_pre2000",1); 
-Map.addLayer(U_pre2000, {'color':db}, "U_pre2000", 1, 1); 
-Map.addLayer(U_post2000, {'color':dg}, "U_post2000", 1, 1); 
-
-
-Map.addLayer(intersectJoined_V_wells, {'color':pink}, "V_shale_wells", 1, 0.3); 
-Map.addLayer(intersectJoined_D_wells, {'color':lb}, "D_shale_wells",1, 0.3); 
-Map.addLayer(intersectJoined_H_post2000, {'color':yellow}, "H_shale_post2000",1, 0.3); 
-Map.addLayer(intersectJoined_H_pre2000, {'color':db}, "H_pre2000", 1, 0.3); 
-Map.addLayer(intersectJoined_U_post2000, {'color':dg}, "U_shale_pre2000", 1, 0.4); 
-Map.addLayer(intersectJoined_U_pre2000, {'color':lg}, "U_shale_post2000", 1, 0.4); 
-
-*/
-
-// 4787/26225 pre 2000 H Wells in plays 
-// 94654/119710 post 2000 H wells in plays
-
-
-
-// Export.table.toDrive(intersectJoined_D_wells,"Test_intersectJoined_D_wells")
-// Export.table.toDrive(intersectJoined_U_pre2000,"intersectJoined_U_post2000")
-
-
-
-
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(2)),Well_List_names.get(2).getInfo())
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(3)),Well_List_names.get(3).getInfo())
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(4)),Well_List_names.get(4).getInfo())
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(5)),Well_List_names.get(5).getInfo())
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(6)),Well_List_names.get(6).getInfo())
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(7)),Well_List_names.get(7).getInfo())
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(8)),Well_List_names.get(8).getInfo())
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(9)),Well_List_names.get(9).getInfo())
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(10)),Well_List_names.get(10).getInfo())
+Export.table.toDrive(ee.FeatureCollection(shale_wells.get(11)),Well_List_names.get(11).getInfo())
 
 
 
