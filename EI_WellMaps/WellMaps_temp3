@@ -113,7 +113,7 @@ var well_count = function(fc){
 };
 
 var count = Well_List.map(well_count);
-print('Total well count by type'); print(Well_List_names.zip(count));
+// print('Total well count by type'); print(Well_List_names.zip(count));
 
 /*var spatialFilter = ee.Filter.intersects({
   leftField: '.geo',
