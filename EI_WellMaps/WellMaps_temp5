@@ -226,48 +226,29 @@ var os_list_names = Well_List_names.map(function(i){i = ee.String(i);
 */
 
 
-// var select = function(fc, before, after, direction, type){
-//   after = ee.String(ee.String(after).cat('-01-01'));
-//   before= ee.String(ee.String(before).cat('-01-01'));
-//   direction = ee.String(direction);
-//   type= ee.String(type);
-//   print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
-//   var selected_fc = ee.FeatureCollection(fc
-//   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
-//   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
-//   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
-//   .filter(ee.Filter.inList('Updated Production Type',  [ee.String(type)]))); 
-//   return ee.FeatureCollection(selected_fc)
-// };
+var select = function(fc, before, after, direction, type){
+  after = ee.String(ee.String(after).cat('-01-01'));
+  before= ee.String(ee.String(before).cat('-01-01'));
+  direction = ee.String(direction);
+  type= ee.String(type);
+  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
+  var selected_fc = ee.FeatureCollection(fc
+  .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
+  .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
+  .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
+  .filter(ee.Filter.inList('Updated Production Type',  [ee.String(type)]))); 
+  return ee.FeatureCollection(selected_fc);
+};
 
-// var well_test = ee.List([
-//   select(Well, '2100','2003', 'H', 'Gas' ),
-//   select(Well, '2003','1900', 'H', 'Gas' )
-//   ]);
-// Map.addLayer(ee.FeatureCollection(well_test.get(0)), {'color':dg}, 'H_gas_post2003_test', 0, 1); 
-// Map.addLayer(ee.FeatureCollection(well_test.get(1)), {'color':dg}, 'H_gas_pre2003_test', 0, 1); 
-// // var shale_well_FB_test = well_test.map(in_shale);
-var before = '2100';
-var after = '2003';
-var direction = 'H';
-var type = 'Gas';
-before = ee.String(before)
-after = ee.String(after)
-print(ee.Filter.inList('Updated Production Type',  [type]));
-print(ee.Filter.inList('Updated Production Type',  ['GAS]));
-
-
-// print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
-var selected_fc = ee.FeatureCollection(Well
-  // .filterMetadata('First Prod Date','greater_than', ee.Date(ee.String(before).cat('-01-01')).millis())
-  // .filterMetadata('First Prod Date','not_greater_than', ee.Date(ee.String(after).cat('-01-01')).millis())
-  .filter(ee.Filter.inList('Drill Type',  [direction]))
-  // .filter(ee.Filter.inList('Updated Production Type',  [type]))); 
-
-print(selected_fc)
-Map.addLayer(selected_fc, {'color':dg}, 'H_gas_post2003_test', 0, 1); 
-// Map.addLayer(ee.FeatureCollection(well_test.get(1)), {'color':dg}, 'H_gas_pre2003_test', 0, 1); 
+var well_test = ee.List([
+  select(Well, '2100','2003', 'H', 'GAS' ),
+  select(Well, '2003','1900', 'H', 'GAS' )
+  ]);
+Map.addLayer(ee.FeatureCollection(well_test.get(0)), {'color':dg}, 'H_gas_post2003_test', 0, 1); 
+Map.addLayer(ee.FeatureCollection(well_test.get(1)), {'color':red}, 'H_gas_pre2003_test', 0, 1); 
+var shale_well_FB_test = well_test.map(in_shale);
+Map.addLayer(ee.FeatureCollection(shale_well_FB_test.get(0)), {'color':dg}, 'H_gas_post2003_shale_test', 0, 1); 
+Map.addLayer(ee.FeatureCollection(shale_well_FB_test.get(1)), {'color':red}, 'H_gas_pre2003_shale_test', 0, 1); 
 
 
 
-// print(select(Well, '2100','2003', 'H', 'Gas' ));
