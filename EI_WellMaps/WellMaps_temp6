@@ -94,7 +94,7 @@ var V_wells_post2000 = Well
 var Well_List = ee.List([H_gas_post2003,H_gas_pre2003, H_oil_post2003,H_oil_pre2003
 ,H_OG_post2003,H_OG_pre2003, U_post2000, U_pre2000
 ,D_wells_post2000,D_wells_pre2000
-,V_wells_pre2000,V_wells_post2000]); 
+,V_wells_post2000, V_wells_pre2000]); 
 
 var Well_List_names = ee.List(['H_gas_post2003','H_gas_pre2003', 'H_oil_post2003','H_oil_pre2003',
 'H_OG_post2003','H_OG_pre2003', 'U_post2000', 'U_pre2000',
@@ -241,9 +241,12 @@ var select = function(fc, after,before, direction, type){
 
 var well_test = ee.List([
   select(Well, '2003','2100', 'H', ['GAS'] ),
-  select(Well, '1990','2003', 'H', ['GAS'] ),
+  select(Well, '1800','2000', 'H', ['GAS'] ),
+  // select(Well, '1800','2000', 'H', ['GAS'] ),
+  // select(Well, '2003','2100', 'H', ['OIL'] ),
+  // select(Well, '1800','2003', 'H', ['OIL'] ),
   select(Well, '2000', '2100', 'V', ['GAS', 'BOTH', 'OIL']),
-  select(Well, '1990', '2000', 'V', ['GAS', 'BOTH', 'OIL'])
+  select(Well, '1800', '2000', 'V', ['GAS', 'BOTH', 'OIL'])
   ]);
 // Map.addLayer(ee.FeatureCollection(well_test.get(0)), {'color':dg}, 'H_gas_post2003_test', 0, 1); 
 // Map.addLayer(ee.FeatureCollection(well_test.get(1)), {'color':red}, 'H_gas_pre2003_test', 0, 1); 
@@ -257,7 +260,7 @@ var test_name =ee.List(['H_gas_post2003_test', 'H_gas_pre2003_test','V_wells_pos
 var test_shale_name =ee.List(['H_gas_post2003_shale_test', 'H_gas_pre2003_shale_test','V_wells_post2000_test','V_wells_pre2000_test']);
 
 
-print(test_name.zip(count_test).zip(count_shale_test));
+print(test_shale_name.zip(count_test).zip(count_shale_test));
 
 
 
