@@ -96,14 +96,20 @@ var Well_List_names = ee.List([
 
 
 
-
 var well_count = function(fc){
   fc = ee.FeatureCollection(fc);
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
 };// count number of wells 
 var count = Well_List.map(well_count);
-print('Total well count by type'); print(count);
+// print('Total well count by type'); print(count);
+
+var avg_depth = function(fc){
+  fc = ee.FeatureCollection(fc);
+  var output = fc.aggregate_mean('Measured Depth (TD)');
+  return ee.Number(output);
+};
+
 
 // #####################
 // a better way to compute spatial join = filterBounds
@@ -118,7 +124,8 @@ var shale_well_FB = Well_List.map(in_shale);
 var s_list_names = Well_List_names.map(function(i){i = ee.String(i);
   return(i.toLowerCase());});
 var shale_well_FB_count = shale_well_FB.map(well_count);
-print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+// print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+
 
 
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);
@@ -183,7 +190,6 @@ var non_shale_well_FB = ee.List.sequence(0,11,1).map(outside_shale);
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);
   return(i.cat('non_shale').toLowerCase());});
   
-aggregate_mean('Measured Depth')
 
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(0)), {'color':yellow}, os_list_names.get(0).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(1)), {'color':yellow}, os_list_names.get(1).getInfo(), 0, 1); 
@@ -207,6 +213,10 @@ var i=3;
 Map.addLayer(ee.FeatureCollection(Well_List.get(i)), {'color':lg}, os_list_names.get(i).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os_list_names.get(i).getInfo(), 0, 1); 
+
+print(avg_depth(ee.FeatureCollection(Well_List.get(i))))
+print(avg_depth(ee.FeatureCollection(shale_well_FB.get(i))))
+print(avg_depth(ee.FeatureCollection(non_shale_well_FB.get(i))))
 
 
 // i=4;
