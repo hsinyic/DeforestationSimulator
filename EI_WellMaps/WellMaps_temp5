@@ -235,10 +235,9 @@ var select = function(fc, before, after, direction, type){
   .filter(ee.Filter.inList('Updated Production Type',  [ee.String(type)])); 
 };
 
-var well_test = ee.List[
-select(Well, '2003','2100', 'H', 'Gas' ),
-select(Well, '1900','2003', 'H', 'Gas' ),
-];
+var well_test = ee.List(
+  [select(Well, '2003','2100', 'H', 'Gas' ),
+  select(Well, '1900','2003', 'H', 'Gas' )]);
 Map.addLayer(well_test.get(0), {'color':dg}, 'H_gas_post2003', 0, 1); 
 Map.addLayer(well_test.get(1), {'color':dg}, 'H_gas_pre2003', 0, 1); 
 var shale_well_FB_test = well_test.map(in_shale);
