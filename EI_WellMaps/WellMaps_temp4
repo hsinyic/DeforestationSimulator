@@ -25,7 +25,7 @@ shaleplay = shaleplay.union(); conventional_play= conventional_play.union();
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); 
 Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); 
 var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
-Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
+Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1);
 
 
 
@@ -80,20 +80,21 @@ var D_wells_pre2000 = Well
 .filterMetadata("Drill Type","equals","D"); 
 
 
-var V_wells_pre2000 = Well
-.filterMetadata('First Prod Date','not_greater_than', ee.Date('2000-01-01').millis())
+var V_wells_post2000 = Well
+.filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata("Drill Type","equals","V"); 
 
-var V_wells_post2000 = Well
-.filterMetadata('First Prod Date','greater_than', ee.Date('2000-01-01').millis())
+
+var V_wells_pre2000 = Well
+.filterMetadata('First Prod Date','not_greater_than', ee.Date('2000-01-01').millis())
 .filter(ee.Filter.inList('Updated Production Type',  ['GAS', 'O&G', 'OIL']))
 .filterMetadata("Drill Type","equals","V"); 
 
 var Well_List = ee.List([H_gas_post2003,H_gas_pre2003, H_oil_post2007,H_oil_pre2007
 ,H_OG_post2003,H_OG_pre2003, U_post2000, U_pre2000
 ,D_wells_post2000,D_wells_pre2000
-,V_wells_pre2000,V_wells_post2000]); 
+,V_wells_post2000 ,V_wells_pre2000]); 
 
 var Well_List_names = ee.List(['H_gas_post2003','H_gas_pre2003', 'H_oil_post2007','H_oil_pre2007',
 'H_OG_post2003','H_OG_pre2003', 'U_post2000', 'U_pre2000',
