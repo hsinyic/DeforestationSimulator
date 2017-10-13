@@ -183,7 +183,7 @@ var non_shale_well_FB = ee.List.sequence(0,11,1).map(outside_shale);
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);
   return(i.cat('non_shale').toLowerCase());});
   
-
+aggregate_mean('Measured Depth')
 
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(0)), {'color':yellow}, os_list_names.get(0).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(1)), {'color':yellow}, os_list_names.get(1).getInfo(), 0, 1); 
