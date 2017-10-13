@@ -225,13 +225,13 @@ var os_list_names = Well_List_names.map(function(i){i = ee.String(i);
 */
 
 
-var select = function(fc, after,before, direction, type){
+var select = function( after,before, direction, type){
   after = ee.String(after).cat('-01-01');
   before= ee.String(before).cat('-01-01');
   direction = ee.String(direction);
   type= ee.List(type);
   // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
-  var selected_fc = ee.FeatureCollection(fc
+  var selected_fc = ee.FeatureCollection(Well
   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
@@ -240,13 +240,13 @@ var select = function(fc, after,before, direction, type){
 };
 
 var well_test = ee.List([
-  select(Well, '2003','2100', 'H', ['GAS'] ),
-  select(Well, '1800','2000', 'H', ['GAS'] ),
-  // select(Well, '1800','2000', 'H', ['GAS'] ),
-  // select(Well, '2003','2100', 'H', ['OIL'] ),
-  // select(Well, '1800','2003', 'H', ['OIL'] ),
-  select(Well, '2000', '2100', 'V', ['GAS', 'BOTH', 'OIL']),
-  select(Well, '1800', '2000', 'V', ['GAS', 'BOTH', 'OIL'])
+  select('2003','2100', 'H', ['GAS'] ),
+  select('1800','2000', 'H', ['GAS'] ),
+  select('1800','2000', 'H', ['GAS'] ),
+  select('2003','2100', 'H', ['OIL'] ),
+  select('1800','2003', 'H', ['OIL'] ),
+  select('2000', '2100', 'V', ['GAS', 'BOTH', 'OIL']),
+  select('1800', '2000', 'V', ['GAS', 'BOTH', 'OIL'])
   ]);
 // Map.addLayer(ee.FeatureCollection(well_test.get(0)), {'color':dg}, 'H_gas_post2003_test', 0, 1); 
 // Map.addLayer(ee.FeatureCollection(well_test.get(1)), {'color':red}, 'H_gas_pre2003_test', 0, 1); 
