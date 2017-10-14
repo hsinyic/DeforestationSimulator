@@ -131,13 +131,14 @@ var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'well count'}
 
 // Make the histogram, set the options.
 var measured_depth = function(fc, series_name){
+  fc = ee.List(fc);
   series_name = ee.String(series_name);
   var histogram = ui.Chart.feature.histogram(ee.FeatureCollection(fc.get(i)).filterBounds(geometry).getInfo(), 
     'Measured Depth (TD)',  30).setSeriesNames(['non_shale_well']).setOptions(options); 
   return(histogram);
 };
 print(measured_depth(non_shale_well_FB, 'non_shale_well'))
-
+print(non_shale_well_FB);
 
 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
