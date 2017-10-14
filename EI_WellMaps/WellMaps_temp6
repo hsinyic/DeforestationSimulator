@@ -137,7 +137,7 @@ var offshore = function(i){
   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry3);
   var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); /*tell the system how to match to two records */ var invertedJoin = ee.Join.inverted();/* Define the join.*/  
   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
-  Well_List = Well_List.set(i,invertedJoined );
+  // Well_List = Well_List.set(i,invertedJoined);
   return invertedJoined;
 };
 var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(offshore);
