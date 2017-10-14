@@ -130,16 +130,27 @@ var Well_List_names = ee.List([
   'V_wells_post2000',
   'V_wells_pre2000']);
   
-  
+Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lp}, "BEFORE", 0, 1); 
+
 var offshore = function(i){
   i=ee.Number(i); 
   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry3);
   var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); /*tell the system how to match to two records */ var invertedJoin = ee.Join.inverted();/* Define the join.*/  
   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
+  Well_List = Well_List.set(i,invertedJoined );
   return invertedJoined;
 };
 var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(offshore);
-Map.addLayer(ee.FeatureCollection(No_Offshore.get(1)));
+// No_Offshore = No_Offshore.reverse();
+// Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
+
+Map.addLayer(ee.FeatureCollection(No_Offshore.get(3)), {'color':lb}, "BEFORE", 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':black}, "BEFORE", 0, 1); 
+
+
+
+
+
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});
 var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});
 var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
