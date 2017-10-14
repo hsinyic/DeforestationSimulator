@@ -223,6 +223,7 @@ Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os
 // print(avg_depth(ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry)  ));
 // print(avg_depth(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry)  ));
 
+
 print(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry).aggregate_count_distinct("Measured Depth (TD)"));
 print(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry).aggregate_count("Measured Depth (TD)"));
 
@@ -236,36 +237,28 @@ print(ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry).aggregate_co
 
 
 
-
-
 var options = {
-  title: 'avg depth',
+  title: 'measured depth',
   fontSize: 10,
-  hAxis: {title: 'count'},
-  vAxis: {title: 'depth'},
+  hAxis: {title: 'well count'},
+  vAxis: {title: 'measured depth in ft'},
   series: {
     0: {color: 'blue'}}
-    // 1: {color: 'green'},
-    // 2: {color: 'red'}}
-    // 3: {color: 'magenta'}}
 };
-var list = ee.List([
-  ee.FeatureCollection(ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry)),
-  ee.FeatureCollection(ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry)),
-  ee.FeatureCollection(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry))
-]);
-
-print(list);
 
 // Make the histogram, set the options.
-var histogram = ui.Chart.feature.histogram(
-  ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry), 
-  'Measured Depth (TD)',  30)
-    .setSeriesNames(['total'])
-    .setOptions(options);
+var measured_depth = function(featurecollection, series_name){
+  var histogram = ui.Chart.feature.histogram(
+    ee.FeatureCollection(featurecollection.get(i)).filterBounds(geometry), 
+    'Measured Depth (TD)',  30)
+      .setSeriesNames([series_name])
+      .setOptions(options);  
+  return(histogram);
+}
+
 
 // Display the histogram.
-print(histogram);
+print(measured_depth(ee.FeatureCollection(non_shale_well_FB.get(i))));
 
 
 // print(ee.FeatureCollection(shale_well_FB.get(i)).aggregate_histogram('Measured Depth (TD)'))
