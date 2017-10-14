@@ -110,8 +110,9 @@ var Well_List_names = ee.List([
   
   'V_wells_post2000',
   'V_wells_pre2000']);
-  
-Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':pink}, "BEFORE", 0, 1); 
+
+
+
 
 var offshore = function(i){
   i=ee.Number(i); 
@@ -120,12 +121,11 @@ var offshore = function(i){
   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
   return invertedJoined;
 };
-var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(offshore);
-No_Offshore =No_Offshore.reverse();
-Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
+Well_List = ee.List.sequence(0,Well_List.size(),1 ).map(offshore);
+// var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(offshore);
+// No_Offshore =No_Offshore.reverse();
+// Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
 
-// Map.addLayer(ee.FeatureCollection(No_Offshore.get(2)), {'color':lb}, "No_Offshore", 0, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':black}, "AFTER", 0, 1); 
 
 
 
