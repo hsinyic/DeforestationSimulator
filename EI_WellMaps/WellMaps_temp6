@@ -8,10 +8,11 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
           [-99.84375, 30.12612436422458],
           [-100.17333984375, 33.94335994657882]]]),
     geometry2 = /* color: #f1ff5d */ee.Geometry.Polygon(
-        [[[-102.77069349293441, 37.71519557523858],
-          [-102.98288610317962, 34.462574436027836],
-          [-96.28252056541089, 33.02253600751248],
-          [-94.22074548223043, 38.26961364078353]]]);
+        [[[-83.70339828250013, 42.36067223886009],
+          [-83.7233965497606, 36.32649585463325],
+          [-76.78826123344527, 37.67253509620034],
+          [-73.95103498640799, 40.16127593903518],
+          [-74.54237997262669, 42.90758581937808]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
@@ -114,14 +115,15 @@ var outside_shale = function(i){
   return invertedJoined;
 };// Apply the join.
 var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(outside_shale);
+print(non_shale_well_FB);
 // count number of wells
 var well_count = function(fc){
   fc = ee.FeatureCollection(fc);
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
 }; 
-// var count = Well_List.map(well_count); print('Total well count by type'); print(count);
-// var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+var count = Well_List.map(well_count); print('Total well count by type'); print(count);
+var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 
 
 
@@ -143,9 +145,9 @@ var avg_depth = function(series_name, fc, geo){
 };
 
 
-var i=12; var geometry= geometry1;
+var i=0; var geometry= geometry1;
 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os_list_names.get(i).getInfo(), 0, 1); 
 print(measured_depth(non_shale_well_FB, 'non_shale_well',geometry));
 print(measured_depth(shale_well_FB, 'shale_well',geometry));
@@ -154,8 +156,8 @@ avg_depth('shale_well', shale_well_FB, geometry);
 
 
 
-i=13;
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':db}, s_list_names.get(i).getInfo(), 0, 1); 
+i=1;
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':db}, s_list_names.get(i).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':lb}, os_list_names.get(i).getInfo(), 0, 1); 
 print(measured_depth(non_shale_well_FB, 'non_shale_well',geometry));
 print(measured_depth(shale_well_FB, 'shale_well',geometry));
