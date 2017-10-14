@@ -2,17 +2,49 @@
 var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG"),
-    geometry1 = /* color: #98ff00 */ee.Geometry.Polygon(
-        [[[-105.18310546875, 34.27083595165],
-          [-104.96337890625, 30.581179257386985],
-          [-99.84375, 30.12612436422458],
-          [-100.17333984375, 33.94335994657882]]]),
+    geometry3 = /* color: #4b55ff */ee.Geometry.Polygon(
+        [[[-89.63028068903844, 22.899855706194447],
+          [-81.7822265625, 25.522614647623296],
+          [-82.08984375, 25.958044673317847],
+          [-82.4853515625, 26.549222577692042],
+          [-82.79296875, 27.254629577800063],
+          [-82.9248046875, 27.527758206861883],
+          [-83.1005859375, 28.226970038918342],
+          [-83.14453125, 28.76765910569123],
+          [-83.232421875, 29.3055613255277],
+          [-83.9794921875, 29.840643899834436],
+          [-84.2431640625, 29.53522956294847],
+          [-85.4296875, 29.53522956294847],
+          [-85.78125, 29.840643899834436],
+          [-86.66015625, 29.993002284551075],
+          [-87.1435546875, 29.993002284551075],
+          [-88.1103515625, 29.993002284551075],
+          [-88.4619140625, 29.611670115197406],
+          [-89.033203125, 28.9600886880068],
+          [-89.6044921875, 29.075375179558346],
+          [-90.703125, 28.92163128242129],
+          [-91.40625, 29.152161283318915],
+          [-91.9775390625, 29.3055613255277],
+          [-92.6806640625, 29.611670115197406],
+          [-93.515625, 29.45873118535534],
+          [-94.4384765625, 29.22889003019423],
+          [-95.2294921875, 28.652030630362262],
+          [-96.064453125, 28.265682390146477],
+          [-96.85546875, 27.800209937418252],
+          [-97.20703125, 26.902476886279832],
+          [-96.9873046875, 26.194876675795218],
+          [-97.119140625, 25.403584973186707]]]),
     geometry2 = /* color: #f1ff5d */ee.Geometry.Polygon(
         [[[-83.70339828250013, 42.36067223886009],
           [-83.7233965497606, 36.32649585463325],
           [-76.78826123344527, 37.67253509620034],
           [-73.95103498640799, 40.16127593903518],
-          [-74.54237997262669, 42.90758581937808]]]);
+          [-74.54237997262669, 42.90758581937808]]]),
+    geometry1 = /* color: #98ff00 */ee.Geometry.Polygon(
+        [[[-105.18310546875, 34.27083595165],
+          [-104.96337890625, 30.581179257386985],
+          [-99.84375, 30.12612436422458],
+          [-100.17333984375, 33.94335994657882]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
@@ -145,7 +177,7 @@ var avg_depth = function(series_name, fc, geo){
 };
 
 
-var i=0; var geometry= geometry1;
+var i=0; var geometry= geometry3;
 
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os_list_names.get(i).getInfo(), 0, 1); 
@@ -222,8 +254,8 @@ Map.addLayer(ee.FeatureCollection(Well_List.get(7)), {'color':black}, Well_List_
 Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':whi}, Well_List_names.get(8).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':lyellow}, Well_List_names.get(11).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(12)), {'color':lyellow}, Well_List_names.get(12).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(12)), {'color':lp}, Well_List_names.get(12).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(13)), {'color':lyellow}, Well_List_names.get(13).getInfo(), 0, 1); 
 
 
