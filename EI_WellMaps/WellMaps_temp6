@@ -157,8 +157,6 @@ avg_depth('shale_well', shale_well_FB, geometry);
 
 
 
-
-
 i=13;
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':db}, s_list_names.get(i).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':lb}, os_list_names.get(i).getInfo(), 0, 1); 
