@@ -123,9 +123,9 @@ var count = Well_List.map(well_count); print('Total well count by type'); print(
 
 // measured depth histogram, set graph options.
 var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'well count'},vAxis: {title: 'measured depth in ft'},series: {0: {color: 'blue'}}};
-var measured_depth = function(fc, series_name){fc = ee.List(fc);series_name = ee.String(series_name);
+var measured_depth = function(fc, series_name){fc = ee.List(fc);series_name = ee.String(series_name);series_name = ee.List([series_name])
   var histogram = ui.Chart.feature.histogram(ee.FeatureCollection(fc.get(i)).filterBounds(geometry), 
-    'Measured Depth (TD)',  30).setSeriesNames([series_name]).setOptions(options); return(histogram);};
+    'Measured Depth (TD)',  30).setSeriesNames(series_name).setOptions(options); return(histogram);};
 // avg_depth
 
 
