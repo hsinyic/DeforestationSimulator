@@ -2,38 +2,19 @@
 var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG"),
-    geometry3 = /* color: #4b55ff */ee.Geometry.Polygon(
-        [[[-81.78054924372594, 25.519785708407063],
-          [-81.7822265625, 25.522614647623296],
-          [-82.08984375, 25.958044673317847],
-          [-82.4853515625, 26.549222577692042],
-          [-82.79296875, 27.254629577800063],
-          [-82.9248046875, 27.527758206861883],
-          [-83.1005859375, 28.226970038918342],
-          [-83.14453125, 28.76765910569123],
-          [-83.232421875, 29.3055613255277],
-          [-83.9794921875, 29.840643899834436],
-          [-84.2431640625, 29.53522956294847],
-          [-85.4296875, 29.53522956294847],
-          [-85.78125, 29.840643899834436],
-          [-86.66015625, 29.993002284551075],
-          [-87.1435546875, 29.993002284551075],
-          [-88.1982421875, 29.9168522330702],
-          [-88.4619140625, 29.611670115197406],
-          [-89.033203125, 28.9600886880068],
-          [-89.6044921875, 29.075375179558346],
-          [-90.703125, 28.92163128242129],
-          [-91.40625, 29.152161283318915],
-          [-91.9775390625, 29.3055613255277],
-          [-92.6806640625, 29.611670115197406],
-          [-93.515625, 29.45873118535534],
-          [-94.4384765625, 29.22889003019423],
-          [-95.2294921875, 28.652030630362262],
-          [-96.064453125, 28.265682390146477],
-          [-96.85546875, 27.800209937418252],
-          [-97.20703125, 26.902476886279832],
-          [-96.9873046875, 26.194876675795218],
-          [-97.119140625, 25.403584973186707]]]),
+    geometry3 = /* color: #000000 */ee.Geometry.Polygon(
+        [[[-84.814453125, 25.562265014427517],
+          [-86.9677734375, 30.18312184219552],
+          [-88.505859375, 29.897805610155874],
+          [-88.48388671875, 29.88828093315929],
+          [-90.791015625, 29.200123477644983],
+          [-93.01025390625, 29.6594160549124],
+          [-93.59356507775965, 29.77030391048783],
+          [-94.7900390625, 29.11377539511439],
+          [-96.943359375, 27.858503954841247],
+          [-97.13003909234658, 27.11421593752332],
+          [-97.283935546875, 25.512700007620513],
+          [-97.2509765625, 25.522614647623296]]]),
     geometry2 = /* color: #f1ff5d */ee.Geometry.Polygon(
         [[[-83.70339828250013, 42.36067223886009],
           [-83.7233965497606, 36.32649585463325],
@@ -135,7 +116,7 @@ Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':pink}, "BEFORE", 
 var offshore = function(i){
   i=ee.Number(i); 
   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry3);
-  var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); /*tell the system how to match to two records */ var invertedJoin = ee.Join.inverted();/* Define the join.*/  
+  var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
   return invertedJoined;
 };
@@ -143,9 +124,8 @@ var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_
 No_Offshore =No_Offshore.reverse();
 Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
 
-Map.addLayer(ee.FeatureCollection(No_Offshore.get(3)), {'color':lb}, "No_Offshore", 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':black}, "AFTER", 0, 1); 
-
+// Map.addLayer(ee.FeatureCollection(No_Offshore.get(2)), {'color':lb}, "No_Offshore", 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':black}, "AFTER", 0, 1); 
 
 
 
