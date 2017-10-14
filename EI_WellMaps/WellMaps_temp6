@@ -3,7 +3,7 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG"),
     geometry3 = /* color: #4b55ff */ee.Geometry.Polygon(
-        [[[-89.63028068903844, 22.899855706194447],
+        [[[-81.78054924372594, 25.519785708407063],
           [-81.7822265625, 25.522614647623296],
           [-82.08984375, 25.958044673317847],
           [-82.4853515625, 26.549222577692042],
@@ -46,6 +46,15 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
           [-99.84375, 30.12612436422458],
           [-100.17333984375, 33.94335994657882]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+var Well_onshore= Well.filterBounds(geometry3);
+var filter = ee.Filter.equals({
+  leftField: 'system:index',
+  rightField: 'system:index'
+}); // tell the system how to match to two records 
+var invertedJoin = ee.Join.inverted();// Define the join.
+
+
+
 
 
 //center on Geometry on the map
@@ -125,6 +134,9 @@ var Well_List_names = ee.List([
   
   'V_wells_post2000',
   'V_wells_pre2000']);
+// var offshore = function(i){fc=ee.FeatureCollection(fc); return(fc.filterBounds(geometry3));}
+// var No_Offshore = ee.List([1,2]).map(offshore);
+print(ee.List([1,2]));
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});
 var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});
 var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
