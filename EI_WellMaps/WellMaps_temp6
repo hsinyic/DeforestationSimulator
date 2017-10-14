@@ -227,12 +227,16 @@ var options = {
   fontSize: 20,
   hAxis: {title: 'count'},
   vAxis: {title: 'depth'},
-  series: {ee.FeatureCollection(Well_List.get(i)).aggregate_histogram('Measured Depth (TD)')}
+  series: {
+    0: {color: 'blue'}}
+    // 1: {color: 'green'},
+    // 2: {color: 'red'},
+    // 3: {color: 'magenta'}}
 };
 
 // Make the histogram, set the options.
-var histogram = ui.Chart.image.histogram(image, region, 30)
-    .setSeriesNames(['blue', 'green', 'red', 'NIR'])
+var histogram = ui.Chart.image.histogram(ee.FeatureCollection(Well_List.get(i)).aggregate_histogram('Measured Depth (TD)'), geometry, 30)
+    .setSeriesNames(['blue'])
     .setOptions(options);
 
 // Display the histogram.
