@@ -121,7 +121,25 @@ var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale we
 
 
 
+
+
+
 var i=3;
+
+var avg_depth = function(fc){fc = ee.FeatureCollection(fc);return(ee.Number(fc.aggregate_mean('Measured Depth (TD)')));};
+var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'well count'},vAxis: {title: 'measured depth in ft'},series: {0: {color: 'blue'}}};
+
+// Make the histogram, set the options.
+var measured_depth = function(fc, series_name){
+  series_name = ee.String(series_name);
+  var histogram = ui.Chart.feature.histogram(ee.FeatureCollection(fc.get(i)).filterBounds(geometry).getInfo(), 
+    'Measured Depth (TD)',  30).setSeriesNames(['non_shale_well']).setOptions(options); 
+  return(histogram);
+};
+print(measured_depth(non_shale_well_FB, 'non_shale_well'))
+
+
+
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os_list_names.get(i).getInfo(), 0, 1); 
 // i=4;
@@ -135,39 +153,6 @@ Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
 
 
-
-
-
-
-
-var avg_depth = function(fc){fc = ee.FeatureCollection(fc);return(ee.Number(fc.aggregate_mean('Measured Depth (TD)')));};
-var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'well count'},vAxis: {title: 'measured depth in ft'},
-  series: {0: {color: 'blue'}}};
-
-// Make the histogram, set the options.
-var measured_depth = function(fc, series_name){fc = ee.FeatureCollection(fc);series_name = ee.String(series_name);
-  var histogram = ui.Chart.feature.histogram(
-    ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry), 
-    'Measured Depth (TD)',  30).setSeriesNames(['non_shale_well']).setOptions(options); 
-  print(histogram);
-  return(histogram);
-};
-
-var test_histogram = ee.FeatureCollection(non_shale_well_FB.get(i))
-.filterBounds(geometry)
-.aggregate_histogram('Measured Depth (TD)');
-test_histogram = ee.Dictionary(test_histogram).toArray()
-
-print(test_histogram);
-// print(Chart(test_histogram, 'Histogram'));
-
-
-
-// Display the histogram.
-// measured_depth(   non_shale_well_FB, 'none_shale')  ;
-
-// var histogram_test = ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry).aggregate_mean("Measured Depth (TD)");
-// ee.Dictionary(histogram_test);
 
 // print(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry).aggregate_count_distinct("Measured Depth (TD)"));
 // print(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry).aggregate_count("Measured Depth (TD)"));
@@ -233,3 +218,4 @@ print(test_histogram);
 // Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':lyellow}, Well_List_names.get(11).getInfo(), 0, 1); 
 
+// https://groups.google.com/forum/#!searchin/google-earth-engine-developers/$20ui.chart%7Csort:relevance/google-earth-engine-developers/b5JzmsCXr9w/hDRtvxqgAQAJ
