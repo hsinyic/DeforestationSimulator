@@ -18,7 +18,7 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
           [-85.78125, 29.840643899834436],
           [-86.66015625, 29.993002284551075],
           [-87.1435546875, 29.993002284551075],
-          [-88.1103515625, 29.993002284551075],
+          [-88.1982421875, 29.9168522330702],
           [-88.4619140625, 29.611670115197406],
           [-89.033203125, 28.9600886880068],
           [-89.6044921875, 29.075375179558346],
@@ -139,7 +139,7 @@ var offshore = function(i){
   return invertedJoined;
 };
 var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(offshore);
-print(No_Offshore);
+Map.addLayer(ee.FeatureCollection(No_Offshore.get(1)));
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});
 var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});
 var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
