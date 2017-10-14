@@ -120,8 +120,8 @@ var well_count = function(fc){
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
 }; 
-var count = Well_List.map(well_count); print('Total well count by type'); print(count);
-var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+// var count = Well_List.map(well_count); print('Total well count by type'); print(count);
+// var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 
 
 
