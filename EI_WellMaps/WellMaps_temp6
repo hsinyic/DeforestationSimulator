@@ -148,12 +148,20 @@ var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'well count'}
 var measured_depth = function(fc, series_name){fc = ee.FeatureCollection(fc);series_name = ee.String(series_name);
   var histogram = ui.Chart.feature.histogram(
     ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry), 
-    'Measured Depth (TD)',  30).setSeriesNames('non_shale_well').setOptions(options); 
+    'Measured Depth (TD)',  30).setSeriesNames(['non_shale_well']).setOptions(options); 
   print(histogram);
   return(histogram);
 };
 
-ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry).aggregate_histogram('Measured Depth (TD)').getInfo()
+var test_histogram = ee.FeatureCollection(non_shale_well_FB.get(i))
+.filterBounds(geometry)
+.aggregate_histogram('Measured Depth (TD)');
+test_histogram = ee.Dictionary(test_histogram).toArray()
+
+print(test_histogram);
+// print(Chart(test_histogram, 'Histogram'));
+
+
 
 // Display the histogram.
 // measured_depth(   non_shale_well_FB, 'none_shale')  ;
