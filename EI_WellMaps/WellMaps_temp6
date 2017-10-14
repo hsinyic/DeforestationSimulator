@@ -218,25 +218,50 @@ var i=3;
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os_list_names.get(i).getInfo(), 0, 1); 
 
-print(avg_depth(  ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry)      )   )
-print(avg_depth(ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry)))
-print(avg_depth(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry)))
+
+// print(avg_depth(ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry) ));
+// print(avg_depth(ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry)  ));
+// print(avg_depth(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry)  ));
+
+print(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry).aggregate_count_distinct("Measured Depth (TD)"));
+print(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry).aggregate_count("Measured Depth (TD)"));
+
+
+print(ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry).aggregate_count_distinct("Measured Depth (TD)"));
+print(ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry).aggregate_count("Measured Depth (TD)"));
+
+
+print(ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry).aggregate_count_distinct("Measured Depth (TD)"));
+print(ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry).aggregate_count("Measured Depth (TD)"));
+
+
+
+
 
 var options = {
   title: 'avg depth',
-  fontSize: 20,
+  fontSize: 10,
   hAxis: {title: 'count'},
   vAxis: {title: 'depth'},
   series: {
     0: {color: 'blue'}}
     // 1: {color: 'green'},
-    // 2: {color: 'red'},
+    // 2: {color: 'red'}}
     // 3: {color: 'magenta'}}
 };
+var list = ee.List([
+  ee.FeatureCollection(ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry)),
+  ee.FeatureCollection(ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry)),
+  ee.FeatureCollection(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry))
+]);
+
+print(list);
 
 // Make the histogram, set the options.
-var histogram = ui.Chart.image.histogram(ee.FeatureCollection(Well_List.get(i)).aggregate_histogram('Measured Depth (TD)'), geometry, 30)
-    .setSeriesNames(['blue'])
+var histogram = ui.Chart.feature.histogram(
+  ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry), 
+  'Measured Depth (TD)',  30)
+    .setSeriesNames(['total'])
     .setOptions(options);
 
 // Display the histogram.
