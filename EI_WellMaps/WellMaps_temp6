@@ -1,8 +1,12 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
-    geometry = /* color: #bf04c2 */ee.Geometry.Point([-105.41544914245605, 42.75381908743202]),
     shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
-    conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG");
+    conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG"),
+    geometry = /* color: #98ff00 */ee.Geometry.Polygon(
+        [[[-105.18310546875, 34.27083595165],
+          [-104.96337890625, 30.581179257386985],
+          [-99.84375, 30.12612436422458],
+          [-100.17333984375, 33.94335994657882]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //center on Geometry on the map
@@ -210,14 +214,34 @@ var os_list_names = Well_List_names.map(function(i){i = ee.String(i);
 
 
 var i=3;
-Map.addLayer(ee.FeatureCollection(Well_List.get(i)), {'color':lg}, os_list_names.get(i).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(i)), {'color':lg}, os_list_names.get(i).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os_list_names.get(i).getInfo(), 0, 1); 
 
-print(avg_depth(ee.FeatureCollection(Well_List.get(i))))
-print(avg_depth(ee.FeatureCollection(shale_well_FB.get(i))))
-print(avg_depth(ee.FeatureCollection(non_shale_well_FB.get(i))))
+print(avg_depth(  ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry)      )   )
+print(avg_depth(ee.FeatureCollection(shale_well_FB.get(i)).filterBounds(geometry)))
+print(avg_depth(ee.FeatureCollection(non_shale_well_FB.get(i)).filterBounds(geometry)))
 
+var options = {
+  title: 'avg depth',
+  fontSize: 20,
+  hAxis: {title: 'count'},
+  vAxis: {title: 'depth'},
+  series: {ee.FeatureCollection(Well_List.get(i)).aggregate_histogram('Measured Depth (TD)')}
+};
+
+// Make the histogram, set the options.
+var histogram = ui.Chart.image.histogram(image, region, 30)
+    .setSeriesNames(['blue', 'green', 'red', 'NIR'])
+    .setOptions(options);
+
+// Display the histogram.
+print(histogram);
+
+
+// print(ee.FeatureCollection(shale_well_FB.get(i)).aggregate_histogram('Measured Depth (TD)'))
+// print(avg_depth(ee.FeatureCollection(non_shale_well_FB.get(i))))
+// Map.addLayer(ee.FeatureCollection(Well_List.get(i)).filterBounds(ee.Geometry(geometry)))
 
 // i=4;
 // Map.addLayer(ee.FeatureCollection(Well_List.get(i)), {'color':lb}, os_list_names.get(i).getInfo(), 0, 1); 
