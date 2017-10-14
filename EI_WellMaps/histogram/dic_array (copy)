@@ -1,0 +1,22 @@
+
+var polygon = ee.Geometry.Polygon([
+  [-73.949, 52.20] ,[-76.45,52.20], 
+  [-76.45, 50.55],[-73.949, 50.55]     // Quebec
+      ]);
+  
+  
+  
+var img1 = ee.Image('MCD12Q1/MCD12Q1_005_2001_01_01')
+  .select(['Land_Cover_Type_1'])
+  .clip(polygon);
+  
+
+var test = ee.FeatureCollection.randomPoints(polygon)
+
+var counts = img1.reduceRegions(test, ee.Reducer.first());
+var histo = counts.aggregate_histogram("first")//.getInfo();
+
+var histo_array = ee.Dictionary(histo).toArray().getInfo()
+print(histo_array)
+print(histo_array[1])
+
