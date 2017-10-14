@@ -127,12 +127,13 @@ var measured_depth = function(fc, series_name){fc = ee.List(fc);series_name = ee
   var histogram = ui.Chart.feature.histogram(ee.FeatureCollection(fc.get(i)).filterBounds(geometry), 
     'Measured Depth (TD)',  30).setSeriesNames([series_name]).setOptions(options); return(histogram);};
 // avg_depth
-var avg_depth = function(fc){fc = ee.List(fc); roi = ee.FeatureCollection(fc.get(i)).filterBounds(geometry);
-print('series_name'
-,roi.aggregate_mean('Measured Depth (TD)'), 'Mean Measured Depth'
-,roi.aggregate_count('Measured Depth (TD)'), 'unique value'
-,roi.aggregate_count_distinct('Measured Depth (TD)'), 'unique value');
-return();
+var avg_depth = function(fc){
+  fc = ee.List(fc); 
+  roi = ee.FeatureCollection(fc.get(i)).filterBounds(geometry);
+  print('series_name',roi.aggregate_mean('Measured Depth (TD)'), 'Mean Measured Depth'
+  ,roi.aggregate_count('Measured Depth (TD)'), 'unique value'
+  ,roi.aggregate_count_distinct('Measured Depth (TD)'), 'unique value');
+  return();
 };
 
 
