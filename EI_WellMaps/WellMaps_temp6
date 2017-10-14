@@ -137,6 +137,7 @@ var Well_List_names = ee.List([
 // var offshore = function(i){fc=ee.FeatureCollection(fc); return(fc.filterBounds(geometry3));}
 // var No_Offshore = ee.List([1,2]).map(offshore);
 print(ee.List([1,2]));
+print(ee.List.sequence(0,Well_List.size().subtract(1),1))
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});
 var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});
 var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
