@@ -143,9 +143,6 @@ var avg_depth = function(series_name, fc, geo){
 };
 
 
-
-
-
 var i=12; var geometry= geometry1;
 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
