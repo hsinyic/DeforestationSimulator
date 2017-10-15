@@ -132,7 +132,7 @@ Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_nam
 var offshore_wells = ee.FeatureCollection(Well_List.get(8)).filterBounds(Active_GOM);
 Map.addLayer(ee.FeatureCollection(offshore_wells), {'color':red}, Well_List_names.get(8).getInfo(), 0, 1); 
 var filter = ee.Filter.equals({leftField: 'system:index' ,rightField:'system:index'}); var invertedJoin = ee.Join.inverted()
-var invertedJoined = invertedJoin.apply( ee.FeatureCollection(Well_List.get(8)),offshore_wells,  filter);
+var invertedJoined = invertedJoin.apply( offshore_wells, ee.FeatureCollection(Well_List.get(8)), filter);
 print(invertedJoined);
 Map.addLayer(ee.FeatureCollection(invertedJoined), {'color':pink}, Well_List_names.get(8).getInfo(), 0, 1); 
 
