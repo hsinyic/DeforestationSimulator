@@ -103,16 +103,16 @@ var Well_List_names = ee.List([
   'V_wells_pre2000']);
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 // ################ filter Offshore from Directional/Unknown ################ 
-// var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D')
-// var selectOnshore = function(i){
-//   i=ee.Number(i); 
-//   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(GOM_boundary);
-//   var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
-//   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
-//   return invertedJoined;};//Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
-// var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
-// No_Offshore =No_Offshore.reverse();
-// Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
+var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D')
+var selectOnshore = function(i){
+  i=ee.Number(i); 
+  var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(GOM_boundary);
+  var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
+  var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
+  return invertedJoined;};//Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
+var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
+No_Offshore =No_Offshore.reverse();
+Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
 // ################  wells in shale ################ //
 var in_shale = function(fc){
   fc = ee.FeatureCollection(fc);
@@ -152,10 +152,12 @@ var avg_depth = function(series_name, fc, geo){
   fc = ee.List(fc); series_name = ee.String(series_name);geo=ee.Geometry(geo);
   var roi = ee.FeatureCollection(fc.get(i))//.filterBounds(geo);
   print(series_name, Well_List_names.get(i).getInfo()
-  , roi.aggregate_count('Well Count'));
-  // ,roi.aggregate_mean('Measured Depth (TD)')//, 'Mean Measured Depth'
-  // ,roi.aggregate_count('Measured Depth (TD)')//, 'total count'
-  // ,roi.aggregate_count_distinct('Measured Depth (TD)'));//, 'unique value');
+  // , roi.aggregate_count('Well Count')); 
+  // many rows have significant amount of wells within each entries
+  // such as Texas who reports in lease 
+  ,roi.aggregate_mean('Measured Depth (TD)')//, 'Mean Measured Depth'
+  ,roi.aggregate_count('Measured Depth (TD)')//, 'total count'
+  ,roi.aggregate_count_distinct('Measured Depth (TD)'));//, 'unique value');
   return(ee.Number(0));
 };
 
@@ -168,8 +170,6 @@ var i=0; var geometry= geometry3;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
 
-
-
 i=1;
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':db}, s_list_names.get(i).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':lb}, os_list_names.get(i).getInfo(), 0, 1); 
@@ -178,37 +178,27 @@ i=1;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
 
-
 i=2;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
-
-
 i=3;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
-
 i=4;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
-
 i=5;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
-
-
 i=6;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
-
 i=7;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
-
 i=8;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
-
 i=9;
 avg_depth('non_shale_well', non_shale_well_FB, geometry);
 avg_depth('shale_well', shale_well_FB, geometry);
