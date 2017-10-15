@@ -114,14 +114,20 @@ var Well_List_names = ee.List([
 
 
 
-var offshore = function(i){
+var Onshore = function(i){
   i=ee.Number(i); 
   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry3);
   var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
   return invertedJoined;
 };
-Well_List = ee.List.sequence(0,Well_List.size(),1 ).map(offshore);
+var Offshore = function(i){
+  i=ee.Number(i); 
+  var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry3);
+  return offshore_wells;
+};
+
+Well_List = ee.List.sequence(0,Well_List.size(),1 ).map(Onshore);
 // var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(offshore);
 // No_Offshore =No_Offshore.reverse();
 // Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
