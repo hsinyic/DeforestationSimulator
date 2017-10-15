@@ -128,18 +128,33 @@ var Offshore_count = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_Li
 // print(Offshore_count.map(function(fc){fc=ee.FeatureCollection(fc); return(fc.aggregate_count("x")) }));
 
 // *********
-Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
-var offshore_wells = ee.FeatureCollection(Well_List.get(8)).filterBounds(Active_GOM);
+Map.addLayer(Active_GOM, {'color':black}, "Active_GOM", 1, 1)
+Map.addLayer(GOM_offshore, {'color':db}, "GOM_offshore", 1, 1)
+Map.addLayer(GOM_offshore.geometry().convexHull(), {'color':yellow}, "Active_GOM_contour", 1, 1)
+
+
+Map.addLayer(ee.FeatureCollection(Well.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
+
+var offshore_wells = ee.FeatureCollection(Well_List.get(8)).filterBounds(Active_GOM);print(offshore_wells.aggregate_count("Well Count"))
 Map.addLayer(ee.FeatureCollection(offshore_wells), {'color':red}, Well_List_names.get(8).getInfo(), 0, 1); 
+var offshore_wells = ee.FeatureCollection(Well_List.get(9)).filterBounds(Active_GOM);print(offshore_wells.aggregate_count("Well Count"))
+Map.addLayer(ee.FeatureCollection(offshore_wells), {'color':pink}, Well_List_names.get(9).getInfo(), 0, 1); 
+var offshore_wells = ee.FeatureCollection(Well_List.get(10)).filterBounds(Active_GOM);print(offshore_wells.aggregate_count("Well Count"))
+Map.addLayer(ee.FeatureCollection(offshore_wells), {'color':bl}, Well_List_names.get(10).getInfo(), 0, 1); 
+var offshore_wells = ee.FeatureCollection(Well_List.get(11)).filterBounds(Active_GOM);print(offshore_wells.aggregate_count("Well Count"))
+Map.addLayer(ee.FeatureCollection(offshore_wells), {'color':orange}, Well_List_names.get(11).getInfo(), 0, 1); 
+
+
+
+
 var filter = ee.Filter.equals({leftField: 'system:index' ,rightField:'system:index'}); var invertedJoin = ee.Join.inverted()
 var invertedJoined = invertedJoin.apply( offshore_wells, ee.FeatureCollection(Well_List.get(8)), filter);
-print(invertedJoined);
-Map.addLayer(ee.FeatureCollection(invertedJoined), {'color':pink}, Well_List_names.get(8).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(invertedJoined), {'color':pink}, Well_List_names.get(8).getInfo(), 0, 1); 
 
 
 
 // **********
-// Map.addLayer(Active_GOM, {'color':red}, "Active_GOM", 1, 1)
+// Map.addLayer(Active_GOM, {'color':black}, "Active_GOM", 1, 1)
 // Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
