@@ -152,7 +152,7 @@ var avg_depth = function(series_name, fc, geo){
   fc = ee.List(fc); series_name = ee.String(series_name);geo=ee.Geometry(geo);
   var roi = ee.FeatureCollection(fc.get(i))//.filterBounds(geo);
   print(series_name, Well_List_names.get(i).getInfo()
-  , roi.aggregate_sum('Well Count'));
+  , roi.aggregate_count('Well Count'));
   // ,roi.aggregate_mean('Measured Depth (TD)')//, 'Mean Measured Depth'
   // ,roi.aggregate_count('Measured Depth (TD)')//, 'total count'
   // ,roi.aggregate_count_distinct('Measured Depth (TD)'));//, 'unique value');
