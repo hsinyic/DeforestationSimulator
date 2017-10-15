@@ -28,20 +28,17 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
           [-100.17333984375, 33.94335994657882]]]),
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-
 Map.centerObject(geometry3, 6);//center on Geometry on the map
-// Color scheme 
-var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
-var azure= ('#11ffff').toString();
-var red=('ff510f').toString();var lr = ('#ff8f7d').toString();
-var gr= ('#4cff62').toString();var lg = ('#afff14').toString();var dg= ('#196e0a').toString();
-var yellow=('#ffeb00').toString();var lyellow = ('#fffcb0').toString();
-var whi=('#f7f7f7').toString();var black = ('#101010').toString();
-var pink = ('#ff6ad8').toString();var lp = ('#ffb9ec').toString();
-var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
-
-
+/* Color scheme */  
+  var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
+  var azure= ('#11ffff').toString();
+  var red=('ff510f').toString();var lr = ('#ff8f7d').toString();
+  var gr= ('#4cff62').toString();var lg = ('#afff14').toString();var dg= ('#196e0a').toString();
+  var yellow=('#ffeb00').toString();var lyellow = ('#fffcb0').toString();
+  var whi=('#f7f7f7').toString();var black = ('#101010').toString();
+  var pink = ('#ff6ad8').toString();var lp = ('#ffb9ec').toString();
+  var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
+/**/
 var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union();// var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay_or, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 //select wells of certaint atrributes 
@@ -80,7 +77,7 @@ var Well_List = ee.List([
   select('2000', '2100', 'V', ['GAS', 'BOTH', 'OIL']),
   select('1800', '2000', 'V', ['GAS', 'BOTH', 'OIL'])
   ]);
-var Active_GOM = GOM_offshore.filterMetadata('Status','equal', 'COM').filterMetadata('Type_Code','equal', 'D')
+var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D')
 var Well_List_names = ee.List([
   'H_gas_post2003',
   'H_gas_00to03',
@@ -114,20 +111,32 @@ var selectOffshore = function(i){
 };
 var selectOnshore_BOEM = function(i){
   i=ee.Number(i); 
-  var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry3);
+  var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(Active_GOM);
   var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
   return invertedJoined;};
 
+
+Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':whi}, Well_List_names.get(8).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
 
 
 
 
 // Well_List = ee.List.sequence(0,Well_List.size().subtract(1),1 ).map(Onshore);
 var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),])
-.map(selectOnshore);
+                  .map(selectOnshore_BOEM);
 No_Offshore =No_Offshore.reverse();
 Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
+
+
+Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':whi}, Well_List_names.get(8).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
+
 
 
 
@@ -153,8 +162,7 @@ var outside_shale = function(i){
   var invertedJoined = invertedJoin.apply(Well_List.get(i), shale_well_FB.get(i), filter);
   return invertedJoined;
 };// Apply the join.
-var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(outside_shale);
-print(non_shale_well_FB);
+var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(outside_shale);print(non_shale_well_FB);
 // count number of wells
 var well_count = function(fc){
   fc = ee.FeatureCollection(fc);
