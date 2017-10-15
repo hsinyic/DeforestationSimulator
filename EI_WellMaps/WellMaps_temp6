@@ -129,9 +129,9 @@ print(Offshore_count.map(function(fc){fc=ee.FeatureCollection(fc); return(fc.agg
 
 // *********
 Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
-var offshore = ee.FeatureCollection(Well_List.get(8)).filterBounds(Active_GOM);
+var offshore_wells = ee.FeatureCollection(Well_List.get(8)).filterBounds(Active_GOM);
 var filter = ee.Filter.equals({leftField: 'system:index' ,rightField:'system:index'}); var invertedJoin = ee.Join.inverted()
-var invertedJoined = invertedJoin.apply(Well_List.get(8), offshore_wells, filter_test);
+var invertedJoined = invertedJoin.apply(ee.FeatureCollection(Well_List.get(8)), offshore_wells, filter);
 Map.addLayer(ee.FeatureCollection(invertedJoined.get(8)), {'color':pink}, Well_List_names.get(8).getInfo(), 0, 1); 
 
 
