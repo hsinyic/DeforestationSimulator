@@ -45,6 +45,7 @@ Map.addLayer(shaleplay_or, {'color':black}, "shale play boundaries", 1, 0.5); //
 
 
 
+
 //select wells of certaint atrributes 
 var select = function( after,before, direction, type){
   after = ee.String(after).cat('-01-01');
@@ -81,6 +82,7 @@ var Well_List = ee.List([
   select('2000', '2100', 'V', ['GAS', 'BOTH', 'OIL']),
   select('1800', '2000', 'V', ['GAS', 'BOTH', 'OIL'])
   ]);
+
 var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D')
 var Well_List_names = ee.List([
   'H_gas_post2003',
@@ -102,6 +104,23 @@ var Well_List_names = ee.List([
   
   'V_wells_post2000',
   'V_wells_pre2000']);
+Map.addLayer(ee.FeatureCollection(Well_List.get(0)), {'color':dg}, Well_List_names.get(0).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(1)), {'color':red}, Well_List_names.get(1).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(2)), {'color':yellow}, Well_List_names.get(2).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(3)), {'color':dg}, Well_List_names.get(3).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(4)), {'color':lb}, Well_List_names.get(4).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(5)), {'color':db}, Well_List_names.get(5).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(7)), {'color':black}, Well_List_names.get(7).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':whi}, Well_List_names.get(8).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(12)), {'color':lp}, Well_List_names.get(12).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(13)), {'color':lyellow}, Well_List_names.get(13).getInfo(), 0, 1); 
+
+
+
 var selectOnshore = function(i){
   i=ee.Number(i); 
   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(geometry3);
@@ -130,10 +149,10 @@ var Offshore_count = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_Li
 // *********
 Map.addLayer(Active_GOM, {'color':black}, "Active_GOM", 1, 1)
 Map.addLayer(GOM_offshore, {'color':db}, "GOM_offshore", 1, 1)
+Map.addLayer(ee.FeatureCollection(Well), {'color':dg}, "All wells", 0, 1); 
 Map.addLayer(GOM_offshore.geometry().convexHull(), {'color':yellow}, "Active_GOM_contour", 1, 1)
 
-
-Map.addLayer(ee.FeatureCollection(Well.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
 
 var offshore_wells = ee.FeatureCollection(Well_List.get(8)).filterBounds(Active_GOM);print(offshore_wells.aggregate_count("Well Count"))
 Map.addLayer(ee.FeatureCollection(offshore_wells), {'color':red}, Well_List_names.get(8).getInfo(), 0, 1); 
