@@ -118,6 +118,9 @@ Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
 var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
 No_Offshore =No_Offshore.reverse();
 Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
+var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});
+var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});
+var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 /* ################################################ */
 
 
@@ -154,9 +157,6 @@ var well_count = function(fc){
 
 
 
-var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});
-var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});
-var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 var count = Well_List.map(well_count); print('Total well count by type'); print(count);
 var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 
