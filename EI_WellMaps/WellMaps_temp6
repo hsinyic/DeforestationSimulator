@@ -123,20 +123,25 @@ var selectOffshore_BOEM = function(i){
   i=ee.Number(i); 
   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(Active_GOM);
   return offshore_wells;};
-  
 var Offshore_count = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),])
                   .map(selectOffshore);
 print(Offshore_count.map(function(fc){fc=ee.FeatureCollection(fc); return(fc.aggregate_count("Depth")) }));
 
-
-
-Map.addLayer(Active_GOM, {'color':red}, "Active_GOM", 1, 1)
+// *********
 Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(8)).filterBounds(Active_GOM), {'color':pink}, Well_List_names.get(8).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(9)).filterBounds(Active_GOM), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
+var offshore = ee.FeatureCollection(Well_List.get(8)).filterBounds(Active_GOM);
+var filter = ee.Filter.equals({leftField: 'system:index' ,rightField:'system:index'}); var invertedJoin = ee.Join.inverted()
+var invertedJoined = invertedJoin.apply(Well_List.get(8), offshore_wells, filter_test);
+Map.addLayer(ee.FeatureCollection(invertedJoined.get(8)), {'color':pink}, Well_List_names.get(8).getInfo(), 0, 1); 
+
+
+
+// **********
+Map.addLayer(Active_GOM, {'color':red}, "Active_GOM", 1, 1)
+// Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
 
 
 // Well_List = ee.List.sequence(0,Well_List.size().subtract(1),1 ).map(Onshore);
@@ -147,10 +152,10 @@ Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshor
 
 
 
-Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':whi}, Well_List_names.get(9).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':black}, Well_List_names.get(10).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':lorange}, Well_List_names.get(11).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':whi}, Well_List_names.get(9).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':black}, Well_List_names.get(10).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':lorange}, Well_List_names.get(11).getInfo(), 0, 1); 
 
 
 
