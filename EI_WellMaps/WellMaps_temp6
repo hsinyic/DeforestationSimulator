@@ -106,6 +106,8 @@ var Well_List_names = ee.List([
   'V_wells_pre2000']);
 /* ################################################ */
 
+//
+
 /* ################ filter Offshore from Directional/Unknown ################ */
 var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D')
 var selectOnshore = function(i){
