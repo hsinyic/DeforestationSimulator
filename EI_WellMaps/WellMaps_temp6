@@ -117,8 +117,9 @@ var selectOnshore_BOEM = function(i){
   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
   return invertedJoined;};
 
-Map.addLayer(Active_GOM, {'color':red}, "conventional_play", 1, 0.2)
-Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':whi}, Well_List_names.get(8).getInfo(), 0, 1); 
+Map.addLayer(Active_GOM, {'color':red}, "Active_GOM", 1, 1)
+Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(8)).filterBounds(Active_GOM), {'color':pink}, Well_List_names.get(8).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
@@ -133,10 +134,10 @@ No_Offshore =No_Offshore.reverse();
 Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
 
 
-Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':whi}, Well_List_names.get(8).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':whi}, Well_List_names.get(9).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':black}, Well_List_names.get(10).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':lorange}, Well_List_names.get(11).getInfo(), 0, 1); 
 
 
 
