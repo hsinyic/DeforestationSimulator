@@ -113,9 +113,19 @@ var selectOffshore = function(i){
 var selectOnshore_BOEM = function(i){
   i=ee.Number(i); 
   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(Active_GOM);
-  var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
+  var filter = ee.Filter.equals({leftField: 'Surface Longitude' ,rightField:'x'}); var invertedJoin = ee.Join.inverted(); 
   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
   return invertedJoined;};
+var selectOffshore_BOEM = function(i){
+  i=ee.Number(i); 
+  var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(Active_GOM);
+  return offshore_wells;};
+  
+var Offshore_count = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),])
+                  .map(selectOffshore_BOEM);
+print(Offshore_count.map(function(fc){fc=ee.FeatureCollection(fc); return(fc.aggregate_count("Depth")) }));
+
+
 
 Map.addLayer(Active_GOM, {'color':red}, "Active_GOM", 1, 1)
 Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
@@ -132,6 +142,7 @@ var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_
                   .map(selectOnshore_BOEM);
 No_Offshore =No_Offshore.reverse();
 Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
+
 
 
 Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 0, 1); 
