@@ -150,8 +150,8 @@ var measured_depth = function(fc, series_name, geo){
 // avg_depth
 var avg_depth = function(series_name, fc, geo){
   fc = ee.List(fc); series_name = ee.String(series_name);geo=ee.Geometry(geo);
-  var roi = ee.FeatureCollection(fc.get(i)).filterBounds(geo);
-  print(series_name
+  var roi = ee.FeatureCollection(fc.get(i))//.filterBounds(geo);
+  print(series_name, os_list_names.get(i).getInfo()
   ,roi.aggregate_mean('Measured Depth (TD)')//, 'Mean Measured Depth'
   ,roi.aggregate_count('Measured Depth (TD)')//, 'total count'
   ,roi.aggregate_count_distinct('Measured Depth (TD)'));//, 'unique value');
@@ -164,8 +164,8 @@ var i=0; var geometry= geometry3;
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os_list_names.get(i).getInfo(), 0, 1); 
 // print(measured_depth(non_shale_well_FB, 'non_shale_well',geometry));
 // print(measured_depth(shale_well_FB, 'shale_well',geometry));
-// avg_depth('non_shale_well', non_shale_well_FB, geometry);
-// avg_depth('shale_well', shale_well_FB, geometry);
+avg_depth('non_shale_well', non_shale_well_FB, geometry);
+avg_depth('shale_well', shale_well_FB, geometry);
 
 
 
@@ -174,8 +174,26 @@ i=1;
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':lb}, os_list_names.get(i).getInfo(), 0, 1); 
 // print(measured_depth(non_shale_well_FB, 'non_shale_well',geometry));
 // print(measured_depth(shale_well_FB, 'shale_well',geometry));
-// avg_depth('non_shale_well', non_shale_well_FB, geometry);
-// avg_depth('shale_well', shale_well_FB, geometry);
+avg_depth('non_shale_well', non_shale_well_FB, geometry);
+avg_depth('shale_well', shale_well_FB, geometry);
+
+
+i=2;
+avg_depth('non_shale_well', non_shale_well_FB, geometry);
+avg_depth('shale_well', shale_well_FB, geometry);
+
+
+i=3;
+avg_depth('non_shale_well', non_shale_well_FB, geometry);
+avg_depth('shale_well', shale_well_FB, geometry);
+
+i=4;
+avg_depth('non_shale_well', non_shale_well_FB, geometry);
+avg_depth('shale_well', shale_well_FB, geometry);
+
+i=5;
+avg_depth('non_shale_well', non_shale_well_FB, geometry);
+avg_depth('shale_well', shale_well_FB, geometry);
 
 
 
