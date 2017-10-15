@@ -26,13 +26,9 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
           [-99.84375, 30.12612436422458],
           [-100.17333984375, 33.94335994657882]]]),
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
-    conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt");
+    conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
+    GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-
-
-
-
 Map.centerObject(geometry3, 6);//center on Geometry on the map
 /* Color scheme */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
@@ -139,12 +135,9 @@ var Offshore_count = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_Li
 
 // *********
 Map.addLayer(Active_GOM, {'color':black}, "Active_GOM", 1, 1)
+Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1)
 Map.addLayer(GOM_offshore, {'color':db}, "GOM_offshore", 1, 1)
-Map.addLayer(ee.FeatureCollection(Well), {'color':dg}, "All wells", 0, 1); 
-Map.addLayer(GOM_offshore.geometry().convexHull(), {'color':yellow}, "Active_GOM_contour", 1, 1)
-
-// Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':dg}, Well_List_names.get(8).getInfo(), 0, 1); 
-
+Map.addLayer(ee.FeatureCollection(Well), {'color':dg}, "All wells", 0, 1); Map.addLayer(GOM_offshore.geometry().convexHull(), {'color':yellow}, "Active_GOM_contour", 1, 1)
 var offshore_wells = ee.FeatureCollection(Well_List.get(8)).filterBounds(GOM_offshore);print(offshore_wells.aggregate_count("Well Count"))
 Map.addLayer(ee.FeatureCollection(offshore_wells), {'color':red}, Well_List_names.get(8).getInfo(), 0, 1); 
 var offshore_wells = ee.FeatureCollection(Well_List.get(9)).filterBounds(GOM_offshore);print(offshore_wells.aggregate_count("Well Count"))
