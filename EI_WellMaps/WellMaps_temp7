@@ -60,10 +60,11 @@ var select = function( after,before, direction, type){
   .filter(ee.Filter.inList('Updated Production Type',  type))); 
   return selected_fc;
 };
-// var firstN = ee.Filter.eq('First Prod Date', null )
-// var completionN = ee.Filter.eq('Completion Date', null)
-// var spudN = ee.Filter.eq('Spud Date', null )
-// var timeN_filter = ee.Filter.and(first, completion, spud);
+var firstN = ee.Filter.eq('First Prod Date', null )
+var completionN = ee.Filter.eq('Completion Date', null)
+var spudN = ee.Filter.eq('Spud Date', null )
+var timeN_filter = ee.Filter.and(firstN, completionN, spudN);
+print(Well.filter(timeN_filter).aggregate_sum("Well Count"));
 
 var Well_List = ee.List([
   select('2003','2100', 'H', ['GAS'] ),
@@ -245,8 +246,8 @@ Map.addLayer(ee.FeatureCollection(shale_well_FB.get(8)), {'color':whi}, s_list_n
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(9)), {'color':orange}, s_list_names.get(9).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(10)), {'color':lorange}, s_list_names.get(10).getInfo(), 0, 1); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(11)), {'color':lyellow}, s_list_names.get(11).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(12)), {'color':azure}, Well_List_names.get(12).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(13)), {'color':bl}, Well_List_names.get(13).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(shale_well_FB.get(12)), {'color':azure}, s_list_names.get(12).getInfo(), 0, 1); 
+Map.addLayer(ee.FeatureCollection(shale_well_FB.get(13)), {'color':bl}, s_list_names.get(13).getInfo(), 0, 1); 
 
 
 
