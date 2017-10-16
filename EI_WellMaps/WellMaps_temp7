@@ -260,8 +260,8 @@ avg_depth('shale_well', shale_well_FB, geometry);
 // Map.addLayer(ee.FeatureCollection(Well_List.get(7)), {'color':black}, Well_List_names.get(7).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':whi}, Well_List_names.get(8).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(12)), {'color':lp}, Well_List_names.get(12).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(13)), {'color':lyellow}, Well_List_names.get(13).getInfo(), 0, 1); 
 
