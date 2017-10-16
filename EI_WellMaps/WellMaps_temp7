@@ -38,7 +38,7 @@ var select = function( after,before, direction, type){
   direction = ee.String(direction);
   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
   var selected_fc = ee.FeatureCollection(Well
-  // .filter(ee.Filter.neq('First Prod Date', null ))
+  .filter(ee.Filter.neq('First Prod Date', null))
   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
@@ -110,16 +110,16 @@ var Well_List_names = ee.List([
   'V_wells_pre2000']);
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 // ################ filter Offshore from Directional/Unknown ################ 
-// var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
-// var selectOnshore = function(i){
-//   i=ee.Number(i); 
-//   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(GOM_boundary);
-//   var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
-//   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
-//   return invertedJoined;};//Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
-// var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
-// No_Offshore =No_Offshore.reverse();
-// Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
+var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
+var selectOnshore = function(i){
+  i=ee.Number(i); 
+  var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(GOM_boundary);
+  var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
+  var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
+  return invertedJoined;};//Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
+var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
+No_Offshore =No_Offshore.reverse();
+Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
 // ################  wells in shale ################ //
 var in_shale = function(fc){
   fc = ee.FeatureCollection(fc);
