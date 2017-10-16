@@ -17,9 +17,6 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
     Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-
-
 Map.centerObject(geometry1, 5);//center on Geometry on the map
 /* ################ Color scheme################ */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
@@ -31,10 +28,6 @@ Map.centerObject(geometry1, 5);//center on Geometry on the map
   var pink = ('#ff6ad8').toString();var lp = ('#ffb9ec').toString();
   var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
 /* ################################################ */
-
-
-
-
 var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union(); //var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay_or, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 // ################ select wells of certaint atrributes ################ //
@@ -50,7 +43,9 @@ Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map
 //   return selected_fc;
 // };
 var select = function( after,before, direction, type){
+  // after= ee.String(after); before = ee.String(before);
   after = ee.Number.parse(after);before= ee.Number.parse(before);
+  // after = ee.Number(after); before =ee.Number(before);
   direction = ee.String(direction);
   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
   var selected_fc = ee.FeatureCollection(Well
@@ -60,9 +55,6 @@ var select = function( after,before, direction, type){
   .filter(ee.Filter.inList('Updated Production Type',  type))); 
   return selected_fc;
 };
-
-print(select('2003','2100', 'H', ['GAS'] ));
-
 var Well_List = ee.List([
   select('2003','2100', 'H', ['GAS'] ),
   select('2000','2003', 'H', ['GAS'] ),
@@ -187,9 +179,9 @@ var avg_depth = function(series_name, fc, geo){
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(0)), {'color':dg}, s_list_names.get(0).getInfo(), 1, 0.5); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(1)), {'color':red}, s_list_names.get(1).getInfo(), 1, 0.5); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(2)), {'color':yellow}, s_list_names.get(2).getInfo(), 1, 0.5); 
-// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(3)), {'color':dg}, s_list_names.get(3).getInfo(), 1, 0.5); 
-// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(4)), {'color':lb}, s_list_names.get(4).getInfo(), 1, 0.5); 
-// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(5)), {'color':db}, s_list_names.get(5).getInfo(), 1, 0.5); 
+Map.addLayer(ee.FeatureCollection(shale_well_FB.get(3)), {'color':dg}, s_list_names.get(3).getInfo(), 1, 0.5); 
+Map.addLayer(ee.FeatureCollection(shale_well_FB.get(4)), {'color':lb}, s_list_names.get(4).getInfo(), 1, 0.5); 
+Map.addLayer(ee.FeatureCollection(shale_well_FB.get(5)), {'color':db}, s_list_names.get(5).getInfo(), 1, 0.5); 
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(6)), {'color':pink}, s_list_names.get(6).getInfo(), 1, 0.5); 
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(7)), {'color':black}, s_list_names.get(7).getInfo(), 1, 0.5); 
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(8)), {'color':whi}, s_list_names.get(8).getInfo(), 1, 0.5); 
