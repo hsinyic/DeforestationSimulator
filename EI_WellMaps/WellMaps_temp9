@@ -1,6 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
-    shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
+var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     geometry3 = /* color: #000000 */ee.Geometry.Point([-119.70703125, 35.389049966911664]),
     geometry2 = /* color: #f1ff5d */ee.Geometry.Polygon(
         [[[-83.70339828250013, 42.36067223886009],
@@ -15,8 +14,12 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
           [-100.17333984375, 33.94335994657882]]]),
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
     conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
-    GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6");
+    GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
+    Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+
+
 Map.centerObject(geometry1, 5);//center on Geometry on the map
 /* ################ Color scheme################ */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
@@ -47,16 +50,19 @@ Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map
 //   return selected_fc;
 // };
 var select = function( after,before, direction, type){
-  after = ee.Number(after);before= ee.Number(before);
+  after = ee.Number.parse(after);before= ee.Number.parse(before);
   direction = ee.String(direction);
   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
   var selected_fc = ee.FeatureCollection(Well
-  .filterMetadata('First Prod Date','greater_than', after)
-  .filterMetadata('First Prod Date','not_greater_than', before)
+  .filterMetadata('First Prod Year','greater_than', after)
+  .filterMetadata('First Prod Year','not_greater_than', before)
   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
   .filter(ee.Filter.inList('Updated Production Type',  type))); 
   return selected_fc;
 };
+
+print(select('2003','2100', 'H', ['GAS'] ));
+
 var Well_List = ee.List([
   select('2003','2100', 'H', ['GAS'] ),
   select('2000','2003', 'H', ['GAS'] ),
@@ -162,33 +168,33 @@ var avg_depth = function(series_name, fc, geo){
   return(ee.Number(0));
 };
 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(0)), {'color':red}, os_list_names.get(0).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(1)), {'color':yellow}, os_list_names.get(1).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(2)), {'color':dg}, os_list_names.get(2).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(3)), {'color':lb}, os_list_names.get(3).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(4)), {'color':db}, os_list_names.get(4).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(5)), {'color':pink}, os_list_names.get(5).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(6)), {'color':black}, os_list_names.get(6).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(7)), {'color':whi}, os_list_names.get(7).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(8)), {'color':orange}, os_list_names.get(8).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(9)), {'color':lorange}, os_list_names.get(9).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(10)), {'color':lyellow}, os_list_names.get(10).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(11)), {'color':lg}, os_list_names.get(11).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(12)), {'color':lp}, Well_List_names.get(12).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(13)), {'color':azure}, Well_List_names.get(13).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(0)), {'color':red}, os_list_names.get(0).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(1)), {'color':yellow}, os_list_names.get(1).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(2)), {'color':dg}, os_list_names.get(2).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(3)), {'color':lb}, os_list_names.get(3).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(4)), {'color':db}, os_list_names.get(4).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(5)), {'color':pink}, os_list_names.get(5).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(6)), {'color':black}, os_list_names.get(6).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(7)), {'color':whi}, os_list_names.get(7).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(8)), {'color':orange}, os_list_names.get(8).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(9)), {'color':lorange}, os_list_names.get(9).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(10)), {'color':lyellow}, os_list_names.get(10).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(11)), {'color':lg}, os_list_names.get(11).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(12)), {'color':lp}, Well_List_names.get(12).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(13)), {'color':azure}, Well_List_names.get(13).getInfo(), 1, 1); 
 
 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(0)), {'color':dg}, s_list_names.get(0).getInfo(), 1, 0.5); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(1)), {'color':red}, s_list_names.get(1).getInfo(), 1, 0.5); 
 Map.addLayer(ee.FeatureCollection(shale_well_FB.get(2)), {'color':yellow}, s_list_names.get(2).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(3)), {'color':dg}, s_list_names.get(3).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(4)), {'color':lb}, s_list_names.get(4).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(5)), {'color':db}, s_list_names.get(5).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(6)), {'color':pink}, s_list_names.get(6).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(7)), {'color':black}, s_list_names.get(7).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(8)), {'color':whi}, s_list_names.get(8).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(9)), {'color':orange}, s_list_names.get(9).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(10)), {'color':lorange}, s_list_names.get(10).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(11)), {'color':lyellow}, s_list_names.get(11).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(12)), {'color':azure}, s_list_names.get(12).getInfo(), 1, 0.5); 
-Map.addLayer(ee.FeatureCollection(shale_well_FB.get(13)), {'color':bl}, s_list_names.get(13).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(3)), {'color':dg}, s_list_names.get(3).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(4)), {'color':lb}, s_list_names.get(4).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(5)), {'color':db}, s_list_names.get(5).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(6)), {'color':pink}, s_list_names.get(6).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(7)), {'color':black}, s_list_names.get(7).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(8)), {'color':whi}, s_list_names.get(8).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(9)), {'color':orange}, s_list_names.get(9).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(10)), {'color':lorange}, s_list_names.get(10).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(11)), {'color':lyellow}, s_list_names.get(11).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(12)), {'color':azure}, s_list_names.get(12).getInfo(), 1, 0.5); 
+// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(13)), {'color':bl}, s_list_names.get(13).getInfo(), 1, 0.5); 
