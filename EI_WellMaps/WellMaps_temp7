@@ -121,6 +121,9 @@ var selectOnshore = function(i){
 var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
 No_Offshore =No_Offshore.reverse();
 Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
+
+
+
 // ################  wells in shale ################ //
 var in_shale = function(fc){
   fc = ee.FeatureCollection(fc);
@@ -129,17 +132,21 @@ var in_shale = function(fc){
   return ee.FeatureCollection(output);
 }; var shale_well_FB = Well_List.map(in_shale);
 // ################ Inverted join to display wells not in shale #################//
-// var filter = ee.Filter.equals({
-//   leftField: 'system:index',
-//   rightField: 'system:index'
-// }); // tell the system how to match to two records 
-// var invertedJoin = ee.Join.inverted();// Define the join.
-// var outside_shale = function(i){
-//   i = ee.Number(i);
-//   var invertedJoined = invertedJoin.apply(Well_List.get(i), shale_well_FB.get(i), filter);
-//   return invertedJoined;
-// };// Apply the join.
-// var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(outside_shale);print(non_shale_well_FB);
+var filter = ee.Filter.equals({
+  leftField: 'system:index',
+  rightField: 'system:index'
+}); // tell the system how to match to two records 
+var invertedJoin = ee.Join.inverted();// Define the join.
+var outside_shale = function(i){
+  i = ee.Number(i);
+  var invertedJoined = invertedJoin.apply(Well_List.get(i), shale_well_FB.get(i), filter);
+  return invertedJoined;
+};// Apply the join.
+var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(outside_shale);print(non_shale_well_FB);
+
+
+
+
 // ################  Display results/ derive statistics #################//
 // count number of wells
 var well_count = function(fc){
@@ -248,13 +255,11 @@ avg_depth('shale_well', shale_well_FB, geometry);
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(12)), {'color':azure}, s_list_names.get(12).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(13)), {'color':bl}, s_list_names.get(13).getInfo(), 0, 1); 
 
-var collapse  = function(element , prev){
-  prev = ee.FeatureCollection(prev);
-  element = ee.FeatureCollection(element)
-  return prev.merge(element)
-}
-var collapse_shale_well_FB = shale_well_FB.iterate(collapse, ee.FeatureCollection(shale_well_FB.get(0)) )
-print(ee.FeatureCollection(collapse_shale_well_FB).size());
+
+
+
+
+
 // Map.addLayer(ee.FeatureCollection(Well_List.get(0)), {'color':dg}, Well_List_names.get(0).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(1)), {'color':red}, Well_List_names.get(1).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(2)), {'color':yellow}, Well_List_names.get(2).getInfo(), 0, 1); 
