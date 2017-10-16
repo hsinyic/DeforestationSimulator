@@ -276,5 +276,4 @@ Map.addLayer(ee.FeatureCollection(shale_well_FB.get(13)), {'color':bl}, s_list_n
 // Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1)
 // Map.addLayer(ee.FeatureCollection(Well), {'color':dg}, "All DI wells", 0, 1); 
 // Map.addLayer(GOM_offshore.geometry().convexHull(), {'color':yellow}, "Active_GOM_contour", 1, 1)
-
 // There are different ways to compare the DI offshore and GOEM offshore: 1) filterbounds 2) spatial join 3) best join (by latitutde and longitude and distance)
