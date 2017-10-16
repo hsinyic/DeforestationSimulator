@@ -33,45 +33,37 @@ var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); 
 Map.addLayer(shaleplay_or, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 // ################ select wells of certaint atrributes ################ //
+// var select = function( after,before, direction, type){
+//   after = ee.String(after).cat('-01-01');before= ee.String(before).cat('-01-01');
+//   direction = ee.String(direction);
+//   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
+//   var selected_fc = ee.FeatureCollection(Well
+//   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
+//   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
+//   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
+//   .filter(ee.Filter.inList('Updated Production Type',  type))); 
+//   return selected_fc;
+// };
+
+
 var select = function( after,before, direction, type){
   after = ee.String(after).cat('-01-01');before= ee.String(before).cat('-01-01');
+  var first = ee.Filter.rangeContains('First Prod Date', ee.Date(after).millis(), ee.Date(before).millis() )
+  var completion = ee.Filter.rangeContains('Completion Date', ee.Date(after).millis(), ee.Date(before).millis() )
+  var spud = ee.Filter.rangeContains('Spud Date', ee.Date(after).millis(), ee.Date(before).millis() )
+  var time_filter = ee.Filter.or(first, completion, spud);
   direction = ee.String(direction);
   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
   var selected_fc = ee.FeatureCollection(Well
-  .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
-  .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
+  .filter(time_filter)
   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
   .filter(ee.Filter.inList('Updated Production Type',  type))); 
   return selected_fc;
 };
-
-// //   .filterMetadata('First Prod Date','not_equals',null) // 
-var after = ee.String('1800').cat('-01-01');
-var before= ee.String('2100').cat('-01-01');
-var first = ee.Filter.rangeContains('First Prod Date', ee.Date(after).millis(), ee.Date(before).millis() )
-var completion = ee.Filter.rangeContains('Completion Date', ee.Date(after).millis(), ee.Date(before).millis() )
-var spud = ee.Filter.rangeContains('Spud Date', ee.Date(after).millis(), ee.Date(before).millis() )
-var time_filter = ee.Filter.or(first, completion, spud);
-
-
-var firstN = ee.Filter.eq('First Prod Date', null )
-var completionN = ee.Filter.eq('Completion Date', null)
-var spudN = ee.Filter.eq('Spud Date', null )
-var timeN_filter = ee.Filter.and(first, completion, spud);
-
-
-print(Well.filter(firstN).aggregate_count("Well Count"));
-print(Well.filter(first).aggregate_count("Well Count"));
-print(Well.aggregate_count("Well Count"));
-
-print(Well.filter(firstN).size());//82033 
-print(Well.filter(first).size());
-print(Well.size());
-
-// 82033
-// 945961
-
-
+// var firstN = ee.Filter.eq('First Prod Date', null )
+// var completionN = ee.Filter.eq('Completion Date', null)
+// var spudN = ee.Filter.eq('Spud Date', null )
+// var timeN_filter = ee.Filter.and(first, completion, spud);
 
 var Well_List = ee.List([
   select('2003','2100', 'H', ['GAS'] ),
@@ -155,8 +147,8 @@ var well_count = function(fc){
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
 }; 
-// var count = Well_List.map(well_count); print('Total well count by type'); print(count);
-// var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+var count = Well_List.map(well_count); print('Total well count by type'); print(count);
+var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 // measured depth histogram, set graph options.
 var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'measured depth in ft'},vAxis: {title: 'well count'},series: {0: {color: 'blue'}}};
 var measured_depth = function(fc, series_name, geo){
