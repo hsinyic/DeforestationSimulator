@@ -28,8 +28,32 @@ Map.centerObject(geometry1, 5);//center on Geometry on the map
   var pink = ('#ff6ad8').toString();var lp = ('#ffb9ec').toString();
   var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
 /* ################################################ */
-var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union(); //var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
+var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union(); var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay_or, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
+// ################  wells in shale ################ //
+
+Well = ee.FeatureCollection(Well).set('shaleplay',0)
+.filterBounds(buffer_shaleplay).set('shaleplay', 2 )
+.filter(ee.Filter.bounds(shaleplay)).set('shaleplay', 1 );
+Export.table.toDrive(Well, "shale_label");
+
+
+
+// ################ filter Offshore from Directional/Unknown ################ 
+var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
+Map.addLayer(GOM_offshore, {'color':db}, "GOM_wells", 1, 1);Map.addLayer(Active_GOM, {'color':black}, "Active_GOM_wells", 1, 1);
+var offshore_wells = ee.FeatureCollection(Well.filterBounds(GOM_boundary));
+var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
+var invertedJoined = invertedJoin.apply(Well, offshore_wells, filter);
+print(invertedJoined);
+Export.table.toDrive(invertedJoined, "compilation");
+
+
+//Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
+
+
+
+
 // ################ select wells of certaint atrributes ################ //
 // var select = function( after,before, direction, type){
 //   after = ee.String(after).cat('-01-01');before= ee.String(before).cat('-01-01');
@@ -42,94 +66,75 @@ Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map
 //   .filter(ee.Filter.inList('Updated Production Type',  type))); 
 //   return selected_fc;
 // };
-var select = function( after,before, direction, type){
-  // after= ee.String(after); before = ee.String(before);
-  after = ee.Number.parse(after);before= ee.Number.parse(before);
-  // after = ee.Number(after); before =ee.Number(before);
-  direction = ee.String(direction);
-  type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
-  var selected_fc = ee.FeatureCollection(Well
-  .filterMetadata('First Prod Year','greater_than', after)
-  .filterMetadata('First Prod Year','not_greater_than', before)
-  .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
-  .filter(ee.Filter.inList('Updated Production Type',  type))); 
-  return selected_fc;
-};
-var Well_List = ee.List([
-  select('2003','2100', 'H', ['GAS'] ),
-  select('2000','2003', 'H', ['GAS'] ),
-  select('1800','2000', 'H', ['GAS'] ),
+// var select = function( after,before, direction, type){
+//   // after= ee.String(after); before = ee.String(before);
+//   after = ee.Number.parse(after);before= ee.Number.parse(before);
+//   // after = ee.Number(after); before =ee.Number(before);
+//   direction = ee.String(direction);
+//   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
+//   var selected_fc = ee.FeatureCollection(Well
+//   .filterMetadata('First Prod Year','greater_than', after)
+//   .filterMetadata('First Prod Year','not_greater_than', before)
+//   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
+//   .filter(ee.Filter.inList('Updated Production Type',  type))); 
+//   return selected_fc;
+// };
+// var Well_List = ee.List([
+//   select('2003','2100', 'H', ['GAS'] ),
+//   select('2000','2003', 'H', ['GAS'] ),
+//   select('1800','2000', 'H', ['GAS'] ),
 
-  select('2007','2100', 'H', ['OIL'] ),
-  select('2000','2007', 'H', ['OIL'] ),
-  select('1800','2000', 'H', ['OIL'] ),
+//   select('2007','2100', 'H', ['OIL'] ),
+//   select('2000','2007', 'H', ['OIL'] ),
+//   select('1800','2000', 'H', ['OIL'] ),
   
   
-  select('2003','2100', 'H', ['BOTH'] ),
-  select('1800','2003', 'H', ['BOTH'] ),
+//   select('2003','2100', 'H', ['BOTH'] ),
+//   select('1800','2003', 'H', ['BOTH'] ),
 
-  select('2000', '2100', 'U', ['GAS', 'BOTH', 'OIL']),
-  select('1800', '2000', 'U', ['GAS', 'BOTH', 'OIL']),
+//   select('2000', '2100', 'U', ['GAS', 'BOTH', 'OIL']),
+//   select('1800', '2000', 'U', ['GAS', 'BOTH', 'OIL']),
 
-  select('2000', '2100', 'D', ['GAS', 'BOTH', 'OIL']),
-  select('1800', '2000', 'D', ['GAS', 'BOTH', 'OIL']),
+//   select('2000', '2100', 'D', ['GAS', 'BOTH', 'OIL']),
+//   select('1800', '2000', 'D', ['GAS', 'BOTH', 'OIL']),
 
 
-  select('2000', '2100', 'V', ['GAS', 'BOTH', 'OIL']),
-  select('1800', '2000', 'V', ['GAS', 'BOTH', 'OIL'])
-  ]);
-var Well_List_names = ee.List([
-  'H_gas_post2003',
-  'H_gas_00to03',
-  'H_gas_pre2000', 
+//   select('2000', '2100', 'V', ['GAS', 'BOTH', 'OIL']),
+//   select('1800', '2000', 'V', ['GAS', 'BOTH', 'OIL'])
+//   ]);
+// var Well_List_names = ee.List([
+//   'H_gas_post2003',
+//   'H_gas_00to03',
+//   'H_gas_pre2000', 
   
-  'H_oil_post2007',
-  'H_oil_00to07',
-  'H_oil_pre2000',
+//   'H_oil_post2007',
+//   'H_oil_00to07',
+//   'H_oil_pre2000',
   
-  'H_OG_post2003',
-  'H_OG_pre2003', 
+//   'H_OG_post2003',
+//   'H_OG_pre2003', 
   
-  'U_post2000', 
-  'U_pre2000',
+//   'U_post2000', 
+//   'U_pre2000',
   
-  'D_wells_post2000',
-  'D_wells_pre2000',
+//   'D_wells_post2000',
+//   'D_wells_pre2000',
   
-  'V_wells_post2000',
-  'V_wells_pre2000']);
-var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
-// ################ filter Offshore from Directional/Unknown ################ 
-var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
-Map.addLayer(GOM_offshore, {'color':db}, "GOM_wells", 1, 1);Map.addLayer(Active_GOM, {'color':black}, "Active_GOM_wells", 1, 1);
-var selectOnshore = function(i){
-  i=ee.Number(i); 
-  var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(GOM_boundary);
-  var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
-  var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
-  return invertedJoined;};//Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
-var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
-No_Offshore =No_Offshore.reverse();
-Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
-// ################  wells in shale ################ //
-var in_shale = function(fc){
-  fc = ee.FeatureCollection(fc);
-  // var output = fc.filterBounds(buffer_shaleplay);
-  var output = fc.filter(ee.Filter.bounds(shaleplay));
-  return ee.FeatureCollection(output);
-}; var shale_well_FB = Well_List.map(in_shale);
+//   'V_wells_post2000',
+//   'V_wells_pre2000']);
+// var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 // ################ Inverted join to display wells not in shale #################//
-var filter = ee.Filter.equals({
-  leftField: 'system:index',
-  rightField: 'system:index'
-}); // tell the system how to match to two records 
-var invertedJoin = ee.Join.inverted();// Define the join.
-var outside_shale = function(i){
-  i = ee.Number(i);
-  var invertedJoined = invertedJoin.apply(Well_List.get(i), shale_well_FB.get(i), filter);
-  return invertedJoined;
-};// Apply the join.
-var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(outside_shale);print(non_shale_well_FB);
+// var filter = ee.Filter.equals({
+//   leftField: 'system:index',
+//   rightField: 'system:index'
+// }); // tell the system how to match to two records 
+// var invertedJoin = ee.Join.inverted();// Define the join.
+// var outside_shale = function(i){
+//   i = ee.Number(i);
+//   var invertedJoined = invertedJoin.apply(Well_List.get(i), shale_well_FB.get(i), filter);
+//   return invertedJoined;
+// };// Apply the join.
+// var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(outside_shale);print(non_shale_well_FB);
 // ################  Display results/ derive statistics #################//
 // count number of wells
 var well_count = function(fc){
@@ -137,8 +142,8 @@ var well_count = function(fc){
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
 }; 
-var count = Well_List.map(well_count); print('Total well count by type'); print(count);
-var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+// var count = Well_List.map(well_count); print('Total well count by type'); print(count);
+// var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 // measured depth histogram, set graph options.
 var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'measured depth in ft'},vAxis: {title: 'well count'},series: {0: {color: 'blue'}}};
 var measured_depth = function(fc, series_name, geo){
@@ -190,17 +195,16 @@ var avg_depth = function(series_name, fc, geo){
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(12)), {'color':azure}, s_list_names.get(12).getInfo(), 1, 0.5); 
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(13)), {'color':bl}, s_list_names.get(13).getInfo(), 1, 0.5); 
 
-var collapse  = function(element , prev){
+/*var collapse  = function(element , prev){
   prev = ee.FeatureCollection(prev);
   element = ee.FeatureCollection(element);
   return prev.merge(element);
 };
-print(shale_well_FB);
 var collapse_shale_well_FB = shale_well_FB.iterate(collapse, ee.FeatureCollection(shale_well_FB.get(0)) );
 var collapse_all_well = Well_List.iterate(collapse, ee.FeatureCollection(Well_List.get(0)) )
-print(ee.FeatureCollection(collapse_all_well).size());
 
 
 Export.table.toDrive(collapse_shale_well_FB, "all_shale_wells")
 Export.table.toDrive(collapse_all_well, "all_wells")
 
+*/
