@@ -32,31 +32,42 @@ var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay_or, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 // ################  wells in shale ################ //
 
-Well = ee.FeatureCollection(Well).set('shaleplay',0)
-.filterBounds(buffer_shaleplay).set('shaleplay', 2 )
-.filter(ee.Filter.bounds(shaleplay)).set('shaleplay', 1 );
-Export.table.toDrive(Well, "shale_label");
+var shale_wells = ee.FeatureCollection(Well.map(function(feature){feature = ee.Feature(feature);
+  return(feature.set("shale_play", 1));
+}))
+// .filterBounds(buffer_shaleplay)
+.filter(ee.Filter.bounds(shaleplay));
 
-print(Well.getInfo())
+var set_shale = function(feature){
+  feature = ee.Feature(feature);
+  return(feature.set("shale_play", 2));
+}
 
+shale_wells = ee.FeatureCollection(shale_wells.map(set_shale));
+var shale_label = shale_wells.merge(Well);
+Export.table.toDrive(shale_label, "shale_label2");
 
+Map.addLayer(Well);
 // ################ filter Offshore from Directional/Unknown ################ 
 var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
 Map.addLayer(GOM_offshore, {'color':db}, "GOM_wells", 1, 1);Map.addLayer(Active_GOM, {'color':black}, "Active_GOM_wells", 1, 1);
-var offshore_label = 
-ee.FeatureCollection(Well)
-.set('offshore', 0)
-.filterBounds(GOM_boundary)
-.set('offshore',1);
-Export.table.toDrive(offshore_label, "offshore_label");
+
+var offshore_wells = ee.FeatureCollection(Well)
+// .filterBounds(buffer_shaleplay)
+.filter(ee.Filter.bounds(GOM_boundary))
+
+var set_offshore = function(feature){
+  feature = ee.Feature(feature);
+  return(feature.set("offshore", 2));
+}
+offshore_wells = ee.FeatureCollection(offshore_wells.map(set_offshore));
+
+var offshore_label =  offshore_wells.merge(shale_label);
+
+Export.table.toDrive(offshore_label, "offshore_label2");
 
 
-
-
-var offshore_wells = ee.FeatureCollection(Well.filterBounds(GOM_boundary));
-var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
-var invertedJoined = invertedJoin.apply(Well, offshore_wells, filter);
-Export.table.toDrive(invertedJoined, "compilation");
+// Export.table.toDrive(invertedJoined, "compilation");
 
 
 //Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
