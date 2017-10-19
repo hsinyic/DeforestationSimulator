@@ -37,15 +37,25 @@ Well = ee.FeatureCollection(Well).set('shaleplay',0)
 .filter(ee.Filter.bounds(shaleplay)).set('shaleplay', 1 );
 Export.table.toDrive(Well, "shale_label");
 
+print(Well.getInfo())
 
 
 // ################ filter Offshore from Directional/Unknown ################ 
 var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
 Map.addLayer(GOM_offshore, {'color':db}, "GOM_wells", 1, 1);Map.addLayer(Active_GOM, {'color':black}, "Active_GOM_wells", 1, 1);
+var offshore_label = 
+ee.FeatureCollection(Well)
+.set('offshore', 0)
+.filterBounds(GOM_boundary)
+.set('offshore',1);
+Export.table.toDrive(offshore_label, "offshore_label");
+
+
+
+
 var offshore_wells = ee.FeatureCollection(Well.filterBounds(GOM_boundary));
 var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
 var invertedJoined = invertedJoin.apply(Well, offshore_wells, filter);
-print(invertedJoined);
 Export.table.toDrive(invertedJoined, "compilation");
 
 
