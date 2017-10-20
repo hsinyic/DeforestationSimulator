@@ -67,7 +67,7 @@ var set_offshore = function(feature){
 // print("hi");
 // print(shaleplay_geometry);
 
-var processed_wells = ee.FeatureCollection(Well).filterBounds(geometry1)
+var processed_wells = ee.FeatureCollection(Well)
 .map(add_shale_label).map(set_shale)
 .map(add_offshore_label).map(set_offshore);
 // print(processed_wells.propertyNames())
