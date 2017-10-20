@@ -18,6 +18,7 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.centerObject(geometry1, 5);//center on Geometry on the map
+
 /* ################ Color scheme################ */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
   var azure= ('#11ffff').toString();
@@ -51,8 +52,8 @@ var add_offshore_label=  function(feature){
 var set_shale = function(feature){
   feature = ee.Feature(feature);
   var result = feature
-  // .set("shale_play", ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 2,1 ))
-  .set("offshore", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2,1));
+  .set("shale_play", ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 2,1 ))
+  // .set("offshore", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2,1));
   return (ee.Feature(result));
 };
 
@@ -63,14 +64,14 @@ var set_offshore = function(feature){
   .set("offshore", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2,1));
   return (ee.Feature(result));
 };
-print("hi");
-print(shaleplay_geometry);
+// print("hi");
+// print(shaleplay_geometry);
 
 var processed_wells = ee.FeatureCollection(Well).filterBounds(geometry1)
 .map(add_shale_label).map(set_shale)
 .map(add_offshore_label).map(set_offshore);
-print(processed_wells.propertyNames())
-print(processed_wells.aggregate_sum('Well Count'));
+// print(processed_wells.propertyNames())
+// print(processed_wells.aggregate_sum('Well Count'));
 
 Export.table.toDrive(ee.FeatureCollection(processed_wells), "labeled_active_wells_test");
 
@@ -139,19 +140,39 @@ var Well_List_names = ee.List([
   'V_wells_post2000',
   'V_wells_pre2000']);
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
+var add_class_label=  function(fc){
+  fc = ee.FeatureCollection(fc);
+  var result = fc.map(function(feature){feature = ee.Feature(feature); 
+    var intermediate_result = feature.set("Class Label", "0"); return(ee.Feature(intermediate_result));
+  });
+  return(ee.FeatureCollection(result));
+};
+  
+Well_List = Well_List.map(add_class_label);
+print('Well_List',Well_List);
+print("size", ee.List(Well_List).size());
 
-var class_label = function(i){
+
+var set_class = function(i){
   i= ee.Number(i);
-  var labeled =ee.FeatureCollection(Well_List.get(i))
-  .map(function(feature){
+  var well_set = ee.FeatureCollection(Well_List.get(i))
+  var label = ee.String(Well_List_names.get(i));
+  var labeled = well_set.map(function(feature){
     feature = ee.Feature(feature);
-    feature = feature.set("Class Label", ee.String(Well_List_names.get(i)))
-    return(ee.Feature(feature))
-    })
-  return(ee.FeatureCollection(labeled))
-}
+    var results = feature.set("Class Label", label);
+    return(ee.Feature(results));
+    });
+  return(ee.FeatureCollection(labeled));
+};
+print('property names', ee.FeatureCollection(Well_List.get(1)).propertyNames());
 
-var classified = ee.List.sequence(0, ee.List(Well_List).size().subtract(1), 1).map(class_label);
+
+var classified = ee.List(ee.List.sequence(0, ee.List(Well_List).size().subtract(1), 1))
+.map(add_class_label)
+// .map(set_class);
+print(classified);
+print(ee.List(Well_List).size().subtract(1));
+
 
 var collapse  = function(element , prev){
   prev = ee.FeatureCollection(prev);
@@ -162,11 +183,10 @@ var collapsed_classified = ee.FeatureCollection(
   classified.iterate(collapse, ee.FeatureCollection(ee.Feature(null)))
   );
 print(ee.FeatureCollection(collapsed_classified).aggregate_sum('Well Count'));
-print(collapsed_classified.propertyNames());
 
-Export.table.toDrive(ee.FeatureCollection(collapsed_classified), "collapsed_classified");
+Export.table.toDrive(ee.FeatureCollection(collapsed_classified), "collapsed_classified5");
 
-var i = 1; var j = 2; var k = 3
+var i = 4; var j = 5; var k = 7
 Map.addLayer(ee.FeatureCollection(classified.get(i)), {'color':yellow}, os_list_names.get(i).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(classified.get(j)), {'color':dg}, os_list_names.get(j).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(classified.get(k)), {'color':pink}, os_list_names.get(k).getInfo(), 1, 1); 
