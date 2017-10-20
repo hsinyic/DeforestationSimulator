@@ -7,7 +7,7 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
 
 
 //center on Geometry on the map
-Map.centerObject(geometry, 8);
+Map.centerObject(geometry, 6);
 
 
 // Color scheme 
