@@ -156,9 +156,30 @@ var classified = ee.List.sequence(0, Well_List.size().subtract(1), 1)
 
 classified = ee.List(classified);
 // print(classified);
+var x=0;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=1;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=2;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=3;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=4;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=5;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=6;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=7;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=8;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=9;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=10;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=11;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=12;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
+var x=13;var toexport = ee.FeatureCollection(classified.get(x)); Export.table.toDrive(ee.FeatureCollection(toexport), ee.String(Well_List_names.get(x)).getInfo());
 
 
-var i = 4; var j = 5; var k = 7
+
+
+
+
+
+
+
+var i = 0; var j = 3; var k = 6;
 Map.addLayer(ee.FeatureCollection(classified.get(i)), {'color':yellow}, Well_List_names.get(i).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(classified.get(j)), {'color':dg}, Well_List_names.get(j).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(classified.get(k)), {'color':pink}, Well_List_names.get(k).getInfo(), 1, 1); 
