@@ -77,7 +77,7 @@ Map.addLayer(GOM_offshore, {'color':db}, "GOM_wells", 1, 1);Map.addLayer(Active_
 
 
 
-//################ select wells of certaint atrributes ################ //
+//################ select wells of certaint attributes ################ //
 
 var select = function( after,before, direction, type){
   // after= ee.String(after); before = ee.String(before);
@@ -159,9 +159,9 @@ classified = ee.List(classified);
 
 
 var i = 4; var j = 5; var k = 7
-Map.addLayer(ee.FeatureCollection(classified.get(i)), {'color':yellow}, os_list_names.get(i).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(classified.get(j)), {'color':dg}, os_list_names.get(j).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(classified.get(k)), {'color':pink}, os_list_names.get(k).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(classified.get(i)), {'color':yellow}, Well_List_names.get(i).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(classified.get(j)), {'color':dg}, Well_List_names.get(j).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(classified.get(k)), {'color':pink}, Well_List_names.get(k).getInfo(), 1, 1); 
 
 
 var collapse  = function(element , prev){
