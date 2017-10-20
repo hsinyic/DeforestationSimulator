@@ -31,9 +31,6 @@ Map.centerObject(geometry1, 5);//center on Geometry on the map
 var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union(); var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay_or, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 // ################  wells in shale ################ //
-
-var processed_wells = ee.FeatureCollection(Well).map(add_shale_label).map(set_shale);
-
 var add_label=  function(feature){
   feature = ee.Feature(feature);
   return(feature.set("shale_play", 0).set("offshore", 0));
@@ -48,6 +45,10 @@ var set_shale_offshore = function(feature){
   );
 };
 
+
+var processed_wells = ee.FeatureCollection(Well).map(add_label).map(set_shale_offshore);
+print(processed_wells.aggregate_sum('Well Count'));
+
 Export.table.toDrive(processed_wells, "labeled_active_wells_test");
 
 // ################ filter Offshore from Directional/Unknown ################ 
@@ -56,27 +57,25 @@ Map.addLayer(GOM_offshore, {'color':db}, "GOM_wells", 1, 1);Map.addLayer(Active_
 
 
 
-
-
 //################ select wells of certaint atrributes ################ //
-var select = function( after,before, direction, type){
-  after = ee.String(after).cat('-01-01');before= ee.String(before).cat('-01-01');
-  direction = ee.String(direction);
-  type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
-  var selected_fc = ee.FeatureCollection(Well
-  .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
-  .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
-  .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
-  .filter(ee.Filter.inList('Updated Production Type',  type))); 
-  return selected_fc;
-};
+// var select = function( after,before, direction, type){
+//   after = ee.String(after).cat('-01-01');before= ee.String(before).cat('-01-01');
+//   direction = ee.String(direction);
+//   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
+//   var selected_fc = ee.FeatureCollection(Well
+//   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
+//   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
+//   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
+//   .filter(ee.Filter.inList('Updated Production Type',  type))); 
+//   return selected_fc;
+// };
 var select = function( after,before, direction, type){
   // after= ee.String(after); before = ee.String(before);
   after = ee.Number.parse(after);before= ee.Number.parse(before);
   // after = ee.Number(after); before =ee.Number(before);
   direction = ee.String(direction);
   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
-  var selected_fc = ee.FeatureCollection(Well
+  var selected_fc = ee.FeatureCollection(processed_wells
   .filterMetadata('First Prod Year','greater_than', after)
   .filterMetadata('First Prod Year','not_greater_than', before)
   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
@@ -136,10 +135,25 @@ var class_label = function(i){
     feature = feature.set("Class Label", ee.String(Well_List_names.get(i)))
     return(feature)
     })
-  return(labeled)
+  return(ee.FeatureCollection(labeled))
 }
 
-var classified = class_label
+var classified = ee.List.sequence(0, ee.List(Well_List).size().subtract(1), 1).map(class_label);
+
+var collapse  = function(element , prev){
+  prev = ee.FeatureCollection(prev);
+  element = ee.FeatureCollection(element);
+  return prev.merge(element);
+};
+var collapsed_classified = ee.FeatureCollection(classified.iterate(collapse, ee.FeatureCollection(ee.Feature(null))));
+print(collapsed_classified.aggregate_sum('Well Count'));
+
+
+Export.table.toDrive(collapsed_classified, "collapsed_classified");
+
+
+
+
 // ################ Inverted join to display wells not in shale #################//
 // var filter = ee.Filter.equals({
 //   leftField: 'system:index',
