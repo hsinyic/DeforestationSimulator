@@ -142,10 +142,11 @@ var Well_List_names = ee.List([
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 var add_class_label=  function(fc){
   fc = ee.FeatureCollection(fc);
-  var result = fc.map(function(feature){feature = ee.Feature(feature); 
-    var intermediate_result = feature.set("Class Label", "0"); return(ee.Feature(intermediate_result));
-  });
-  return(ee.FeatureCollection(result));
+  // var result = fc.map(function(feature){feature = ee.Feature(feature); 
+  //   var intermediate_result = feature.set("Class Label", "0"); return(ee.Feature(intermediate_result));
+  // });
+  // return(ee.FeatureCollection(result));
+  return(fc);
 };
   
 Well_List = Well_List.map(add_class_label);
