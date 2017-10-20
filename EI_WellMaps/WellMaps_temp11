@@ -8,9 +8,9 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
           [-73.95103498640799, 40.16127593903518],
           [-74.54237997262669, 42.90758581937808]]]),
     geometry1 = /* color: #98ff00 */ee.Geometry.Polygon(
-        [[[-91.17378475305708, 31.250596144564103],
-          [-92.46299197447149, 28.15973246072152],
-          [-90.6706367144883, 28.171036923265792],
+        [[[-91.39351131555719, 31.175427996380666],
+          [-91.97959353697149, 29.00867882491196],
+          [-90.4509101519883, 28.712011560480814],
           [-87.79341005405581, 31.5217831179659]]]),
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
     conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
@@ -140,39 +140,32 @@ var Well_List_names = ee.List([
   'V_wells_post2000',
   'V_wells_pre2000']);
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
-var add_class_label=  function(fc){
-  fc = ee.FeatureCollection(fc);
-  // var result = fc.map(function(feature){feature = ee.Feature(feature); 
-  //   var intermediate_result = feature.set("Class Label", "0"); return(ee.Feature(intermediate_result));
-  // });
-  // return(ee.FeatureCollection(result));
-  return(fc);
-};
-  
-Well_List = Well_List.map(add_class_label);
-print('Well_List',Well_List);
-print("size", ee.List(Well_List).size());
-
-
-var set_class = function(i){
+print(Well_List);
+var set_class = function(i, prev_well_list){
   i= ee.Number(i);
-  var well_set = ee.FeatureCollection(Well_List.get(i))
-  var label = ee.String(Well_List_names.get(i));
-  var labeled = well_set.map(function(feature){
+  prev_well_list = ee.List(prev_well_list);
+  var element = ee.FeatureCollection(Well_List.get(i))
+  var update = element.map(function(feature){
     feature = ee.Feature(feature);
-    var results = feature.set("Class Label", label);
+    var results = feature.set("Class Label", Well_List_names.get(i));
     return(ee.Feature(results));
-    });
-  return(ee.FeatureCollection(labeled));
+    })
+  var newlabeled_Well_List = prev_well_list.set(i, ee.FeatureCollection(update));
+  return(ee.List(newlabeled_Well_List));
 };
-print('property names', ee.FeatureCollection(Well_List.get(1)).propertyNames());
 
 
-var classified = ee.List(ee.List.sequence(0, ee.List(Well_List).size().subtract(1), 1))
-.map(add_class_label)
-// .map(set_class);
-print(classified);
-print(ee.List(Well_List).size().subtract(1));
+var classified = ee.List.sequence(0, Well_List.size().subtract(1), 1)
+.iterate(set_class, Well_List);
+
+classified = ee.List(classified);
+// print(classified);
+
+
+var i = 4; var j = 5; var k = 7
+// Map.addLayer(ee.FeatureCollection(classified.get(i)), {'color':yellow}, os_list_names.get(i).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(classified.get(j)), {'color':dg}, os_list_names.get(j).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(classified.get(k)), {'color':pink}, os_list_names.get(k).getInfo(), 1, 1); 
 
 
 var collapse  = function(element , prev){
@@ -180,17 +173,12 @@ var collapse  = function(element , prev){
   element = ee.FeatureCollection(element);
   return prev.merge(element);
 };
-var collapsed_classified = ee.FeatureCollection(
-  classified.iterate(collapse, ee.FeatureCollection(ee.Feature(null)))
-  );
-print(ee.FeatureCollection(collapsed_classified).aggregate_sum('Well Count'));
+var collapsed_classified = ee.List(classified).iterate(collapse, ee.FeatureCollection([]));
+collapsed_classified = ee.FeatureCollection(collapsed_classified);
+// print(ee.FeatureCollection(collapsed_classified).aggregate_sum('Well Count'));
 
-Export.table.toDrive(ee.FeatureCollection(collapsed_classified), "collapsed_classified5");
+Export.table.toDrive(ee.FeatureCollection(collapsed_classified), "collapsed_classified7");
 
-var i = 4; var j = 5; var k = 7
-Map.addLayer(ee.FeatureCollection(classified.get(i)), {'color':yellow}, os_list_names.get(i).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(classified.get(j)), {'color':dg}, os_list_names.get(j).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(classified.get(k)), {'color':pink}, os_list_names.get(k).getInfo(), 1, 1); 
 
 
 
