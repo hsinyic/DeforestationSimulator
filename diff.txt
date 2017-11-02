@@ -1,0 +1,205 @@
+15c15,16
+<     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru");
+---
+>     in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
+>     geometry = /* color: d63000 */ee.Geometry.MultiPoint();
+17,18c18,22
+< Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
+< // Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Jambi 
+---
+> // Map.setCenter(102.08245301691568, -0.4909959458718788, 8);// Riau 
+> Map.setCenter(101.96, -1.53, 8); //Jambi 
+> Map.setCenter(100.4, -0.58, 8); //Sumetera Barat 
+> 
+> 
+21,24c25,43
+< // ########
+< // # Step 0) Define Region of Interest, Name Hansen Layer, Import vector data and convert to raster
+< // ########
+< // # Define Region of Interest  
+---
+> var printclass = function(t, folder){
+>   var year = t.toString();
+>   t= ee.Number(t).subtract(2000);
+>   var img = ee.Image(folder.get(t));
+>   var taskname = ee.String(year).cat(ee.String('Riau_PartIII'));
+>   Map.addLayer(img, {min: 0, max: 6,
+>     palette:[ '#11ffff', '0000FF', '#4cff62',  '#fff832', 'ff510f', '#f7f7f7', '0000FF']}, year);
+>   // Export.image.toDrive({
+>   //   image: img,
+>   //   description: taskname.getInfo(),
+>   //   scale: 100,
+>   //   region: totalarea_outline,
+>   //   maxPixels: 1e13
+>   // });
+>   // return(3);
+> };
+> 
+> 
+> // Define Region of Interest  
+33c52
+< var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi', 'Pelalawan', 'Kampar', 'Pekan Baru'])
+---
+> var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
+35c54
+< var R2  =  ee.List(['Rokan Hilir','Bengkalis'])//,'Dumai','Siak'])
+---
+> var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
+36a56,59
+> var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
+>           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
+> 
+> 
+38c61,64
+< var area_works = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+---
+> var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+> var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat'); 
+> 
+> 
+40c66
+< var totalarea = ee.FeatureCollection(R2);
+---
+> var totalarea = ee.FeatureCollection(R1);
+45c71
+< // #Import Hansen  Data set 
+---
+> //Import Hansen Global Data set 
+49c75
+< var blank = ee.Image([0]).rename(['blank']).clip(totalarea_outline);
+---
+> var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea_outline);
+52c78
+< // #Import Vector Data and convert to Raster 
+---
+> //Import Vector Data and convert to Raster 
+72a99,105
+> Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '0000FF' ]}, "OP10");
+> Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '0000FF' ]}, "OP05");
+> Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '0000FF' ]}, "OP00");
+> Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '0000FF' ]}, "OP90");
+> 
+> 
+> 
+75c108
+< // # Step 1) Intermediate Layer Load Hansen of lossYear, perform speckle filtering and majority sampling 
+---
+> // # Load Hansen of lossYear, perform speckle filtering and majority sampling 
+77,78c110,111
+< var binary_pre = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 ).clip(totalarea_outline);
+< var binary = ee.Image([0]).where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
+---
+> var binary_pre = blank.where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
+> var binary = blank.where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
+84c117
+< var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
+---
+> var lossYear_replant = ee.Image([2099]).clip(totalarea_outline).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
+89a123,124
+> Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+>     palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
+91a127,133
+> 
+> // ############
+> // # Step 3: Preliminary data processing 
+> // # 1) Buffer by field treatment 
+> // # 2) Create 2000 Basemap  
+> // ############
+> 
+93c135
+< // # Step 2) Intermediate Layer :  1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
+---
+> // # 1) 1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
+112,114c154,156
+< var source90 = ee.Image([0]).where(totalarea_raster.neq(0),OP90).clip(totalarea_outline); source90 = source90.updateMask(source90);
+< var source00 = ee.Image([0]).where(totalarea_raster.neq(0),OP00).clip(totalarea_outline); source00 = source00.updateMask(source00);
+< var source05 = ee.Image([0]).where(totalarea_raster.neq(0),OP05).clip(totalarea_outline); source05 = source05.updateMask(source05);
+---
+> var source90 = blank.where(totalarea_raster.neq(0),OP90); source90 = source90.updateMask(source90);
+> var source00 = blank.where(totalarea_raster.neq(0),OP00); source00 = source00.updateMask(source00);
+> var source05 = blank.where(totalarea_raster.neq(0),OP05); source05 = source05.updateMask(source05);
+146,147c188,189
+<     var Binary = ee.Image([0]).
+<               where(costmap.lte(cuttoff).and(costmap.gt(cuttoff_before)), 1).clip(totalarea_outline);
+---
+>     var Binary = blank.
+>               where(costmap.lte(cuttoff).and(costmap.gt(cuttoff_before)), 1);
+162,168c204,205
+<   Export.image.toDrive({
+<     image: lossYear,
+<     description: 'lossYear_buffered_rainbow',
+<     scale: 100,
+<     region: totalarea_outline,
+<     maxPixels: 1e13
+<   });
+---
+> Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','0000FF' ]}, 'updated Hansen');
+> 
+171c208
+< // # Step 3) Intermediate Layer : Create year_2000 land use clasfficiation  
+---
+> // # 2) Create year_2000 land use clasfficiation  
+172a210
+> 
+175,180c213,218
+< var NF_color = 1;
+< var F_color = 2;
+< var OPReplant_color = 3; 
+< var OP_color = 4; 
+< var NOP_color = 5;
+< var OTH_color = 6;
+---
+> var NF_color = ee.Number(1);
+> var F_color = ee.Number(2);
+> var OPReplant_color = ee.Number(3); 
+> var OP_color = ee.Number(4); 
+> var NOP_color = ee.Number(5);
+> var OTH_color = ee.Number(6);
+200c238
+< // #Step4 : Final Product: Land use classifications,  2000 to 2010 
+---
+> // #Step4 : Land use classifications,  2000 to 2010 
+205d242
+<   var timestamp = t.toString();
+207,208d243
+<   var lossyear = lossYear; 
+<   var basemap = year_2000;
+217c252
+<         'lossYear': lossyear,
+---
+>         'lossYear': Gunarso_intermediate.select('lossyear'),
+233,234c268,269
+<         'lossYear': lossyear,
+<         'basemap': basemap,
+---
+>         'lossYear': Gunarso_intermediate.select('lossyear'),
+>         'basemap': Gunarso_intermediate.select('year_2000'),
+249,250c284,285
+<         'lossYear': lossyear,
+<         'basemap': basemap,
+---
+>         'lossYear': Gunarso_intermediate.select('lossyear'),
+>         'basemap': Gunarso_intermediate.select('year_2000'),
+261,262c296,297
+<   var final_yearmap = ee.Image([0]).where(totalarea_raster.neq(0), yearmap);
+<   return ee.Image(final_yearmap).clip(totalarea_outline);
+---
+>   var final_yearmap = blank.where(totalarea_raster.neq(0), yearmap);
+>   return ee.Image(final_yearmap);
+266,279d300
+< var printclass = function(t, folder){
+<   var year = t.toString();
+<   t= ee.Number(t).subtract(2000);
+<   var img = ee.Image(folder.get(t));
+<   var taskname = ee.String(year).cat(ee.String('Test_Riau2_smaller'));
+<   Export.image.toDrive({
+<     image: img,
+<     description: taskname.getInfo(),
+<     scale: 100,
+<     region: totalarea_outline,
+<     maxPixels: 1e13
+<   });
+<   return(3);
+< };
+295a317
+> 
