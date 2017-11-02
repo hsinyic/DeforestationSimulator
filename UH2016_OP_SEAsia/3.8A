@@ -1,0 +1,186 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: 0B4A8B */ee.Geometry.MultiPoint(),
+    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
+    Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
+    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft"),
+    Pen05_v2 = ee.FeatureCollection("ft:1WFl3go93KXh8Lk8ltOzMK2YBjIlaMeHPst1hod_b");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Get just the Malaysia feature.
+var lossYear = gfcImage.select(['lossyear']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+var forest = gfcImage.select(['treecover2000']);
+print('lossYear', lossYear);
+//Define country boundary (Malaysia only)
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+
+//mask out the area where there isn't a "loss year" mark
+Map.addLayer(lossYear.clip(malaysia).updateMask(gfcImage.select(['lossyear'])),
+             {'min': 0, 'max': 12, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+             'Forest Lost Year');
+
+// Map.addLayer(forest.clip(malaysia).updateMask(gfcImage.select(['treecover2000'])),
+//             {'min': 0, 'max': 100, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+//             'Forest Cover 2000');
+
+
+// Convert our vector map to a raster 
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+
+//var malaysia_raster = malaysia.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+// Map.addLayer(malaysia_raster, {min: 0, max: 256, palette: ['00FFFF']}, 'Malaysia');
+// print('malaysia_raster: ', malaysia_raster.getInfo());
+
+
+
+
+// Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Raster OP 2010');
+Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Raster OP 2005');
+Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Raster OP 2000');
+// Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Raster OP 1990');
+
+//Create an imagecollection of 2001, 2002, 2003, 2004
+//Each image has bands of OP, Non-OP, and Forest 
+// Create a collection of images, each is 2000,
+// 2001, 2002, 2003...etc 
+var Gunarso = ee.ImageCollection([2000]);
+for (var i = 2001; i <= 2012; ++i){
+  var additional = ee.ImageCollection([i]);
+  Gunarso = Gunarso.merge(additional);
+}
+print('collectionFromConstructor: ', Gunarso.getInfo());
+
+
+/////// 
+// Simple output that works 
+///////
+/*
+var decision = function(bef, aft, t, p){
+  var loss = lossYear.gte(p).and(lossYear.lte(p+1));
+  return loss
+}
+*/
+
+
+
+
+
+var decision2 = function(bef, aft, hansen, t){
+  //bef: nearest gunarso layer in the past 
+  //aft: nearest gunarso layer in the future 
+  //hansen: forest loss year (0-12)
+  //t is the year at which we are making decisions for 
+  // var T= 2012 - t ; //T is goes from 0 to 2012, it is the current year 
+  
+  //@initiate an image where we can then add bands to it 
+  // var Gunarso_test = ee.ImageCollection([T]);
+  // print('Gunarso_test',Gunarso_test);
+  
+  //Analyze property of the input 
+  print('bef',bef);
+  print('hansen',hansen); 
+  
+  
+  // a layer of hansen loss year, but everything in default zero 
+  var p = hansen.multiply(0); 
+
+  //@Conditional statement test 
+  //aft.neq(bef)
+  if(aft==='NULL'){
+    print('hey 1'); 
+    // the bug is that they will always come here, it selects whereever
+    // Hansen has zero values is not defined 
+    p = hansen.add(2);
+  }
+  else if(aft.neq(bef)){ //the program never comes here 
+    print('I am finally here!');
+    p = hansen.add(3);
+  }
+  else{ //the program never comes here either 
+    p = hansen.add(1);
+  }
+  //Conditional test (this is corect) 
+  if(1+2===2){
+    print('oy');
+  }
+  else if(1+4===6){
+    print('oy2');
+  }
+  else if(1+5===10){
+    print('oy3');
+  }
+  else if(1+6===7){
+    print('correct!!!!'); //it did come here 
+  }
+  return p;
+};
+
+var decision = function(bef, aft, t, p){
+  var loss = lossYear.gte(p).and(lossYear.lte(p+1));
+  return t.add(loss);
+};
+
+var OP0005 = decision2(OP00_raster, OP05_raster, lossYear, 2002);
+print('OP0005', OP0005);
+Map.addLayer(OP0005.clip(malaysia).updateMask(OP0005), 
+{min: 0, max: 12, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 
+'Initial Classify');
+
+//binary later 
+var loss0 = lossYear.gte(0).and(lossYear.lte(1));
+var loss1 = lossYear.gte(1).and(lossYear.lte(2));
+var loss2 = lossYear.gte(2).and(lossYear.lte(3));
+var loss3 = lossYear.gte(3).and(lossYear.lte(4));
+var loss_eq = lossYear.where(loss3.add(1).eq(loss1), 3);
+//random statement, but it did create an effect, it seems to take all 
+//loss Year data, and assign the same color 
+
+Map.addLayer(loss0.clip(malaysia).updateMask(loss0), 
+  {min: 0, max: 1, palette: ['0000FF']}, 'Loss0');
+Map.addLayer(loss1.clip(malaysia).updateMask(loss1), 
+  {min: 0, max: 1, palette: ['#d267ff']}, 'Loss1');
+Map.addLayer(loss2.clip(malaysia).updateMask(loss2), 
+  {min: 0, max: 1, palette: ['#ffe14e']}, 'Loss2');
+Map.addLayer(loss3.clip(malaysia).updateMask(loss3), 
+  {min: 0, max: 1, palette: ['#ff1334']}, 'Loss3');
+Map.addLayer(loss_eq.clip(malaysia).updateMask(loss_eq), 
+  {min: 0, max: 2, palette: ['#62ff21']}, 'loss_eq');
+
+//intersect this binary layer with Gunarso 
+var i=0;
+var j=1;
+var lossInFirstIYear = lossYear.gte(i).and(lossYear.lte(i+1)); 
+var OP_2001 = OP05_raster.where(lossInFirstIYear.eq(1), 0);
+Map.addLayer(OP_2001, 
+  {min: 0, max: 2, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'OP_2001');
+print('OPAt2005', OP_2001.getInfo())
+print('lossInFirst5Year', lossInFirstIYear.getInfo())
+
+
+
+
+
+
+// var OP_classify = function(OP00_raster, OP05_raster, lossYear, t);
+
+
+//Year 2000 
+//Assign OP90=1 and OP00=1  as ones with age > 10, mean = 10
+var Gunarso2000 = lossYear;
+Gunarso = Gunarso.merge(Gunarso2000);
+
+
+
+// Export the image, specifying scale and region.
+Export.image(OP_2001, 'exportImageExample', {
+  scale: 30,
+  region: geometry
+});
+
+

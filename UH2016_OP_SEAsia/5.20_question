@@ -1,0 +1,38 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    geometry = /* color: 000000 */ee.Geometry.Polygon(
+        [[[101.38733786286514, 1.027166227904569],
+          [101.40380857602315, -0.21423290098878023],
+          [102.81006086366165, -0.21697946105268517],
+          [102.80182033962615, 1.0161816414827798]]]),
+    G2002 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2002"),
+    G2003 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2003"),
+    G2004 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/year_2004");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var image = ee.Image('LANDSAT/LC8_L1T/LC80440342014077LGN00').select('B4');
+var lossYear = gfcImage.select(['lossyear']);
+
+
+var db= String('0000FF');
+var lb= String('#11ffff');
+var red=String('ff510f');
+var yellow=String('#fff832');
+var gr= String('#4cff62');
+var whi=String('#181716');
+
+//############
+//# Sum area for 2002 
+//############
+
+Map.addLayer(G2004, {min: 0, max: 5, palette:[lb, db, gr, yellow, red, whi ]},"G2004");
+Map.addLayer(G2003, {min: 0, max: 5, palette:[lb, db, gr, yellow, red, whi ]},"G2003");
+Map.addLayer(G2002, {min: 0, max: 5, palette:[lb, db, gr, yellow, red, whi ]},"G2002");
+
+var Stat = G2002.addBands(G2002);
+var r = Stat.reduceRegion({
+  reducer: ee.Reducer.count().group(1),
+  scale: 900,
+  geometry: geometry
+});
+print('summary statistics', r);
+

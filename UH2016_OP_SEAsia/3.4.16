@@ -1,0 +1,83 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: 98ff00 */ee.Geometry.MultiPoint(),
+    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    OP90 = ee.FeatureCollection("ft:10MTEH3_Isn54RRvSiSjpf1378fbr7TSKaiKYl-W6"),
+    OP00 = ee.FeatureCollection("ft:1pu7hrl_uK4OKKzKI5vr1DsjshK58hErrT3Nv8M1p"),
+    OP05 = ee.FeatureCollection("ft:1lNXWu2s8GjIyLifNr1OE8CwC3FvGgCnWLLRe8Ngo"),
+    OP10 = ee.FeatureCollection("ft:1NWWDMO543vxr45_vugNDtjl9FPvZ78zh9VhupSCr"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen05 = ee.FeatureCollection("ft:12a-k5uoK8bI9RWsPYlBsrxDQajV4RwS4P_iOC8rP"),
+    Pen00 = ee.FeatureCollection("ft:1eb9ukc3v3tM_xvezzPR8PJdkQKuh977Ej_XxwL_Q"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Get just the Malaysia feature.
+var lossYear = gfcImage.select(['lossyear']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+var forest = gfcImage.select(['treecover2000']);
+
+
+//Define country boundary (Malaysia only)
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var oilPalm00 = ee.FeatureCollection(OP00, 'geometry');
+// var oilPalm90 = ee.FeatureCollection(OP90, 'geometry');
+var oilPalm10 = ee.FeatureCollection(OP10, 'geometry');
+
+
+// var oilPalmInMalaysia = oilPalm00.filterBounds(malaysia); // no need for this line
+
+//original masking script
+/*
+ee.Image('UMD/hansen/global_forest_change_2013').select(['treecover2000']);
+Map.addLayer(ee.Image('UMD/hansen/global_forest_change_2013')
+  .updateMask(ee.Image('UMD/hansen/global_forest_change_2013').select(['treecover2000'])),
+    {bands: ['treecover2000'], palette: '000000, 00FF00', min: [0], max: [100]});
+*/
+
+//mask out the area where there isn't a "loss year" mark
+Map.addLayer(lossYear.clip(malaysia).updateMask(gfcImage.select(['lossyear'])),
+             {'min': 0, 'max': 12, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+             'Forest Lost Year');
+
+
+Map.addLayer(forest.clip(malaysia).updateMask(gfcImage.select(['treecover2000'])),
+             {'min': 0, 'max': 100, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+             'Forest Cover 2000');
+
+
+// Convert our vector map to a raster 
+var OP90_raster = OP90
+  .reduceToImage({
+    properties: ['cat'],
+    reducer: ee.Reducer.first()
+});
+var OP00_raster = oilPalm00
+  .reduceToImage({
+    properties: ['cat'],
+    reducer: ee.Reducer.first()
+});
+
+Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['#fff707']}, 'Raster OP 1990');
+Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['#ff9900']}, 'Raster OP 2000');
+
+
+//
+var lossInFirst5Year = lossYear.gte(0).and(lossYear.lte(5)); 
+var OPAt2005 = OP00_raster.where(lossInFirst5Year.eq(1), 0);
+var vis = {'min': 0, 'max': 100, 'palette': '000000, 00FF00'};
+
+
+Map.addLayer(OPAt2005, {min: 0, max: 2, palette: ['0000FF', '00FF00', '00FFFF', 'FF0000']}, 'OPAt2001');
+
+
+
+
+
+
+// Export the image, specifying scale and region.
+Export.image(OPAt2005, 'exportImageExample', {
+  scale: 30,
+  region: geometry
+});
+

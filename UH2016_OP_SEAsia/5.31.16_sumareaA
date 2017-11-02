@@ -1,0 +1,202 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    Pen10 = ee.FeatureCollection("ft:1xabXcdjDWY8PCYLjAO6zH07XTczWVKqGcNVVQI3Y"),
+    Pen05 = ee.FeatureCollection("ft:1YZK7dCxaKKF5WneTc3hcNyB1ss6nVRkl818pf7zI"),
+    Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
+    Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.setCenter(102.10693359375, 3.973860975839102, 5);
+
+// ############
+// # Step 0: Define pixel count and area functions  
+// ############
+var pixelcount = function(image, shape){
+  var Stat = image.addBands(image);
+  var r = Stat.reduceRegion({
+    reducer: ee.Reducer.count().group(1),
+    scale: 300,
+    maxPixels: 9e12,
+    geometry: shape
+  });
+  return r; 
+};
+var area = function(image, shape){
+  var areaImage = image.multiply(ee.Image.pixelArea());
+  var stats = areaImage.reduceRegion({
+    reducer: ee.Reducer.sum(),
+    geometry: shape,
+    scale: 300,
+    maxPixels: 9e12,
+    // maxPixels: 2e8
+  });
+  // return stats.get('cumulative_cost');
+  return stats;
+};
+
+// ############
+// # Step 1: Load data 
+// # 1) from Hansen 
+// # 2) draw boundaries around malaysia, indo, PNG
+// # 3) AreaExpansion vector maps, converted to raster
+// ############
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
+var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
+// var totalarea = malaysia.merge(indonesia).merge(PNG);
+var peninsula = Peninsula_outline.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var totalarea= Peninsula_outline;
+
+var lossYear = gfcImage.select(['lossyear']);
+var treecover2000 = gfcImage.select(['treecover2000']);
+var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
+
+// //add color scheme 
+var db= String('0000FF');
+var lb= String('#11ffff');
+var red=String('ff510f');
+var lr = String("#ff8f7d");
+var yellow=String('#fff832');
+var gr= String('#4cff62');
+var whi=String('#181716');
+var black = String('#101010');
+
+// show lossyear from Hansen Global Forest Cover Change 
+Map.addLayer(lossYear.clip(totalarea).updateMask(lossYear),
+            {'min': 0, 'max': 14, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+            'Hansen Forest Lost Year');
+
+// Convert vector maps to a raster, Peninsula
+var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
+var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
+var OP05_raster = Pen05.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
+var OP10_raster = Pen10.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.mean()}).multiply(0).add(1);
+
+
+// Revise to make sure NOP-OP scenarios is not possible 
+var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']).clip(totalarea);
+var OP00 = blank.where(OP00_raster.eq(1), 1).rename(['OP00']).clip(totalarea);
+var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']).clip(totalarea);
+var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']).clip(totalarea);
+
+// ####################
+// # Step 2: Categorical map for 1990-2000, 2000-2005, 2005-2010 
+// ####################
+var AreaExpansion = ee.Image([lossYear]);
+AreaExpansion= AreaExpansion.addBands([OP90, OP00, OP05,OP10, treecover2000,blank]);
+print('AreaExpansion image collection: ', AreaExpansion);
+
+
+//Define transition variables
+var NOP_NOP= 1;//NonOP to NonOP 
+var NOP_OP= 2;//NonOP to OP
+var OP_NOP= 3;//OP to NonOP
+var OP_OP= 4;//OP to OP
+
+var OP_90_00 = AreaExpansion.expression(
+  "(OP1990==1 && OP2000==1) ? OP_OP \
+    : (OP1990==1 && OP2000==0) ? OP_NOP \
+      :(OP1990==0 && OP2000==0) ? NOP_NOP \
+        : NOP_OP", 
+        {
+        'OP1990': AreaExpansion.select('OP90'),
+        'OP2000': AreaExpansion.select('OP00'),
+        'OP_OP': AreaExpansion.select('blank').add(OP_OP),
+        'OP_NOP': AreaExpansion.select('blank').add(OP_NOP),
+        'NOP_NOP': AreaExpansion.select('blank').add(NOP_NOP),
+        'NOP_OP': AreaExpansion.select('blank').add(NOP_OP),
+        }
+    ).rename(['OP_90_00']);
+
+var OP_00_05 = AreaExpansion.expression(
+    "(OP2000==1 && OP2005==1) ? OP_OP \
+      : (OP2000==1 && OP2005==0) ? OP_NOP \
+        :(OP2000==0 && OP2005==0) ? NOP_NOP \
+          : NOP_OP", 
+        {
+        'OP2000': AreaExpansion.select('OP00'),
+        'OP2005': AreaExpansion.select('OP05'),
+        'OP_OP': AreaExpansion.select('blank').add(OP_OP),
+        'OP_NOP': AreaExpansion.select('blank').add(OP_NOP),
+        'NOP_NOP': AreaExpansion.select('blank').add(NOP_NOP),
+        'NOP_OP': AreaExpansion.select('blank').add(NOP_OP),
+        }
+    ).rename(['OP_00_05']);
+
+var OP_05_10 = AreaExpansion.expression(
+  "(OP2005==1 && OP2010==1) ? OP_OP\
+      : (OP2005==1 && OP2010==0) ? OP_NOP \
+        :(OP2005==0 && OP2010==0) ? NOP_NOP \
+          : NOP_OP", 
+        {
+        'OP2005': AreaExpansion.select('OP05'),
+        'OP2010': AreaExpansion.select('OP10'),
+        'OP_OP': AreaExpansion.select('blank').add(OP_OP),
+        'OP_NOP': AreaExpansion.select('blank').add(OP_NOP),
+        'NOP_NOP': AreaExpansion.select('blank').add(NOP_NOP),
+        'NOP_OP': AreaExpansion.select('blank').add(NOP_OP),
+        }
+    ).rename(['OP_05_10']);
+
+Map.addLayer(OP_90_00.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_90_00');
+Map.addLayer(OP_00_05.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_00_05');
+Map.addLayer(OP_05_10.clip(totalarea), {min: 0, max: 4, palette: [whi, gr, lr, red, red]}, 'OP_05_10');
+
+
+// ############
+// # Step 3: Preliminary data processing 
+// # 1) Create 2000 Basemap  
+// # 2) Fix inconsistencies for "NOP>OP, but no lossevents in between"
+// # 3) Append the categorical maps, basemaps, and new lossyear layers 
+// #    (00-05, 05-10) to AreaExpansion_intermediate band
+// ############
+
+// code NF, F, OPR, OP into numbers 
+var NF_color = 1;
+var F_color = 2;
+var OPReplant_color = 3; 
+var OP_color = 4; 
+var OTH_color = 5;
+
+
+// Create year_2000 classified layer of OP, F, NF  
+var year_2000 = AreaExpansion.expression(
+'(OP00 ==1)? OP\
+  :((OP00==0) && treecover2000>=30)? F\
+    :((OP00==0)&& treecover2000<30)? NF\
+      :OTH',
+    {  
+      'OP': AreaExpansion.select('blank').add(OP_color),
+      'F': AreaExpansion.select('blank').add(F_color),
+      'NF': AreaExpansion.select('blank').add(NF_color),
+      'OTH': AreaExpansion.select('blank').add(OTH_color),
+      'OP00': AreaExpansion.select('OP00'),
+      'treecover2000': AreaExpansion.select('treecover2000')
+    }
+).rename(['year_2000']);
+Map.addLayer(year_2000, {min: 0, max: 5,
+    palette:[lb,db , gr, yellow, red, black ]},'year_2000');
+
+
+// sum pixel 
+var pixel2000 = pixelcount(year_2000, Peninsula_outline);
+print(pixel2000);
+
+// sum area takes a very long time 
+var area2000 = area(year_2000.multiply(0).add(1), Peninsula_outline);
+var area2000_NF = area(year_2000.eq(1), Peninsula_outline);
+var area2000_F = area(year_2000.eq(2), Peninsula_outline);
+var area2000_OP = area(year_2000.eq(4), Peninsula_outline);
+
+var area2000_OTH = area(year_2000.eq(5), Peninsula_outline);
+var area2000_OTH2 = area(year_2000.eq(3), Peninsula_outline);
+
+
+print('area2000 Total', area2000);
+print('area2000_NF', area2000_NF);
+print('area2000_F', area2000_F);
+print('area2000_OP', area2000_OP);
+print('area2000_OTH', area2000_OTH);
+print('area2000_OTH2', area2000_OTH2);
+print(year_2000);

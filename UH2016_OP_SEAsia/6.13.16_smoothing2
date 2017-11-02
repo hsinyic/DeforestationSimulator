@@ -1,0 +1,97 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
+    Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
+    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft"),
+    ma90 = ee.FeatureCollection("ft:1ClQZOLYbgQUpFlaj-IEM0H-HCYH2qgWB0IMgw67s"),
+    ma10 = ee.FeatureCollection("ft:1qnUbN9G35ty03brJzVL_bvwur5r0CrAORkHwZSak"),
+    ma05 = ee.FeatureCollection("ft:1_TjOWmEO3IJviMvrPnpmSf6-X3tbBCNg0rW8MZOb"),
+    ma00 = ee.FeatureCollection("ft:1dZpd04fr-TNZV_5BlsT6GgmDHXTLqoDwH4jg59vX"),
+    in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
+    in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
+    in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    geometry = /* color: d63000 */ee.Geometry.Polygon(
+        [[[102.15225219726562, 4.136873372175124],
+          [102.14744567871094, 3.6244418715038584],
+          [103.2000732421875, 3.6593900720416443],
+          [103.08952331542969, 4.127970187726043]]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Map.setCenter(102.59239196777344,3.94029555672408, 14);
+// Map.setCenter(102.59239196777344,3.94029555672408, 10);
+Map.setCenter(102.59239196777344,3.94029555672408, 14);
+
+
+
+// NOT IMPORTANT add name string for colors, so I don't have to input the colors   
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ('#ff8f7d').toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
+
+var totalarea = Peninsula_outline;
+var lossYear = gfcImage.select(['lossyear']).clip(totalarea);
+lossYear = lossYear.where(lossYear.eq(0), 99).clip(totalarea);
+Map.addLayer(lossYear.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+var blank = lossYear.multiply(0);
+
+var lossYear1 =lossYear.min(lossYear.focal_mode(1, 'circle'));
+lossYear1 = lossYear1.toInt();
+Map.addLayer(lossYear1.updateMask(lossYear.neq(99)), {min: 1, max: 14,
+    palette:[ red, yellow, gr ,db]}, 'lossYear1');
+
+
+// Run a focal_mode convolution on the image. 
+var image3 = lossYear.focal_median();
+
+// Further smooth the image via focal_max and focal_min. 
+var image4 = image3.focal_max(3).focal_min(5).focal_max(3);
+
+// Map.addLayer(image4.updateMask(image4.neq(99)), {min: 1, max: 14,
+//     palette:[ red, yellow, gr ,db]}, 'Trial1 Mode');
+    
+    
+    
+var image5 = lossYear1.focal_mode();
+// Further smooth the image via focal_max and focal_min. 
+// var image7 = image5.focal_max(5).focal_min(9).focal_max(5);
+var image8 = image5.focal_max(1).focal_min(7).focal_max(1);
+
+image5 = image5.focal_mode();
+var image6 = image5.focal_max(3).focal_min(6).focal_max(3);
+
+
+// Map.addLayer(image6.updateMask(image6.neq(99)), {min: 1, max: 14,
+//     palette:[ red, yellow, gr ,db]}, 'Trial2 image6');
+// Map.addLayer(image7.updateMask(image7.neq(99)), {min: 1, max: 14,
+//     palette:[ red, yellow, gr ,db]}, 'Trial3 Median focal max 5');
+// Map.addLayer(image8.updateMask(image8.neq(99)), {min: 1, max: 14,
+//     palette:[ red, yellow, gr ,db]}, 'Trial3 image8');
+
+var lossYearconnectedPixelCount = blank.where(lossYear.eq(3), 1);
+var lossYearconnectedPixelCount1 = lossYear.eq(1).connectedPixelCount(500);
+print(lossYearconnectedPixelCount);
+var lossYear4 = blank.where(lossYear.connectedPixelCount(500).gte(500),lossYear );
+Map.addLayer(lossYearconnectedPixelCount, {min: 1, max: 600, palette:[ red, yellow, gr ,db ]},"lossYear_connectedpixel");
+
+
+Map.addLayer(lossYearconnectedPixelCount1, {min: 1, max: 600, palette:[ red, yellow, gr ,db ]},"lossYear_connectedpixel");
+// Map.addLayer(lossYear4, {min: 1, max: 14, palette:[ red, yellow, gr ,db ]},"lossYear_connectedpixel");
+
+
+
+
+
+// Map.addLayer(image3, vis_params, 'Mode');
+// Map.addLayer(image4, vis_params, 'Smooth');
+
+
+

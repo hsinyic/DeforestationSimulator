@@ -1,0 +1,48 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.setCenter(102.10693359375, 3.973860975839102, 5);
+
+
+// ############
+// # Step 1: Load data 
+// # 1) from Hansen 
+// # 2) draw boundaries around malaysia, indo, PNG
+// # 3) Gunarso vector maps, converted to raster
+// ############
+var lossYear = gfcImage.select(['lossyear']);
+
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
+var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
+var totalarea = malaysia.merge(indonesia).merge(PNG);
+
+
+
+// ###################
+// Compute summary statistics 
+// ###################
+
+// var json = ee.Element(malaysia).geometry().getInfo();
+// // doesn't work because there is no 'area' method:
+// print(json.area());
+// // does work since ee.Geometry() returns objects with all the methods:
+// print(ee.Geometry(json).area());
+
+var json = Peninsula_outline.geometry().getInfo();
+// doesn't work because there is no 'area' method:
+// print(json.area());
+// does work since ee.Geometry() returns objects with all the methods:
+// print(ee.Geometry(json).area());
+
+print(totalarea);
+Export.image.toDrive({
+image: lossYear,
+description: 'lossYear',
+scale: 30,
+region: ee.Geometry(totalarea.geometry().getInfo()).toGeoJSONString(),
+maxPixels: 9e12
+});
+

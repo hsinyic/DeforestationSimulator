@@ -1,0 +1,16 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfc = ee.Image("UMD/hansen/global_forest_change_2015");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var algo = function(number1, image){
+  number1 = ee.Number(number1);
+  var add = ee.Number(external_list.get(number1));
+  image = ee.Image(image);
+  return ee.Image(image.add(add));
+};
+
+// var initial_state = gfc.select(['lossyear']);
+var initial_state = ee.Image([0]);
+var external_list = ee.List([1,3,5,7]);
+
+var result = ee.List([0,1,2,3]).iterate(algo, initial_state);
+print(result);

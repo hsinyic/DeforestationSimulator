@@ -1,0 +1,155 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
+    Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
+    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft"),
+    Pen05_v2 = ee.FeatureCollection("ft:1WFl3go93KXh8Lk8ltOzMK2YBjIlaMeHPst1hod_b");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var lossYear = gfcImage.select(['lossyear']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+var forest = gfcImage.select(['treecover2000']);
+
+
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+
+//mask out the area where there isn't a "loss year" mark
+Map.addLayer(lossYear.clip(malaysia).updateMask(gfcImage.select(['lossyear'])),
+             {'min': 0, 'max': 12, 'palette': ['0000FF', '00FF00', '00FFFF', 'FF0000']},
+             'Forest Lost Year');
+
+// Convert Gunarso Peninsula ONLY vector map to a raster 
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+
+// Map.addLayer(OP10_raster, {min: 0, max: 1, palette: ['FF0000']}, 'Raster OP 2010');
+// Map.addLayer(OP05_raster, {min: 0, max: 1, palette: ['00FFFF']}, 'Raster OP 2005');
+// Map.addLayer(OP00_raster, {min: 0, max: 1, palette: ['00FF00']}, 'Raster OP 2000');
+// Map.addLayer(OP90_raster, {min: 0, max: 1, palette: ['0000FF']}, 'Raster OP 1990');
+
+
+
+
+//initiate a blank layer for use 
+var blank = lossYear.multiply(0);
+
+
+var OP90 = blank.where(OP90_raster.eq(1), 1);
+var OP00 = blank.where(OP00_raster.eq(1), 1);
+var OP05 = blank.where(OP05_raster.eq(1), 1);
+var OP10 = blank.where(OP10_raster.eq(1), 1);
+
+
+
+
+//initiate Gunarso image collection 
+var Gunarso = ee.Image([OP90]);
+Gunarso= Gunarso.addBands(OP00).addBands(OP05).
+addBands(OP10).rename(['OP90','OP00','OP05','OP10']);
+
+//Add Hansen yearly loss 
+for (var i = 2000; i < 2012; ++i){
+  var LossInYear = lossYear.gte(i-2000).and(lossYear.lte(i+1-2000));
+  var Hansenloss = blank.where(LossInYear.eq(1), 1);
+  // var Hansenloss = LossInYear.eq(1);
+  Gunarso = Gunarso.addBands(Hansenloss);
+}
+
+//Initiate monochromatic color layers for use later 
+var OP_color = lossYear.multiply(0).add(1).rename(['Color_OP']); 
+var NonOP_color = lossYear.multiply(0).add(10).rename(['Color_NonOP']); 
+var F_color = lossYear.multiply(0).add(20).rename(['Color_F']); 
+var NonOP2_color = lossYear.multiply(0).add(30).rename(['Color_NonOP2']); 
+Gunarso = Gunarso.addBands([OP_color, NonOP_color, F_color, NonOP2_color]);
+
+//Check that Gunarso has 1. All Gunarso OP layers 
+//2. Hansen yearly data 3. Monocrhomatic color layers
+print('Gunarso image collection: ', Gunarso);
+
+
+
+//Initial classification:
+//assign all areas that has been oil palm throughout 2000 and 2005 as OP
+//assign all other areas as OTH
+
+/*var cond1 = composite.expression('b("10") > b("20") && b("20") > b("30")'); 
+var cond2 = composite.expression('b("62") > b("70") && b("50") > b("40")'); 
+var cond =  cond1.or(cond2); 
+var output = ee.Image(4).where(cond, 3); 
+
+
+    // "(b('NDVI') <= 0.03) ? 1 \
+    //   : (b('NDVI') <= 0.06) ? 2 \
+    //     : 3"
+*/
+
+
+
+var OP_90_00 = Gunarso.expression(
+  "(OP1990==1 && OP2000==1) ? OP \
+    : (OP1990==1 && OP2000==0) ? OTH2 \
+      :(OP1990==0 && OP2000==0) ? F \
+        : OTH", 
+        {
+        'OP1990': Gunarso.select('OP90'),
+        'OP2000': Gunarso.select('OP00'),
+        'OP': Gunarso.select('Color_OP'),
+        'F': Gunarso.select('Color_F'),
+        'OTH': Gunarso.select('Color_NonOP'),
+        'OTH2': Gunarso.select('Color_NonOP2'),
+        }
+    );
+var OP_00_05 = Gunarso.expression(
+    "(OP2000==1 && OP2005==1) ? OP \
+      : (OP2000==1 && OP2005==0) ? OTH2 \
+        :(OP2000==0 && OP2005==0) ? F \
+          : OTH", 
+        {
+        'OP2000': Gunarso.select('OP00'),
+        'OP2005': Gunarso.select('OP05'),
+        'OP': Gunarso.select('Color_OP'),
+        'F': Gunarso.select('Color_F'),
+        'OTH': Gunarso.select('Color_NonOP'),
+        'OTH2': Gunarso.select('Color_NonOP2'),
+
+        }
+    );
+var OP_05_10 = Gunarso.expression(
+      "(OP2005==1 && OP2010==1) ? OP \
+      : (OP2005==1 && OP2010==0) ? OTH2 \
+        :(OP2005==0 && OP2010==0) ? F \
+          : OTH", 
+        {
+        'OP2005': Gunarso.select('OP05'),
+        'OP2010': Gunarso.select('OP10'),
+        'OP': Gunarso.select('Color_OP'),
+        'F': Gunarso.select('Color_F'),
+        'OTH': Gunarso.select('Color_NonOP'),
+        'OTH2': Gunarso.select('Color_NonOP2'),
+        }
+    );
+
+
+
+print('op 1990- 2000',OP_90_00);
+print('op 2000- 2005',OP_00_05);
+print('op 2005- 2010',OP_05_10);
+
+
+Map.addLayer(OP_90_00.clip(malaysia).updateMask(OP_90_00), 
+{min: 0, max: 30, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 
+'OP_90_00');
+
+Map.addLayer(OP_00_05.clip(malaysia).updateMask(OP_00_05), 
+{min: 0, max: 30, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 
+'OP_00_05');
+
+Map.addLayer(OP_05_10.clip(malaysia).updateMask(OP_05_10), 
+{min: 0, max: 30, palette: ['0000FF', '#00ffff', '#ff510f', '#ffec0d']}, 
+'OP_05_10');
+
+

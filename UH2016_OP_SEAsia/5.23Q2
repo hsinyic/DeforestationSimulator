@@ -1,0 +1,45 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var AFTER = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/AFTER"),
+    BEFORE = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/BEFORE"),
+    geometry = /* color: 0B4A8B */ee.Geometry.LinearRing(
+        [[101.3983154296875, 1.016182073033441],
+         [101.3983154296875, -0.21972602392079613],
+         [102.821044921875, -0.2252191465717146],
+         [102.81005859375, 1.0106897682409128],
+         [101.3983154296875, 1.016182073033441]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var db= String('0000FF');
+var lb= String('#11ffff');
+var red=String('ff510f');
+var yellow=String('#fff832');
+var gr= String('#4cff62');
+var whi=String('#ffffff');
+
+//##########
+//# Data Preprocessing (ignore this part) 
+//##########
+BEFORE = BEFORE.where(AFTER.eq(3),4);
+Map.addLayer(BEFORE, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"BEFORE");
+
+//##########
+//# Minimum cost mapping: 
+//##########
+
+// Mask the sources image with itself.
+var sources =BEFORE.eq(4);
+sources = sources.updateMask(sources);
+Map.addLayer(sources, {min: 1, max: 4, palette:[ db, gr, yellow, red ]},"sources");
+// Unifrom cost of 1 in every pixel
+var cost = BEFORE.multiply(0).add(1); 
+Map.addLayer(cost, {min: 0, max: 4, palette:[ yellow,red, gr, whi, db ]},"cost");
+// Compute the cumulative cost to traverse the land cover.
+var cumulativeCost = cost.cumulativeCost({
+  source: sources,
+  maxDistance: 50 * 1000 // 5 kilometers
+});
+Map.addLayer(cumulativeCost, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'acumulativeCost');
+
+//Mask out BEFORE area AND Non-expanding area 
+var costmap = cumulativeCost.where(BEFORE.eq(4), 0).where(AFTER.neq(4),0);
+costmap = costmap.updateMask(costmap);
+Map.addLayer(costmap, {min: 0, max: 5e4, palette:[ whi, yellow, gr, lb, db ] }, 'costmap');

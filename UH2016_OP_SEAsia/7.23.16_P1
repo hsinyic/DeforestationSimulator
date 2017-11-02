@@ -1,0 +1,113 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var landsatF7 = ee.ImageCollection("LANDSAT/LE7_L1T_TOA_FMASK"),
+    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
+    Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
+    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft"),
+    ma90 = ee.FeatureCollection("ft:1ClQZOLYbgQUpFlaj-IEM0H-HCYH2qgWB0IMgw67s"),
+    ma10 = ee.FeatureCollection("ft:1qnUbN9G35ty03brJzVL_bvwur5r0CrAORkHwZSak"),
+    ma05 = ee.FeatureCollection("ft:1_TjOWmEO3IJviMvrPnpmSf6-X3tbBCNg0rW8MZOb"),
+    ma00 = ee.FeatureCollection("ft:1dZpd04fr-TNZV_5BlsT6GgmDHXTLqoDwH4jg59vX"),
+    in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
+    in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
+    in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// NOT IMPORTANT add name string for colors, so I don't have to input the colors   
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ('#ff8f7d').toString();
+var dg= ('#196e0a').toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
+var pink = ('#ff50f1').toString();
+var scale = ee.Number(1000); 
+
+
+var lossYear = gfcImage.select(['lossyear']);
+lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'lossYear original');
+
+
+var showLandsat = function(t, folder){
+  var year = t.toString();
+  t= ee.Number(t);
+  var index= ee.Number(t).subtract(2000);
+  var img = ee.Image(folder.get(index));
+  Map.addLayer( img, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, year);
+  Map.addLayer(ee.Image([0]).where(lossYear.eq(t),t).updateMask(lossYear.eq(t)), {min: 2000, max: 2014,palette:[ red, pink, lb ,db]}, 'Hansen');
+  return ee.Number(2);
+};
+
+
+// This LEDAPS SR works - https://explorer.earthengine.google.com/#detail/LEDAPS%2FLE7_L1T_SR
+var landsat7 = landsatF7
+  .filterDate('2004-01-01', '2005-01-01');
+  
+print('landsat7 LE7_L1T_TOA Band names: ', landsat7); // List of landsat7 band names
+
+function cloudmask(image) {
+  return image.updateMask(image.select('fmask').eq(0)); // Mask out SHADOW, SNOW, and CLOUD classes.
+}
+
+var collection_masked = ee.ImageCollection(landsat7.map(cloudmask));
+// var mean_col_year = collection_masked.reduce(ee.Reducer.percentile([20]));
+var mean_col_year = collection_masked.reduce(ee.Reducer.median());
+
+Map.addLayer( mean_col_year, {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2004-2005');
+
+
+
+
+function display(time){
+  time= ee.Number(time);
+  var dat = ee.Date('2001-01-01').advance(time, 'year');
+  var date_change = ee.Date(dat); // CHANGE THIS: date of fire
+  var preDate = date_change.advance(-6, 'month'); //date range of pre fire
+  var postDate = date_change.advance(6, 'month'); //date range of pre fire
+  var landsat7 = landsatF7.filterDate(preDate, postDate);
+  var collection_masked = ee.ImageCollection(landsat7.map(cloudmask));
+  var mean_col_year = collection_masked.reduce(ee.Reducer.median());
+  return ee.Image(mean_col_year);
+}
+
+
+
+
+var dates = ee.List.sequence(0,14,1);
+var final = dates.map(display);
+showLandsat(2001,final);showLandsat(2002,final);showLandsat(2003,final);
+showLandsat(2004,final);showLandsat(2005,final);
+showLandsat(2006,final);showLandsat(2007,final);
+showLandsat(2008,final);showLandsat(2009,final);showLandsat(2010,final);showLandsat(2011,final);
+showLandsat(2012,final);showLandsat(2013,final);showLandsat(2014,final);
+
+
+
+print(final);
+// Map.addLayer( display(0), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2001');
+// Map.addLayer( display(1), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2002');
+// Map.addLayer( display(2), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2003');
+// Map.addLayer( display(3), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2004');
+// Map.addLayer( display(4), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2005');
+// Map.addLayer( display(5), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2006');
+// Map.addLayer( display(6), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2007');
+// Map.addLayer( display(7), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2008');
+// Map.addLayer( display(8), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2009');
+// Map.addLayer( display(9), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2010');
+// Map.addLayer( display(10), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2011');
+// Map.addLayer( display(11), {bands: ['B5_median', 'B4_median', 'B1_median'], max: 0.4, min:0}, 'LE7_L1T_TOA_FMASK 2012');
+
+
+
+
+
+
+
+Map.setCenter(101.14837,3.88891, 12); // Malaysia, Penn

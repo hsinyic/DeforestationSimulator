@@ -1,0 +1,460 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Pen10 = ee.FeatureCollection("ft:1cwFEmRV89tF2QxGZCQWH3o_Fn7PSfPVLpp1Djp05"),
+    Pen90 = ee.FeatureCollection("ft:17sNwA_Hb3XB2XO5wDVOjUpRQ8RkoAQsL4m6XQHNL"),
+    Pen00 = ee.FeatureCollection("ft:1NJ3I0Rt6gvHK1C90DMZV30KQfhQyBjJkJ6R_tW0O"),
+    Pen05 = ee.FeatureCollection("ft:1PCQ6vmmijAn_MjfovMmxvBOr1UtcsZEemujetqft"),
+    ma90 = ee.FeatureCollection("ft:1ClQZOLYbgQUpFlaj-IEM0H-HCYH2qgWB0IMgw67s"),
+    ma10 = ee.FeatureCollection("ft:1qnUbN9G35ty03brJzVL_bvwur5r0CrAORkHwZSak"),
+    ma05 = ee.FeatureCollection("ft:1_TjOWmEO3IJviMvrPnpmSf6-X3tbBCNg0rW8MZOb"),
+    ma00 = ee.FeatureCollection("ft:1dZpd04fr-TNZV_5BlsT6GgmDHXTLqoDwH4jg59vX"),
+    in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
+    in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
+    in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.setCenter(101.08245301691568, 0.7909959458718788, 8);// Riau 
+// Map.setCenter(101.436767578125, 0.5232166048991478, 9); //PekanBaru, Indo 
+// Map.setCenter(101.964111328125, -1.5324100450044358, 8); //Bungo 
+// Map.setCenter( 102.8704833984375, -1.7245930431979002, 8);
+// Map.setCenter(102.10693359375, 3.973860975839102, 9);
+// Map.setCenter(102.59239196777344,3.94029555672408, 9); // Malaysia Penninsula
+// Map.setCenter(101.14837646484375,3.888917295949231, 12); // Malaysia, Penn
+// Map.setCenter(104.9853515625, -5.0909441750333855, 9) ;// Lampung
+// Map.setCenter(114.43359375,-1.054627942275887, 6);// Kalimantan 
+var printage = function(t, folder){
+  var year = t.toString();
+  t= ee.Number(t).subtract(2000);
+  var img = ee.Image(folder.get(t));
+  Map.addLayer(img, {min: 0, max: 25,
+    palette:[ yellow, gr, dg]}, year);
+
+  return(3);
+};
+var printclass = function(t, folder){
+  var year = t.toString();
+  t= ee.Number(t).subtract(2000);
+  var img = ee.Image(folder.get(t));
+  var taskname = ee.String(year).cat(ee.String('Kalimantan'));
+  export_image = export_image.addBands(img);
+  // Map.addLayer(img, {min: 0, max: 6,
+  //   palette:[ lb, db, gr,  yellow, red, whi, db]}, year);
+  // Export.image.toDrive({
+  //   image: img,
+  //   description: taskname.getInfo(),
+  //   scale: 100,
+  //   region: totalarea_outline,
+  //   maxPixels: 1e13
+  // });
+
+  return(3);
+};
+// NOT IMPORTANT add name string for colors, so I don't have to input the colors   
+var db= ('0000FF').toString();
+var lb= ('#11ffff').toString();
+var red=('ff510f').toString();
+var lr = ('#ff8f7d').toString();
+var dg= ('#196e0a').toString();
+var yellow=('#fff832').toString();
+var gr= ('#4cff62').toString();
+var whi=('#f7f7f7').toString();
+var black = ('#101010').toString();
+var pink = ('#ff50f1').toString();
+var scale = ee.Number(1000); 
+
+var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
+var Bungo = Indonesia_1.filterMetadata('NAME_2', 'equals', 'Bungo');
+var Pekanbaru = Indonesia_1.filterMetadata('NAME_2', 'equals', 'Pekanbaru');
+
+var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+var Lampung = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Lampung');
+var Sumatera_Selatan = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Selatan'); 
+var Riau = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Riau');
+var Aceh = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Aceh');
+var Sumatera_Utara = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Utara');
+var Sumatera_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat');
+var Bengkulu = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Bengkulu');
+var Sumatra = Jambi
+.merge(Riau)
+.merge(Lampung)
+.merge(Sumatera_Selatan)
+.merge(Aceh)
+.merge(Sumatera_Utara)
+.merge(Sumatera_Barat)
+.merge(Bengkulu);
+Map.addLayer(Sumatra);
+
+var Kalimantan_Timur = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Timur');
+var Kalimantan_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Barat');
+var Kalimantan_Tengah = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Tengah');
+var Kalimantan_Selatan = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Kalimantan Selatan');
+var Kalimantan = Kalimantan_Timur.merge(Kalimantan_Barat).merge(Kalimantan_Tengah).merge(Kalimantan_Selatan);
+
+
+var Papua_1 =Indonesia_1.filterMetadata('NAME_1', 'equals', 'Papua');
+var Papua_2 =Indonesia_1.filterMetadata('NAME_1', 'equals', 'Irian Jaya Barat');
+var Papua = Papua_1.merge(Papua_2);
+
+
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
+var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
+
+
+var totalarea = Sumatra;
+var totalarea_outline = totalarea.geometry().bounds();
+Map.addLayer(totalarea_outline);
+
+
+var lossYear = gfcImage.select(['lossyear']);
+lossYear = lossYear.where(lossYear.eq(0), 99).add(2000).clip(totalarea_outline);
+var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
+var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
+//   Data Processing 
+
+// var location = ee.List([Pen90,Pen00,Pen05,Pen10]); 
+// var VtR = function(packet){
+//   packet = ee.FeatureCollection(packet);
+//   return ee.Image(packet.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()}));
+// }
+
+var OP90_raster = Pen90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP00_raster = Pen00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP05_raster = Pen05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP10_raster = Pen10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var OP90_raster = ee.Image([0]).where(OP90_raster.eq(1), 1);
+var OP00_raster = ee.Image([0]).where(OP00_raster.eq(1), 1).where(OP90_raster.eq(1), 1);
+var OP05_raster = ee.Image([0]).where(OP05_raster.eq(1), 1).where(OP00_raster.eq(1), 1);
+var OP10_raster = ee.Image([0]).where(OP10_raster.eq(1), 1).where(OP05_raster.eq(1), 1);
+// Convert Gunarso vector maps to a raster, Sabah and Sarawak
+var ma90_raster = ma90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma00_raster = ma00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma05_raster = ma05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma10_raster = ma10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var ma90_raster = ee.Image([0]).where(ma90_raster.eq(1), 1);
+var ma00_raster = ee.Image([0]).where(ma00_raster.eq(1), 1).where(ma90_raster.eq(1), 1);
+var ma05_raster = ee.Image([0]).where(ma05_raster.eq(1), 1).where(ma00_raster.eq(1), 1);
+var ma10_raster = ee.Image([0]).where(ma10_raster.eq(1), 1).where(ma05_raster.eq(1), 1);
+// Convert Gunarso vector maps to a raster, Indonesia and PNG
+var in90_raster = in90.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in00_raster = in00.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in05_raster = in05.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in10_raster = in10.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+var in90_raster = ee.Image([0]).where(in90_raster.eq(1), 1);
+var in00_raster = ee.Image([0]).where(in00_raster.eq(1), 1).where(in90_raster.eq(1), 1);
+var in05_raster = ee.Image([0]).where(in05_raster.eq(1), 1).where(in00_raster.eq(1), 1);
+var in10_raster = ee.Image([0]).where(in10_raster.eq(1), 1).where(in05_raster.eq(1), 1);
+var OP90 = ee.Image([0]).where(OP90_raster.eq(1), 1).where(ma90_raster.eq(1), 1).where(in90_raster.eq(1), 1).rename(['OP90']);
+var OP00 = ee.Image([0]).where(OP00_raster.eq(1), 1).where(ma00_raster.eq(1), 1).where(in00_raster.eq(1), 1).rename(['OP00']);
+var OP05 = ee.Image([0]).where(OP05_raster.eq(1), 1).where(ma05_raster.eq(1), 1).where(in05_raster.eq(1), 1).rename(['OP05']);
+var OP10 = ee.Image([0]).where(OP10_raster.eq(1), 1).where(ma10_raster.eq(1), 1).where(in10_raster.eq(1), 1).rename(['OP10']);
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[whi, black ]}, "OP10");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[whi, db ]}, "OP05");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[whi, gr ]}, "OP00");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[lb, yellow ]}, "OP90");
+
+
+// ########
+// # Load Hansen data. Filter for lossYear 
+// ########
+var binary = ee.Image([0]).where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
+// Map.addLayer(binary, {min: 0, max: 2,
+//     palette:[ whi,gr , db]}, 'binary');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(lossYear.lte(2010)), {min: 2000, max: 2010,
+    palette:[ red, yellow, gr ,db]}, 'lossYear original');
+
+
+//Expansion
+var lossYear_expand = lossYear.neq(2099); // make it binary 
+lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
+lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
+
+//Replant 
+
+// Tester -- round up number 
+// print(ee.Number(17).divide(2).ceil().multiply(2));
+
+// Smooth by a bin of 2 years 
+var lossYear_replant = ee.Image([2099]).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
+// Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)), {min: 2000, max: 2014,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear_replant round up bin 2');
+// Fill in  
+lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square'));
+// Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear_replant square focal');
+// Remove Speckles 
+lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
+// Map.addLayer(lossYear_replant.updateMask(lossYear_replant.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+//     palette:[ red, yellow, gr ,db]}, 'lossYear_replant remove pixels');
+
+
+//Final assembling 
+var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
+Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+    palette:[ red, yellow, gr ,db]}, 'lossYear final');
+lossYear = lossYear_final; 
+/*
+
+// ########
+// # 1990 to 2000 annual maps 
+// ########
+var Designated = blank.where(OP90.eq(0).and(OP00.eq(1)), 1).clip(totalarea); 
+var Target = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
+var source = OP90; source = source.updateMask(source); 
+var cost = ee.Image([0]).add(1);
+cost = cost.clip(totalarea_outline);
+var cumulativeCost = cost.cumulativeCost({ source: source,maxDistance: 300 * 1000 });
+var costmap = blank.where(Designated.eq(1), cumulativeCost);
+costmap = costmap.updateMask(costmap);
+// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 1990--2000");
+var mincostmapping = function(t){
+  t= ee.Number(t);
+  var N_target = ee.Number(Target.get(t));
+  var output = costmap.reduceRegion({
+    reducer: ee.Reducer.percentile([t.multiply(100)]),
+    geometry: totalarea,
+    scale: scale,
+    maxPixels: 12e9,
+  });
+  return ee.Number(output.get('blank'));
+};
+var threshold = Target.map(mincostmapping);
+
+// print(threshold);
+var execute = function(x, offset){
+  var year = x.toString();
+  var t=ee.Number(x).toInt();
+  x=ee.Number(x).subtract(offset).toInt();
+  var cuttoff = ee.Number(threshold.get(x));
+  var cuttoff_before = ee.Algorithms.If(x.gt(1), ee.Number(threshold.get(x.subtract(1).toInt())), ee.Number(0.0));
+  var Binary = blank.where(costmap.lte(ee.Number(cuttoff)).and(costmap.gt(ee.Number(cuttoff_before))), 1).clip(totalarea);
+  var lossYear_update = lossYear.where(Binary.eq(1), t);
+  var Binary_show = blank.where(Binary.eq(1), t);
+  // Map.addLayer(Binary_show.updateMask(Binary_show), {min: 1990, max: 2010, palette: [whi, yellow, red, lb, db, black]}, year);
+  return lossYear_update;
+};
+var offset = ee.Number(1990);
+var x=1991;
+lossYear = execute(x, offset); x=1992; lossYear = execute(x, offset); x=1993; lossYear = execute(x, offset); x=1994; lossYear = execute(x, offset); x=1995; lossYear = execute(x, offset); x=1996; lossYear = execute(x, offset); x=1997;
+lossYear = execute(x, offset); x=1998; lossYear = execute(x, offset); x=1999; lossYear = execute(x, offset); x=2000; lossYear = execute(x, offset);
+// ########
+// # 2000 to 2005 annual maps 
+// ########
+Designated = blank.where(
+  (OP00.eq(0).and(OP05.eq(1)))
+  .and(
+    (lossYear.lte(2000)).or(lossYear.gt(2005)).or(lossYear.eq(99))), 1)
+  .clip(totalarea); 
+Target = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
+source = OP00; source = source.updateMask(source);
+cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 100 * 1000 });
+costmap = blank.where(Designated.eq(1), cumulativeCost);
+costmap = costmap.updateMask(costmap);
+// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulative cost 2000-2005");
+threshold = Target.map(mincostmapping);
+// print(threshold);
+offset = ee.Number(2000);  
+x=2001; lossYear = execute(x, offset);
+x=2002; lossYear = execute(x, offset);
+x=2003; lossYear = execute(x, offset);
+x=2004; lossYear = execute(x, offset);
+x=2005; lossYear = execute(x, offset);
+// ########
+// # 2005 to 2010 annual maps 
+// ########
+Designated = blank.where(
+  (OP05.eq(0).and(OP10.eq(1)))
+  .and(
+    (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1)
+  .clip(totalarea); 
+Target = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
+source = OP05;
+source = source.updateMask(source);
+cumulativeCost = cost.cumulativeCost({source: source,maxDistance: 100 * 1000 });
+costmap = blank.where(Designated.eq(1), cumulativeCost);
+costmap = costmap.updateMask(costmap);
+// Map.addLayer(cumulativeCost, {min: 0, max: 1e4,
+//     palette:[db, lb, gr, yellow, red, whi  ]}, "cumulativeCost 2005--2010");
+threshold = Target.map(mincostmapping);
+// print(threshold);
+offset = ee.Number(2005);  
+x=2006; lossYear = execute(x, offset);
+x=2007; lossYear = execute(x, offset);
+x=2008; lossYear = execute(x, offset);
+x=2009; lossYear = execute(x, offset);
+x=2010; lossYear = execute(x, offset);
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2010, palette: [red, yellow, gr ,db ]}, 'updated Hansen');
+
+// ####################
+// # Step 2: Intermediate output for 1990-2000, 2000-2005, 2005-2010 
+// ####################
+var Gunarso = ee.Image([lossYear,OP90, OP00, OP05,OP10, treecover2000,blank]);
+//Define transition variables
+var NOP_NOP= 1;//NonOP to NonOP 
+var NOP_OP= 2;//NonOP to OP
+var OP_NOP= 3;//OP to NonOP
+var OP_OP= 4;//OP to OP
+
+// ############
+// # Step 3: Preliminary data processing 
+// # 1) Create 2000/2005 Basemap  
+// # 2) Mark inconsistencies for "NOP>OP, but no lossevents in between"
+// # 3) Append the categorical maps, basemaps, and new lossyear layers 
+// #    (00-05, 05-10) to Gunarso_intermediate band
+// ############
+
+// code NF, F, OPR, OP into numbers 
+var NF_color = 1;
+var F_color = 2;
+var OPReplant_color = 3; 
+var OP_color = 4; 
+var NOP_color = 5;
+var OTH_color = 6;
+// Create year_2000 and year_2005 classified layer of OP, F, NF  
+var year_2000 = Gunarso.expression(
+'(OP00 ==1)? OP\
+  :((OP00==0) && treecover2000>=30)? F\
+    :((OP00==0)&& treecover2000<30)? NF\
+      :OTH',
+    {  
+      'OP': Gunarso.select('blank').add(OP_color),
+      'F': Gunarso.select('blank').add(F_color),
+      'NF': Gunarso.select('blank').add(NF_color),
+      'OTH': Gunarso.select('blank').add(OTH_color),
+      'OP00': Gunarso.select('OP00'),
+      'treecover2000': Gunarso.select('treecover2000')
+    }
+).rename(['year_2000']);
+
+var year_2005 = Gunarso.expression(
+'(OP05 ==1)? OP\
+  :( OP00==1&& OP05==0)? OTH2\
+  :( OP00==0&& OP05==0 && treecover2000<30)? NF\
+    :( OP00==0 && OP05==0 && treecover2000>=30 && lossYear==2000)? F\
+    :( OP00==0 && OP05==0 && treecover2000>=30 && lossYear>2005)? F\
+    :( OP00==0 && OP05==0 && treecover2000>=30 && lossYear<=2005 )? NF\
+        :OTH',
+    {  
+      'OP': Gunarso.select('blank').add(OP_color),
+      'F': Gunarso.select('blank').add(F_color),
+      'NF': Gunarso.select('blank').add(NF_color),
+      'OTH': Gunarso.select('blank').add(OTH_color),
+      'OTH2': Gunarso.select('blank').add(6),
+      'lossYear': Gunarso.select('lossyear'),
+      'OP00': Gunarso.select('OP00'),
+      'OP05': Gunarso.select('OP05'),
+      'treecover2000': Gunarso.select('treecover2000')
+    }
+).rename(['year_2005']);
+// print('year_2005',year_2005);
+    // Map.addLayer(year_2005, {min: 0, max: 6,
+    // palette:[db, lb, gr, yellow, red, whi, black ]},'year_2005');
+
+
+// #########################a
+// #Step4 : Create annual maps (stored in Gunarso_final),  2000 <= t <= 2010
+// #########################
+var Gunarso_intermediate = ee.Image([lossYear]);
+Gunarso_intermediate= Gunarso_intermediate.addBands([ year_2000, year_2005, blank, OP00, OP05, OP10, OP90 ]);
+
+var yr = ee.List.sequence(2000, 2010, 1);
+var annual = function(t){
+  var timestamp = t.toString();
+  t= ee.Number(t);
+  var lossyear = lossYear; 
+  // var basemap_intermediate = ee.Algorithms.If(t.gte(2000), year_2000, year_1990);
+  // basemap_intermediate = ee.Image(basemap_intermediate);
+  // var basemap = ee.Algorithms.If(t.gte(2005), year_2005, basemap_intermediate);
+  // basemap = ee.Image(basemap);
+  // var aftermap_intermediate = ee.Algorithms.If(t.gte(2000), year_2000, year_1990);
+  // aftermap_intermediate = ee.Image(aftermap_intermediate);
+  // var aftermap = ee.Algorithms.If(t.gte(2005), year_2005, aftermap_intermediate);
+  // aftermap = ee.Image(aftermap);
+
+  var basemap = year_2000;
+  var executeOP_OP = Gunarso_intermediate.expression(
+  'lossYear==t && OP90 == 1 ? OPR\
+    :lossYear==t && OP90 == 0 ? OP\
+    :(lossYear>t || lossYear<t) ? OP\
+    : OTH',
+      {  
+        'OP': Gunarso_intermediate.select('blank').add(OP_color),
+        'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
+        'lossYear': lossyear,
+        'OP90': Gunarso_intermediate.select('OP90'),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        't': t,
+      }
+  );
+
+  var executeNOP_OP = Gunarso_intermediate.expression(
+    // 'lossYear>t && basemap==F_color? F\
+    //   : lossYear>t && basemap==NF_color?NF\
+    'lossYear>t ? basemap\
+        : lossYear<=t? OP\
+          :OTH',
+      {  
+        'F': Gunarso_intermediate.select('blank').add(F_color),
+        'OP': Gunarso_intermediate.select('blank').add(OP_color),
+        'NF': Gunarso_intermediate.select('blank').add(NF_color),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        'lossYear': lossyear,
+        'basemap': basemap,
+        't': t,
+        'NF_color': NF_color,
+        'F_color': F_color
+      }
+  );
+  var executeNOP_NOP = Gunarso_intermediate.expression(
+  ' basemap==F_color && (lossYear>t || lossYear==2099)? F\
+    :basemap==F_color && (lossYear<=t && lossYear<2099)? NF\
+          :basemap==NF_color ? NF\
+            :OTH',
+      {  
+        'F': Gunarso_intermediate.select('blank').add(F_color),
+        'NF': Gunarso_intermediate.select('blank').add(NF_color),
+        'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+        'lossYear': lossyear,
+        'basemap': basemap,
+        't': t,
+        'NF_color': NF_color,
+        'F_color': F_color
+      }
+  );
+  
+  
+
+  var yearmap = blank
+  .where(OP00.eq(1).and(OP10.eq(1)),executeOP_OP)
+  .where(OP00.eq(0).and(OP10.eq(1)),executeNOP_OP)
+  .where(OP00.eq(0).and(OP10.eq(0)),executeNOP_NOP);
+
+
+  // Map.addLayer(ee.Image(yearmap), {min: 0, max: 6,
+  //   palette:[ db, lb, gr,  yellow, red, whi, db]}, timestamp);
+
+  return ee.Image(yearmap).clip(totalarea);
+};
+
+// var test = annual(2000); test = annual(2003); test = annual(2005); test = annual(2007);
+
+var Gunarso = yr.map(annual);
+var export_image = ee.Image([0]);
+var t=2010; var p0= printclass(t, Gunarso);
+t=2009; p0= printclass(t, Gunarso);
+t=2008; p0= printclass(t, Gunarso);
+t=2007; p0= printclass(t, Gunarso);
+t=2006; p0= printclass(t, Gunarso);
+t=2005; p0= printclass(t, Gunarso);
+t=2004; p0= printclass(t, Gunarso);
+t=2003; p0= printclass(t, Gunarso);
+t=2002; p0= printclass(t, Gunarso);
+t=2001; p0= printclass(t, Gunarso);
+t=2000; p0= printclass(t, Gunarso);
+
+
+*/

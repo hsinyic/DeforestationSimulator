@@ -1,0 +1,101 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
+    Peninsula_outline = ee.FeatureCollection("ft:1qXLCkXAj4shgixeHmj-yDVAYrVhtkF2iJ94OBp3N"),
+    geometry = /* color: d63000 */ee.Geometry.Point([102.10693359375, 3.973860975839102]),
+    Pen10 = ee.FeatureCollection("ft:1xabXcdjDWY8PCYLjAO6zH07XTczWVKqGcNVVQI3Y"),
+    Pen05 = ee.FeatureCollection("ft:1YZK7dCxaKKF5WneTc3hcNyB1ss6nVRkl818pf7zI"),
+    Pen90 = ee.FeatureCollection("ft:1zaZ7Z6NB0aGX5IfFTvWrVe3BJA5YrbCBfP85Y5de"),
+    Pen00 = ee.FeatureCollection("ft:13VBea1Xy9bPFVVOGRGFT5gDA-Q8lE803AbNQyU5m");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.setCenter(102.10693359375, 3.973860975839102, 10);
+var scale = ee.Number(500); 
+// ee.Number significantly slows down the calculation, what to do? 
+var scale_square = ee.Number(scale.multiply(scale)); 
+
+// ############
+// # Define Statistical Functions
+// ############
+var pixelcount = function(image, shape){
+  var Stat = image.addBands(image);
+  var r = Stat.reduceRegion({
+    reducer: ee.Reducer.count().group(1),
+    scale: scale,
+    geometry: shape
+  });
+  return r; 
+};
+var getcount = function(dict, group){
+  var list = ee.List(ee.Dictionary(dict).get('groups'));
+  return ee.Dictionary(list.get(group)).get('count');
+};
+var percentile_threshold = function(costmap, p){
+  var output = costmap.clip(targetarea).reduceRegion({
+    reducer: ee.Reducer.percentile([p]),
+    geometry: targetarea,
+    scale: 500
+  });
+  // print(output);
+  return ee.Number(output.get('cumulative_cost'));
+  // return output;
+  }; 
+
+
+// ############
+// # Step 1: Load data 
+// # 1) from Hansen 
+// # 2) draw boundaries around malaysia, indo, PNG
+// # 3) Gunarso vector maps, converted to raster
+// ############
+
+var malaysia = countries.filterMetadata('Country', 'equals', 'Malaysia');
+var indonesia = countries.filterMetadata('Country', 'equals', 'Indonesia');
+var PNG = countries.filterMetadata('Country', 'equals', 'Papua New Guinea');
+// var totalarea = malaysia.merge(indonesia).merge(PNG);
+var totalarea = Peninsula_outline; 
+var lossYear = gfcImage.select(['lossyear']);
+var treecover2000 = gfcImage.select(['treecover2000']);
+var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea);
+
+// //add color scheme 
+var db= String('0000FF');
+var lb= String('#11ffff');
+var red=String('ff510f');
+var lr = String("#ff8f7d");
+var yellow=String('#fff832');
+var gr= String('#4cff62');
+var whi=String('#181716');
+var black = String('#101010');
+
+// Convert Gunarso vector maps to a raster, Peninsula, data preprocessing 
+var OP90_raster = Pen90.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP00_raster = Pen00.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP05_raster = Pen05.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP10_raster = Pen10.reduceToImage({properties: ['Ha'],reducer: ee.Reducer.first()}).multiply(0).add(1);
+var OP90 = blank.where(OP90_raster.eq(1), 1).rename(['OP90']);
+var OP00 = blank.where(OP00_raster.eq(1), 1).rename(['OP00']);
+var OP05 = blank.where(OP05_raster.eq(1), 1).rename(['OP05']);
+var OP10 = blank.where(OP10_raster.eq(1), 1).rename(['OP10']);
+
+
+var yr = ee.List.sequence(1, 10, 1);
+
+// map()
+var collection_intermediate = ee.Image([0, OP90, OP00]);
+var annual = function(t){
+  t= ee.Number(t);
+  var basemap = ee.Algorithms.If(t.lt(5), String('OP90'), String('OP00'));
+  var yearmap= blank.where(collection_intermediate.select([basemap]).eq(1),1);
+  return ee.Image(yearmap);
+};
+var test = annual(3);
+print('test', test);
+
+
+
+var Gunarso = yr.map(annual);
+print('Gunarso_final, 2000-2005', Gunarso);
+
+
+
+
