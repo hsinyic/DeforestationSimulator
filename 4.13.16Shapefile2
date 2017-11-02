@@ -1,7 +1,0 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var in10 = ee.FeatureCollection("ft:1i2_t_HF3Nzdau0yApYxTlsvnKsLoTiyZLsF9tjW4"),
-    in00 = ee.FeatureCollection("ft:1XNKOZSPbf78gm176d-F9MqMTDENUqvUplKd5mGfx"),
-    in05 = ee.FeatureCollection("ft:1CKypuxiYEknKPTcx3C6N5pP5rB5HqbUDyVatMzPM"),
-    in90 = ee.FeatureCollection("ft:1p3C2Y9Gj-oXqClHCtEUdF-HEwS8gKHxEW-nmjAWj");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
-
