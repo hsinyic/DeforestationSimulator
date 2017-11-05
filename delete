@@ -25,14 +25,45 @@ var Well = ee.FeatureCollection("ft:1COkqpSqnbi138IXDcakGmvYlArjhAfACCkGchYzd"),
 
 
 var spatialFilter = ee.Filter.intersects({
-  leftField: 'API_number',
+  leftField: 'API_number_adjusted',
   rightField: 'API/UWI',
-  maxError: 1
+  maxError: 100
 });
 var saveAllJoin = ee.Join.saveAll({
   matchesKey: 'Offshore_Matched',
 });
 
-Map.addLayer(Well, {'color':pink}, "All_Wells", 1, 1);
-var intersectJoined = saveAllJoin.apply( Well,GOM_offshore, spatialFilter);
-Map.addLayer(intersectJoined, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
+Map.addLayer(Well, {'color':db}, "All_Wells", 1, 1);
+var intersectJoined = saveAllJoin.apply( GOM_offshore, Well, spatialFilter);
+Map.addLayer(intersectJoined, {'color':pink}, "GOEM_downloaded_GOM_boundary", 1, 1);
+
+
+print(intersectJoined);
+
+// Load a primary collection: Landsat imagery.
+var primary = ee.ImageCollection('LC8_L1T_TOA')
+    .filterDate('2014-04-01', '2014-06-01')
+    .filterBounds(ee.Geometry.Point(-122.09, 37.42));
+
+// Load a secondary collection: FLUXNET points in a Fusion Table.
+var fluxnet = ee.FeatureCollection('ft:1f85fvccyKSlaZJiAta8ojlXGhgf-LPPNmICG9kQ');
+
+// Define a spatial filter, with distance 100 km.
+var distFilter = ee.Filter.withinDistance({
+  distance: 100000,
+  leftField: '.geo',
+  rightField: '.geo',
+  maxError: 10
+});
+
+// Define a saveAll join.
+var distSaveAll = ee.Join.saveAll({
+  matchesKey: 'blahblah',
+  measureKey: 'hahahaha'
+});
+
+// Apply the join.
+var spatialJoined = distSaveAll.apply(primary, fluxnet, distFilter);
+
+// Print the result.
+print(spatialJoined);
