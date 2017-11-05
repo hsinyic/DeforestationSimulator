@@ -16,10 +16,7 @@ var Well = ee.FeatureCollection("ft:1COkqpSqnbi138IXDcakGmvYlArjhAfACCkGchYzd"),
   var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
 /* ################################################ */
   
-
-
-
-
+print(Well);
 // Use the filter to see if it adds up and is correct 
 // Next step is to construct your schedule for next week
 
