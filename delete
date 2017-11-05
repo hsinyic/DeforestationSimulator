@@ -38,6 +38,13 @@ var intersectJoined = saveAllJoin.apply( GOM_offshore, Well, spatialFilter);
 Map.addLayer(intersectJoined, {'color':pink}, "GOEM_downloaded_GOM_boundary", 1, 1);
 
 
+
+// var invertedJoin = ee.Join.inverted();
+
+// // Apply the join.
+// var invertedJoined = invertedJoin.apply(primary, secondary, filter);
+
+
 print(intersectJoined);
 
 // Load a primary collection: Landsat imagery.
