@@ -1,0 +1,24 @@
+
+var Well = ee.FeatureCollection("ft:1COkqpSqnbi138IXDcakGmvYlArjhAfACCkGchYzd"),
+    shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
+    GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
+    conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
+    GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6");
+
+
+
+// Use the filter to  
+
+
+var spatialFilter = ee.Filter.intersects({
+  leftField: 'API/UWI',
+  rightField: 'API number',
+  maxError: 1
+});
+var saveAllJoin = ee.Join.saveAll({
+  matchesKey: 'Offshore_Matched',
+});
+
+
+var intersectJoined = saveAllJoin.apply(Well ,GOM_offshore,  spatialFilter);
+
