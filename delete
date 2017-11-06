@@ -36,7 +36,7 @@ Map.addLayer(GOM_offshore, {'color':pink}, "Offshore_wells_BOEM", 1, 1);
 Map.addLayer(Well, {'color':db}, "All_Wells", 1, 1);
 Map.addLayer(GOM_boundary, {'color':yellow}, "BOEM_downloaded_GOM_boundary", 1, 1);
 
-
+// When EIA select 
 
 
 var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
