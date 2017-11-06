@@ -30,6 +30,9 @@ var saveAllJoin = ee.Join.saveAll({
   matchesKey: 'Offshore_Matched',
 });
 
+Map.addLayer(GOM_offshore, {'color':pink}, "Offshore_wells", 1, 1);
+
+
 Map.addLayer(Well, {'color':db}, "All_Wells", 1, 1);
 var intersectJoined = saveAllJoin.apply( GOM_offshore, Well, spatialFilter);
 Map.addLayer(intersectJoined, {'color':pink}, "GOEM_downloaded_GOM_boundary", 1, 1);
