@@ -1,1 +1,0 @@
-var oilPalm = ee.FeatureCollection('ft:1Q-5XgXQpAeRhILPoPTx8gnGTzUpSJx-EtKu_BCw', 'geometry');
