@@ -19,8 +19,12 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
   var br = ('#5b2e01').toString();
 /* ################################################ */
 
-var shaleplay = shaleplay_or.union().geometry(); var conventional_play= conventional_play_or; //var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
-Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
+var shaleplay = shaleplay_or.union().geometry(); 
+var conventional_play= conventional_play_or; 
+//var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
+Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); 
+Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5);  
+// Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 // ################ select wells of certaint atrributes ################ //
 var select = function( after,before, direction, type){
   // after = ee.Number.parse(after);before= ee.Number.parse(before);
@@ -96,9 +100,6 @@ var selectOnshore = function(i){
 var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
 No_Offshore =No_Offshore.reverse();
 Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
-
-
-
 // ################  wells in shale ################ //
 var in_shale = function(fc){
   fc = ee.FeatureCollection(fc);
