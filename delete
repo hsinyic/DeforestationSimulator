@@ -16,12 +16,11 @@ var Well = ee.FeatureCollection("ft:1COkqpSqnbi138IXDcakGmvYlArjhAfACCkGchYzd"),
   var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
 /* ################################################ */
   
-print(Well);
 // Use the filter to see if it adds up and is correct 
 // Next step is to construct your schedule for next week
 
 
-var spatialFilter = ee.Filter.intersects({
+/*var spatialFilter = ee.Filter.intersects({
   leftField: 'API_number_adjusted',
   rightField: 'API/UWI',
   maxError: 100
@@ -29,13 +28,26 @@ var spatialFilter = ee.Filter.intersects({
 var saveAllJoin = ee.Join.saveAll({
   matchesKey: 'Offshore_Matched',
 });
-
-Map.addLayer(GOM_offshore, {'color':pink}, "Offshore_wells", 1, 1);
-
-
-Map.addLayer(Well, {'color':db}, "All_Wells", 1, 1);
 var intersectJoined = saveAllJoin.apply( GOM_offshore, Well, spatialFilter);
-Map.addLayer(intersectJoined, {'color':pink}, "GOEM_downloaded_GOM_boundary", 1, 1);
+Map.addLayer(intersectJoined, {'color':pink}, "GOM_Wells", 1, 1);
+*/
+
+Map.addLayer(GOM_offshore, {'color':pink}, "Offshore_wells_BOEM", 1, 1);
+Map.addLayer(Well, {'color':db}, "All_Wells", 1, 1);
+Map.addLayer(GOM_boundary, {'color':yellow}, "BOEM_downloaded_GOM_boundary", 1, 1);
+
+
+
+
+var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
+
+var DI_offshore_wells_by_bounds = ee.FeatureCollection(Well.filterBounds(GOM_boundary));
+Map.addLayer(DI_offshore_wells_by_bounds, {'color':dg}, "Offshore_wells_DI", 1, 1);
+var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); 
+var invertedJoin = ee.Join.inverted(); 
+var DI_onshore_wells_by_bounds = invertedJoin.apply(Well, DI_offshore_wells_by_bounds, filter);
+Map.addLayer(DI_onshore_wells_by_bounds, {'color':gr}, "Onshore_wells_DI", 1, 1);
+
 
 
 
@@ -43,9 +55,6 @@ Map.addLayer(intersectJoined, {'color':pink}, "GOEM_downloaded_GOM_boundary", 1,
 
 // // Apply the join.
 // var invertedJoined = invertedJoin.apply(primary, secondary, filter);
-
-
-print(intersectJoined);
 
 // // Load a primary collection: Landsat imagery.
 // var primary = ee.ImageCollection('LC8_L1T_TOA')
