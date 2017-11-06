@@ -1,7 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
-    geometry3 = /* color: #000000 */ee.Geometry.Point([-119.70703125, 35.389049966911664]),
+    geometry3 = /* color: #000000 */ee.Geometry.MultiPoint(),
     geometry2 = /* color: #f1ff5d */ee.Geometry.Polygon(
         [[[-83.70339828250013, 42.36067223886009],
           [-83.7233965497606, 36.32649585463325],
@@ -92,11 +92,6 @@ var Well_List_names = ee.List([
   'V_wells_pre2000']);
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 
-// Map.addLayer(Well.filterMetadata('First Prod Date','not_equals',null), {'color':black}, "well", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
-// Map.addLayer(Well.filterMetadata('First Prod Date','equals',null), {'color':pink}, "well", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
-
-
-// print(Well.filterMetadata('SerialNumber1','equals',28492).getInfo());
 // ################ filter Offshore from Directional/Unknown ################ 
 var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D')
 var selectOnshore = function(i){
@@ -134,8 +129,8 @@ var well_count = function(fc){
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
 }; 
-// var count = Well_List.map(well_count); print('Total well count by type'); print(count);
-// var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+var count = Well_List.map(well_count); print('Total well count by type'); print(count);
+var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 // measured depth histogram, set graph options.
 var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'measured depth in ft'},vAxis: {title: 'well count'},series: {0: {color: 'blue'}}};
 var measured_depth = function(fc, series_name, geo){
