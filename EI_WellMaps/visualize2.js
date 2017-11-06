@@ -23,15 +23,17 @@ var shaleplay = shaleplay_or.union().geometry(); var conventional_play= conventi
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 // ################ select wells of certaint atrributes ################ //
 var select = function( after,before, direction, type){
-  after = ee.Number.parse(after);before= ee.Number.parse(before);
-  // after = ee.String(after).cat('-01-01');before= ee.String(before).cat('-01-01');
+  // after = ee.Number.parse(after);before= ee.Number.parse(before);
+  after =  ee.String(after);
+  before = ee.String(before);
+  after = ee.String(after).cat('-01-01');before= ee.String(before).cat('-01-01');
   direction = ee.String(direction);
   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
   var selected_fc = ee.FeatureCollection(Well
-  // .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
-  // .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
-  .filterMetadata('First Prod Year','greater_than', after)
-  .filterMetadata('First Prod Year','not_greater_than', before)
+  .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
+  .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
+  // .filterMetadata('First Prod Year','greater_than', after)
+  // .filterMetadata('First Prod Year','not_greater_than', before)
   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
   .filter(ee.Filter.inList('Updated Production Type',  type))); 
   return selected_fc;
