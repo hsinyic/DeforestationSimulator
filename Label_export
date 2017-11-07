@@ -50,16 +50,16 @@ var add_offshore_label=  function(feature){
 var set_shale = function(feature){
   feature = ee.Feature(feature);
   var result = feature
-  .set("shale_play", ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 2,1 ))
-  // .set("offshore", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2,1));
+  .set("shale code", ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 2,1 ))
+  .set("shale", ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "shale","conventional" ))
   return (ee.Feature(result));
 };
 
 var set_offshore = function(feature){
   feature = ee.Feature(feature);
   var result = feature
-  // .set("shale_play", ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 2,1 ))
-  .set("offshore", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2,1));
+  .set("offshore code", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2,1))
+  .set("offshore", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore","onshore"));
   return (ee.Feature(result));
 };
 // print("hi");
@@ -69,8 +69,9 @@ var processed_wells = ee.FeatureCollection(Well)
 .map(add_shale_label)
 .map(add_offshore_label);
 
-processed_wells = processed_wells.filterMetadata('SurfaceLongitude', 'not_equals', null)
-.map(set_shale).map(set_offshore);
+processed_wells = processed_wells.filterMetadata('SurfaceLongitude', 'not_equals', null).map(set_offshore);
+
+processed_wells = processed_wells.filterMetadata("offshore code", "equals", 1).map(set_shale);
 // print(processed_wells.propertyNames())
 // print(processed_wells.aggregate_sum('Well Count'));
 
@@ -152,7 +153,8 @@ var set_class = function(i, prev_well_list){
   var element = ee.FeatureCollection(Well_List.get(i))
   var update = element.map(function(feature){
     feature = ee.Feature(feature);
-    var results = feature.set("Class Label", Well_List_code.get(i));
+    var results = feature.set("Class Label Code", Well_List_code.get(i))
+    .set("Class Label", Well_List_names.get(i));
     return(ee.Feature(results));
     })
   var newlabeled_Well_List = prev_well_list.set(i, ee.FeatureCollection(update));
