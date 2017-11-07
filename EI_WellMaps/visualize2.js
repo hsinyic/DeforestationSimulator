@@ -196,3 +196,4 @@ for (var x = 0; x<Well_List.size().getInfo(); x++){
 }
 
 Map.add(legend);
+
