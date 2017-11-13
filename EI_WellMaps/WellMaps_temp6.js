@@ -149,6 +149,14 @@ var avg_depth = function(series_name, fc, geo){
   ,roi.aggregate_count_distinct('Measured Depth (TD)'));//, 'unique value');
   return(ee.Number(0));
 };
+// without surfacelongitude 
+var no_location = function(fc){
+  fc = ee.FeatureCollection(fc);
+  var output = fc.filterMetadata("SurfaceLongitude", "equals", null);
+  return ee.FeatureCollection(output);
+}; var no_location_non_shale_FB = non_shale_well_FB.map(no_location);
+print(Well_List_names.zip(no_location_non_shale_FB.map(well_count)));
+
 
 
 // var i=0; var geometry= geometry3;
