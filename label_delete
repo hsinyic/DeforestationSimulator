@@ -46,11 +46,11 @@ var add_time_label=  function(feature){
 
 var test_label_wells = ee.FeatureCollection(Well)
 .map(add_location_label)
-.map(add_time_label);
+// .map(add_time_label);
 
 
 // Number of location label should match the null filterMetadata 
-print("location label", test_label_wells.aggregate_count('location'))
+print("location label", test_label_wells.aggregate_sum('location'))
 print("filterMetadata", Well.filterMetadata('SurfaceLongitude', 'not_equals', null).aggregate_count('Well Count'))
 print("total count location label", test_label_wells.aggregate_count('Well Count'))
 print("total count filterMetadata", Well.aggregate_count('Well Count'))
@@ -88,7 +88,10 @@ var set_offshore = function(feature){
 };
 processed_wells = processed_wells.map(set_offshore);
 processed_wells = processed_wells.map(set_shale);
-Export.table.toDrive(ee.FeatureCollection(processed_wells), "labeled_active_wells_final");
+Export.table.toDrive(
+  ee.FeatureCollection(processed_wells)
+  .select(['shale_play', 'offshore', 'shale code', 'offshore code', ' 'SerialNumber2'])
+, "labeled_active_wells_final");
 
 // ################ filter Offshore from Directional/Unknown ################ 
 var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
