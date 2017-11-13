@@ -27,7 +27,7 @@ Map.addLayer(shaleplay, {'color':black}, "shale play boundaries union", 1, 0.5);
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('SurfaceLongitude'))
-  var label = ee.Algorithms.If(property, 1000, 0 );
+  var label = ee.Algorithms.If(property, 0, 1 ); // 1 means without surfaceLongitude 
   return(ee.Feature(feature).set("location",label )
   );
 };
@@ -38,7 +38,7 @@ var add_location_label=  function(feature){
 var add_time_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('First Prod Date'))
-  var label =ee.Algorithms.If(property, 1000, 0 )
+  var label =ee.Algorithms.If(property, 0, 1 )
   return(ee.Feature(feature).set("time",label));
 };
 
@@ -52,10 +52,13 @@ var test_label_wells = ee.FeatureCollection(Well)
 
 
 // Number of location label should match the null filterMetadata 
-print("location label", test_label_wells
-.filterMetadata('location', 'not_equals', 1000)
-.aggregate_count('Well Count'))
+print("location label", test_label_wells.aggregate_count('location'))
 print("filterMetadata", Well.filterMetadata('SurfaceLongitude', 'not_equals', null).aggregate_count('Well Count'))
+print("total count location label", test_label_wells.aggregate_count('Well Count'))
+print("total count filterMetadata", Well.aggregate_count('Well Count'))
+
+
+
 
 // 1018836
 // 
