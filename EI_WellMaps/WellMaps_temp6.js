@@ -142,8 +142,7 @@ var avg_depth = function(series_name, fc, geo){
   var roi = ee.FeatureCollection(fc.get(i))//.filterBounds(geo);
   print(series_name, Well_List_names.get(i).getInfo()
   // , roi.aggregate_count('Well Count')); 
-  // many rows have significant amount of wells within each entries
-  // such as Texas who reports in lease 
+  // many rows have significant amount of wells within each entries such as Texas who reports in lease 
   ,roi.aggregate_mean('Measured Depth (TD)')//, 'Mean Measured Depth'
   ,roi.aggregate_count('Measured Depth (TD)')//, 'total count'
   ,roi.aggregate_count_distinct('Measured Depth (TD)'));//, 'unique value');
