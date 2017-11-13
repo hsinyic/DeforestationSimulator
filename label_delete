@@ -58,25 +58,27 @@ print("filterMetadata", Well.filterMetadata('First Prod Date', 'not_equals', nul
 print("total count time label", test_label_wells.aggregate_count('Well Count'))
 print("total count filterMetadata", Well.aggregate_count('Well Count'))
 
-print('total count Production Date After 2002-01-01',
+print('total count Production Date After 2001-12-31 -- 2002 and later',
 Well.filterMetadata('First Prod Date', 'not_equals', null)
-.filterMetadata('First Prod Date','greater_than', ee.Date('2002-01-01').millis())
+.filterMetadata('First Prod Date','greater_than', ee.Date('2001-12-31').millis())
+.aggregate_sum('Well Count'))
+
+
+print('total count Production Year',
+Well.filterMetadata('First Prod Year', 'not_equals', null)
+.filterMetadata('First Prod Year','greater_than', 2001)
+.aggregate_sum('Well Count'))
+
+
+
+print('total count No Production Date',
+Well.filterMetadata('First Prod Date', 'not_equals', null)
 .aggregate_sum('Well Count'))
 
 
 print('total count No Production Year',
-Well.filterMetadata('First Prod Year', 'greater_than', null)
-.filterMetadata('First Prod Year','greater_than', 2001)
+Well.filterMetadata('First Prod Year', 'not_equals', null)
 .aggregate_sum('Well Count'))
-
-// var test = ee.Feature(geometry);
-// print(ee.Algorithms.If(ee.Number(2).eq(null), 1000, 0 ));
-// print(test);
-// print(ee.Number(test.get('SurfaceLongitude')));
-// print(ee.Algorithms.If(ee.Number(test.get('SurfaceLongitude')), 1000, 0 ));
-// print(ee.Algorithms.If(ee.Number(test.get('SL')), 1000, 0 ));
-// print(test.set('no location', ee.Algorithms.If(ee.Number(test.get('SurfaceLongitude')).lte(-1), 1000, 0 )))
-
 
 
 var processed_wells = Well;
