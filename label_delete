@@ -33,33 +33,41 @@ var add_location_label=  function(feature){
 };
 
 
-
-
 var add_time_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('First Prod Date'))
-  var label =ee.Algorithms.If(property, 0, 1 )
+  var label =ee.Algorithms.If(property, 0, 1 ) //1 means without First Production Date
   return(ee.Feature(feature).set("time",label));
 };
 
 
 
 var test_label_wells = ee.FeatureCollection(Well)
-.map(add_location_label)
-// .map(add_time_label);
+// .map(add_location_label)
+.map(add_time_label);
 
 
 // Number of location label should match the null filterMetadata 
-print("location label", test_label_wells.aggregate_sum('location'))
-print("filterMetadata", Well.filterMetadata('SurfaceLongitude', 'not_equals', null).aggregate_count('Well Count'))
-print("total count location label", test_label_wells.aggregate_count('Well Count'))
+// print("location label", test_label_wells.aggregate_sum('location'))
+// print("filterMetadata", Well.filterMetadata('SurfaceLongitude', 'not_equals', null).aggregate_count('Well Count'))
+// print("total count location label", test_label_wells.aggregate_count('Well Count'))
+// print("total count filterMetadata", Well.aggregate_count('Well Count'))
+
+print("time label", test_label_wells.aggregate_sum('time'))
+print("filterMetadata", Well.filterMetadata('First Prod Date', 'not_equals', null).aggregate_count('Well Count'))
+print("total count time label", test_label_wells.aggregate_count('Well Count'))
 print("total count filterMetadata", Well.aggregate_count('Well Count'))
 
+print('total count Production Date After 2002-01-01',
+Well.filterMetadata('First Prod Date', 'not_equals', null)
+.filterMetadata('First Prod Date','greater_than', ee.Date('2002-01-01').millis())
+.aggregate_sum('Well Count'))
 
 
-
-// 1018836
-// 
+print('total count No Production Year',
+Well.filterMetadata('First Prod Year', 'greater_than', null)
+.filterMetadata('First Prod Year','greater_than', 2001)
+.aggregate_sum('Well Count'))
 
 // var test = ee.Feature(geometry);
 // print(ee.Algorithms.If(ee.Number(2).eq(null), 1000, 0 ));
@@ -112,13 +120,15 @@ var select = function( after,before, direction, type){
   direction = ee.String(direction);
   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
   var selected_fc = ee.FeatureCollection(processed_wells
+  .filterMetadata('location','not_equals', 1)
+  .filterMetadata('time','not_equals', 1)
   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
   // .filterMetadata('First Prod Year','greater_than', after)
   // .filterMetadata('First Prod Year','not_greater_than', before)
   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
   .filter(ee.Filter.inList('Updated Production Type',  type))); 
-  return ee.FeatureCollection(selected_fc);
+  return selected_fc;
 };
 var Well_List = ee.List([
   select('2003','2100', 'H', ['GAS'] ),
@@ -209,9 +219,9 @@ classified = ee.List(classified);
 
 
 var i = 0; var j = 3; var k = 6;
-Map.addLayer(ee.FeatureCollection(classified.get(i)), {'color':yellow}, Well_List_names.get(i).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(classified.get(j)), {'color':dg}, Well_List_names.get(j).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(classified.get(k)), {'color':pink}, Well_List_names.get(k).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(classified.get(i)), {'color':yellow}, Well_List_names.get(i).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(classified.get(j)), {'color':dg}, Well_List_names.get(j).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(classified.get(k)), {'color':pink}, Well_List_names.get(k).getInfo(), 1, 1); 
 
 
 var collapse  = function(element , prev){
