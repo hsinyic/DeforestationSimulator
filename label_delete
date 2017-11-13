@@ -90,7 +90,10 @@ processed_wells = processed_wells.map(set_offshore);
 processed_wells = processed_wells.map(set_shale);
 Export.table.toDrive(
   ee.FeatureCollection(processed_wells)
-  .select(['shale_play', 'offshore', 'shale code', 'offshore code', ' 'SerialNumber2'])
+  .select(['shale_play', 'offshore', 
+            'shale code', 'offshore code', 
+            'location', 'time', 
+            'SerialNumber2'])
 , "labeled_active_wells_final");
 
 // ################ filter Offshore from Directional/Unknown ################ 
