@@ -26,18 +26,51 @@ Map.addLayer(shaleplay, {'color':black}, "shale play boundaries union", 1, 0.5);
 // ################  wells in shale ################ //
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
-  return(ee.Feature(feature)
-  .set("location", ee.Algorithms.If(feature.get('SurfaceLongitude').eq(null), 1000, 0 ))
+  var property = ee.Number(feature.get('SurfaceLongitude'))
+  var label = ee.Algorithms.If(property, 1000, 0 );
+  return(ee.Feature(feature).set("location",label )
   );
 };
+
+
+
 
 var add_time_label=  function(feature){
   feature = ee.Feature(feature);
-  return(ee.Feature(feature)
-  .set("time", ee.Algorithms.If(feature.get('First Prod Date').eq(null), 1000, 0 ))
-  );
+  var property = ee.Number(feature.get('First Prod Date'))
+  var label =ee.Algorithms.If(property, 1000, 0 )
+  return(ee.Feature(feature).set("time",label));
 };
 
+
+
+var test_label_wells = ee.FeatureCollection(Well)
+// .filterMetadata('First Prod Date', 'not_equals', null)
+// .filterMetadata('SurfaceLongitude', 'not_equals', null)
+.map(add_location_label)
+// .map(add_time_label);
+
+
+// Number of location label should match the null filterMetadata 
+print("location label", test_label_wells
+.filterMetadata('location', 'not_equals', 1000)
+.aggregate_count('Well Count'))
+print("filterMetadata", Well.filterMetadata('SurfaceLongitude', 'not_equals', null).aggregate_count('Well Count'))
+
+// 1018836
+// 
+
+// var test = ee.Feature(geometry);
+// print(ee.Algorithms.If(ee.Number(2).eq(null), 1000, 0 ));
+// print(test);
+// print(ee.Number(test.get('SurfaceLongitude')));
+// print(ee.Algorithms.If(ee.Number(test.get('SurfaceLongitude')), 1000, 0 ));
+// print(ee.Algorithms.If(ee.Number(test.get('SL')), 1000, 0 ));
+// print(test.set('no location', ee.Algorithms.If(ee.Number(test.get('SurfaceLongitude')).lte(-1), 1000, 0 )))
+
+
+
+var processed_wells = Well;
 var set_shale = function(feature){
   feature = ee.Feature(feature);
   var result = feature
@@ -45,7 +78,6 @@ var set_shale = function(feature){
   .set("shale", ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "shale","conventional" ))
   return (ee.Feature(result));
 };
-
 var set_offshore = function(feature){
   feature = ee.Feature(feature);
   var result = feature
@@ -53,19 +85,8 @@ var set_offshore = function(feature){
   .set("offshore", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore","onshore"));
   return (ee.Feature(result));
 };
-// print("hi");
-// print(shaleplay_geometry);
-
-var processed_wells = ee.FeatureCollection(Well)
-.map(add_location_label)
-.map(add_time_label);
-
 processed_wells = processed_wells.map(set_offshore);
-
 processed_wells = processed_wells.map(set_shale);
-// print(processed_wells.propertyNames())
-// print(processed_wells.aggregate_sum('Well Count'));
-
 Export.table.toDrive(ee.FeatureCollection(processed_wells), "labeled_active_wells_final");
 
 // ################ filter Offshore from Directional/Unknown ################ 
@@ -199,8 +220,6 @@ collapsed_classified = ee.FeatureCollection(collapsed_classified);
 
 var label = ee.FeatureCollection(collapsed_classified)
 .select(['Class Label', 'shale_play', 'offshore', 'SerialNumber2'])
-print(label.aggregate_count('shale_play'));
-print(label.propertyNames());
 
 
 Export.table.toDrive(label, "label"  )
@@ -279,16 +298,15 @@ Export.table.toDrive(label, "label"  )
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(12)), {'color':azure}, s_list_names.get(12).getInfo(), 1, 0.5); 
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(13)), {'color':bl}, s_list_names.get(13).getInfo(), 1, 0.5); 
 
-/*var collapse  = function(element , prev){
-  prev = ee.FeatureCollection(prev);
-  element = ee.FeatureCollection(element);
-  return prev.merge(element);
-};
-var collapse_shale_well_FB = shale_well_FB.iterate(collapse, ee.FeatureCollection(shale_well_FB.get(0)) );
-var collapse_all_well = Well_List.iterate(collapse, ee.FeatureCollection(Well_List.get(0)) )
+// var collapse  = function(element , prev){
+//   prev = ee.FeatureCollection(prev);
+//   element = ee.FeatureCollection(element);
+//   return prev.merge(element);
+// };
+// var collapse_shale_well_FB = shale_well_FB.iterate(collapse, ee.FeatureCollection(shale_well_FB.get(0)) );
+// var collapse_all_well = Well_List.iterate(collapse, ee.FeatureCollection(Well_List.get(0)) )
 
 
-Export.table.toDrive(collapse_shale_well_FB, "all_shale_wells")
-Export.table.toDrive(collapse_all_well, "all_wells")
+// Export.table.toDrive(collapse_shale_well_FB, "all_shale_wells")
+// Export.table.toDrive(collapse_all_well, "all_wells")
 
-*/
