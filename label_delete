@@ -38,7 +38,7 @@ var add_location_label=  function(feature){
 
 var add_time_label=  function(feature){
   feature = ee.Feature(feature);
-  var property = ee.Number(feature.get('First Prod Date'))
+  var property = ee.Number(feature.get('First Prod Year'))
   var label =ee.Algorithms.If(property, 0, 1 ) //1 means without First Production Date
   return(ee.Feature(feature).set("time",label));
 };
