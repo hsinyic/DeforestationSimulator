@@ -45,10 +45,8 @@ var add_time_label=  function(feature){
 
 
 var test_label_wells = ee.FeatureCollection(Well)
-// .filterMetadata('First Prod Date', 'not_equals', null)
-// .filterMetadata('SurfaceLongitude', 'not_equals', null)
 .map(add_location_label)
-// .map(add_time_label);
+.map(add_time_label);
 
 
 // Number of location label should match the null filterMetadata 
