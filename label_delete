@@ -1,19 +1,10 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
-    geometry3 = /* color: #000000 */ee.Geometry.Point([-119.70703125, 35.389049966911664]),
-    geometry2 = /* color: #f1ff5d */ee.Geometry.Polygon(
-        [[[-83.70339828250013, 42.36067223886009],
-          [-83.7233965497606, 36.32649585463325],
-          [-76.78826123344527, 37.67253509620034],
-          [-73.95103498640799, 40.16127593903518],
-          [-74.54237997262669, 42.90758581937808]]]),
-    geometry1 = /* color: #98ff00 */ee.Geometry.MultiPoint(),
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
     conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
     GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
     Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.centerObject(geometry2, 5);//center on Geometry on the map
 
 
 /* ################ Color scheme################ */  
