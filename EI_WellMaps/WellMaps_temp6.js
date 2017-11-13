@@ -28,7 +28,6 @@ Map.centerObject(geometry3, 9);//center on Geometry on the map
   var pink = ('#ff6ad8').toString();var lp = ('#ffb9ec').toString();
   var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
 /* ################################################ */
-print(Well.aggregate_sum("Well Count"));
 
 var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union(); //var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); 
