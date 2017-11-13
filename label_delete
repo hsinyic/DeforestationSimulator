@@ -71,7 +71,7 @@ Export.table.toDrive(
             'shale code', 'offshore code', 
             'location', 'time', 
             'SerialNumber2'])
-, "labeled_active_wells_final");
+, "label_offshore_shale_time_location");
 
 // ################ filter Offshore from Directional/Unknown ################ 
 var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
@@ -197,8 +197,8 @@ print(ee.FeatureCollection(collapsed_classified).aggregate_sum('Well Count'));
 
 
 var label = ee.FeatureCollection(collapsed_classified)
-.select(['Class Label', 'shale_play', 'offshore', 'SerialNumber2'])
+.select(['Class Label',  'SerialNumber2'])
 
-Export.table.toDrive(label, "label"  )
+Export.table.toDrive(label, "Label_shale_class_correc"  )
 
 
