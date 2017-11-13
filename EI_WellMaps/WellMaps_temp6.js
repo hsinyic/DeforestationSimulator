@@ -120,7 +120,7 @@ var outside_shale = function(i){
   var invertedJoined = invertedJoin.apply(Well_List.get(i), shale_well_FB.get(i), filter);
   return invertedJoined;
 };// Apply the join.
-var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(outside_shale);print(non_shale_well_FB);
+var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(outside_shale);//print(non_shale_well_FB);
 // ################  Display results/ derive statistics #################//
 // count number of wells
 var well_count = function(fc){
@@ -150,52 +150,16 @@ var avg_depth = function(series_name, fc, geo){
   return(ee.Number(0));
 };
 
-/*
-var i=0; var geometry= geometry3;
+
+// var i=0; var geometry= geometry3;
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os_list_names.get(i).getInfo(), 0, 1); 
 // print(measured_depth(non_shale_well_FB, 'non_shale_well',geometry));
 // print(measured_depth(shale_well_FB, 'shale_well',geometry));
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
-
-i=1;
-// Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':db}, s_list_names.get(i).getInfo(), 0, 1); 
-// Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':lb}, os_list_names.get(i).getInfo(), 0, 1); 
-// print(measured_depth(non_shale_well_FB, 'non_shale_well',geometry));
-// print(measured_depth(shale_well_FB, 'shale_well',geometry));
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
-
-i=2;
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
-i=3;
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
-i=4;
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
-i=5;
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
-i=6;
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
-i=7;
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
-i=8;
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
-i=9;
-avg_depth('non_shale_well', non_shale_well_FB, geometry);
-avg_depth('shale_well', shale_well_FB, geometry);
+// avg_depth('non_shale_well', non_shale_well_FB, geometry);
+// avg_depth('shale_well', shale_well_FB, geometry);
 
 
-
-
-*/
 
 
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(0)), {'color':red}, os_list_names.get(0).getInfo(), 0, 1); 
@@ -241,15 +205,13 @@ avg_depth('shale_well', shale_well_FB, geometry);
 // Map.addLayer(ee.FeatureCollection(Well_List.get(7)), {'color':black}, Well_List_names.get(7).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':whi}, Well_List_names.get(8).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':lorange}, Well_List_names.get(10).getInfo(), 0, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':azure}, Well_List_names.get(11).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(12)), {'color':lp}, Well_List_names.get(12).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(13)), {'color':lyellow}, Well_List_names.get(13).getInfo(), 0, 1); 
 
 
 // https://groups.google.com/forum/#!searchin/google-earth-engine-developers/$20ui.chart%7Csort:relevance/google-earth-engine-developers/b5JzmsCXr9w/hDRtvxqgAQAJ Introducing the EE User Interface API
-
-
 
 
 // ********* Number of wells in DI for offshore wells that matches number of active GOM 
