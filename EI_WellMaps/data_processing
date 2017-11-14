@@ -76,6 +76,9 @@ print('', '', '')
 
 
 
+
+// # Export the mismatched records 
+
 var extract_year=  function(feature){
   feature = ee.Feature(feature);
   var date = ee.Number(feature.get('First Prod Date'));
@@ -90,19 +93,19 @@ var extract_year=  function(feature){
 };
 
 
-
-
-
-
 var test = Well.filterMetadata('First Prod Date', 'not_equals', null).map(extract_year); 
 // var sample = Well.filterMetadata('SerialNumber2', 'greater_than', 13).filterMetadata('SerialNumber2', 'less_than', 23005).filterMetadata('First Prod Date', 'not_equals', null)
 
 
 // 5 entries have mismatch (1928 >> 2028, 1917 >> 2017 .etc for wells between 1800 and 1930 )
 Export.table.toDrive(test.filterMetadata('indicator', 'not_equals', 0)
-.select(['First Prod Date', 'First Prod Year','SerialNumber2'])
+.select(['First Prod Date', 'First Prod Year','years_difference', 'SerialNumber2'])
 , "date_year_mismatch"  );
 
+
+
+
+// Misc printout of ee.Date functions 
 print(ee.Number(
     ee.Date(ee.Number(1009843200000))
     ))
