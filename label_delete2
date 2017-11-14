@@ -50,8 +50,8 @@ var add_time_label=  function(feature){
   var date = ee.Number(feature.get('First Prod Date'));
   date = ee.Date(date).get('year');
   date = ee.Number(date);
-  var time =ee.Algorithms.If(date, 2, 1 ) //1 means without First Production Date
-  var time_code =ee.Algorithms.If(date, "with prod date", "no prod date" ) //1 means without First Production Date
+  var time =ee.Number(ee.Algorithms.If(date, 2, 1 )) //1 means without First Production Date
+  var time_code = ee.String(ee.Algorithms.If(date, "with prod date", "no prod date" )) //1 means without First Production Date
   return(ee.Feature(feature).set("time",time).set("time_code",time_code));
 };
 
