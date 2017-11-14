@@ -91,17 +91,26 @@ var Well_List_names = ee.List([
   'V_wells_pre2000']);
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 
-// ################ filter Offshore from Directional/Unknown ################ 
-var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D')
-var selectOnshore = function(i){
-  i=ee.Number(i); 
-  var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(GOM_boundary);
-  var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
-  var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
-  return invertedJoined;};//Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
-var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
-No_Offshore =No_Offshore.reverse();
-Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
+// ################ Check Offshore Count Total ################ 
+// var GOM_boundary_union = GOM_boundary.union()
+// var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry());
+var GOM_boundary_geometry = GOM_boundary;
+var in_GOM = function(fc){
+  fc = ee.FeatureCollection(fc);
+  var output = fc.filter(ee.Filter.bounds(GOM_boundary_geometry));
+  return ee.FeatureCollection(output);
+}; var GOM_well_FB = Well_List.map(in_GOM);
+// // ################ filter Offshore from Directional/Unknown ################ 
+// var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D')
+// var selectOnshore = function(i){
+//   i=ee.Number(i); 
+//   var offshore_wells = ee.FeatureCollection(Well_List.get(i)).filterBounds(GOM_boundary);
+//   var filter = ee.Filter.equals({leftField: 'system:index',rightField: 'system:index'}); var invertedJoin = ee.Join.inverted(); 
+//   var invertedJoined = invertedJoin.apply(Well_List.get(i), offshore_wells, filter);
+//   return invertedJoined;};//Map.addLayer(GOM_boundary, {'color':lb}, "GOEM_downloaded_GOM_boundary", 1, 1);
+// var No_Offshore = ee.List([Well_List_names.indexOf('D_wells_pre2000'),Well_List_names.indexOf('D_wells_post2000'),Well_List_names.indexOf('U_pre2000'),Well_List_names.indexOf('U_post2000'),]).map(selectOnshore);
+// No_Offshore =No_Offshore.reverse();
+// Well_List = Well_List.splice( Well_List_names.indexOf('U_post2000'),4,No_Offshore );
 // ################  wells in shale ################ //
 var in_shale = function(fc){
   fc = ee.FeatureCollection(fc);
@@ -129,7 +138,10 @@ var well_count = function(fc){
   return ee.Number(output);
 }; 
 var count = Well_List.map(well_count); print('Total well count by type'); print(count);
-var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+var shale_well_FB_count = shale_well_FB.map(well_count); 
+var GOM_well_FB_count = GOM_well_FB.map(well_count);
+print('count of shale wellt/total well, by well type'); 
+print(Well_List_names.zip(shale_well_FB_count).zip(GOM_well_FB_count).zip(count));
 // measured depth histogram, set graph options.
 var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'measured depth in ft'},vAxis: {title: 'well count'},series: {0: {color: 'blue'}}};
 var measured_depth = function(fc, series_name, geo){
@@ -155,9 +167,7 @@ var no_location = function(fc){
   return ee.FeatureCollection(output);
 }; 
 var no_location_non_shale_FB = non_shale_well_FB.map(no_location);
-var no_location_shale_well_FB = shale_well_FB.map(no_location);
 print(Well_List_names.zip(no_location_non_shale_FB.map(well_count)));
-print(Well_List_names.zip(no_location_shale_well_FB.map(well_count)));
 
 
 
