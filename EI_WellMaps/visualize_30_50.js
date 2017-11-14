@@ -35,7 +35,8 @@ Map.centerObject(geometry1, 5);//center on Geometry on the map
 
 
 
-var shaleplay = shaleplay_or.union(); var conventional_play= conventional_play_or; //var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
+var shaleplay = shaleplay_or.union().geometry(); 
+var conventional_play= conventional_play_or; //var buffer_shaleplay = shaleplay.map(function(i){i=ee.Feature(i); return(i.buffer(ee.Number(1609).multiply(2)))});
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 // ################ select wells of certaint atrributes ################ //
 var select = function( after,before, direction, type){
@@ -213,7 +214,7 @@ var color_list = ee.List([dg, red, yellow, lp, lb, db, pink, purple1, azure, ora
 
 
 Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); 
-Map.addLayer(shaleplay.geometry(), {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
+Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 
 var legend = ui.Panel({style: {position: 'bottom-left'}});
 legend.add(ui.Label({
