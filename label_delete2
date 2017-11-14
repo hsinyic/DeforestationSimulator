@@ -58,7 +58,7 @@ var add_time_label=  function(feature){
 
 var processed_wells = ee.FeatureCollection(Well)
 .map(add_location_label)
-// .map(add_time_label);
+.map(add_time_label);
 
 
 
