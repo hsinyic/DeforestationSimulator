@@ -30,16 +30,27 @@ Map.addLayer(shaleplay, {'color':black}, "shale play boundaries union", 1, 0.5);
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('SurfaceLongitude'))
-  var label = ee.Algorithms.If(property, 1, 0 ); // 0 means without surfaceLongitude 
-  return(ee.Feature(feature).set("location",label )
-  );
+  feature = feature.set("location",'default' )
+  var location = ee.String(ee.Algorithms.If(property, 
+  ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore", 
+    ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "onshore conventional")),
+  "no location"));
+  var location_code = ee.Algorithms.If(property, 
+  ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2, 
+    ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 3)),
+  1);
+  feature = ee.Feature(feature.set("location", location));
+  feature = ee.Feature(feature.set("location_code", location_code));
+  return(ee.Feature(feature));
 };
 
-// Assume First Prod Year and First Prod Date are consistent 
+// Use First Prod Date 
 var add_time_label=  function(feature){
   feature = ee.Feature(feature);
-  var property = ee.Number(feature.get('First Prod Year'))
-  var label =ee.Algorithms.If(property, 1, 0 ) //0 means without First Production Date
+  var date = ee.Number(feature.get('First Prod Date'));
+  date = ee.Date(date).get('year');
+  date = ee.Number(date);
+  var label =ee.Algorithms.If(date, 1, 0 ) //0 means without First Production Date
   return(ee.Feature(feature).set("time",label));
 };
 
@@ -54,32 +65,11 @@ var processed_wells = ee.FeatureCollection(Well)
 
 
 
-var set_shale = function(feature){
-  feature = ee.Feature(feature);
-  var property = ee.Number(feature.get('SurfaceLongitude'))
-  var result = feature
-  .set("shale code",  ee.Algorithms.If(property, 
-  ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 2,1 ), 0
-  ))
-  .set("shale",  ee.Algorithms.If(property, 
-  ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "shale","conventional" ), "no location"
-  ));
-  return (ee.Feature(result));
-};
-var set_offshore = function(feature){
-  feature = ee.Feature(feature);
-  var result = feature
-  .set("offshore code", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2,1))
-  .set("offshore", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore","onshore"));
-  return (ee.Feature(result));
-};
-processed_wells = processed_wells.map(set_offshore);
-processed_wells = processed_wells.map(set_shale);
+
 Export.table.toDrive(
   ee.FeatureCollection(processed_wells)
-  .select(['shale_play', 'offshore', 
-            'shale code', 'offshore code', 
-            'location', 'time', 
+  .select(['location', 'location_code', 
+            'time', 'time code', 
             'SerialNumber2'])
 , "label_offshore_shale_time_location");
 
