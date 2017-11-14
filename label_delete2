@@ -60,12 +60,6 @@ var processed_wells = ee.FeatureCollection(Well)
 .map(add_location_label)
 // .map(add_time_label);
 
-print(processed_wells.aggregate_count('Well Count'));
-print(processed_wells.filterMetadata("location", "equals", "offshore").aggregate_count('Well Count'));
-print(processed_wells.filterMetadata("location", "equals", "onshore shale").aggregate_count('Well Count'));
-print(processed_wells.filterMetadata("location", "equals", "onshore conventional").aggregate_count('Well Count'));
-
-
 
 
 
