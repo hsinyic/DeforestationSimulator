@@ -1,13 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     geometry = /* color: #bf04c2 */ee.Geometry.Point([-95.93974113464355, 30.11038488561688]),
-    shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
-    conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
-    shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
-    conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG");
+    shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
@@ -18,8 +12,8 @@ var lg = ('#afff14').toString();var dg= ('#196e0a').toString();var yellow=('#ffe
 var whi=('#f7f7f7').toString();var black = ('#101010').toString();var pink = ('#ff50f1').toString();var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
 var lyellow = ('#fffcb0').toString();
 
-shaleplay = shaleplay.union(); conventional_play= conventional_play.union();
-Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); 
+shaleplay = shaleplay.union(); 
+Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); 
 
 
 
