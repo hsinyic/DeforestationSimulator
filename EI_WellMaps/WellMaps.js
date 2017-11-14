@@ -4,9 +4,11 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-//center on Geometry on the map
-Map.centerObject(geometry, 5);
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
+    shaleplay = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
+    conventional_play = ee.FeatureCollection("ft:1BUaXMmhXABk8pnXRBvWZnHVbQcPx5TQE74qVU2jG");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
 // Color scheme 
@@ -17,8 +19,7 @@ var whi=('#f7f7f7').toString();var black = ('#101010').toString();var pink = ('#
 var lyellow = ('#fffcb0').toString();
 
 shaleplay = shaleplay.union(); conventional_play= conventional_play.union();
-Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); 
-Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); 
+Map.addLayer(conventional_play, {'color':red}, "conventional_play", 1, 0.2); Map.addLayer(shaleplay, {'color':black}, "shale play boundaries", 1, 0.5); 
 
 
 
@@ -56,27 +57,14 @@ var Well_List_names = ee.List(["D_wells", "V_wells", 'H_post2000', 'H_pre2000','
 
 
 
-
-// count number of wells 
-var well_count = function(fc){
-  fc = ee.FeatureCollection(fc);
-  var output = fc.aggregate_sum('Well Count');
-  return ee.Number(output);
-};
-
-var count = Well_List.map(well_count);
-// print('Total well count by type'); print(Well_List_names.zip(count));
-
-
 var spatialFilter = ee.Filter.intersects({
   leftField: '.geo',
   rightField: '.geo',
   maxError: 10
 });
 var saveAllJoin = ee.Join.saveAll({
-  matchesKey: 'scenes',
+  matchesKey: 'intersected',
 });
-
 
 var play_bound = function(well_layer){
   well_layer = ee.FeatureCollection(well_layer);
@@ -88,37 +76,11 @@ var play_bound = function(well_layer){
 var shale_wells = Well_List.map(play_bound);
 print(Well_List_names.zip(shale_wells));
 
-/*
-var spatialFilter = ee.Filter.intersects({
-  leftField: '.geo',
-  rightField: '.geo',
-  maxError: 10
-});
-var saveAllJoin = ee.Join.saveAll({
-  matchesKey: 'scenes',
-});
-
-
 
 var intersectJoined = saveAllJoin.apply(H_post2000 ,shaleplay,  spatialFilter);
-var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('scenes')));
-Map.addLayer(H_post2000, {'color':db}, "H_post2000"); 
-Map.addLayer(intersectJoined, {'color':yellow}, "intersectJoined"); 
-Map.addLayer(intersected, {'color':dg}, "intersected"); 
+var intersected = ee.FeatureCollection(ee.List(intersectJoined.first().get('intersected')));
+
 // 4787/26225 pre 2000 H Wells in plays 
 // 94654/119710 post 2000 H wells in plays
 
-print(well_count(intersected)); // 
-print(well_count(intersectJoined)); //0 
 
-
-
-// add Layers 
-// Map.addLayer(V_wells, {'color':pink}, "V_wells", 1, 0.3); 
-// Map.addLayer(D_wells, {'color':lb}, "D_wells",1, 0.3); 
-// Map.addLayer(H_post2000, {'color':yellow}, "H_post2000"); 
-// Map.addLayer(H_pre2000, {'color':db}, "H_pre2000"); 
-// Map.addLayer(U_pre2000, {'color':dg}, "U_pre2000", 1, 0.4); 
-// Map.addLayer(U_post2000, {'color':lg}, "U_post2000", 1, 0.4); 
-
-*/
