@@ -5,11 +5,6 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
     Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-// easiest way is to export no location and no time labels 
-// later, filter the no location labels out, add the offshore label 
-
-
 /* ################ Color scheme################ */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
   var azure= ('#11ffff').toString();
@@ -30,16 +25,16 @@ Map.addLayer(shaleplay, {'color':black}, "shale play boundaries union", 1, 0.5);
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('SurfaceLongitude'))
-  var label = ee.Algorithms.If(property, 1, 2 ); // 2 means without surfaceLongitude 
+  var label = ee.Algorithms.If(property, 0, 1 ); // 1 means without surfaceLongitude 
   return(ee.Feature(feature).set("location",label )
-  ); // 0 means has location, 1 means no location 
+  );
 };
 
 // Assume First Prod Year and First Prod Date are consistent 
 var add_time_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('First Prod Year'))
-  var label =ee.Algorithms.If(property, 1, 2 ) //2 means without First Production Date
+  var label =ee.Algorithms.If(property, 0, 1 ) //1 means without First Production Date
   return(ee.Feature(feature).set("time",label));
 };
 
@@ -67,11 +62,19 @@ processed_wells = processed_wells.map(set_offshore);
 processed_wells = processed_wells.map(set_shale);
 Export.table.toDrive(
   ee.FeatureCollection(processed_wells)
-  .select(['shale_play', 'offshore', 
+  .select(['shale', 'offshore', 
             'shale code', 'offshore code', 
             'location', 'time', 
             'SerialNumber2'])
 , "label_offshore_shale_time_location");
+
+
+
+
+
+// ################ filter Offshore from Directional/Unknown ################ 
+var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
+Map.addLayer(GOM_offshore, {'color':db}, "GOM_wells", 1, 1);Map.addLayer(Active_GOM, {'color':black}, "Active_GOM_wells", 1, 1);
 
 
 
@@ -193,7 +196,7 @@ print(ee.FeatureCollection(collapsed_classified).aggregate_sum('Well Count'));
 
 
 var label = ee.FeatureCollection(collapsed_classified)
-.select(['Class Label',  'SerialNumber2'])
+.select(['Class Label', 'Class Label Code', 'SerialNumber2'])
 
 Export.table.toDrive(label, "Label_shale_class_correc"  )
 
