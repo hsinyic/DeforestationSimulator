@@ -30,30 +30,40 @@ Map.addLayer(shaleplay, {'color':black}, "shale play boundaries union", 1, 0.5);
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('SurfaceLongitude'))
-  var label = ee.Algorithms.If(property, 2, 1 ); // 2 means has location 
+  var label = ee.Algorithms.If(property, 1, 0 ); // 0 means without surfaceLongitude 
   return(ee.Feature(feature).set("location",label )
-  ); // 0 means has location, 1 means no location 
+  );
 };
 
 // Assume First Prod Year and First Prod Date are consistent 
 var add_time_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('First Prod Year'))
-  var label =ee.Algorithms.If(property, 2, 1 ) //2 means has time 
+  var label =ee.Algorithms.If(property, 1, 0 ) //0 means without First Production Date
   return(ee.Feature(feature).set("time",label));
 };
 
-
+// no location, convnetional onshore, conventional offshore, shale onshore 
+// the ones without the location 
+// the ones that are offshore 
+// the ones that are onshore in shale play 
 
 var processed_wells = ee.FeatureCollection(Well)
 .map(add_location_label)
 .map(add_time_label);
 
+
+
 var set_shale = function(feature){
   feature = ee.Feature(feature);
+  var property = ee.Number(feature.get('SurfaceLongitude'))
   var result = feature
-  .set("shale code", ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 2,1 ))
-  .set("shale", ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "shale","conventional" ))
+  .set("shale code",  ee.Algorithms.If(property, 
+  ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 2,1 ), 0
+  ))
+  .set("shale",  ee.Algorithms.If(property, 
+  ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "shale","conventional" ), "no location"
+  ));
   return (ee.Feature(result));
 };
 var set_offshore = function(feature){
@@ -63,7 +73,6 @@ var set_offshore = function(feature){
   .set("offshore", ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore","onshore"));
   return (ee.Feature(result));
 };
-
 processed_wells = processed_wells.map(set_offshore);
 processed_wells = processed_wells.map(set_shale);
 Export.table.toDrive(
@@ -73,6 +82,10 @@ Export.table.toDrive(
             'location', 'time', 
             'SerialNumber2'])
 , "label_offshore_shale_time_location");
+
+// ################ filter Offshore from Directional/Unknown ################ 
+var Active_GOM = GOM_offshore.filterMetadata('Status','equals', 'COM').filterMetadata('Type_Code','equals', 'D');
+Map.addLayer(GOM_offshore, {'color':db}, "GOM_wells", 1, 1);Map.addLayer(Active_GOM, {'color':black}, "Active_GOM_wells", 1, 1);
 
 
 
