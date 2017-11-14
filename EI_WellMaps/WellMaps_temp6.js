@@ -153,8 +153,12 @@ var no_location = function(fc){
   fc = ee.FeatureCollection(fc);
   var output = fc.filterMetadata("SurfaceLongitude", "equals", null);
   return ee.FeatureCollection(output);
-}; var no_location_non_shale_FB = non_shale_well_FB.map(no_location);
+}; 
+var no_location_non_shale_FB = non_shale_well_FB.map(no_location);
+var no_location_shale_well_FB = shale_well_FB.map(no_location);
 print(Well_List_names.zip(no_location_non_shale_FB.map(well_count)));
+print(Well_List_names.zip(no_location_shale_well_FB.map(well_count)));
+
 
 
 
