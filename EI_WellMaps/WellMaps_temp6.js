@@ -158,6 +158,7 @@ print(Well_List_names.zip(no_location_non_shale_FB.map(well_count)));
 
 
 
+
 // var i=0; var geometry= geometry3;
 // Map.addLayer(ee.FeatureCollection(shale_well_FB.get(i)), {'color':dg}, s_list_names.get(i).getInfo(), 0, 1); 
 // Map.addLayer(ee.FeatureCollection(non_shale_well_FB.get(i)), {'color':azure}, os_list_names.get(i).getInfo(), 0, 1); 
