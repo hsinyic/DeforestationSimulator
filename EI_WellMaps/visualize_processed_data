@@ -36,6 +36,7 @@ var select = function( after,before, direction, type){
   direction = ee.String(direction);
   type= ee.List(type);  // print(before, after, direction, type, ee.Date(after).millis(), ee.Date(before).millis())
   var selected_fc = ee.FeatureCollection(Processed_Well
+  .filter(ee.Filter.inList('final_location_label',  ['onshore conventional', 'onshore shale']))
   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
   .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
@@ -62,7 +63,6 @@ var Well_List = ee.List([
   select('2000', '2100', 'V', ['GAS', 'BOTH', 'OIL']),
   select('1800', '2000', 'V', ['GAS', 'BOTH', 'OIL'])
   ]);
-
 var Well_List_names = ee.List([
   'H_gas_post2003',
   'H_gas_pre2000', 
@@ -81,9 +81,12 @@ var Well_List_names = ee.List([
   
   'V_wells_post2000',
   'V_wells_pre2000']);
-
 var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 
+
+var Well_List_processed = ee.List.sequence(0, 13 ).map(function(code){
+  code= ee.Number(code);return Processed_Well.filterMetadata('Class Label Code', 'equals', code)}
+  )
 // ################  wells in shale ################ //
 var in_shale = function(fc){
   fc = ee.FeatureCollection(fc);
@@ -98,8 +101,8 @@ var well_count = function(fc){
   var output = fc.aggregate_sum('Well Count');
   return ee.Number(output);
 }; 
-var count = Well_List.map(well_count); print('Total well count by type'); print(count);
-var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+// var count = Well_List.map(well_count); print('Total well count by type'); print(count);
+// var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 // measured depth histogram, set graph options.
 var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'measured depth in ft'},vAxis: {title: 'well count'},series: {0: {color: 'blue'}}};
 var measured_depth = function(fc, series_name, geo){
@@ -129,11 +132,15 @@ var avg_depth = function(series_name, fc, geo){
 
 
 Map.addLayer(ee.FeatureCollection(Well_List.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 1, 1); 
+
+
 Map.addLayer(ee.FeatureCollection(Well_List.get(7)), {'color':purple1}, Well_List_names.get(7).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':gr}, Well_List_names.get(10).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':bl}, Well_List_names.get(11).getInfo(), 1, 1); 
+
 
 
 var color_list = ee.List([dg, red, yellow, lp, lb, db, pink, purple1, azure, orange, gr,bl,   br, purple2])
