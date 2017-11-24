@@ -49,7 +49,9 @@ var Well_List_names = ee.List([
   'V_wells_pre2000']);
 
 var Well_List_processed = ee.List([0,2,3,5,6,7,8,9,10,11,12,13]).map(function(code){
-  code= ee.Number(code);return Processed_Well.filterMetadata('Class Label Code', 'equals', code)}
+  code= ee.Number(code);return Processed_Well.filterMetadata('Class Label Code', 'equals', code)
+  .filter(ee.filter.inList('final_location_label', ['onshore conventional', 'onshore shale']))
+}
   )
 // ################  Display results/ derive statistics #################//
 // // count number of wells
@@ -66,9 +68,9 @@ var Well_List_processed = ee.List([0,2,3,5,6,7,8,9,10,11,12,13]).map(function(co
 Map.addLayer(ee.FeatureCollection(Well_List_processed.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List_processed.get(7)), {'color':purple1}, Well_List_names.get(7).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List_processed.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List_processed.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List_processed.get(10)), {'color':gr}, Well_List_names.get(10).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List_processed.get(11)), {'color':bl}, Well_List_names.get(11).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List_processed.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List_processed.get(10)), {'color':gr}, Well_List_names.get(10).getInfo(), 1, 1); 
+// Map.addLayer(ee.FeatureCollection(Well_List_processed.get(11)), {'color':bl}, Well_List_names.get(11).getInfo(), 1, 1); 
 
 
 
