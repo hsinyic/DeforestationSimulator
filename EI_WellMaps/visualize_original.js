@@ -71,13 +71,10 @@ var select = function( after,before, direction, type){
 };
 var Well_List = ee.List([
   select('2003','2100', 'H', ['GAS'] ),
-  select('2000','2003', 'H', ['GAS'] ),
-  select('1800','2000', 'H', ['GAS'] ),
+  select('1800','2003', 'H', ['GAS'] ),
 
   select('2007','2100', 'H', ['OIL'] ),
-  select('2000','2007', 'H', ['OIL'] ),
-  select('1800','2000', 'H', ['OIL'] ),
-  
+  select('1800','2007', 'H', ['OIL'] ),
   
   select('2003','2100', 'H', ['BOTH'] ),
   select('1800','2003', 'H', ['BOTH'] ),
@@ -95,12 +92,10 @@ var Well_List = ee.List([
 
 var Well_List_names = ee.List([
   'H_gas_post2003',
-  'H_gas_00to03',
-  'H_gas_pre2000', 
+  'H_gas_pre2003', 
   
   'H_oil_post2007',
-  'H_oil_00to07',
-  'H_oil_pre2000',
+  'H_oil_pre2007',
   
   'H_OG_post2003',
   'H_OG_pre2003', 
@@ -176,12 +171,12 @@ var avg_depth = function(series_name, fc, geo){
 };
 
 
-// Map.addLayer(ee.FeatureCollection(Well_List.get(0)), {'color':dg}, Well_List_names.get(0).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List.get(1)), {'color':red}, Well_List_names.get(1).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List.get(2)), {'color':yellow}, Well_List_names.get(2).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List.get(3)), {'color':lp}, Well_List_names.get(3).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List.get(4)), {'color':lb}, Well_List_names.get(4).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List.get(5)), {'color':db}, Well_List_names.get(5).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(0)), {'color':dg}, Well_List_names.get(0).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(1)), {'color':red}, Well_List_names.get(1).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(2)), {'color':yellow}, Well_List_names.get(2).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(3)), {'color':lp}, Well_List_names.get(3).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(4)), {'color':lb}, Well_List_names.get(4).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List.get(5)), {'color':db}, Well_List_names.get(5).getInfo(), 1, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 1, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(7)), {'color':purple1}, Well_List_names.get(7).getInfo(), 1, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 1, 1); 
