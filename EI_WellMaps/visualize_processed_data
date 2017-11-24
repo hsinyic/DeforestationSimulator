@@ -61,19 +61,14 @@ var Well_List_processed = ee.List([0,2,3,5,6,7,8,9,10,11,12,13]).map(function(co
 // // var count = Well_List.map(well_count); print('Total well count by type'); print(count);
 // // var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 // measured depth histogram, set graph options.
-var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'measured depth in ft'},vAxis: {title: 'well count'},series: {0: {color: 'blue'}}};
-var measured_depth = function(fc, series_name, geo){
-  fc = ee.List(fc);series_name = ee.List([series_name]);geo=ee.Geometry(geo);
-  var histogram = ui.Chart.feature.histogram(ee.FeatureCollection(fc.get(i)).filterBounds(geo), 
-    'Measured Depth (TD)',  30).setSeriesNames(series_name).setOptions(options); return(histogram);};
 
 
 Map.addLayer(ee.FeatureCollection(Well_List_processed.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List_processed.get(7)), {'color':purple1}, Well_List_names.get(7).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List_processed.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List_processed.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List_processed.get(10)), {'color':gr}, Well_List_names.get(10).getInfo(), 1, 1); 
-// Map.addLayer(ee.FeatureCollection(Well_List_processed.get(11)), {'color':bl}, Well_List_names.get(11).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(7)), {'color':purple1}, Well_List_names.get(7).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(10)), {'color':gr}, Well_List_names.get(10).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(11)), {'color':bl}, Well_List_names.get(11).getInfo(), 1, 1); 
 
 
 
