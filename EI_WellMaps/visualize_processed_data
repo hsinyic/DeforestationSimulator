@@ -1,6 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
-    shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
+var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
     conventional_play_or = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
     GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
@@ -87,22 +86,15 @@ var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.ca
 var Well_List_processed = ee.List.sequence(0, 13 ).map(function(code){
   code= ee.Number(code);return Processed_Well.filterMetadata('Class Label Code', 'equals', code)}
   )
-// ################  wells in shale ################ //
-var in_shale = function(fc){
-  fc = ee.FeatureCollection(fc);
-  // var output = fc.filterBounds(buffer_shaleplay);
-  var output = fc.filter(ee.Filter.eq('final_location_label', 'onshore shale' ));
-  return ee.FeatureCollection(output);
-}; var shale_well_FB = Well_List.map(in_shale);
 // ################  Display results/ derive statistics #################//
-// count number of wells
-var well_count = function(fc){
-  fc = ee.FeatureCollection(fc);
-  var output = fc.aggregate_sum('Well Count');
-  return ee.Number(output);
-}; 
-// var count = Well_List.map(well_count); print('Total well count by type'); print(count);
-// var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
+// // count number of wells
+// var well_count = function(fc){
+//   fc = ee.FeatureCollection(fc);
+//   var output = fc.aggregate_sum('Well Count');
+//   return ee.Number(output);
+// }; 
+// // var count = Well_List.map(well_count); print('Total well count by type'); print(count);
+// // var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 // measured depth histogram, set graph options.
 var options = {title: 'measured depth',fontSize: 10,hAxis: {title: 'measured depth in ft'},vAxis: {title: 'well count'},series: {0: {color: 'blue'}}};
 var measured_depth = function(fc, series_name, geo){
@@ -131,15 +123,15 @@ var avg_depth = function(series_name, fc, geo){
 // Map.addLayer(ee.FeatureCollection(Well_List.get(5)), {'color':db}, Well_List_names.get(5).getInfo(), 1, 1); 
 
 
-Map.addLayer(ee.FeatureCollection(Well_List.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List_processed.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 1, 1); 
 
 
-Map.addLayer(ee.FeatureCollection(Well_List.get(7)), {'color':purple1}, Well_List_names.get(7).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':gr}, Well_List_names.get(10).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':bl}, Well_List_names.get(11).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(7)), {'color':purple1}, Well_List_names.get(7).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(8)), {'color':azure}, Well_List_names.get(8).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(10)), {'color':gr}, Well_List_names.get(10).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(11)), {'color':bl}, Well_List_names.get(11).getInfo(), 1, 1); 
 
 
 
