@@ -33,7 +33,7 @@ Map.addLayer(county, {'color':gr}, "county", 1, 0.5);
 
 // Map.addLayer(buffer_shaleplay,{'color':orange}, "shale play buffer", 1, 1)
 // ################ select wells of certaint atrributes ################ //
-var no_date = .getInfo(), 1, 0); 
+var no_date = Well
 .filter(ee.Filter.inList('Updated Production Type', 
 ['GAS', 'OIL', 'BOTH']))
 // .filter(ee.Filter.inList('Drill Type', 
