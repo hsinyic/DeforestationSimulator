@@ -48,7 +48,6 @@ var BOEMoffshore_boundary_geometry = BOEMoffshore_boundary_union;
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('SurfaceLongitude'));
-  feature = feature.set("location",'default' );
 
   feature = feature.set("off location",0);
 
@@ -83,12 +82,10 @@ var add_location_label=  function(feature){
   ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2, 
     ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 3)),
   1));
-  feature = ee.Feature(feature.set("location", 
-  ee.Algorithms.If(off_location.eq(1),1 , on_location)
-  ));
-  feature = ee.Feature(feature.set("onshore location"), on_location);
-  feature = ee.Feature(feature.set("offshore location"), off_location);
-  feature = ee.Feature(feature.set("no location"), off_location);
+
+  feature = ee.Feature(feature.set("onshore location", on_location));
+  feature = ee.Feature(feature.set("offshore location", off_location));
+  feature = ee.Feature(feature.set("no location", off_location));
   feature = ee.Feature(feature.set("location_code", null_property));
   return(ee.Feature(feature));
 };
@@ -114,7 +111,7 @@ var processed_wells = ee.FeatureCollection(Well_May18)
 print(processed_wells.aggregate_count('time_code'));
 
 Map.addLayer(Well_May18,  {'color':pink},'total', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'conventional', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'offshore', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 4),  {'color':lg},'shale', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('no location', 'equals', 10),  {'color':dg},'offshore', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('no location', 'equals', 16),  {'color':bl},'no', 1, 1); 
