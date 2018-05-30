@@ -50,8 +50,11 @@ var add_location_label=  function(feature){
   var property = ee.Number(feature.get('SurfaceLongitude'));
 
   feature = feature.set("offshore location",0);
-
   feature = feature.set("onshore location",0 );
+  feature = feature.set("location_code",0 );
+  feature = feature.set("final",0 );
+
+
 
   // var location = ee.String(
   //   ee.Algorithms.If(property, 
@@ -66,7 +69,7 @@ var add_location_label=  function(feature){
       
   var null_property = ee.Number(
       ee.Algorithms.If(property, 10, 16));
-  var final_label = off_location + on_location +null_property;
+  var final_label = ee.Number(off_location).add(ee.Number(on_location)).add(ee.Number(null_property));
 
 // off=1
 // on=3
@@ -75,9 +78,14 @@ var add_location_label=  function(feature){
 // no=5
 
 // off+shale = 5
+// 15, 21
 // off+ con = 6
+// 16, 22
 // on + shale = 7
+// 17,23
 // on + conv = 8
+// 18, 24
+
 
   var location_code = ee.Number(ee.Algorithms.If(property, 
   ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2, 
@@ -87,6 +95,7 @@ var add_location_label=  function(feature){
   feature = ee.Feature(feature.set("onshore location", on_location));
   feature = ee.Feature(feature.set("offshore location", off_location));
   feature = ee.Feature(feature.set("location_code", null_property));
+  feature = ee.Feature(feature.set("final_location", final_label));
   return(ee.Feature(feature));
 };
 
