@@ -21,7 +21,7 @@ var add_location_label=  function(feature){
   var property = ee.Number(feature.get('SurfaceLongitude'));
   feature = feature.set("location",'default' );
   var location = ee.String(ee.Algorithms.If(property, 
-  ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore", 
+    ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore", 
     ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "onshore conventional")),
   "no location"));
   var location_code = ee.Number(ee.Algorithms.If(property, 
