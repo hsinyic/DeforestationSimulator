@@ -5,15 +5,15 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
     Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union()
+var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union();
 var shaleplay_geometry = ee.Geometry(shaleplay.geometry());
-var GOM_boundary_union = GOM_boundary.union()
+var GOM_boundary_union = GOM_boundary.union();
 var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry());
 // ################  wells in shale ################ //
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
-  var property = ee.Number(feature.get('SurfaceLongitude'))
-  feature = feature.set("location",'default' )
+  var property = ee.Number(feature.get('SurfaceLongitude'));
+  feature = feature.set("location",'default' );
   var location = ee.String(ee.Algorithms.If(property, 
   ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore", 
     ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "onshore conventional")),
@@ -134,6 +134,6 @@ var collapse  = function(element , prev){
 var collapsed_classified = ee.List(classified).iterate(collapse, ee.FeatureCollection([]));
 collapsed_classified = ee.FeatureCollection(collapsed_classified);
 var label = ee.FeatureCollection(collapsed_classified)
-.select(['Class_Label', 'Class_Label_Code', 'SerialNumber2'])
+.select(['Class_Label', 'Class_Label_Code', 'SerialNumber2']);
 
 Export.table.toDrive(label, "Label_class"  );
