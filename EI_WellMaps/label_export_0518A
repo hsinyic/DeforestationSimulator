@@ -49,26 +49,36 @@ var add_location_label=  function(feature){
   feature = ee.Feature(feature);
   var property = ee.Number(feature.get('SurfaceLongitude'));
   feature = feature.set("location",'default' );
+
+  feature = feature.set("off location",0);
+
+  feature = feature.set("on location",0 );
+
   // var location = ee.String(
   //   ee.Algorithms.If(property, 
   //     ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore", 
   //       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "onshore conventional")),
   //           "no location"));
   var off_location = ee.Number(
-      ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, 2
-    ));
+      ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, 3));
 
   var on_location = ee.Number(
-      ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 3, 4
-    ));
+      ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 5));
+      
+  var null_property = ee.Number(
+      ee.Algorithms.If(property, 10, 16));
+
 
 // off=1
-// on=2
-// shale = 3
-// con=4
+// on=3
+// shale = 4
+// con=5
 // no=5
 
-
+// off+shale = 5
+// off+ con = 6
+// on + shale = 7
+// on + conv = 8
   var location_code = ee.Number(ee.Algorithms.If(property, 
   ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2, 
     ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 3)),
@@ -78,7 +88,8 @@ var add_location_label=  function(feature){
   ));
   feature = ee.Feature(feature.set("onshore location"), on_location);
   feature = ee.Feature(feature.set("offshore location"), off_location);
-  feature = ee.Feature(feature.set("location_code", location_code));
+  feature = ee.Feature(feature.set("no location"), off_location);
+  feature = ee.Feature(feature.set("location_code", null_property));
   return(ee.Feature(feature));
 };
 
@@ -103,10 +114,10 @@ var processed_wells = ee.FeatureCollection(Well_May18)
 print(processed_wells.aggregate_count('time_code'));
 
 Map.addLayer(Well_May18,  {'color':pink},'total', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('location', 'equals', 'conventional'), {'color':black}, 'conventional', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('location', 'equals', 'shale'),  {'color':lg},'shale', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('location', 'equals', 'offshore'),  {'color':dg},'offshore', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('location', 'equals', 'default'),  {'color':bl},'no', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'conventional', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 4),  {'color':lg},'shale', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('no location', 'equals', 10),  {'color':dg},'offshore', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('no location', 'equals', 16),  {'color':bl},'no', 1, 1); 
 
 
 
