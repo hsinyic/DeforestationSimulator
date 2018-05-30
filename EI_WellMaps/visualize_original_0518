@@ -193,7 +193,7 @@ var avg_depth = function(series_name, fc, geo){
 };
 
 
-Map.addLayer(ee.FeatureCollection(Well_List.get(0)), {'color':dg}, Well_List_names.get(0).getInfo(), 1, 0); 
+/*Map.addLayer(ee.FeatureCollection(Well_List.get(0)), {'color':dg}, Well_List_names.get(0).getInfo(), 1, 0); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(1)), {'color':red}, Well_List_names.get(1).getInfo(), 1, 0); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(2)), {'color':yellow}, Well_List_names.get(2).getInfo(), 1, 0); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(3)), {'color':lp}, Well_List_names.get(3).getInfo(), 1, 0); 
@@ -205,6 +205,7 @@ Map.addLayer(ee.FeatureCollection(Well_List.get(8)), {'color':azure}, Well_List_
 Map.addLayer(ee.FeatureCollection(Well_List.get(9)), {'color':orange}, Well_List_names.get(9).getInfo(), 1, 0); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(10)), {'color':gr}, Well_List_names.get(10).getInfo(), 1, 0); 
 Map.addLayer(ee.FeatureCollection(Well_List.get(11)), {'color':bl}, Well_List_names.get(11).getInfo(), 1, 0); 
+*/
 // Map.addLayer(ee.FeatureCollection(Well_List.get(12)), {'color':br}, Well_List_names.get(12).getInfo(), 1, 1); 
 // Map.addLayer(ee.FeatureCollection(Well_List.get(13)), {'color':purple2}, Well_List_names.get(13).getInfo(), 1, 1); 
 
