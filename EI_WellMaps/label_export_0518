@@ -42,7 +42,7 @@ var processed_wells = ee.FeatureCollection(Well_May18)
 .map(add_location_label)
 .map(add_time_label);
 
-print(processed_wells.aggregate_count('time_code'));
+// print(processed_wells.aggregate_count('time_code'));
 
 Export.table.toDrive(
   ee.FeatureCollection(processed_wells)
