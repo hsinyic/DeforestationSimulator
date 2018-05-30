@@ -58,6 +58,7 @@ Export.table.toDrive(
             'SerialNumber2'])
 , "label_time_location");
 
+/*
 //################ select wells of certaint attributes ################ //
 var select = function( after,before, direction, type){
   after= ee.String(after); before = ee.String(before);
@@ -142,4 +143,4 @@ collapsed_classified = ee.FeatureCollection(collapsed_classified);
 var label = ee.FeatureCollection(collapsed_classified)
 .select(['Class_Label', 'Class_Label_Code', 'SerialNumber2']);
 
-Export.table.toDrive(label, "Label_class"  );
+Export.table.toDrive(label, "Label_class"  );*/
