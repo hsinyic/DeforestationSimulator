@@ -70,7 +70,7 @@ var select = function( after,before, direction, type){
   .filterMetadata('time','not_equals', 1)
   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
-  .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
+  .filter(ee.Filter.inList('Drill Type',  direction))
   .filter(ee.Filter.inList('Updated Production Type',  type))); 
   return selected_fc;
 };
