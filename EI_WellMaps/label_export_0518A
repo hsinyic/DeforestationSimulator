@@ -87,10 +87,6 @@ var add_location_label=  function(feature){
 // 18, 24
 
 
-  var location_code = ee.Number(ee.Algorithms.If(property, 
-  ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2, 
-    ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 3)),
-  1));
 
   feature = ee.Feature(feature.set("onshore location", on_location));
   feature = ee.Feature(feature.set("offshore location", off_location));
