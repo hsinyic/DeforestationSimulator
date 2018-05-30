@@ -70,19 +70,18 @@ var select = function( after,before, direction, type){
   .filterMetadata('time','not_equals', 1)
   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
-  .filter(ee.Filter.inList('Drill Type',  [ee.String(direction)]))
   .filter(ee.Filter.inList('Updated Production Type',  type))); 
   return selected_fc;
 };
 var Well_List = ee.List([
-  select('2003','2100', 'H', ['GAS'] ),
-  select('1800','2003', 'H', ['GAS'] ),
+  select('2003','2100', ['H', 'V', 'U', 'D'], ['GAS'] ),
+  select('1800','2003', ['H', 'V', 'U', 'D'], ['GAS'] ),
 
-  select('2007','2100', 'H', ['OIL'] ),
-  select('1800','2007', 'H', ['OIL'] ),
+  select('2007','2100', ['H', 'V', 'U', 'D'], ['OIL'] ),
+  select('1800','2007', ['H', 'V', 'U', 'D'], ['OIL'] ),
 
-  select('2003','2100', 'H', ['BOTH'] ),
-  select('1800','2003', 'H', ['BOTH'] )  ]);
+  select('2003','2100', ['H', 'V', 'U', 'D'], ['BOTH'] ),
+  select('1800','2003', ['H', 'V', 'U', 'D'], ['BOTH'] )  ]);
 var Well_List_names = ee.List([
   'gas_post2003',
   'gas_pre2003', 
