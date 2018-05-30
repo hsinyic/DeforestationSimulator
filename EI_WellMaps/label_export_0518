@@ -54,6 +54,7 @@ Export.table.toDrive(
             'SerialNumber2'])
 , "label_time_location");
 
+print(processed_wells.filterMetadata('location','equals', 'onshore conventional').aggregate_count('Well Count'))
 
 //################ select wells of certaint attributes ################ //
 var select = function( after,before, direction, type){
