@@ -54,12 +54,12 @@ var add_location_label=  function(feature){
   //     ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore", 
   //       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "onshore conventional")),
   //           "no location"));
-  var off_location = ee.String(
-      ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, "onshore"
+  var off_location = ee.Number(
+      ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, 2
     ));
 
-  var on_location = ee.String(
-      ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "on conventional"
+  var on_location = ee.Number(
+      ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 3, 4
     ));
 
 // off=1
@@ -74,7 +74,7 @@ var add_location_label=  function(feature){
     ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 3)),
   1));
   feature = ee.Feature(feature.set("location", 
-  ee.Algorithms.If((off_location.compareTo(ee.String("offshore"))).eq(0),"offshore" , on_location)
+  ee.Algorithms.If(off_location.eq(1),1 , on_location)
   ));
   feature = ee.Feature(feature.set("location_code", location_code));
   return(ee.Feature(feature));
