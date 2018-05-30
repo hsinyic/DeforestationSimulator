@@ -83,6 +83,7 @@ var Well_List = ee.List([
 
   select('2003','2100', ['H', 'V', 'U', 'D'], ['BOTH'] ),
   select('1800','2003', ['H', 'V', 'U', 'D'], ['BOTH'] )  ]);
+
 var Well_List_names = ee.List([
   'gas_post2003',
   'gas_pre2003', 
