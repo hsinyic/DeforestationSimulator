@@ -66,7 +66,7 @@ var add_location_label=  function(feature){
       
   var null_property = ee.Number(
       ee.Algorithms.If(property, 10, 16));
-  var final_label = off_location + on_location +null_property
+  var final_label = off_location + on_location +null_property;
 
 // off=1
 // on=3
@@ -114,7 +114,7 @@ print(processed_wells.aggregate_count('time_code'));
 Map.addLayer(Well_May18,  {'color':pink},'total', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'offshore', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 4),  {'color':lg},'shale', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('no location', 'equals', 10),  {'color':dg},'offshore', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('no location', 'equals', 10),  {'color':dg},'location', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('no location', 'equals', 16),  {'color':bl},'no', 1, 1); 
 
 
