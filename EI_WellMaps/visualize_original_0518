@@ -157,7 +157,7 @@ var non_shale_well_FB = ee.List.sequence(0,Well_List.size().subtract(1),1).map(o
 var graph_shale = in_shale(Well2);
 var graph_non_shale = invertedJoin.apply(Well2, graph_shale, filter);
 Map.addLayer(Well2, {'color':dg}, 'total', 1, 1); 
-Map.addLayer(graph_shale, {'color':dg}, 'shale', 1, 1); 
+Map.addLayer(graph_shale, {'color':red}, 'shale', 1, 1); 
 Map.addLayer(graph_non_shale, {'color':lb}, 'conventional', 1, 1); 
 
 
