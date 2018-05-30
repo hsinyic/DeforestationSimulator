@@ -60,47 +60,45 @@ Export.table.toDrive(
 
 
 //################ select wells of certaint attributes ################ //
-var select = function( after,before, direction, type){
+var select = function( after,before, type){
   after= ee.String(after); before = ee.String(before);
   after = ee.String(after).cat('-01-01');before= ee.String(before).cat('-01-01');
-  direction = ee.String(direction);
   type= ee.List(type);
   var selected_fc = ee.FeatureCollection(processed_wells
   .filterMetadata('location','not_equals', 1)
   .filterMetadata('time','not_equals', 1)
   .filterMetadata('First Prod Date','greater_than', ee.Date(after).millis())
   .filterMetadata('First Prod Date','not_greater_than', ee.Date(before).millis())
-  .filter(ee.Filter.inList('Drill Type',  direction))
   .filter(ee.Filter.inList('Updated Production Type',  type))); 
   return selected_fc;
 };
 var Well_List = ee.List([
-  select('2003','2100', [('H', 'V', 'U', 'D')], ['GAS'] ),
-  select('1800','2003', [('H', 'V', 'U', 'D')], ['GAS'] ),
+  select('2003','2100', ['GAS'] ),
+  select('1800','2003', ['GAS'] ),
 
-  select('2007','2100', [('H', 'V', 'U', 'D')], ['OIL'] ),
-  select('1800','2007', ['H', 'V', 'U', 'D'], ['OIL'] ),
+  select('2007','2100', ['OIL'] ),
+  select('1800','2007', ['OIL'] ),
 
-  select('2003','2100', [('H', 'V', 'U', 'D')], ['BOTH'] ),
-  select('1800','2003', [('H', 'V', 'U', 'D')], ['BOTH'] )  ]);
+  select('2003','2100', ['BOTH'] ),
+  select('1800','2003', ['BOTH'] )  ]);
 
-var Well_List_names = ee.List([
-  'gas_post2003',
-  'gas_pre2003', 
+// var Well_List_names = ee.List([
+//   'gas_post2003',
+//   'gas_pre2003', 
 
-  'oil_pre2003',
-  'oil_post2003',
+//   'oil_pre2003',
+//   'oil_post2003',
 
-  'OG_pre2003',
-  'OG_post2003']);
-var Well_List_code = ee.List.sequence(0, Well_List.size().subtract(1), 1);
-print("Well_List_code", Well_List_code);
-var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});
-var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});
-var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
+//   'OG_pre2003',
+//   'OG_post2003']);
+// var Well_List_code = ee.List.sequence(0, Well_List.size().subtract(1), 1);
+// print("Well_List_code", Well_List_code);
+// var os_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('non_shale').toLowerCase());});
+// var s_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.cat('_shale').toLowerCase());});
+// var all_list_names = Well_List_names.map(function(i){i = ee.String(i);return(i.toUpperCase());});
 
 
-
+/*
 var set_class = function(i, prev_well_list){
   i= ee.Number(i);
   prev_well_list = ee.List(prev_well_list);
@@ -125,4 +123,4 @@ collapsed_classified = ee.FeatureCollection(collapsed_classified);
 var label = ee.FeatureCollection(collapsed_classified)
 .select(['Class_Label', 'Class_Label_Code', 'SerialNumber2']);
 
-Export.table.toDrive(label, "Label_class"  );
+Export.table.toDrive(label, "Label_class"  );*/
