@@ -66,7 +66,7 @@ var add_location_label=  function(feature){
       
   var null_property = ee.Number(
       ee.Algorithms.If(property, 10, 16));
-
+  var final_label = off_location + on_location +null_property
 
 // off=1
 // on=3
@@ -78,6 +78,7 @@ var add_location_label=  function(feature){
 // off+ con = 6
 // on + shale = 7
 // on + conv = 8
+
   var location_code = ee.Number(ee.Algorithms.If(property, 
   ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 2, 
     ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 3)),
