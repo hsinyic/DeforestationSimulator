@@ -55,16 +55,18 @@ var add_location_label=  function(feature){
   //       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "onshore conventional")),
   //           "no location"));
   var off_location = ee.String(
-      ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore", "onshore"
+      ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, "onshore"
     ));
 
   var on_location = ee.String(
       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "on conventional"
     ));
 
-  var location = ee.String(
-      ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "on conventional"
-    ));
+// off=1
+// on=2
+// shale = 3
+// con=4
+// no=5
 
 
   var location_code = ee.Number(ee.Algorithms.If(property, 
@@ -72,9 +74,8 @@ var add_location_label=  function(feature){
     ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 3)),
   1));
   feature = ee.Feature(feature.set("location", 
-  ee.Algorithms.If(off_location.eq("offshore"),"offshore" , on_location)
+  ee.Algorithms.If((off_location.compareTo(ee.String("offshore"))).eq(0),"offshore" , on_location)
   ));
-
   feature = ee.Feature(feature.set("location_code", location_code));
   return(ee.Feature(feature));
 };
@@ -103,7 +104,7 @@ Map.addLayer(Well_May18,  {'color':pink},'total', 1, 1);
 Map.addLayer(processed_wells.filterMetadata('location', 'equals', 'conventional'), {'color':black}, 'conventional', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('location', 'equals', 'shale'),  {'color':lg},'shale', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('location', 'equals', 'offshore'),  {'color':dg},'offshore', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('location', 'equals', 'no location'),  {'color':bl},'no', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('location', 'equals', 'default'),  {'color':bl},'no', 1, 1); 
 
 
 
