@@ -1,6 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
-    shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
+var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     geometry3 = /* color: #000000 */ee.Geometry.Point([-119.70703125, 35.389049966911664]),
     geometry2 = /* color: #f1ff5d */ee.Geometry.Polygon(
         [[[-83.70339828250013, 42.36067223886009],
@@ -17,12 +16,9 @@ var Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
     conventional_play_or = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
     GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
     BOEMoffshore_boundary = ee.FeatureCollection("ft:1CCkNqJ01FBC54wV-hkFCkngsAotxawo8MZyd0H-R"),
-    Well_May18 = ee.FeatureCollection("ft:1uDXh73lzH4n2bJivvecwXA-Swiz3pb4j8LBnt75J");
+    Well = ee.FeatureCollection("ft:1uDXh73lzH4n2bJivvecwXA-Swiz3pb4j8LBnt75J");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-    
 Map.centerObject(geometry1, 5);//center on Geometry on the map
-
 /* ################ Color scheme################ */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
   var azure= ('#11ffff').toString();
