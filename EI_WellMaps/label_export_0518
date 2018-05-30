@@ -7,10 +7,6 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     BOEMoffshore_boundary = ee.FeatureCollection("ft:1CCkNqJ01FBC54wV-hkFCkngsAotxawo8MZyd0H-R"),
     Well_May18 = ee.FeatureCollection("ft:1uDXh73lzH4n2bJivvecwXA-Swiz3pb4j8LBnt75J");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-
-
-
 var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union();
 var shaleplay_geometry = ee.Geometry(shaleplay.geometry());
 var GOM_boundary_union = BOEMoffshore_boundary.union();
