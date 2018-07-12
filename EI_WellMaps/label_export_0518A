@@ -7,6 +7,9 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     BOEMoffshore_boundary = ee.FeatureCollection("ft:1CCkNqJ01FBC54wV-hkFCkngsAotxawo8MZyd0H-R"),
     Well_May18 = ee.FeatureCollection("ft:1uDXh73lzH4n2bJivvecwXA-Swiz3pb4j8LBnt75J");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+var Well_May18 = ee.FeatureCollection("ft:1iPT-a3AzJGTZj5lFpS3CKtrf5D1t5LpC4EwmkOmc");
+
+
 
 /* ################ Color scheme################ */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
@@ -71,22 +74,22 @@ var add_location_label=  function(feature){
       ee.Algorithms.If(property, 10, 16));
   var final_label = ee.Number(off_location).add(ee.Number(on_location)).add(ee.Number(null_property));
 
-// off=1
-// on=3
-// shale = 4
-// con=5
-// no=5
+
+// 
+// off          =1
+// on           =3
+// shale        =4
+// conventional =5
+
 
 // off+shale = 5
 // 15, 21
-// off+ con = 6
+// off+conventional = 6
 // 16, 22
-// on + shale = 7
-// 17,23
-// on + conv = 8
+// on +shale = 7
+// 17, 23
+// on +conv = 8
 // 18, 24
-
-
 
   feature = ee.Feature(feature.set("onshore location", on_location));
   feature = ee.Feature(feature.set("offshore location", off_location));
