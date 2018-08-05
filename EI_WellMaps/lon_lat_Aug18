@@ -62,6 +62,7 @@ var add_location_label=  function(feature){
 // shale = 4
 // con=5
 // no=5
+
 // off+shale = 5
 // 15, 21
 // off+ con = 6
