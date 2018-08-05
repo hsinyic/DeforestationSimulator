@@ -57,13 +57,11 @@ var add_location_label=  function(feature){
       ee.Algorithms.If(propertyLatitude, 1, 0));
   var null_property = ee.Number(null_latitude).multiply(null_longitude); 
   var final_label = ee.Number(off_location).add(ee.Number(on_location)).multiply(ee.Number(null_property));
-
 // off=1
 // on=3
 // shale = 4
 // con=5
 // no=5
-
 // off+shale = 5
 // 15, 21
 // off+ con = 6
@@ -72,9 +70,6 @@ var add_location_label=  function(feature){
 // 17,23
 // on + conv = 8
 // 18, 24
-
-
-
   feature = ee.Feature(feature.set("onshore location", on_location));
   feature = ee.Feature(feature.set("offshore location", off_location));
   feature = ee.Feature(feature.set("location_code", null_property));
