@@ -79,10 +79,10 @@ var add_location_label=  function(feature){
 
       
   var null_longitude = ee.Number(
-      ee.Algorithms.If(property, 1, 0));
+      ee.Algorithms.If(propertyLongitude, 1, 0));
 
   var null_latitude = ee.Number(
-      ee.Algorithms.If(property, 1, 0));
+      ee.Algorithms.If(propertyLatitude, 1, 0));
 
   var null_property = ee.Number(null_latitutde).multiply(null_longitude); 
 
