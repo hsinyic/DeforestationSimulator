@@ -7,8 +7,20 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     Well_Aug18 = ee.FeatureCollection("ft:1iPT-a3AzJGTZj5lFpS3CKtrf5D1t5LpC4EwmkOmc");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 100000)
-.filterMetadata("New_ID", "less_than", 105000);
+// Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 100000)
+// .filterMetadata("New_ID", "less_than", 105000);
+print(Well_Aug18.aggregate_count("New_ID"))
+Well_Aug18= Well_Aug18
+.filterMetadata("SurfaceLongitude", "not_equals", null);
+print(Well_Aug18.aggregate_count("New_ID"))
+
+
+var Well_Aug18_null= Well_Aug18
+.filterMetadata("SurfaceLongitude", "equals", null);
+print(Well_Aug18_null.aggregate_count("New_ID"))
+
+
+
 /* ################ Color scheme################ */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
   var azure= ('#11ffff').toString();
