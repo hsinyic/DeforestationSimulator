@@ -47,7 +47,7 @@ var add_location_label=  function(feature){
   var on_location = ee.Number(
       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 5));
   var null_longitude = ee.Number(
-      ee.Algorithms.If(propertyLongitude, 0, 1));
+      ee.Algorithms.If(propertyLongitude.eq(null), 0, 1));
   var null_latitude = ee.Number(
       ee.Algorithms.If(propertyLatitude, 0, 1));
   var null_property = ee.Number(null_latitude).multiply(null_longitude); 
