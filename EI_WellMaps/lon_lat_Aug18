@@ -49,11 +49,8 @@ var add_location_label=  function(feature){
   feature = feature.set("location_code",0 );feature = feature.set("final",0 );
   var off_location = ee.Number(
       ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, 3));
-
   var on_location = ee.Number(
       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 5));
-
-      
   var null_longitude = ee.Number(
       ee.Algorithms.If(propertyLongitude, 1, 0));
 
