@@ -10,7 +10,7 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
 // Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
 // Well_May18 = ee.FeatureCollection("ft:1iPT-a3AzJGTZj5lFpS3CKtrf5D1t5LpC4EwmkOmc");
 
-Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "less than", 100000);
+Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "not_greater_than", 100000);
 
 
 /* ################ Color scheme################ */  
