@@ -41,7 +41,7 @@ var add_location_label=  function(feature){
   var propertyLongitude = ee.Number(feature.get('SurfaceLongitude'));
   var propertyLatitude = ee.Number(feature.get('SurfaceLatitude'));
   feature = feature.set("offshore location",0);feature = feature.set("onshore location",0 );
-  feature = feature.set("location_code",0 );feature = feature.set("final",0 );
+  feature = feature.set("location_code",0 );feature = feature.set("final_location",0 );
   var off_location = ee.Number(
       ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, 3));
   var on_location = ee.Number(
