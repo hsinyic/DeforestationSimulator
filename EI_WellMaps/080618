@@ -60,16 +60,10 @@ var add_location_label=  function(feature){
 // on=3
 // shale = 4
 // con=5
-// no=5
-
 // off+shale = 5
-// 15, 21
 // off+ con = 6
-// 16, 22
 // on + shale = 7
-// 17,23
 // on + conv = 8
-// 18, 24
   feature = ee.Feature(feature.set("onshore location", on_location));
   feature = ee.Feature(feature.set("offshore location", off_location));
   feature = ee.Feature(feature.set("location_code", null_property));
