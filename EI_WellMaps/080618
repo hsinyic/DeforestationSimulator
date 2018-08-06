@@ -14,7 +14,7 @@ print(Well_Aug18.aggregate_count("New_ID"))
 var Well_Aug18_null= Well_Aug18.filterMetadata("nodataCode", "equals", 0);
 print(Well_Aug18_null.aggregate_count("New_ID"))
 
-
+Map.addLayer(Well_Aug18)
 
 
 
