@@ -44,7 +44,7 @@ Map.addLayer(shaleplay,  {'color':bl},'shaleplay', 1, 1);
 // ################  wells in shale ################ //
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
-  var noDataIndicator = feature.get('First Prod Year');
+  var noDataIndicator = feature.get('nodataCode');
   feature = feature.set("offshore location",0);feature = feature.set("onshore location",0 );
   feature = feature.set("location_code",0 );feature = feature.set("final_location",0 );
   var off_location = ee.Number(
@@ -52,10 +52,7 @@ var add_location_label=  function(feature){
   var on_location = ee.Number(
       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 5));
   var final_label = (ee.Number(off_location).add(ee.Number(on_location)));
-// off=1
-// on=3
-// shale = 4
-// con=5
+// off=1,on=3, shale = 4, con=5
 // off+shale = 5
 // off+ con = 6
 // on + shale = 7
