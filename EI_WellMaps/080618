@@ -46,16 +46,13 @@ Map.addLayer(shaleplay,  {'color':bl},'shaleplay', 1, 1);
 // ################  wells in shale ################ //
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
-  var propertyNodata = ee.Number(feature.get('locationNodata'));
   feature = feature.set("offshore location",0);feature = feature.set("onshore location",0 );
   feature = feature.set("location_code",0 );feature = feature.set("final_location",0 );
   var off_location = ee.Number(
       ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, 3));
   var on_location = ee.Number(
       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 5));
-  var null_property = ee.Number(
-      ee.Algorithms.If(propertyNodata, 0, 1));
-  var final_label = (ee.Number(off_location).add(ee.Number(on_location))).multiply(ee.Number(null_property));
+  var final_label = (ee.Number(off_location).add(ee.Number(on_location)));
 // off=1
 // on=3
 // shale = 4
