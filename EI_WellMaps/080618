@@ -91,7 +91,6 @@ Export.table.toDrive(
 , "label_location");
 
 
-
   // var null_property = ee.Number(
   //     ee.Algorithms.If(property, 10, 16));
   // var location = ee.String(
