@@ -10,7 +10,7 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
 
 
 Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 400000)
-.filterMetadata("New_ID", "less_than", 535000);
+.filterMetadata("New_ID", "less_than", 1535000);
 print(Well_Aug18.aggregate_count("New_ID"))
 Well_Aug18= Well_Aug18
 .filterMetadata("locationNodata", "equals", "TRUE");
