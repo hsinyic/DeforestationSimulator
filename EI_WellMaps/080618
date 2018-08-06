@@ -22,18 +22,6 @@ print(Well_Aug18_null.aggregate_count("New_ID"))
 
 
 
-// var add_location_label=  function(feature){
-//   feature = ee.Feature(feature);
-//   feature = feature.set("location_code",0 );
-//   var null_longitude = ee.Number(
-//       ee.Algorithms.If(propertyLongitude, 1, 0));
-//   var null_latitude = ee.Number(
-//       ee.Algorithms.If(propertyLatitude, 1, 0));
-//   var null_property = ee.Number(null_latitude).multiply(null_longitude); 
-//   feature = ee.Feature(feature.set("location_code", null_property));
-//   return(ee.Feature(feature));
-// };
-
 
 /* ################ Color scheme################ */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
@@ -53,30 +41,20 @@ var shaleplay_geometry = ee.Geometry(shaleplay.geometry());
 var GOM_boundary_union = GOM_boundary.union();
 var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry());
 var BOEMoffshore_boundary_union = BOEMoffshore_boundary.union();
-// var BOEMoffshore_boundary_geometry= ee.Geometry(BOEMoffshore_boundary_union.geometry());
 var BOEMoffshore_boundary_geometry = BOEMoffshore_boundary_union;
-// Map.addLayer(BOEMoffshore_boundary,  {'color':whi},'BOEMoffshore_boundary', 1, 1); 
-// Map.addLayer(BOEMoffshore_boundary_union,  {'color':yellow},'GOM_boundary_union', 1, 1); 
-// Map.addLayer(BOEMoffshore_boundary_geometry,  {'color':purple1},'GOM_boundary_geometry', 1, 1); 
-// Map.addLayer(shaleplay_or,  {'color':black},'shaleplay_or', 1, 1); 
 Map.addLayer(shaleplay,  {'color':bl},'shaleplay', 1, 1); 
-// Map.addLayer(shaleplay_geometry,  {'color':pink},'shaleplay_geometry', 1, 1); 
 // ################  wells in shale ################ //
 var add_location_label=  function(feature){
   feature = ee.Feature(feature);
-  var propertyLongitude = ee.Number(feature.get('SurfaceLongitude'));
-  var propertyLatitude = ee.Number(feature.get('SurfaceLatitude'));
+  var propertyNodata = ee.Number(feature.get('locationNodata'));
   feature = feature.set("offshore location",0);feature = feature.set("onshore location",0 );
   feature = feature.set("location_code",0 );feature = feature.set("final_location",0 );
   var off_location = ee.Number(
       ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, 3));
   var on_location = ee.Number(
       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 5));
-  var null_longitude = ee.Number(
-      ee.Algorithms.If(propertyLongitude, 1, 0));
-  var null_latitude = ee.Number(
-      ee.Algorithms.If(propertyLatitude, 1, 0));
-  var null_property = ee.Number(null_latitude).multiply(null_longitude); 
+  var null_property = ee.Number(
+      ee.Algorithms.If(propertyNodata, 0, 1));
   var final_label = (ee.Number(off_location).add(ee.Number(on_location))).multiply(ee.Number(null_property));
 // off=1
 // on=3
@@ -146,5 +124,12 @@ Export.table.toDrive(
 
 // Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
 // Well_May18 = ee.FeatureCollection("ft:1iPT-a3AzJGTZj5lFpS3CKtrf5D1t5LpC4EwmkOmc");
+// var BOEMoffshore_boundary_geometry= ee.Geometry(BOEMoffshore_boundary_union.geometry());
+// Map.addLayer(BOEMoffshore_boundary,  {'color':whi},'BOEMoffshore_boundary', 1, 1); 
+// Map.addLayer(BOEMoffshore_boundary_union,  {'color':yellow},'GOM_boundary_union', 1, 1); 
+// Map.addLayer(BOEMoffshore_boundary_geometry,  {'color':purple1},'GOM_boundary_geometry', 1, 1); 
+// Map.addLayer(shaleplay_or,  {'color':black},'shaleplay_or', 1, 1); 
+// Map.addLayer(shaleplay_geometry,  {'color':pink},'shaleplay_geometry', 1, 1); 
+
 
 
