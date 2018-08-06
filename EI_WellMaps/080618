@@ -8,11 +8,11 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 600000)
 // .filterMetadata("New_ID", "less_than", 625000);
-print(Well_Aug18.aggregate_count("New_ID"))
-var Well_Aug18_nonNull= Well_Aug18.filterMetadata("nodataCode", "equals", 1);
-print(Well_Aug18_nonNull.aggregate_count("New_ID"))
-var Well_Aug18_null= Well_Aug18.filterMetadata("nodataCode", "equals", 0);
-print(Well_Aug18_null.aggregate_count("New_ID"))
+// print(Well_Aug18.aggregate_count("New_ID"))
+// var Well_Aug18_nonNull= Well_Aug18.filterMetadata("nodataCode", "equals", 1);
+// print(Well_Aug18_nonNull.aggregate_count("New_ID"))
+// var Well_Aug18_null= Well_Aug18.filterMetadata("nodataCode", "equals", 0);
+// print(Well_Aug18_null.aggregate_count("New_ID"))
 
 
 
@@ -73,10 +73,10 @@ var processed_wells = ee.FeatureCollection(Well_Aug18)
 .map(add_location_label)
 // .map(add_time_label);
 Map.addLayer(Well_Aug18,  {'color':pink},'total', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'offshore', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 3), {'color':black}, 'offshore', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 4),  {'color':lg},'shale', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 5),  {'color':dg},'conventional', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 3), {'color':black}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 4),  {'color':lg},'shale', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 5),  {'color':dg},'conventional', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 7), {'color':orange}, 'conventional', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 8), {'color':yellow}, 'shale', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 5), {'color':purple1}, 'offshore', 1, 1); 
