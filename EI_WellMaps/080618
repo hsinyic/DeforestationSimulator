@@ -63,7 +63,6 @@ var add_location_label=  function(feature){
 // on + conv = 8
   feature = ee.Feature(feature.set("onshore location", on_location));
   feature = ee.Feature(feature.set("offshore location", off_location));
-  feature = ee.Feature(feature.set("location_code", null_property));
   feature = ee.Feature(feature.set("final_location", final_label));
   return(ee.Feature(feature));
 };
