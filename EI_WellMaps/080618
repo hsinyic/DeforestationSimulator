@@ -3,8 +3,7 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
     conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
     GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
-    BOEMoffshore_boundary = ee.FeatureCollection("ft:1CCkNqJ01FBC54wV-hkFCkngsAotxawo8MZyd0H-R"),
-    Well_Aug18 = ee.FeatureCollection("ft:1Orc-KWp7nHk6BXfz5rYoD3mY6jwiNYdPXWetOU3o");
+    BOEMoffshore_boundary = ee.FeatureCollection("ft:1CCkNqJ01FBC54wV-hkFCkngsAotxawo8MZyd0H-R");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 600000)
 // .filterMetadata("New_ID", "less_than", 625000);
@@ -16,7 +15,7 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
 
 
 
-
+    // Well_Aug18 = ee.FeatureCollection("ft:1Orc-KWp7nHk6BXfz5rYoD3mY6jwiNYdPXWetOU3o");
 
 
 
