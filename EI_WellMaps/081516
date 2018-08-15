@@ -15,6 +15,8 @@ var Well_Aug18_null= Well_Aug18.filterMetadata("nodataCode", "equals", 0);
 print(Well_Aug18_null.aggregate_count("New_ID"))
 
 
+1LU5qSzC3Mu4Pg7ilV6lBKXyR46AiqCXKmRhwU-JZ
+
 /* ################ Color scheme################ */  
   var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
   var azure= ('#11ffff').toString();
