@@ -6,13 +6,13 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     BOEMoffshore_boundary = ee.FeatureCollection("ft:1CCkNqJ01FBC54wV-hkFCkngsAotxawo8MZyd0H-R"),
     Well_Aug18 = ee.FeatureCollection("ft:1Tfoqd3NaYNjcXhA4FZbjQgOrplE5xBLsL4hRELMC");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 600000)
-// .filterMetadata("New_ID", "less_than", 625000);
-// print(Well_Aug18.aggregate_count("New_ID"))
-// var Well_Aug18_nonNull= Well_Aug18.filterMetadata("nodataCode", "equals", 1);
-// print(Well_Aug18_nonNull.aggregate_count("New_ID"))
-// var Well_Aug18_null= Well_Aug18.filterMetadata("nodataCode", "equals", 0);
-// print(Well_Aug18_null.aggregate_count("New_ID"))
+Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 600000)
+.filterMetadata("New_ID", "less_than", 625000);
+print(Well_Aug18.aggregate_count("New_ID"))
+var Well_Aug18_nonNull= Well_Aug18.filterMetadata("nodataCode", "equals", 1);
+print(Well_Aug18_nonNull.aggregate_count("New_ID"))
+var Well_Aug18_null= Well_Aug18.filterMetadata("nodataCode", "equals", 0);
+print(Well_Aug18_null.aggregate_count("New_ID"))
 
 
 
