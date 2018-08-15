@@ -65,7 +65,7 @@ var add_time_label=  function(feature){
   return(ee.Feature(feature).set("time",time).set("time_code",time_code));
 };
 var processed_wells = ee.FeatureCollection(Well_Aug18)
-.map(add_location_label)
+.map(add_location_label);
 // .map(add_time_label);
 Map.addLayer(Well_Aug18,  {'color':pink},'total', 1, 1); 
 Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'offshore', 1, 1); 
