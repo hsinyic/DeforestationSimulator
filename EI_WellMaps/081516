@@ -79,7 +79,7 @@ Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 5),  {
 // Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 5), {'color':purple1}, 'offshore', 1, 1); 
 // Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 6), {'color':purple2}, 'offshore', 1, 1); 
 
-print(processed_wells.aggregate_sum('final_location'));
+// print(processed_wells.aggregate_sum('final_location'));
 Export.table.toDrive(
   ee.FeatureCollection(processed_wells)
   .select(['final_location', 'New_ID'])
