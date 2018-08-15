@@ -8,7 +8,7 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 600000)
 // .filterMetadata("New_ID", "less_than", 625000);
-print(Well_Aug18.aggregate_count("New_ID"))
+// print(Well_Aug18.aggregate_count("New_ID"))
 // var Well_Aug18_nonNull= Well_Aug18.filterMetadata("nodataCode", "equals", 1);
 // print(Well_Aug18_nonNull.aggregate_count("New_ID"))
 // var Well_Aug18_null= Well_Aug18.filterMetadata("nodataCode", "equals", 0);
@@ -78,7 +78,10 @@ Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 5),  {
 // Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 6), {'color':purple2}, 'offshore', 1, 1); 
 
 print(processed_wells.aggregate_sum('final_location'));
-
+Export.table.toDrive(
+  ee.FeatureCollection(processed_wells)
+  .select(['final_location', 'New_ID'])
+, "label_locationLean");
 Export.table.toDrive(
   ee.FeatureCollection(processed_wells)
   .select(['onshore location', 'offshore location', 'location_code','final_location',
