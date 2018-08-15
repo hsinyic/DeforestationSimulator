@@ -70,14 +70,14 @@ var processed_wells = ee.FeatureCollection(Well_Aug18)
 .map(add_location_label);
 // .map(add_time_label);
 // Map.addLayer(Well_Aug18,  {'color':pink},'total', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'offshore', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 3), {'color':black}, 'offshore', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 4),  {'color':lg},'shale', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 5),  {'color':dg},'conventional', 1, 1); 
-// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 7), {'color':orange}, 'conventional', 1, 1); 
-// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 8), {'color':yellow}, 'shale', 1, 1); 
-// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 5), {'color':purple1}, 'offshore', 1, 1); 
-// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 6), {'color':purple2}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 3), {'color':black}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 4),  {'color':lg},'shale', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 5),  {'color':dg},'conventional', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 7), {'color':orange}, 'conventional', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 8), {'color':yellow}, 'shale', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 5), {'color':purple1}, 'offshore', 1, 1); 
+Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 6), {'color':dg}, 'offshore', 1, 1); 
 
 // print(processed_wells.aggregate_sum('final_location'));
 // Export.table.toDrive(
