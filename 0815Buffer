@@ -3,7 +3,6 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
     conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
     GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
-    BOEMoffshore_boundary = ee.FeatureCollection("ft:1CCkNqJ01FBC54wV-hkFCkngsAotxawo8MZyd0H-R"),
     Well_Aug18 = ee.FeatureCollection("ft:1LU5qSzC3Mu4Pg7ilV6lBKXyR46AiqCXKmRhwU-JZ");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 600000)
@@ -46,8 +45,6 @@ var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry());
 var BOEMoffshore_boundary_union = BOEMoffshore_boundary.union();
 var BOEMoffshore_boundary_geometry = BOEMoffshore_boundary_union;
 Map.addLayer(shaleplay,  {'color':bl},'shaleplay', 1, 1); 
-
-Map.addLayer(BOEMoffshore_boundary_geometry,  {'color':purple1},'offshore BOEM', 1, 1); 
 Map.addLayer(GOM_boundary_geometry,  {'color':whi},'offshore GOM', 1, 1); 
 
 
