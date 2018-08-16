@@ -95,10 +95,10 @@ Map.addLayer(Well_Aug18.filterBounds(shaleplay_geometry),  {'color':yellow},'sha
 // Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 3), {'color':black}, 'offshore', 1, 1); 
 // Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 4),  {'color':lg},'shale', 1, 1); 
 // Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 5),  {'color':dg},'conventional', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 7), {'color':orange}, 'shale', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 8), {'color':yellow}, 'conventional', 1, 1); 
-// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 5), {'color':purple1}, 'offshore', 1, 1); 
-Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 6), {'color':dg}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 7), {'color':orange}, 'shale', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 8), {'color':yellow}, 'conventional', 1, 1); 
+// // Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 5), {'color':purple1}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 6), {'color':dg}, 'offshore', 1, 1); 
 
 // print(processed_wells.aggregate_count('final_location'));
 Export.table.toDrive(
