@@ -42,14 +42,14 @@ Map.addLayer(Well_Aug18.filterBounds(shaleplay),{'color':bl},'shaleplay', 1, 1);
 Map.addLayer(Well_Aug18.filterBounds(GOM_boundary_geometry),{'color':yellow},'offshore', 1, 1);
 Map.addLayer(Well_Aug18.filterBounds(BOEMoffshore_boundary_geometry), {'color':gr},'offshore2', 1, 1);
 
-Export.table.toDrive(
-  ee.FeatureCollection(Well_Aug18.filterBounds(GOM_boundary_geometry))
-  .select(['New_ID'])
-, "offshore");
-Export.table.toDrive(
-  ee.FeatureCollection(Well_Aug18.filterBounds(shaleplay))
-  .select(['New_ID'])
-, "shaleplay");
+// Export.table.toDrive(
+//   ee.FeatureCollection(Well_Aug18.filterBounds(GOM_boundary_geometry))
+//   .select(['New_ID'])
+// , "offshore");
+// Export.table.toDrive(
+//   ee.FeatureCollection(Well_Aug18.filterBounds(shaleplay))
+//   .select(['New_ID'])
+// , "shaleplay");
 
 
 /*
