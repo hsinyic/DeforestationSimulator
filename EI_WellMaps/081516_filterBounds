@@ -13,7 +13,7 @@ var Well_Aug18 = ee.FeatureCollection("ft:1Tfoqd3NaYNjcXhA4FZbjQgOrplE5xBLsL4hRE
 // print(Well_Aug18_nonNull.aggregate_count("New_ID"))
 // var Well_Aug18_null= Well_Aug1B8.filterMetadata("nodataCode", "equals", 0);
 // print(Well_Aug18_null.aggregate_count("New_ID"))
-Well_Aug18= Well_Aug18.filterMetadata("nodataCode", "equals", 1);
+// Well_Aug18= Well_Aug18.filterMetadata("nodataCode", "equals", 1);
 
 
 /* ################ Color scheme################ */  
