@@ -1,0 +1,145 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
+    GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
+    conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
+    GOM_boundary = ee.FeatureCollection("ft:1uOqEshx2FIgESMxBUB8IA0Mxxx2rbUlNcv6-cOS6"),
+    BOEMoffshore_boundary = ee.FeatureCollection("ft:1CCkNqJ01FBC54wV-hkFCkngsAotxawo8MZyd0H-R"),
+    Well_Aug18 = ee.FeatureCollection("ft:1LU5qSzC3Mu4Pg7ilV6lBKXyR46AiqCXKmRhwU-JZ");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 600000)
+// .filterMetadata("New_ID", "less_than", 1025000);
+// print(Well_Aug18.aggregate_count("New_ID"))
+// var Well_Aug18_nonNull= Well_Aug18.filterMetadata("nodataCode", "equals", 1);
+// print(Well_Aug18_nonNull.aggregate_count("New_ID"))
+// var Well_Aug18_null= Well_Aug1B8.filterMetadata("nodataCode", "equals", 0);
+// print(Well_Aug18_null.aggregate_count("New_ID"))
+
+
+
+Well_Aug18= Well_Aug18.filterMetadata("SurfaceLongitude", "not_equals", null);
+// print(Well_Aug18.aggregate_count("New_ID"))
+
+
+
+ 
+
+/* ################ Color scheme################ */  
+  var db= ('0000FF').toString();var bl = ('#538dd6').toString();var lb= ('#86abff').toString();
+  var azure= ('#11ffff').toString();
+  var red=('ff510f').toString();var lr = ('#ff8f7d').toString();
+  var gr= ('#4cff62').toString();var lg = ('#afff14').toString();var dg= ('#196e0a').toString();
+  var yellow=('#ffeb00').toString();var lyellow = ('#fffcb0').toString();
+  var whi=('#f7f7f7').toString();var black = ('#101010').toString();
+  var pink = ('#ff6ad8').toString();var lp = ('#ffb9ec').toString();
+  var orange = ('#ff9d24').toString();var lorange = ('#ffcc99').toString();
+  var purple1 = ('#430159').toString();
+  var purple2 = ('#1b0159').toString();
+  var br = ('#5b2e01').toString();
+/* ################################################ */
+var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union();
+var shaleplay_geometry_or = ee.Geometry(shaleplay.geometry());
+
+
+var shaleplay_geometry = ee.Geometry(shaleplay.geometry()).buffer(2);
+var GOM_boundary_union = GOM_boundary.union();
+var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry());
+var BOEMoffshore_boundary_union = BOEMoffshore_boundary.union();
+var BOEMoffshore_boundary_geometry = BOEMoffshore_boundary_union;
+Map.addLayer(shaleplay,  {'color':bl},'shaleplay', 1, 1); 
+
+Map.addLayer(BOEMoffshore_boundary_geometry,  {'color':purple1},'offshore BOEM', 1, 1); 
+Map.addLayer(GOM_boundary_geometry,  {'color':whi},'offshore GOM', 1, 1); 
+
+
+// ################  wells in shale ################ //
+var add_location_label=  function(feature){
+  feature = ee.Feature(feature);
+  // var noDataIndicator = ee.Number(feature.get('nodataCode'));
+  feature = feature.set("offshore location",0);feature = feature.set("onshore location",0 );
+  feature = feature.set("final_location",0 );
+  var off_location = ee.Number(
+      ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), 1, 3));
+  var on_location = ee.Number(
+      ee.Algorithms.If(feature.containedIn(shaleplay_geometry), 4, 5));
+  var final_label = off_location.add(on_location);
+    // (off_location.add(on_location)).multiply(noDataIndicator.subtract(1));
+// off=1, on=3, shale = 4, con=5
+// off+shale = 5, off+con = 6
+// on +shale = 7, on +conv = 8
+  feature = ee.Feature(feature.set("onshore location", on_location));
+  feature = ee.Feature(feature.set("offshore location", off_location));
+  feature = ee.Feature(feature.set("final_location", final_label));
+  return(ee.Feature(feature));
+};
+// Use First Prod Year to create "no time" label 
+var add_time_label=  function(feature){
+  feature = ee.Feature(feature);
+  var date = feature.get('First Prod Year');
+  var time =ee.Number(ee.Algorithms.If(date, 2, 1 )) //1 means without First Production Date
+  var time_code = ee.String(ee.Algorithms.If(date, "with prod date", "no prod date" )) //1 means without First Production Date
+  return(ee.Feature(feature).set("time",time).set("time_code",time_code));
+};
+var processed_wells = ee.FeatureCollection(Well_Aug18)
+.map(add_location_label);
+// .map(add_time_label);
+Map.addLayer(Well_Aug18,  {'color':pink},'total', 1, 1); 
+// Map.addLayer(Well_Aug18.filterBounds(GOM_boundary_geometry),  {'color':red},'offshore', 1, 1); 
+Map.addLayer(Well_Aug18.filterBounds(shaleplay_geometry),  {'color':yellow},'shale', 1, 1); 
+
+Map.addLayer(Well_Aug18.filterBounds(shaleplay_geometry_or),  {'color':db},'shale', 1, 1); 
+
+// Export.table.toDrive(
+//   ee.FeatureCollection(Well_Aug18.filterBounds(shaleplay_geometry))
+//   .select(['New_ID'])
+// , "shale");
+// Export.table.toDrive(
+//   ee.FeatureCollection(Well_Aug18.filterBounds(GOM_boundary_geometry))
+//   .select(['New_ID'])
+// , "off");
+
+
+
+
+
+
+// Map.addLayer(processed_wells.filterMetadata('offshore location', 'equals', 1), {'color':black}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 3), {'color':black}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 4),  {'color':lg},'shale', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('onshore location', 'equals', 5),  {'color':dg},'conventional', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 7), {'color':orange}, 'shale', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 8), {'color':yellow}, 'conventional', 1, 1); 
+// // Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 5), {'color':purple1}, 'offshore', 1, 1); 
+// Map.addLayer(processed_wells.filterMetadata('final_location', 'equals', 6), {'color':dg}, 'offshore', 1, 1); 
+
+// print(processed_wells.aggregate_count('final_location'));
+Export.table.toDrive(
+  ee.FeatureCollection(processed_wells)
+  .select(['final_location', 'New_ID'])
+, "label_locationLean");
+// Export.table.toDrive(
+//   ee.FeatureCollection(processed_wells)
+//   .select(['onshore location', 'offshore location', 'location_code','final_location',
+//             'SerialNumber', 'New_ID'])
+// , "label_location");
+
+
+  // var null_property = ee.Number(
+  //     ee.Algorithms.If(property, 10, 16));
+  // var location = ee.String(
+  //   ee.Algorithms.If(property, 
+  //     ee.Algorithms.If(feature.containedIn(GOM_boundary_geometry), "offshore", 
+  //       ee.Algorithms.If(feature.containedIn(shaleplay_geometry), "onshore shale", "onshore conventional")),
+  //           "no location"));
+
+
+// Well = ee.FeatureCollection("ft:1Rto8ImdBnuDcBNX-ApGkuSfZf7UetvXjjFPc6RAu"),
+// Well_May18 = ee.FeatureCollection("ft:1iPT-a3AzJGTZj5lFpS3CKtrf5D1t5LpC4EwmkOmc");
+// var BOEMoffshore_boundary_geometry= ee.Geometry(BOEMoffshore_boundary_union.geometry());
+// Map.addLayer(BOEMoffshore_boundary,  {'color':whi},'BOEMoffshore_boundary', 1, 1); 
+// Map.addLayer(BOEMoffshore_boundary_union,  {'color':yellow},'GOM_boundary_union', 1, 1); 
+// Map.addLayer(BOEMoffshore_boundary_geometry,  {'color':purple1},'GOM_boundary_geometry', 1, 1); 
+// Map.addLayer(shaleplay_or,  {'color':black},'shaleplay_or', 1, 1); 
+// Map.addLayer(shaleplay_geometry,  {'color':pink},'shaleplay_geometry', 1, 1); 
+
+
+
