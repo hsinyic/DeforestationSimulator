@@ -17,7 +17,7 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
 
 
 Well_Aug18= Well_Aug18.filterMetadata("SurfaceLongitude", "not_equals", null);
-// print(Well_Aug18.aggregate_count("New_ID"))
+print(Well_Aug18.aggregate_count("New_ID"))
 
 
 
