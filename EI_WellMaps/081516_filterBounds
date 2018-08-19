@@ -32,9 +32,9 @@ var Well_Aug18 = ee.FeatureCollection("ft:18QSNFlr4Exru57NfWew7vQknyIPmFxO5OVBg_
 var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union();
 var shaleplay_geometry = ee.Geometry(shaleplay.geometry());
 var GOM_boundary_union = GOM_boundary.union();
-var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry()).buffer(1609*15);
+var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry()).buffer(1609*20);
 var BOEMoffshore_boundary_union = BOEMoffshore_boundary.union();
-var BOEMoffshore_boundary_geometry = ee.Geometry(BOEMoffshore_boundary_union.geometry()).buffer(1609*15);
+var BOEMoffshore_boundary_geometry = ee.Geometry(BOEMoffshore_boundary_union.geometry()).buffer(1609*20);
 Map.addLayer(shaleplay_or,  {'color':red},'shaleplay_or', 1, 0.5); 
 
 Map.addLayer(shaleplay_geometry,  {'color':whi},'shaleplay_geometry', 1, 0.5); 
