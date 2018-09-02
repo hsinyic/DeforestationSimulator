@@ -36,20 +36,27 @@ var GOM_boundary_union = GOM_boundary.union();
 var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry()).buffer(1609*20);
 var BOEMoffshore_boundary_union = BOEMoffshore_boundary.union();
 var BOEMoffshore_boundary_geometry = ee.Geometry(BOEMoffshore_boundary_union.geometry()).buffer(1609*20);
-// Map.addLayer(shaleplay_or,  {'color':red},'shaleplay_or', 1, 0.5); 
+Map.addLayer(shaleplay_or, {'color':red},'shaleplay_or');
+// ,'shaleplay_or', 1, 0.5); 
 
-// Map.addLayer(shaleplay_geometry,  {'color':whi},'shaleplay_geometry', 1, 0.5); 
-// Map.addLayer(GOM_boundary,  {'color':purple1},'GOM_boundary', 1, 0.5); 
+Map.addLayer(shaleplay_geometry,  {'color':whi},'shaleplay_geometry');
+// , 1, 0.5); 
+Map.addLayer(GOM_boundary,  {'color':purple1},'GOM_boundary');
+// , 1, 0.5); 
 
-// Map.addLayer(GOM_boundary_geometry,  {'color':black},'GOM_boundary_geometry', 1, 0.5); 
-// Map.addLayer(BOEMoffshore_boundary_geometry,  {'color':orange},'BOEMoffshore_boundary_geometry', 1, 0.5); 
+Map.addLayer(GOM_boundary_geometry,  {'color':black},'GOM_boundary_geometry');
+// 1, 0.5); 
+Map.addLayer(BOEMoffshore_boundary_geometry,  {'color':orange},'BOEMoffshore_boundary_geometry')
+// 1, 0.5); 
 
 
 
 // ################  wells in shale ################ //
 
-Map.addLayer(Well_Aug18.filterBounds(shaleplay),{'color':bl},'shaleplay', 1, 1);
-Map.addLayer(Well_Aug18.filterBounds(GOM_boundary_geometry),{'color':yellow},'offshore', 1, 1);
+Map.addLayer(Well_Aug18.filterBounds(shaleplay),{'color':bl},'shaleplay')
+// , 1, 1);
+Map.addLayer(Well_Aug18.filterBounds(GOM_boundary_geometry),{'color':yellow},'offshore');
+// 1, 1);
 
 Export.table.toDrive(
   ee.FeatureCollection(Well_Aug18.filterBounds(GOM_boundary_geometry))
