@@ -8,8 +8,9 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     GOM_boundary2 = ee.FeatureCollection("ft:1gtyXMb_JHOBt6KoN-dcRaCC-EKzTJJG6NUPac_wv"),
     GOMsquare = /* color: #fff072 */ee.Geometry.Polygon(
         [[[-98.82656446757244, 32.67209156786883],
-          [-98.69472853007244, 23.981605678634896],
-          [-78.52383009257244, 23.57946471597576],
+          [-98.69472853007244, 23.095265867706225],
+          [-88.54957489509849, 22.78109073565249],
+          [-78.17226759257244, 22.568741782326114],
           [-78.34804884257244, 33.00439828690587]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
  
@@ -57,7 +58,7 @@ Map.addLayer(GOM_boundary,  {'color':purple1},'GOM_boundary');
 Map.addLayer(GOM_boundary2,  {'color':gr},'GOM_boundary2');
 Map.addLayer(GOM_boundary_geometry,  {'color':black},'GOM_boundary_geometry');
 Map.addLayer(GOM_boundary_geometry2,  {'color':lyellow},'GOM_boundary_geometry2');
-Map.addLayer(GOMsquare.difference(GOM_boundary_geometry2),  {'color':lp},'GOM_boundary_geometry2');
+Map.addLayer(GOMsquare.difference(GOM_boundary_geometry2),  {'color':lp},'diff');
 
 
 GOM_boundary_geometry= GOM_boundary_geometry2
@@ -67,6 +68,9 @@ GOM_boundary_geometry= GOM_boundary_geometry2
 Map.addLayer(Well_Aug18.filterBounds(shaleplay),{'color':bl},'shaleplay')
 // , 1, 1);
 Map.addLayer(Well_Aug18.filterBounds(GOM_boundary_geometry),{'color':yellow},'offshore');
+
+Map.addLayer(Well_Aug18.filterBounds(GOMsquare.difference(GOM_boundary_geometry2)),{'color':azure},'conventional');
+
 // 1, 1);
 
 Export.table.toDrive(
