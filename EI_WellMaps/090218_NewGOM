@@ -52,10 +52,8 @@ var BOEMoffshore_boundary_geometry = ee.Geometry(BOEMoffshore_boundary_union.geo
 // Map.addLayer(shaleplay_or, {'color':red},'shaleplay_or');
 // Map.addLayer(shaleplay_geometry,  {'color':azure},'shaleplay_geometry');
 Map.addLayer(GOM_boundary,  {'color':purple1},'GOM_boundary');
-Map.addLayer(GOM_boundary,  {'color':gr},'GOM_boundary2');
 Map.addLayer(GOM_boundary_geometry,  {'color':black},'GOM_boundary_geometry');
-Map.addLayer(GOM_boundary_geometry2,  {'color':lyellow},'GOM_boundary_geometry2');
-Map.addLayer(GOMsquare.difference(GOM_boundary_geometry2),  {'color':lp},'diff');
+Map.addLayer(GOMsquare.difference(GOM_boundary_geometry),  {'color':lp},'diff');
 
 
 GOM_boundary_geometry= GOM_boundary_geometry2
