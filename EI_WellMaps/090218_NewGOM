@@ -2,7 +2,6 @@
 var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbOgpy6c"),
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
     conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
-    BOEMoffshore_boundary = ee.FeatureCollection("ft:1CCkNqJ01FBC54wV-hkFCkngsAotxawo8MZyd0H-R"),
     Well_Aug18 = ee.FeatureCollection("ft:18QSNFlr4Exru57NfWew7vQknyIPmFxO5OVBg_n0J"),
     GOM_boundary = ee.FeatureCollection("ft:1gtyXMb_JHOBt6KoN-dcRaCC-EKzTJJG6NUPac_wv"),
     GOMsquare = /* color: #fff072 */ee.Geometry.Polygon(
@@ -37,7 +36,7 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
   var purple2 = ('#1b0159').toString();
   var br = ('#5b2e01').toString();
 /* ################################################ */
-Map.addLayer(Well_Aug18, {'color':red},'All wells');
+// Map.addLayer(Well_Aug18, {'color':red},'All wells');
 
 
 
