@@ -41,9 +41,9 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
 
 
 var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union();
-var shaleplay_geometry = ee.Geometry(shaleplay.geometry());
+var shaleplay_geometry = ee.Geometry(shaleplay.geometry()).buffer(1609*0);
 var GOM_boundary_union = GOM_boundary.union();
-var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry()).buffer(1609*15);
+var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry()).buffer(1609*0);
 
 
 // Map.addLayer(shaleplay_or, {'color':red},'shaleplay_or');
@@ -56,9 +56,9 @@ Map.addLayer(GOMsquare.difference(GOM_boundary_geometry),  {'color':lp},'diff');
 
 // ################  wells in shale ################ //
 
-Map.addLayer(Well_Aug18.filterBounds(shaleplay),{'color':bl},'shaleplay')
-Map.addLayer(Well_Aug18.filterBounds(GOM_boundary_geometry),{'color':yellow},'offshore');
-Map.addLayer(Well_Aug18.filterBounds(GOMsquare.difference(GOM_boundary_geometry)),{'color':azure},'conventional');
+// Map.addLayer(Well_Aug18.filterBounds(shaleplay),{'color':bl},'shaleplay')
+// Map.addLayer(Well_Aug18.filterBounds(GOM_boundary_geometry),{'color':yellow},'offshore');
+// Map.addLayer(Well_Aug18.filterBounds(GOMsquare.difference(GOM_boundary_geometry)),{'color':azure},'conventional');
 
 // 1, 1);
 
