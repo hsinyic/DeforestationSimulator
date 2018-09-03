@@ -60,9 +60,7 @@ Map.addLayer(GOMsquare.difference(GOM_boundary_geometry),  {'color':lp},'diff');
 // ################  wells in shale ################ //
 
 Map.addLayer(Well_Aug18.filterBounds(shaleplay),{'color':bl},'shaleplay')
-// , 1, 1);
 Map.addLayer(Well_Aug18.filterBounds(GOM_boundary_geometry),{'color':yellow},'offshore');
-
 Map.addLayer(Well_Aug18.filterBounds(GOMsquare.difference(GOM_boundary_geometry)),{'color':azure},'conventional');
 
 // 1, 1);
