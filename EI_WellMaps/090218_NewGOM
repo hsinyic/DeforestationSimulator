@@ -47,16 +47,20 @@ var GOM_boundary_union = ee.FeatureCollection(GOM_boundary).union();
 // var GOM_boundary_geometry= ee.Geometry(GOM_boundary.geometry());//.geometry()
 var GOM_boundary_union_raster =   GOM_boundary.reduceToImage({
     properties: ['geometry_vertex_count'],
-    reducer: ee.Reducer.first()
+    reducer: ee.Reducer.mean()
 });
+
+GOM_boundary_union_raster = GOM_boundary_union_raster.addBands(GOM_boundary_union_raster)
+print(GOM_boundary_union_raster)
+
 
 var GOM_boundary_geometry = GOM_boundary_union_raster.reduceToVectors({
   geometry:GOMsquare, 
   crs: GOMsquare.projection(),
   scale: 1000,
   geometryType: 'polygon',
-  eightConnected: true
-  
+  eightConnected: true,
+  reducer: ee.Reducer.mean()
 });
 
 
