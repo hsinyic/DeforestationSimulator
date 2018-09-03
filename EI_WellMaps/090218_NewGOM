@@ -36,7 +36,7 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
   var purple2 = ('#1b0159').toString();
   var br = ('#5b2e01').toString();
 /* ################################################ */
-// Map.addLayer(Well_Aug18, {'color':red},'All wells');
+Map.addLayer(Well_Aug18, {'color':red},'All wells');
 
 
 
