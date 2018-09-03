@@ -51,12 +51,12 @@ var GOM_boundary_union_raster =   GOM_boundary.reduceToImage({
 });
 
 var GOM_boundary_geometry = GOM_boundary_union_raster.reduceToVectors({
-  geometry: japan,
-  crs: nl2012.projection(),
-  scale: 100,
+  geometry:GOMsquare, 
+  crs: GOMsquare.projection(),
+  scale: 1000,
   geometryType: 'polygon',
-  eightConnected: false,
-  reducer: ee.Reducer.first()
+  eightConnected: true
+  
 });
 
 
