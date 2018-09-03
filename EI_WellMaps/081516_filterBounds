@@ -61,7 +61,6 @@ Map.addLayer(GOM_boundary_geometry2,  {'color':lyellow},'GOM_boundary_geometry2'
 Map.addLayer(GOMsquare.difference(GOM_boundary_geometry2),  {'color':lp},'diff');
 
 
-GOM_boundary_geometry= GOM_boundary_geometry2
 
 // ################  wells in shale ################ //
 
