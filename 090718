@@ -12,7 +12,9 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
           [-78.34804884257244, 33.00439828690587]]]),
     diff = ee.FeatureCollection("ft:1VY_S4QCQXy5v4JEKC_igWdy3WmzJ0it3c0FV1-FQ");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
- 
+var checkState = ee.FeatureCollection("ft:1Z5WFNeus9K3gX-Zi4n3L2vAFTWjnxi_dML0b4mjO")
+
+
   
  
 Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 200000)
