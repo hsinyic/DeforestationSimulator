@@ -41,7 +41,7 @@ Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 200000)
   var purple2 = ('#1b0159').toString();
   var br = ('#5b2e01').toString();
 /* ################################################ */
-Map.addLayer(Well_Aug18, {'color':red},'All wells');
+Map.addLayer(checkState, {'color':red},'All wells');
 
 
 
@@ -66,7 +66,6 @@ Map.addLayer(GOM_boundary_geometry,  {'color':whi},'GOM_boundary_geometry');
 // Map.addLayer(Well_Aug18.filterBounds(shaleplay),{'color':bl},'shaleplay')
 Map.addLayer(Well_Aug18.filterBounds(GOM_boundary_geometry),{'color':yellow},'offshore');
 
-// 1, 1);
 
 Export.table.toDrive(
   ee.FeatureCollection(Well_Aug18.filterBounds(GOM_boundary_geometry))
