@@ -41,7 +41,7 @@ Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 200000)
   var purple2 = ('#1b0159').toString();
   var br = ('#5b2e01').toString();
 /* ################################################ */
-Map.addLayer(checkState, {'color':red},'All wells');
+// Map.addLayer(checkState, {'color':red},'All wells');
 
 Map.addLayer(checkState.filterMetadata("State", "equals", "FO GULF" ), 
 {'color':black},'GO GULF');
@@ -49,16 +49,16 @@ Map.addLayer(checkState.filterMetadata("State", "equals", "FO GULF" ),
 
 
 var shaleplay = shaleplay_or.union(); conventional_play= conventional_play.union();
-var shaleplay_geometry = ee.Geometry(shaleplay.geometry()).buffer(1609*20);
+var shaleplay_geometry = ee.Geometry(shaleplay.geometry()).buffer(1609*5);
 var GOM_boundary_union = ee.FeatureCollection(GOM_boundary.union());
 // var GOM_boundary_geometry= ee.Geometry(GOM_boundary_union.geometry());//.geometry()
-var GOM_boundary_geometry= GOM_boundary_union.geometry().dissolve().buffer(1609*10);//.geometry()
+var GOM_boundary_geometry= GOM_boundary_union.geometry().buffer(1609*10);//.geometry()
 
 
 // Map.addLayer(shaleplay_or, {'color':red},'shaleplay_or');
 Map.addLayer(shaleplay_geometry,  {'color':azure},'shaleplay_geometry');
 // Map.addLayer(GOM_boundary,  {'color':purple1},'GOM_boundary');
-Map.addLayer(GOM_boundary_union,  {'color':whi},'GOM_boundary_union');
+Map.addLayer(GOM_boundary_union,  {'color':orange},'GOM_boundary_union');
 Map.addLayer(GOM_boundary_geometry,  {'color':purple1},'GOM_boundary_geometry');
 
 
