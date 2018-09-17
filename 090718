@@ -10,9 +10,10 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
           [-78.17226759257244, 22.568741782326114],
           [-78.34804884257244, 33.00439828690587]]]),
     diff = ee.FeatureCollection("ft:1VY_S4QCQXy5v4JEKC_igWdy3WmzJ0it3c0FV1-FQ"),
-    GOM_boundary = ee.FeatureCollection("ft:1mIkK_hjBCe13NdTeIPnt7uk831F_NNX3GZSmOBgg");
+    GOM_boundary = ee.FeatureCollection("ft:1mIkK_hjBCe13NdTeIPnt7uk831F_NNX3GZSmOBgg"),
+    checkState = ee.FeatureCollection("ft:1Z5WFNeus9K3gX-Zi4n3L2vAFTWjnxi_dML0b4mjO");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var checkState = ee.FeatureCollection("ft:1Z5WFNeus9K3gX-Zi4n3L2vAFTWjnxi_dML0b4mjO")
+
 
 
 
@@ -43,7 +44,7 @@ Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 200000)
   var purple2 = ('#1b0159').toString();
   var br = ('#5b2e01').toString();
 /* ################################################ */
-// Map.addLayer(checkState, {'color':red},'All wells');
+Map.addLayer(checkState, {'color':red},'All wells');
 
 Map.addLayer(checkState.filterMetadata("State", "equals", "FO GULF" ), 
 {'color':black},'GO GULF');
