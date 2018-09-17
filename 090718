@@ -3,16 +3,18 @@ var shaleplay_or = ee.FeatureCollection("ft:1EIjMHaQqs6SGoIdocVDIQJfFQXVwVKr4tbO
     GOM_offshore = ee.FeatureCollection("ft:1RkZEvZUCiE09ZyMOpkNBhjFik_VeZSAkCPqPK30S"),
     conventional_play = ee.FeatureCollection("ft:11jfMGryj5DdmBhG0GMP6ZcKWIK2oatWGUR1w9QUt"),
     Well_Aug18 = ee.FeatureCollection("ft:18QSNFlr4Exru57NfWew7vQknyIPmFxO5OVBg_n0J"),
-    GOM_boundary = ee.FeatureCollection("ft:1gtyXMb_JHOBt6KoN-dcRaCC-EKzTJJG6NUPac_wv"),
     GOMsquare = /* color: #fff072 */ee.Geometry.Polygon(
         [[[-98.82656446757244, 32.67209156786883],
           [-98.69472853007244, 23.095265867706225],
           [-88.54957489509849, 22.78109073565249],
           [-78.17226759257244, 22.568741782326114],
           [-78.34804884257244, 33.00439828690587]]]),
-    diff = ee.FeatureCollection("ft:1VY_S4QCQXy5v4JEKC_igWdy3WmzJ0it3c0FV1-FQ");
+    diff = ee.FeatureCollection("ft:1VY_S4QCQXy5v4JEKC_igWdy3WmzJ0it3c0FV1-FQ"),
+    GOM_boundary = ee.FeatureCollection("ft:1mIkK_hjBCe13NdTeIPnt7uk831F_NNX3GZSmOBgg");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var checkState = ee.FeatureCollection("ft:1Z5WFNeus9K3gX-Zi4n3L2vAFTWjnxi_dML0b4mjO")
+
+
 
 
   
