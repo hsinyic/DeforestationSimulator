@@ -46,8 +46,8 @@ Well_Aug18 = Well_Aug18.filterMetadata("New_ID", "greater_than", 200000)
 /* ################################################ */
 Map.addLayer(checkState, {'color':red},'All wells');
 
-Map.addLayer(checkState.filterMetadata("State", "equals", "FO GULF" ), 
-{'color':black},'GO GULF');
+// Map.addLayer(checkState.filterMetadata("State", "equals", "FO GULF" ), 
+// {'color':black},'GO GULF');
 
 
 
