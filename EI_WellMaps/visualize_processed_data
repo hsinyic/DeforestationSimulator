@@ -67,12 +67,14 @@ var Well_List_processed = ee.List([0,2,3,5,6,7,8,9,10,11,12,13]).map(function(co
 // // var shale_well_FB_count = shale_well_FB.map(well_count);print('count of shale wellt/total well, by well type'); print(Well_List_names.zip(shale_well_FB_count).zip(count));
 // measured depth histogram, set graph options.
 
-/*Map.addLayer(ee.FeatureCollection(Well_List_processed.get(1)), {'color':grey}, Well_List_names.get(1).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List_processed.get(2)), {'color':lb}, Well_List_names.get(2).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List_processed.get(3)), {'color':red}, Well_List_names.get(3).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List_processed.get(4)), {'color':yellow}, Well_List_names.get(4).getInfo(), 1, 1); 
-Map.addLayer(ee.FeatureCollection(Well_List_processed.get(5)), {'color':whi}, Well_List_names.get(5).getInfo(), 1, 1); 
+/*Map.addLayer(ee.FeatureCollection(Well_List_processed.get(0)), {'color':dg}, Well_List_names.get(0).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(1)), {'color':red}, Well_List_names.get(1).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(2)), {'color':yellow}, Well_List_names.get(2).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(3)), {'color':lp}, Well_List_names.get(3).getInfo(), 1, 1); 
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(4)), {'color':lb}, Well_List_names.get(4).getInfo(), 1, 1); 
 */
+Map.addLayer(ee.FeatureCollection(Well_List_processed.get(5)), {'color':db}, Well_List_names.get(5).getInfo(), 1, 1); 
+
 
 Map.addLayer(ee.FeatureCollection(Well_List_processed.get(6)), {'color':pink}, Well_List_names.get(6).getInfo(), 1, 1); 
 Map.addLayer(ee.FeatureCollection(Well_List_processed.get(7)), {'color':purple1}, Well_List_names.get(7).getInfo(), 1, 1); 
