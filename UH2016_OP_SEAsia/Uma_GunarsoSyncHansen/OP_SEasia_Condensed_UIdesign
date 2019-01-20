@@ -333,5 +333,4 @@ slider.onChange(function(t) {
 
 
 
-Map.addLayer(ee.Image(255), {palette: 'blue'});
 Map.add(slider)
