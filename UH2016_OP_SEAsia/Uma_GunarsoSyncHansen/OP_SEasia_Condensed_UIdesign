@@ -12,7 +12,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
-    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru");
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
+    geometry = /* color: #ffc82d */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 //     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
@@ -58,7 +59,7 @@ var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Bar
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(R1);
+var totalarea = ee.FeatureCollection(R2);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -317,8 +318,8 @@ var printclass = function(t){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(Gunarso.get(t));
-  Map.addLayer(img.selfMask(), {min: 0, max: 6,
-    palette:[ '#ffffff', '#d1ee6c', '#c5d96b',  '#c5d96b', '#d51483', '#f7f7f7', '0000FF']}, year);
+  Map.addLayer(img.selfMask(), {min: 0, max: 5,
+    palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
 };
 
 
@@ -335,7 +336,8 @@ slider.onChange(printclass);
 slider.style().set(
   {
   width: '300px',
-  padding: '10px'
+  padding: '10px',
+  position: 'bottom-right'
     
   });
 Map.add(slider.setValue(2005));
