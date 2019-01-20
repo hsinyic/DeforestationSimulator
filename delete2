@@ -62,7 +62,7 @@ var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Bar
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(malaysia);
+var totalarea = ee.FeatureCollection(R1);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -343,21 +343,21 @@ var printclass = function(t){
 
 
 
-var slider = ui.Slider();
-slider.setMax(2010);
-slider.setMin(1990);
-slider.setStep(1);
+// var slider = ui.Slider();
+// slider.setMax(2010);
+// slider.setMin(1990);
+// slider.setStep(1);
 
-slider.setValue(2005);  // Set a default value.
-slider.onChange(printclass);
-slider.style().set(
-  {
-  width: '300px',
-  padding: '10px',
-  position: 'bottom-right'
+// slider.setValue(2005);  // Set a default value.
+// slider.onChange(printclass);
+// slider.style().set(
+//   {
+//   width: '300px',
+//   padding: '10px',
+//   position: 'bottom-right'
     
-  });
-Map.add(slider.setValue(2005));
+//   });
+// Map.add(slider.setValue(2005));
 
 
 
