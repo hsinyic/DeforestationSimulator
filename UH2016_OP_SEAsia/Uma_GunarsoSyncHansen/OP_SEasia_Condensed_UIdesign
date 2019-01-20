@@ -314,14 +314,22 @@ var Gunarso = yr.map(annual);
 // t=1998; p0= printclass(t, Gunarso);
 
 
+// var printclass = function(t){
+//   var year = t.toString();
+//   t= ee.Number(t).subtract(2000);
+//   var img = ee.Image(Gunarso.get(t));
+//   Map.addLayer(img.selfMask(), {min: 0, max: 5,
+//     palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
+// };
+
 var printclass = function(t){
   var year = t.toString();
   t= ee.Number(t).subtract(2000);
   var img = ee.Image(Gunarso.get(t));
-  Map.addLayer(img.selfMask(), {min: 0, max: 5,
+  var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
     palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
+    Map.layers().set(0, layer);
 };
-
 
 
 
