@@ -200,7 +200,8 @@ lossYear = Hansen_update;
 Hansen_update = buffer(Designated05, Target05,source05, years05); 
 lossYear = Hansen_update; 
 
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 
+'simulated year of forest clearing', 1, 0.4);
 
 
 // ########
@@ -350,3 +351,36 @@ slider.style().set(
   });
 Map.add(slider.setValue(2005));
 
+
+
+
+
+var legend = ui.Panel({style: {position: 'bottom-left'}});
+legend.add(ui.Label({
+  value: "land use class",
+  style: {
+    fontWeight: 'bold',
+    fontSize: '18px',
+    margin: '0 0 4px 0',
+    padding: '0px'
+  }
+}));
+
+var color_list = ee.List(['#d1ee6c', '#51612e', '#d51483'])
+
+var Well_List_names = ee.List(['other use', 'forest', 'agriculture']);
+var entry;
+for (var x = 0; x<3; x++){
+  entry = [
+    ui.Label({style:{color:color_list.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
+    ui.Label({
+      value: Well_List_names.get(x).getInfo(),
+      style: {
+        margin: '0 0 4px 4px'
+      }
+    })
+  ];
+  legend.add(ui.Panel(entry, ui.Panel.Layout.Flow('horizontal')))
+}
+
+Map.add(legend);
