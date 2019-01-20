@@ -12,7 +12,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
-    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru");
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
+    geometry = /* color: #b7b25d */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.08245301691568, -0.4909959458718788, 8);// Riau 
 Map.setCenter(101.96, -1.53, 8); //Jambi 
@@ -29,7 +30,7 @@ var printclass = function(t, folder){
   // Map.addLayer(img, {min: 0, max: 6,
   //   palette:[ '#ffffff', '0000FF', '#4cff62',  '#fff832', 'ff510f', '#f7f7f7', '0000FF']}, year);
   Map.addLayer(img.selfMask(), {min: 0, max: 6,
-    palette:[ '#ffffff', '0000FF', '#4cff62',  '#fff832', 'ff510f', '#f7f7f7', '0000FF']}, year);
+    palette:[ '#ffffff', '#d1ee6c', '#b7b25d',  '#b78726', '#d51483', '#f7f7f7', '0000FF']}, year);
   // Export.image.toDrive({
   //   image: img,
   //   description: taskname.getInfo(),
