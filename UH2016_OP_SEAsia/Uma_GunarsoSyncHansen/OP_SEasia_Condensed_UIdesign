@@ -53,12 +53,12 @@ var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
 
 
     // area_working: works, and is a bigger area 
-var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'R1'); 
 var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat'); 
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(R1);
+var totalarea = ee.FeatureCollection(R3);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -96,10 +96,10 @@ OP10 = OP10.where(OP05.eq(1), 1);
 // Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000", 0);
 // Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990", 0);
 
-Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', ' #dedeff' ]}, "Crop X coverage 2010", 0);
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#a3acff' ]}, "Crop X coverage 2005", 0);
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#6c7bff' ]}, "Crop X coverage 2000", 0);
-Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#3b438c' ]}, "Crop X coverage 1990", 0);
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', ' #dedeff' ]}, "Crop X coverage 2010", 1);
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#a3acff' ]}, "Crop X coverage 2005", 1);
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#6c7bff' ]}, "Crop X coverage 2000", 1);
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#3b438c' ]}, "Crop X coverage 1990", 1);
 
 
 
@@ -333,7 +333,7 @@ var printclass = function(t){
   var img = ee.Image(Gunarso.get(t));
   var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
     palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
-    Map.layers().set(0, layer);
+    Map.layers().set(4, layer);
 };
 
 
