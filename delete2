@@ -307,38 +307,40 @@ var annual = function(t){
 var Gunarso = yr.map(annual);
 
 
-//Display all maps, and export them 
-// var t=2010; var p0= printclass(t, Gunarso);
-// t=2009; p0= printclass(t, Gunarso);
-// t=2008; p0= printclass(t, Gunarso);
-// t=2007; p0= printclass(t, Gunarso);
-// t=2006; p0= printclass(t, Gunarso);
-// t=2005; p0= printclass(t, Gunarso);
-// t=2004; p0= printclass(t, Gunarso);
-// t=2003; p0= printclass(t, Gunarso);
-// t=2002; p0= printclass(t, Gunarso);
-// t=2001; p0= printclass(t, Gunarso);
-// t=2000; p0= printclass(t, Gunarso);
-// t=1999; p0= printclass(t, Gunarso);
-// t=1998; p0= printclass(t, Gunarso);
+var printclass = function(t){
+  var year = t.toString();
+  t= ee.Number(t).subtract(2000);
+  var img = ee.Image(Gunarso.get(t));
+  Map.addLayer(img.selfMask(), {min: 0, max: 5,
+    palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
+};
+
+
+// Display all maps, and export them 
+var t=2010; var p0= printclass(t, Gunarso);
+t=2009; p0= printclass(t, Gunarso);
+t=2008; p0= printclass(t, Gunarso);
+t=2007; p0= printclass(t, Gunarso);
+t=2006; p0= printclass(t, Gunarso);
+t=2005; p0= printclass(t, Gunarso);
+t=2004; p0= printclass(t, Gunarso);
+t=2003; p0= printclass(t, Gunarso);
+t=2002; p0= printclass(t, Gunarso);
+t=2001; p0= printclass(t, Gunarso);
+t=2000; p0= printclass(t, Gunarso);
+t=1999; p0= printclass(t, Gunarso);
+t=1998; p0= printclass(t, Gunarso);
+
 
 
 // var printclass = function(t){
 //   var year = t.toString();
 //   t= ee.Number(t).subtract(2000);
 //   var img = ee.Image(Gunarso.get(t));
-//   Map.addLayer(img.selfMask(), {min: 0, max: 5,
+//   var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
 //     palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
+//     Map.layers().set(4, layer);
 // };
-
-var printclass = function(t){
-  var year = t.toString();
-  t= ee.Number(t).subtract(2000);
-  var img = ee.Image(Gunarso.get(t));
-  var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
-    palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
-    Map.layers().set(4, layer);
-};
 
 
 
