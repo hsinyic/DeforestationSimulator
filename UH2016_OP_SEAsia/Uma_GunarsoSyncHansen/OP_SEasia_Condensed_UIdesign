@@ -12,13 +12,12 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
-    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    geometry = /* color: #b7b25d */ee.Geometry.MultiPoint();
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.08245301691568, -0.4909959458718788, 8);// Riau 
-Map.setCenter(101.96, -1.53, 8); //Jambi 
-Map.setCenter(100.4, -0.58, 8); //Sumetera Barat 
-
+// Map.setCenter(101.96, -1.53, 8); //Jambi 
+// Map.setCenter(100.4, -0.58, 8); //Sumetera Barat 
+Map.setCenter(102.59729699055572,-0.4124334747334486, 8.5)
 
 
 var scale = ee.Number(1000); 
@@ -30,7 +29,7 @@ var printclass = function(t, folder){
   // Map.addLayer(img, {min: 0, max: 6,
   //   palette:[ '#ffffff', '0000FF', '#4cff62',  '#fff832', 'ff510f', '#f7f7f7', '0000FF']}, year);
   Map.addLayer(img.selfMask(), {min: 0, max: 6,
-    palette:[ '#ffffff', '#d1ee6c', '#b7b25d',  '#b78726', '#d51483', '#f7f7f7', '0000FF']}, year);
+    palette:[ '#ffffff', '#d1ee6c', '#c5d96b',  '#c5d96b', '#d51483', '#f7f7f7', '0000FF']}, year);
   // Export.image.toDrive({
   //   image: img,
   //   description: taskname.getInfo(),
@@ -306,17 +305,33 @@ var Gunarso = yr.map(annual);
 
 //Display all maps, and export them 
 var t=2010; var p0= printclass(t, Gunarso);
-t=2009; p0= printclass(t, Gunarso);
-t=2008; p0= printclass(t, Gunarso);
-t=2007; p0= printclass(t, Gunarso);
-t=2006; p0= printclass(t, Gunarso);
-t=2005; p0= printclass(t, Gunarso);
-t=2004; p0= printclass(t, Gunarso);
-t=2003; p0= printclass(t, Gunarso);
-t=2002; p0= printclass(t, Gunarso);
-t=2001; p0= printclass(t, Gunarso);
-t=2000; p0= printclass(t, Gunarso);
+// t=2009; p0= printclass(t, Gunarso);
+// t=2008; p0= printclass(t, Gunarso);
+// t=2007; p0= printclass(t, Gunarso);
+// t=2006; p0= printclass(t, Gunarso);
+// t=2005; p0= printclass(t, Gunarso);
+// t=2004; p0= printclass(t, Gunarso);
+// t=2003; p0= printclass(t, Gunarso);
+// t=2002; p0= printclass(t, Gunarso);
+// t=2001; p0= printclass(t, Gunarso);
+// t=2000; p0= printclass(t, Gunarso);
+// t=1999; p0= printclass(t, Gunarso);
+// t=1998; p0= printclass(t, Gunarso);
 
 
 
 
+var slider = ui.Slider();
+slider.setMax(2010);
+slider.setMin(1990);
+slider.setStep(1);
+
+slider.setValue(2005);  // Set a default value.
+slider.onChange(function(t) {
+  p0= printclass(t, Gunarso);
+});
+
+
+
+Map.addLayer(ee.Image(255), {palette: 'blue'});
+Map.add(slider)
