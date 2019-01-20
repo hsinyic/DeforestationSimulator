@@ -12,8 +12,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
-    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    geometry = /* color: #ffc82d */ee.Geometry.MultiPoint();
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
 //     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
@@ -92,10 +91,15 @@ var OP10 = ee.Image(layer10.iterate(concatenate, blank)).rename(['OP10']);
 OP00 = OP00.where(OP90.eq(1), 1);
 OP05 = OP05.where(OP00.eq(1), 1);
 OP10 = OP10.where(OP05.eq(1), 1);
-Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Oil Palm 2010", 0);
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Oil Palm 2005", 0);
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000", 0);
-Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990", 0);
+// Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Oil Palm 2010", 0);
+// Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Oil Palm 2005", 0);
+// Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000", 0);
+// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990", 0);
+
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', ' #dedeff' ]}, "Crop X coverage 2010", 0);
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#a3acff' ]}, "Crop X coverage 2005", 0);
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#6c7bff' ]}, "Crop X coverage 2000", 0);
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#3b438c' ]}, "Crop X coverage 1990", 0);
 
 
 
