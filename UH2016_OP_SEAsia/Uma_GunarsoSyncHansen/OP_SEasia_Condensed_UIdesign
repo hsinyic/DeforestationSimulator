@@ -12,8 +12,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     in00 = ee.FeatureCollection("ft:1UmFrgy4IPk2vAuqoQ84uLUoo87p03H81yq9fS4_L"),
     in05 = ee.FeatureCollection("ft:1NbhFw2CTXFSDK-DM45fWhiPT05iUWaMATGQJysin"),
     in10 = ee.FeatureCollection("ft:13TMkrpp7qsuJnbY1GsOEx4UkUQCrnJlgo2XuVcC2"),
-    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru"),
-    geometry = /* color: #ffb3b3 */ee.Geometry.MultiPoint();
+    in90 = ee.FeatureCollection("ft:1dQMQUMmiArzbIAyqSdMzDfZpxyBI75uS0g1rOlru");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.08245301691568, -0.4909959458718788, 8);// Riau 
 Map.setCenter(101.96, -1.53, 8); //Jambi 
@@ -98,15 +97,16 @@ var OP10 = ee.Image(layer10.iterate(concatenate, blank)).rename(['OP10']);
 OP00 = OP00.where(OP90.eq(1), 1);
 OP05 = OP05.where(OP00.eq(1), 1);
 OP10 = OP10.where(OP05.eq(1), 1);
-Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 1990");
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Oil Palm 2010");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Oil Palm 2005");
 Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000");
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2005");
-Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2010");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990");
 
 
 
 
 
+ 
 
 // ########
 // # Load Hansen of lossYear, perform speckle filtering and majority sampling 
@@ -124,8 +124,8 @@ lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(25
 //Final assembling 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
 lossYear = lossYear_final; 
-Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
-    palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
+// Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+//     palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
 
 
 
@@ -205,7 +205,7 @@ lossYear = Hansen_update;
 Hansen_update = buffer(Designated05, Target05,source05, years05); 
 lossYear = Hansen_update; 
 
-Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'updated Hansen');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
 
 
 // ########
