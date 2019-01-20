@@ -312,21 +312,8 @@ var printclass = function(t){
 
 
 
-var slider = ui.Slider();
-slider.setMax(2010);
-slider.setMin(1990);
-slider.setStep(1);
 
-slider.setValue(2005);  // Set a default value.
-slider.onChange(printclass);
-slider.style().set(
-  {
-  width: '300px',
-  padding: '10px'
-    
-  });
 
-Map.add(slider.setValue(2005));
 
 // var printclass = function(t, folder){
 //   var year = t.toString();
@@ -346,4 +333,19 @@ Map.add(slider.setValue(2005));
 //   // });
 //   // return(3);
 // };
+
+var slider = ui.Slider();
+slider.setMax(2010);
+slider.setMin(1990);
+slider.setStep(1);
+
+slider.setValue(2005);  // Set a default value.
+slider.onChange(printclass);
+slider.style().set(
+  {
+  width: '300px',
+  padding: '10px'
+    
+  });
+Map.add(slider.setValue(2005));
 
