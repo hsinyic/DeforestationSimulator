@@ -34,14 +34,19 @@ Map.addLayer(in00);
   
 var add_cat_label=  function(feature){
   feature = ee.Feature(feature);
-  return(ee.Feature(feature).set("cat",1 )
+  number = ee.Number(1);
+  return(ee.Feature(feature).set("cat",number )
   );
 };
 in10 = ee.FeatureCollection(in10).map(add_cat_label);
 in00 = ee.FeatureCollection(in00).map(add_cat_label);
-in90 = ee.FeatureCollection(in90).map(add_cat_label);
-in05 = ee.FeatureCollection(in05).map(add_cat_label);
+ma90 = ee.FeatureCollection(ma90).map(add_cat_label);
+ma05 = ee.FeatureCollection(ma05).map(add_cat_label);
+ma00 = ee.FeatureCollection(ma00).map(add_cat_label);
+ma10 = ee.FeatureCollection(ma10).map(add_cat_label);
 
+
+print(in10);
 
 
 
