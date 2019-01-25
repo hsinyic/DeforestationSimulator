@@ -16,9 +16,6 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.59729699055572,-0.4124334747334486, 8.5)
 
-
-
-
   
 var add_cat_label=  function(feature){
   feature = ee.Feature(feature);
