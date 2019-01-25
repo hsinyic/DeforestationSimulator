@@ -302,21 +302,6 @@ var annual = function(t){
 var Gunarso = yr.map(annual);
 
 
-//Display all maps, and export them 
-// var t=2010; var p0= printclass(t, Gunarso);
-// t=2009; p0= printclass(t, Gunarso);
-// t=2008; p0= printclass(t, Gunarso);
-// t=2007; p0= printclass(t, Gunarso);
-// t=2006; p0= printclass(t, Gunarso);
-// t=2005; p0= printclass(t, Gunarso);
-// t=2004; p0= printclass(t, Gunarso);
-// t=2003; p0= printclass(t, Gunarso);
-// t=2002; p0= printclass(t, Gunarso);
-// t=2001; p0= printclass(t, Gunarso);
-// t=2000; p0= printclass(t, Gunarso);
-// t=1999; p0= printclass(t, Gunarso);
-// t=1998; p0= printclass(t, Gunarso);
-
 
 
 var printclass = function(t){
