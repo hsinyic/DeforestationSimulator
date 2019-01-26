@@ -18,8 +18,10 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.59729699055572,-0.4124334747334486, 8.5)
 
-print(country_simple);
-  
+// Map.setCenter(108.831,3.89, 6.5)
+
+
+
 var add_cat_label=  function(feature){
   feature = ee.Feature(feature);
   var number = ee.Number(1);
@@ -60,8 +62,10 @@ var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
 
 var Malaysia = country_simple.filterMetadata('country_co', 'equals', "MY");
-print(Malaysia);
-Map.addLayer(Malaysia);
+var Indonesia = country_simple.filterMetadata('country_co', 'equals', "ID");
+var PapuaNewGuinea = country_simple.filterMetadata('country_co', 'equals', "PP");
+
+
 
     // area_working: works, and is a bigger area 
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
@@ -210,7 +214,7 @@ lossYear = Hansen_update;
 Hansen_update = buffer(Designated05, Target05,source05, years05); 
 lossYear = Hansen_update; 
 
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
 
 
 // ########
