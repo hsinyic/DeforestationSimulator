@@ -12,10 +12,13 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
     Pen05 = ee.FeatureCollection("ft:1gizVspGHIjdwL9P-piLzYV-_DXJ7AvuIky2IBBQ_"),
     in00 = ee.FeatureCollection("ft:1oNZXmk6ETcE9UBhaLLs7WRRImV6AcdTchYPfIj0f"),
     Pen10 = ee.FeatureCollection("ft:1s1sLCzufbyP4TdfqOysEo8w5eclnFbEQ8IqLYHlm"),
-    in10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In10");
+    in10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In10"),
+    country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    country_detailed = ee.FeatureCollection("USDOS/LSIB/2013");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.59729699055572,-0.4124334747334486, 8.5)
 
+print(country_simple);
   
 var add_cat_label=  function(feature){
   feature = ee.Feature(feature);
@@ -55,7 +58,9 @@ var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
 var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
-
+var Malaysia = country_simple.filterMetadata('2', 'equals', "MY");
+print(Malaysia);
+Map.addLayer(Malaysia);
 
     // area_working: works, and is a bigger area 
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
