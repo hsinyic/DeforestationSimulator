@@ -59,7 +59,7 @@ var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
 var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
 
-var Malaysia = country_simple.filterMetadata('countries', 'equals', "MY");
+var Malaysia = country_simple.filterMetadata('country_co', 'equals', "MY");
 print(Malaysia);
 Map.addLayer(Malaysia);
 
