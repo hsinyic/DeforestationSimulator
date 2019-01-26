@@ -115,7 +115,7 @@ Export.image.toAsset({
   image: OP90,
   description: "OP90_Malaysia",
   scale: 30,
-  region: Malaysia,
+  region: Malaysia.geometry().bounds(),
   maxPixels: 1e13
 });
 
