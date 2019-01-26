@@ -16,7 +16,7 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     country_detailed = ee.FeatureCollection("USDOS/LSIB/2013");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(102.59729699055572,-0.4124334747334486, 8.5)
+// Map.setCenter(102.59729699055572,-0.4124334747334486, 8.5)
 
 print(country_simple);
   
@@ -69,7 +69,7 @@ var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Bar
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(R1);
+var totalarea = ee.FeatureCollection(Malaysia);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
