@@ -37,14 +37,6 @@ var imageSelect = ui.Select({
     ma00 = ee.FeatureCollection(ma00).map(add_cat_label);
     ma10 = ee.FeatureCollection(ma10).map(add_cat_label);
     
-    
-    
-    
-    
-    
-    
-    
-    
     var scale = ee.Number(1000); 
     
     // Define Region of Interest  
@@ -78,7 +70,7 @@ var imageSelect = ui.Select({
     
     
         // define totalarea 
-    var totalarea_geometry = totalarea.geometry();
+    var ROA  =  Indonesia_1.filterMetadata('NAME_1', 'equals', value);
     var totalarea = ee.FeatureCollection(ROA);
     var totalarea_raster = totalarea
     .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.mean()}); // for Indonesia_1
@@ -174,8 +166,8 @@ var imageSelect = ui.Select({
     //Final assembling 
     var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
     lossYear = lossYear_final; 
-    Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
-        palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
+    // Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+    //     palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
     
     
     
@@ -189,7 +181,7 @@ var imageSelect = ui.Select({
     // # 1) 1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
     // ########
     // Set scale for buffering (e.g.,reduceRegion percentile operation)
-    var scale = ee.Number(1000); 
+    scale = ee.Number(1000); 
     
     var Designated90 = blank.where(OP90.eq(0).and(OP00.eq(1)), 1); 
     var Designated00 = blank.where(
@@ -258,19 +250,19 @@ var imageSelect = ui.Select({
     
     var Hansen_update = buffer(Designated90, Target90,source90, years90); 
     lossYear = Hansen_update;
-    Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing1');
+    // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing1');
     
     
     
     Hansen_update = buffer(Designated00, Target00,source00, years00); 
     lossYear = Hansen_update; 
-    Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing2');
+    // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing2');
     
     
     Hansen_update = buffer(Designated05, Target05,source05, years05); 
     lossYear = Hansen_update; 
     
-    Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
+    // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
     
     
     // ########
