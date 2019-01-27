@@ -14,7 +14,6 @@ var totalarea = ee.FeatureCollection(geometry);
 var totalarea_raster = totalarea.set("raster_convert",1)
 totalarea_raster= totalarea_raster.reduceToImage({properties: ['raster_convert'],reducer: ee.Reducer.first()}); 
 var totalarea_outline = totalarea.geometry().bounds();
-print(totalarea);
 Map.addLayer(totalarea)
 
 Map.addLayer(totalarea_raster)
