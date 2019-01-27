@@ -408,3 +408,33 @@ for (var x = 0; x<3; x++){
 }
 
 Map.add(legend);
+
+var legend2 = ui.Panel({style: {position: 'bottom-left'}});
+legend2.add(ui.Label({
+  value: "land use class",
+  style: {
+    fontWeight: 'bold',
+    fontSize: '18px',
+    margin: '0 0 4px 0',
+    padding: '0px'
+  }
+}));
+
+var color_list2 = ee.List(['#966969', '#c38888','#ffb3b3','#ffd6d6' ])
+
+var class_names2 = ee.List(['2010', '2005', '2000', '1990']);
+var entry2;
+for (var x = 0; x<3; x++){
+  entry2 = [
+    ui.Label({style:{color:color_list.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
+    ui.Label({
+      value: class_names2.get(x).getInfo(),
+      style: {
+        margin: '0 0 4px 4px'
+      }
+    })
+  ];
+  legend2.add(ui.Panel(entry2, ui.Panel.Layout.Flow('horizontal')))
+}
+
+Map.add(legend2);
