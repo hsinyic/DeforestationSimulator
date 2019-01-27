@@ -69,7 +69,9 @@ var imageSelect = ui.Select({
     {label: 'Jawa', value: 'Jawa'},
     {label: 'Kalimantan Barat', value: 'Kalimantan Barat'},
     {label: 'Kalimantan Tengah', value: 'Kalimantan Tengah'},
-    {label: 'Kalimantan Timur', value: 'Kalimantan Timur'}
+    {label: 'Kalimantan Timur', value: 'Kalimantan Timur'},
+    {label: 'Sumatera Selatan', value: 'Sumatera Selatan'}
+
     ],
   onChange: function(value) {
   // Define Region of Interest  
