@@ -60,18 +60,18 @@ var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
 var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
+    // area_working: works, and is a bigger area 
+var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat'); 
+
 
 var Malaysia = country_simple.filterMetadata('country_co', 'equals', "MY");
 var Indonesia = country_simple.filterMetadata('country_co', 'equals', "ID");
 var PapuaNewGuinea = country_simple.filterMetadata('country_co', 'equals', "PP");
 var MIP = country_simple.filter(ee.Filter.inList('country_co', ['PP', 'ID', 'MY']))
-Map.addLayer(MIP)
 
 
 
-    // area_working: works, and is a bigger area 
-var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
-var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat'); 
 
 
     // define totalarea 
