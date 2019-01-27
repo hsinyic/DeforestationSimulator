@@ -20,7 +20,8 @@ var ROAselectUser = ee.String('Jambi')
 var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
-    {label: 'Sumatera Barat', value: 'Sumatera Barat'}
+    {label: 'Sumatera Barat', value: 'Sumatera Barat'},
+    {label: 'Riau', value: 'Riau'}
   ],
   onChange: function(value) {
         
@@ -77,11 +78,12 @@ var imageSelect = ui.Select({
     
     
         // define totalarea 
-    var totalarea = ee.FeatureCollection(Malaysia);
-    var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
-    var totalarea_outline = totalarea.geometry().bounds();
     var totalarea_geometry = totalarea.geometry();
-    
+    var totalarea = ee.FeatureCollection(ROA);
+    var totalarea_raster = totalarea
+    .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.mean()}); // for Indonesia_1
+    var totalarea_outline = totalarea.geometry().bounds();
+
     
     // Map.addLayer(totalarea,{name:'totalarea'})
     // Map.addLayer(totalarea_raster,{name:'totalarea_raster'})
