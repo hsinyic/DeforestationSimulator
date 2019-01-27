@@ -39,7 +39,12 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
 //     Pen05 = ee.FeatureCollection("ft:1gizVspGHIjdwL9P-piLzYV-_DXJ7AvuIky2IBBQ_"),
 //     Pen10 = ee.FeatureCollection("ft:1s1sLCzufbyP4TdfqOysEo8w5eclnFbEQ8IqLYHlm"),
 //     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
-//     country_detailed = ee.FeatureCollection("USDOS/LSIB/2013");
+    // country_detailed = ee.FeatureCollection("USDOS/LSIB/2013"),
+    // geometry = /* color: #cbd6c1 */ee.Geometry.Polygon(
+    //       [[[116.63649739188509, 5.865163721647857],
+    //         [116.63375080985384, 5.051767767935978],
+    //         [118.60579670829134, 5.073654702300962],
+    //         [118.60579670829134, 5.867895918991532]]]);
 
 
 
