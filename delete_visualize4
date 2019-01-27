@@ -151,7 +151,7 @@ var imageSelect = ui.Select({
   // # 1) 1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
   // ########
   // Set scale for buffering (e.g.,reduceRegion percentile operation)
-  var scale = ee.Number(100); 
+  var scale = ee.Number(50); 
   
   var Designated90 = blank.where(OP90.eq(0).and(OP00.eq(1)), 1); 
   var Designated00 = blank.where(
@@ -231,7 +231,7 @@ var imageSelect = ui.Select({
   Hansen_update = buffer(Designated05, Target05,source05, years05); 
   lossYear = Hansen_update; 
   
-  // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing');
+  Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing');
   
   
   // ########
