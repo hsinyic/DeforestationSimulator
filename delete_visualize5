@@ -21,7 +21,13 @@ var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
     {label: 'Sumatera Barat', value: 'Sumatera Barat'},
-  ],
+    {label: 'Sumatera Barat', value: 'Sumatera Barat'},
+    {label: 'Aceh', value: 'Aceh'},
+    {label: 'Jawa', value: 'Jawa'},
+    {label: 'Banten', value: 'Banten'},
+    {label: 'Jawa', value: 'Jawa'},
+    {label: 'Barat', value: 'Barat'}
+    ],
   onChange: function(value) {
         
     var add_cat_label=  function(feature){
@@ -470,3 +476,7 @@ for (var x = 0; x<4; x++){
 }
 
 Map.add(legend2);
+
+
+// Aceh,Jawa Tengah,Banten,Jawa Barat,Sulawesi Utara,Yogyakarta,Bengkulu
+// Kabupaten,Kotamadya
