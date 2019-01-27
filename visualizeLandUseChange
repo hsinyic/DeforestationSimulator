@@ -13,15 +13,16 @@ var crop = ee.ImageCollection("USGS/NLCD"),
 // define totalarea 
 // var totalarea = country_simple.filterMetadata('country_co', 'equals', "US");
 
-var totalarea = geometry;
+var totalarea = ee.FeatureCollection(geometry);
 var totalarea_raster = totalarea.set("raster_conver",1).reduceToImage({properties: ['raster_convert'],reducer: ee.Reducer.first()}); 
 var totalarea_outline = totalarea.geometry();
+
 //Import Hansen Global Data set 
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
 var blank = ee.Image(0).rename(['blank']).clip(totalarea_outline);
-// Map.addLayer(blank, {min: 1, max: 95,palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'blank');
+Map.addLayer(lossYear, {min: 2000, max: 2014,palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'lossYear');
 
 
 
@@ -38,10 +39,10 @@ var crop2001=crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2001')
 var crop2006= crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2006');
 var crop2011= crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2011');
 
-var OP90=crop_only(crop1992)
-var OP00=crop_only(crop2001)
-var OP05=crop_only(crop2006)
-var OP10=crop_only(crop2011)
+var OP92=crop_only(crop1992)
+var OP01=crop_only(crop2001)
+var OP06=crop_only(crop2006)
+var OP11=crop_only(crop2011)
 
 
 // Map.addLayer(crop1992, {min: 1, max: 95,palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD1992');
@@ -56,21 +57,99 @@ Map.addLayer(crop_only(crop2011),{min: 0, max: 1,palette:[ '#d1ee6c','#f7f7f7']}
 // ########
 // # Load Hansen of lossYear, perform speckle filtering and majority sampling 
 // ########
-var binary_pre = blank.where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
+var binary_pre = blank.where(OP92.eq(1).and(OP11.eq(1)), 1).where((OP92.eq(0)).and(OP11.eq(1)),2 );
 var binary = blank.where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
 //Expansion
 var lossYear_expand = lossYear.neq(2099); // make it binary 
 lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
 lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
 //Replant 
-var lossYear_replant = ee.Image([2099]).clip(totalarea_outline).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
+var lossYear_replant = ee.Image([2099]).clip(totalarea_outline).where(lossYear.neq(2099).updateMask(OP11.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
 lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square'));
 lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
 //Final assembling 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
 lossYear = lossYear_final; 
-Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP11.neq(0)), {min: 2000, max: 2014,
     palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
 
 
+
+// ############
+// # Step 3: Preliminary data processing 
+// # 1) Buffer by field treatment 
+// # 2) Create 2000 Basemap  
+// ############
+
+// ########
+// # 1) 1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
+// ########
+// Set scale for buffering (e.g.,reduceRegion percentile operation)
+var scale = ee.Number(1000); 
+
+var Designated90 = blank.where(OP92.eq(0).and(OP01.eq(1)), 1); 
+var Designated00 = blank.where(
+  (OP01.eq(0).and(OP06.eq(1)))
+  .and(
+    (lossYear.lte(2000)).or(lossYear.gt(2005)).or(lossYear.eq(99))), 1);
+var Designated05 = blank.where(
+  (OP06.eq(0).and(OP11.eq(1)))
+  .and(
+    (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1);
+
+var Target00 = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
+var Target90 = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
+var Target05 = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
+
+var source90 = blank.where(totalarea_raster.neq(0),OP92); source90 = source90.updateMask(source90);
+var source00 = blank.where(totalarea_raster.neq(0),OP01); source00 = source00.updateMask(source00);
+var source05 = blank.where(totalarea_raster.neq(0),OP06); source05 = source05.updateMask(source05);
+
+var years00 = ee.List.sequence(2001, 2005,1);
+var years90 = ee.List.sequence(1991, 2000,1);
+var years05  = ee.List.sequence(2006, 2010,1);
+
+var buffer = function(Designated, Target,source, years ){
+  var offset = ee.Number(years.get(0)).subtract(1);
+  var cumulativeCost = ee.Image([1]).clip(totalarea_outline).cumulativeCost({source: source,maxDistance: 100 * 1000 });
+  var costmap = blank.where(Designated.eq(1), cumulativeCost);
+  costmap = costmap.updateMask(costmap);
+  var mincostmapping = function(t){
+    t= ee.Number(t);
+    var N_target = ee.Number(Target.get(t));
+    var output = costmap.reduceRegion({
+      reducer: ee.Reducer.percentile([t.multiply(100)]),
+      geometry: totalarea,
+      scale: scale,
+      maxPixels: 12e9,
+    });
+    return ee.Number(output.get('blank'));
+  };
+  var threshold = Target.map(mincostmapping); 
+  var execute = function(x, prev){
+    x= ee.Number(x);
+    prev = ee.Image(prev);
+    var t=x.toInt();  
+    var index =ee.Number(x).subtract(offset).toInt();
+    var cuttoff = ee.Number(threshold.get(index)); 
+    var cuttoff_before = ee.Number(
+                  ee.Algorithms.If(index.gt(1), ee.Number(threshold.get(index.subtract(1).toInt())), ee.Number(0.0))
+                  );
+    var Binary = blank.
+              where(costmap.lte(cuttoff).and(costmap.gt(cuttoff_before)), 1);
+    var lossYear_update = prev.where(Binary.eq(1), t);
+    return ee.Image(lossYear_update);
+  };
+  var map = ee.Image(years.iterate(execute, lossYear)); 
+  return map;
+};
+
+var Hansen_update = buffer(Designated90, Target90,source90, years90); 
+lossYear = Hansen_update;
+Hansen_update = buffer(Designated00, Target00,source00, years00); 
+lossYear = Hansen_update; 
+Hansen_update = buffer(Designated05, Target05,source05, years05); 
+lossYear = Hansen_update; 
+
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
 
