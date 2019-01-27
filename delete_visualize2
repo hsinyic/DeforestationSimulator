@@ -65,7 +65,6 @@ var addprovinces = function(name, prev){
   return ee.FeatureCollection(prev
           .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
 };
-print(Indonesia_1);
     // area_notworking: R1, R2 splits the province Riau, and doesn't work 
 var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
@@ -221,9 +220,9 @@ var source90 = OP90; source90 = source90.updateMask(source90);
 var source00 = OP00; source00 = source00.updateMask(source00);
 var source05 = OP05; source05 = source05.updateMask(source05);
 
-Map.addLayer(source90, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source90');
-Map.addLayer(source00, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source00');
-Map.addLayer(source05, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source05');
+// Map.addLayer(source90, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source90');
+// Map.addLayer(source00, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source00');
+// Map.addLayer(source05, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source05');
 
 
 var years00 = ee.List.sequence(2001, 2005,1);
