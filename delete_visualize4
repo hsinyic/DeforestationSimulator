@@ -185,7 +185,7 @@ var imageSelect = ui.Select({
   
   var buffer = function(Designated, Target,source, years ){
     var offset = ee.Number(years.get(0)).subtract(1);
-    var cumulativeCost = ee.Image([1]).clip(totalarea_outline).cumulativeCost({source: source,maxDistance: 100 * 1000 });
+    var cumulativeCost = ee.Image([1]).clip(totalarea_outline).cumulativeCost({source: source,maxDistance: 100 * 100 });
     var costmap = blank.where(Designated.eq(1), cumulativeCost);
     costmap = costmap.updateMask(costmap);
     var mincostmapping = function(t){
