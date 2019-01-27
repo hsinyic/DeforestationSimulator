@@ -99,7 +99,7 @@ var imageSelect = ui.Select({
   var totalarea_outline = totalarea.geometry().bounds();
 
   
-  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, 'area footprint')
+  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#cbd6c1' ]}, 'area footprint')
   // Map.addLayer(totalarea_raster)
   // Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
   //Import Hansen Global Data set 
@@ -148,7 +148,7 @@ var imageSelect = ui.Select({
   // # 1) 1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
   // ########
   // Set scale for buffering (e.g.,reduceRegion percentile operation)
-  var scale = ee.Number(1000); 
+  var scale = ee.Number(500); 
   
   var Designated90 = blank.where(OP90.eq(0).and(OP00.eq(1)), 1); 
   var Designated00 = blank.where(
@@ -342,7 +342,7 @@ var imageSelect = ui.Select({
     var img = ee.Image(Gunarso_final.get(t));
     var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
       palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
-      Map.layers().set(1, layer);
+      Map.layers().set(50, layer);
   };
   
   var slider = ui.Slider();
