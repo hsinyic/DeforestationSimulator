@@ -373,7 +373,13 @@ var imageSelect = ui.Select({
         palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#ff7c7c'  ]}, year);
     };
     
+    printclass2(1990);printclass2(1992);printclass2(1994);
+    printclass2(1996);printclass2(1998);printclass2(2000);
+    printclass2(2002);printclass2(2004);
+    printclass2(2006);printclass2(2008);
     printclass2(2009);
+
+
     
     
     var printclass = function(t){
