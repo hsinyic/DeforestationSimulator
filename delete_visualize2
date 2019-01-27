@@ -75,7 +75,7 @@ var MIP = country_simple.filter(ee.Filter.inList('country_co', ['PP', 'ID', 'MY'
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(MIP);
+var totalarea = ee.FeatureCollection(PapuaNewGuinea);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -114,37 +114,37 @@ Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b
 Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990");
 
 
-Export.image.toAsset({
-  image: OP90.clip(MIP),
-  description: "OP90",
-  scale: 30,
-  region: MIP.geometry().bounds(),
-  maxPixels: 1e13
-});
+// Export.image.toAsset({
+//   image: OP90.clip(MIP),
+//   description: "OP90",
+//   scale: 30,
+//   region: MIP.geometry().bounds(),
+//   maxPixels: 1e13
+// });
 
-Export.image.toAsset({
-  image: OP00.clip(MIP),
-  description: "OP00",
-  scale: 30,
-  region: MIP.geometry().bounds(),
-  maxPixels: 1e13
-});
+// Export.image.toAsset({
+//   image: OP00.clip(MIP),
+//   description: "OP00",
+//   scale: 30,
+//   region: MIP.geometry().bounds(),
+//   maxPixels: 1e13
+// });
 
-Export.image.toAsset({
-  image: OP05.clip(MIP),
-  description: "OP05",
-  scale: 30,
-  region: MIP.geometry().bounds(),
-  maxPixels: 1e13
-});
+// Export.image.toAsset({
+//   image: OP05.clip(MIP),
+//   description: "OP05",
+//   scale: 30,
+//   region: MIP.geometry().bounds(),
+//   maxPixels: 1e13
+// });
 
-Export.image.toAsset({
-  image: OP10.clip(MIP),
-  description: "OP10",
-  scale: 30,
-  region: MIP.geometry().bounds(),
-  maxPixels: 1e13
-});
+// Export.image.toAsset({
+//   image: OP10.clip(MIP),
+//   description: "OP10",
+//   scale: 30,
+//   region: MIP.geometry().bounds(),
+//   maxPixels: 1e13
+// });
 
 
 
@@ -166,8 +166,8 @@ lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(25
 //Final assembling 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
 lossYear = lossYear_final; 
-// Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
-//     palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
+Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+    palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
 
 
 
@@ -392,13 +392,13 @@ legend.add(ui.Label({
 
 var color_list = ee.List(['#d1ee6c', '#51612e', '#d51483'])
 
-var Well_List_names = ee.List(['other use', 'forest', 'agriculture']);
+var class_names = ee.List(['other use', 'forest', 'agriculture']);
 var entry;
 for (var x = 0; x<3; x++){
   entry = [
     ui.Label({style:{color:color_list.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
     ui.Label({
-      value: Well_List_names.get(x).getInfo(),
+      value: class_names.get(x).getInfo(),
       style: {
         margin: '0 0 4px 4px'
       }
