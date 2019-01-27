@@ -335,35 +335,8 @@ var imageSelect = ui.Select({
     Map.addLayer(img.selfMask(), {min: 0, max: 5,
       palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
   };
+  printclass2(2009);
   
-
-  
-  var printclass = function(t){
-    var year = t.toString();
-    t= ee.Number(t).subtract(2000);
-    var img = ee.Image(Gunarso.get(t));
-    var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
-      palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
-      Map.layers().set(0, layer);
-  };
-  
-  
-  
-  var slider = ui.Slider();
-  slider.setMax(2010);
-  slider.setMin(1990);
-  slider.setStep(1);
-  
-  slider.setValue(2005);  // Set a default value.
-  slider.onChange(printclass);
-  slider.style().set(
-    {
-    width: '300px',
-    padding: '10px',
-    position: 'bottom-right'
-      
-    });
-  Map.add(slider.setValue(2005));
   
   
 
@@ -438,3 +411,18 @@ print(imageSelect);
   }
   
   Map.add(legend2);
+  
+  
+  var printclass = function(t){
+    var year = t.toString();
+    t= ee.Number(t).subtract(2000);
+    var img = ee.Image(Gunarso_final.get(t));
+    var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
+      palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
+      Map.layers().set(0, layer);
+  };
+  
+  
+  
+
+
