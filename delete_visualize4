@@ -60,13 +60,10 @@ var imageSelect = ui.Select({
     {label: 'Bengkulu', value: 'Bengkulu'},
     {label: 'Aceh', value: 'Aceh'},
     {label: 'Jawa', value: 'Jawa'},
-    {label: 'Banten', value: 'Banten'},
-    {label: 'Jawa', value: 'Jawa'},
     {label: 'Kalimantan Barat', value: 'Kalimantan Barat'},
     {label: 'Kalimantan Tengah', value: 'Kalimantan Tengah'},
     {label: 'Kalimantan Timur', value: 'Kalimantan Timur'},
     {label: 'Sumatera Selatan', value: 'Sumatera Selatan'}
-
     ],
   onChange: function(value) {
   // Define Region of Interest  
@@ -347,7 +344,7 @@ var imageSelect = ui.Select({
     t= ee.Number(t).subtract(2000);
     var img = ee.Image(Gunarso_final.get(t));
     var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
-      palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
+      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#fffcb9', '#fffcb9', '#ff7c7c', ]}, year);
       Map.layers().set(0, layer);
   };
   
