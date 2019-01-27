@@ -16,12 +16,11 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     country_detailed = ee.FeatureCollection("USDOS/LSIB/2013");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var ROAselectUser = ee.String('Jambi')
+
 var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
     {label: 'Sumatera Barat', value: 'Sumatera Barat'},
-    {label: 'Riau', value: 'Riau'}
   ],
   onChange: function(value) {
         
@@ -50,6 +49,7 @@ var imageSelect = ui.Select({
     
     // Define Region of Interest  
     var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
+    print(Indonesia_1);
     var addprovinces = function(name, prev){
       name = ee.String(name);
       prev = ee.FeatureCollection(prev);
@@ -414,6 +414,9 @@ var imageSelect = ui.Select({
 
   }
 })
+
+imageSelect.setPlaceholder('Choose a location...');
+print(imageSelect);
 
 
 
