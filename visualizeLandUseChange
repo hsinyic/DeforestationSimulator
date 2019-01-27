@@ -87,12 +87,12 @@ Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP11
 // Set scale for buffering (e.g.,reduceRegion percentile operation)
 var scale = ee.Number(1000); 
 
-var Designated90 = blank.where(OP92.eq(0).and(OP01.eq(1)), 1); 
-var Designated00 = blank.where(
+var Designated92 = blank.where(OP92.eq(0).and(OP01.eq(1)), 1); 
+var Designated01 = blank.where(
   (OP01.eq(0).and(OP06.eq(1)))
   .and(
     (lossYear.lte(2000)).or(lossYear.gt(2005)).or(lossYear.eq(99))), 1);
-var Designated05 = blank.where(
+var Designated06 = blank.where(
   (OP06.eq(0).and(OP11.eq(1)))
   .and(
     (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1);
@@ -144,11 +144,11 @@ var buffer = function(Designated, Target,source, years ){
   return map;
 };
 
-var Hansen_update = buffer(Designated90, Target90,source90, years90); 
+var Hansen_update = buffer(Designated92, Target90,source90, years90); 
 lossYear = Hansen_update;
-Hansen_update = buffer(Designated00, Target00,source00, years00); 
+Hansen_update = buffer(Designated01, Target00,source00, years00); 
 lossYear = Hansen_update; 
-Hansen_update = buffer(Designated05, Target05,source05, years05); 
+Hansen_update = buffer(Designated06, Target05,source05, years05); 
 lossYear = Hansen_update; 
 
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
