@@ -11,7 +11,7 @@ var crop = ee.ImageCollection("USGS/NLCD"),
 // define totalarea 
 // var totalarea = country_simple.filterMetadata('country_co', 'equals', "US");
 var totalarea = ee.FeatureCollection(geometry);
-var totalarea_raster = totalarea.set("raster_convert",1).reduceToImage({properties: ['raster_convert'],reducer: ee.Reducer.first()}); 
+var source92 = totalarea.set("raster_convert",1).reduceToImage({properties: ['raster_convert'],reducer: ee.Reducer.first()}); 
 var totalarea_outline = totalarea.geometry();
 
 //Import Hansen Global Data set 
@@ -58,7 +58,7 @@ Map.addLayer(crop_only(crop2011),{min: 0, max: 1,palette:[ '#d1ee6c','#f7f7f7']}
 // # Load Hansen of lossYear, perform speckle filtering and majority sampling 
 // ########
 var binary_pre = blank.where(OP92.eq(1).and(OP11.eq(1)), 1).where((OP92.eq(0)).and(OP11.eq(1)),2 );
-var binary = blank.where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
+var binary = blank.where(source92.neq(0),binary_pre).clip(totalarea_outline);
 //Expansion
 var lossYear_expand = lossYear.neq(2099); // make it binary 
 lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
@@ -107,12 +107,12 @@ var Target92 = ee.List([0, 0.11, 0.22, 0.33, 0.44, 0.55, 0.66, 0.77, 0.88, 1.0])
 var Target01 = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 var Target06 = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
 
-var source90 = blank.where(totalarea_raster.neq(0),OP92); source90 = source90.updateMask(source90);
-var source00 = blank.where(totalarea_raster.neq(0),OP01); source00 = source00.updateMask(source00);
-var source05 = blank.where(totalarea_raster.neq(0),OP06); source05 = source05.updateMask(source05);
+var source90 = blank.where(source92.neq(0),OP92); source90 = source90.updateMask(source90);
+var source01 = blank.where(source92.neq(0),OP01); source01 = source01.updateMask(source01);
+var source06 = blank.where(source92.neq(0),OP06); source06 = source06.updateMask(source06);
 Map.addLayer(source90, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source90');
-Map.addLayer(source00, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source00');
-Map.addLayer(source05, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source05');
+Map.addLayer(source01, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source01');
+Map.addLayer(source06, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source06');
 
 
 
@@ -163,12 +163,14 @@ var buffer = function(Designated, Target,source, years ){
 
 var Hansen_update = buffer(Designated92, Target92,source90, years90); 
 lossYear = Hansen_update;
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
 
 
-Hansen_update = buffer(Designated01, Target01,source00, years00); 
+
+Hansen_update = buffer(Designated01, Target01,source01, years00); 
 lossYear = Hansen_update; 
-Hansen_update = buffer(Designated06, Target06,source05, years05); 
+Hansen_update = buffer(Designated06, Target06,source06, years05); 
 lossYear = Hansen_update; 
 
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
 
