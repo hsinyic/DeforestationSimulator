@@ -65,6 +65,7 @@ var addprovinces = function(name, prev){
   return ee.FeatureCollection(prev
           .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
 };
+print(Indonesia_1);
     // area_notworking: R1, R2 splits the province Riau, and doesn't work 
 var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
