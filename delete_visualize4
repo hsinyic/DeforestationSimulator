@@ -366,6 +366,18 @@ var imageSelect = ui.Select({
   Map.add(slider.setValue(2005));
   
   
+
+  }
+});
+
+// Set a place holder.
+imageSelect.setPlaceholder('Choose a location...');
+print(imageSelect);
+
+
+
+
+
   
   var legend = ui.Panel({style: {position: 'bottom-left'}});
   legend.add(ui.Label({
@@ -426,14 +438,3 @@ var imageSelect = ui.Select({
   }
   
   Map.add(legend2);
-
-  }
-});
-
-// Set a place holder.
-imageSelect.setPlaceholder('Choose a location...');
-print(imageSelect);
-
-
-
-
