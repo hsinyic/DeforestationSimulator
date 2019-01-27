@@ -22,7 +22,7 @@ var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
 var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
 var blank = ee.Image(0).rename(['blank']).clip(totalarea_outline);
-Map.addLayer(lossYear, {min: 2000, max: 2014,palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'lossYear');
+Map.addLayer(lossYear, {min: 2000, max: 2011,palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'lossYear');
 
 
 
@@ -70,7 +70,7 @@ lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(25
 //Final assembling 
 var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
 lossYear = lossYear_final; 
-Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP11.neq(0)), {min: 2000, max: 2014,
+Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP11.neq(0)), {min: 2000, max: 2011,
     palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
 
 
