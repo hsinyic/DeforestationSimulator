@@ -18,7 +18,8 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
     OP00 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP00"),
     OP05 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP05"),
     OP10 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP10"),
-    OP90 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP90");
+    OP90 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP90"),
+    geometry = /* color: #d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // var ma00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M00"),
 //     ma05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M05"),
@@ -204,18 +205,18 @@ var buffer = function(Designated, Target,source, years ){
 
 var Hansen_update = buffer(Designated90, Target90,source90, years90); 
 lossYear = Hansen_update;
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing1');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing1');
 
 
 Hansen_update = buffer(Designated00, Target00,source00, years00); 
 lossYear = Hansen_update; 
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing2');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing2');
 
 
 Hansen_update = buffer(Designated05, Target05,source05, years05); 
 lossYear = Hansen_update; 
 
-// Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
+Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing');
 
 
 // ########
@@ -321,35 +322,35 @@ var printclass2 = function(t){
     palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
 };
 
-printclass2(2009);
+// printclass2(2009);
 
-printclass2(2008);
+// printclass2(2008);
 
-printclass2(2007);
+// printclass2(2007);
 
-printclass2(2006);
+// printclass2(2006);
 
-printclass2(2005);
+// printclass2(2005);
 
-printclass2(2004);
+// printclass2(2004);
 
-printclass2(2003);
+// printclass2(2003);
 
-printclass2(2002);
+// printclass2(2002);
 
-printclass2(2001);
+// printclass2(2001);
 
-printclass2(2000);
+// printclass2(2000);
 
-printclass2(1999);
+// printclass2(1999);
 
-printclass2(1998);
+// printclass2(1998);
 
-printclass2(1997);
+// printclass2(1997);
 
-printclass2(1996);
+// printclass2(1996);
 
-printclass2(1995);
+// printclass2(1995);
 
 
 
