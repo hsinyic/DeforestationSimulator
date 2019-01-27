@@ -299,6 +299,7 @@ var imageSelect = ui.Select({
         }
     ).rename(['year_2000']);
     
+
     
     // #########################a
     // #Step4 : Land use classifications,  2000 to 2010 
@@ -369,8 +370,9 @@ var imageSelect = ui.Select({
       var year = t.toString();
       t= ee.Number(t).subtract(2000); 
       var img = ee.Image(Gunarso.get(t)); 
-      Map.addLayer(img.selfMask(), {min: 0, max: 5,
-        palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff'  ]}, year);
+      Map.addLayer(img.selfMask(), {min: 0, max: 6,
+      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff' ,'#7290ff' ]}, year);
+
     };
     
     printclass2(1990);printclass2(1992);printclass2(1994);
@@ -386,8 +388,8 @@ var imageSelect = ui.Select({
       var year = t.toString();
       t= ee.Number(t).subtract(2000);
       var img = ee.Image(Gunarso.get(t));
-      var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
-        palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#ff7c7c'  ]}, year);
+      var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
+      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff' ,'#7290ff' ]}, year);
         Map.layers().set(0, layer);
     };
     
