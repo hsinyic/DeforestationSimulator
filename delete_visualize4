@@ -60,8 +60,14 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
 var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
-    {label: 'Sumatera Barat', value: 'Sumatera Barat'}
-  ],
+    {label: 'Sumatera Barat', value: 'Sumatera Barat'},
+    {label: 'Sumatera Barat', value: 'Sumatera Barat'},
+    {label: 'Aceh', value: 'Aceh'},
+    {label: 'Jawa', value: 'Jawa'},
+    {label: 'Banten', value: 'Banten'},
+    {label: 'Jawa', value: 'Jawa'},
+    {label: 'Barat', value: 'Barat'}
+    ],
   onChange: function(value) {
   // Define Region of Interest  
   var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
