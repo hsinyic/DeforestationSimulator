@@ -41,8 +41,6 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
 //     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
 //     country_detailed = ee.FeatureCollection("USDOS/LSIB/2013");
 
-var scale = ee.Number(1000); 
-
 
 
 
@@ -68,6 +66,34 @@ var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
 var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
+
+
+var ROAselectUser = ee.String('Jambi')
+var imageSelect = ui.Select({
+  items: [
+    {label: 'Jambi', value: 'Jambi'},
+    {label: 'Sumatera Barat', value: 'Sumatera Barat'}
+  ],
+  onChange: function(value) {
+    var ROAselectUser = ee.String(value);
+    // // Asynchronously get the list of band names.
+    // value.bandNames().evaluate(function(bands) {
+    //   // Display the bands of the selected image.
+    //   bandSelect.items().reset(bands);
+    //   // Set the first band to the selected band.
+    //   bandSelect.setValue(bandSelect.items().get(0));
+    // });
+  }
+});
+
+// Set a place holder.
+imageSelect.setPlaceholder('Choose a location...');
+print(imageSelect);
+
+var ROA  =  Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat');
+
+
+
     // area_working: works, and is a bigger area 
 var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
 var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat'); 
@@ -83,7 +109,7 @@ var MIP = country_simple.filter(ee.Filter.inList('country_co', ['PP', 'ID', 'MY'
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(geometry);
+var totalarea = ee.FeatureCollection(R3);
 
 var totalarea_raster = ee.FeatureCollection([totalarea.first().set('ID_0',3)])
 .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
