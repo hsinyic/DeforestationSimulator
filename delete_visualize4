@@ -19,11 +19,7 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
     OP05 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP05"),
     OP10 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP10"),
     OP90 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP90"),
-    geometry = /* color: #cbd6c1 */ee.Geometry.Polygon(
-        [[[116.63649739188509, 5.865163721647857],
-          [116.63375080985384, 5.051767767935978],
-          [118.60579670829134, 5.073654702300962],
-          [118.60579670829134, 5.867895918991532]]]);
+    geometry = /* color: #98ff00 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // var ma00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M00"),
 //     ma05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M05"),
@@ -109,7 +105,7 @@ var imageSelect = ui.Select({
   var totalarea_outline = totalarea.geometry().bounds();
 
   
-  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#242424' ]}, 'area footprint')
+  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#baa9ff' ]}, 'area footprint')
   // Map.addLayer(totalarea_raster)
   // Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
   //Import Hansen Global Data set 
@@ -352,7 +348,7 @@ var imageSelect = ui.Select({
     var img = ee.Image(Gunarso_final.get(t));
     var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
       palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
-      Map.layers().set(t.add(5), layer);
+      Map.layers().set(0, layer);
   };
   
   var slider = ui.Slider();
