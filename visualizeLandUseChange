@@ -2,10 +2,22 @@
 var crop = ee.ImageCollection("USGS/NLCD"),
     collection2 = ee.ImageCollection("MODIS/006/MYD13A1"),
     collection3 = ee.ImageCollection("LANDSAT/LC08/C01/T1_TOA"),
-    country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
+    country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var totalarea_outline = country_simple.filterMetadata('country_co', 'equals', "US").geometry();
+// define totalarea 
+var totalarea = country_simple.filterMetadata('country_co', 'equals', "US");
+var totalarea_raster = totalarea.set("raster_conver",1).reduceToImage({properties: ['raster_convert'],reducer: ee.Reducer.first()}); 
+var totalarea_outline = totalarea.geometry();
+//Import Hansen Global Data set 
+var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
+lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
+var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
 var blank = ee.Image(0).rename(['blank']).clip(totalarea_outline);
+// Map.addLayer(blank, {min: 1, max: 95,palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'blank');
+
+
+
 var crop_only = function(imageCollect){
   var imagery = ee.Image(imageCollect.reduce(ee.Reducer.first()));
 // var crop_test = ee.Image(imageCollect.first());
@@ -15,44 +27,43 @@ var crop_only = function(imageCollect){
 
 
 var crop1992=crop.select(0).filterMetadata('system:index', 'equals', 'NLCD1992');
-
-Map.addLayer(crop1992
-, {min: 1, max: 95,
-    palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD1992');
-
-Map.addLayer(crop_only(crop1992),{min: 0, max: 1,
-    palette:[ '#d1ee6c','#f7f7f7']})
-
-
-
 var crop2001=crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2001');
-
-
-
-
-Map.addLayer(crop2001
-, {min: 1, max: 95,
-    palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD2001');
-Map.addLayer(crop_only(crop2001),{min: 0, max: 1,
-    palette:[ '#d1ee6c','#f7f7f7']})
-
 var crop2006= crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2006');
+var crop2011= crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2011');
 
-Map.addLayer(crop2006
-, {min: 1, max: 95,
-    palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD2006');
-Map.addLayer(crop_only(crop2006),{min: 0, max: 1,
-    palette:[ '#d1ee6c','#f7f7f7']})
-
-var crop2011 = crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2011')
-Map.addLayer(crop2011
-, {min: 1, max: 95,
-    palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD2011');
-Map.addLayer(crop_only(crop2011),{min: 0, max: 1,
-    palette:[ '#d1ee6c','#f7f7f7']})
+var OP90=crop_only(crop1992)
+var OP00=crop_only(crop2001)
+var OP05=crop_only(crop2006)
+var OP10=crop_only(crop2011)
 
 
-// remove the Alaska Band 
-// define OP92, OP01, OP06, OP11; 0 for noncrop and 1 for cropland  
-// 9 years, 5 years, 5 years 
+// Map.addLayer(crop1992, {min: 1, max: 95,palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD1992');
+Map.addLayer(crop_only(crop1992),{min: 0, max: 1,palette:[ '#d1ee6c','#f7f7f7']})
+// Map.addLayer(crop_only(crop2001),{min: 0, max: 1,palette:[ '#d1ee6c','#f7f7f7']})
+// Map.addLayer(crop_only(crop2006),{min: 0, max: 1,palette:[ '#d1ee6c','#f7f7f7']})
+Map.addLayer(crop_only(crop2011),{min: 0, max: 1,palette:[ '#d1ee6c','#f7f7f7']})
+
+
+
+
+// ########
+// # Load Hansen of lossYear, perform speckle filtering and majority sampling 
+// ########
+var binary_pre = blank.where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
+var binary = blank.where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
+//Expansion
+var lossYear_expand = lossYear.neq(2099); // make it binary 
+lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
+lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
+//Replant 
+var lossYear_replant = ee.Image([2099]).clip(totalarea_outline).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
+lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square'));
+lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
+//Final assembling 
+var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
+lossYear = lossYear_final; 
+Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+    palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
+
+
 
