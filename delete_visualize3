@@ -79,13 +79,15 @@ var MIP = country_simple.filter(ee.Filter.inList('country_co', ['PP', 'ID', 'MY'
 
     // define totalarea 
 var totalarea = ee.FeatureCollection(Malaysia);
+var totalarea = ee.FeatureCollection(Malaysia);
+
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 var totalarea_geometry = totalarea.geometry();
 
 
 // Map.addLayer(totalarea,{name:'totalarea'})
-// Map.addLayer(totalarea_raster,{name:'totalarea_raster'})
+Map.addLayer(totalarea_raster)
 // Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
 //Import Hansen Global Data set 
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
