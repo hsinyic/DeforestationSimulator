@@ -219,7 +219,7 @@ var imageSelect = ui.Select({
   
   var Hansen_update = buffer(Designated90, Target90,source90, years90); 
   lossYear = Hansen_update;
-  Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing1');
+  // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing1');
   
   
   Hansen_update = buffer(Designated00, Target00,source00, years00); 
@@ -230,7 +230,7 @@ var imageSelect = ui.Select({
   Hansen_update = buffer(Designated05, Target05,source05, years05); 
   lossYear = Hansen_update; 
   
-  Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing');
+  // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing');
   
   
   // ########
