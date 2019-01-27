@@ -66,27 +66,21 @@ var imageSelect = ui.Select({
   onChange: function(value) {
   // Define Region of Interest  
   var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
-  var addprovinces = function(name, prev){
-    name = ee.String(name);
-    prev = ee.FeatureCollection(prev);
-    return ee.FeatureCollection(prev
-            .merge(Indonesia_1.filterMetadata('NAME_2', 'equals', name)));
-  };
-  // area_notworking: R1, R2 splits the province Riau, and doesn't work 
-  var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
-            .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
-  var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
-            .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
-  var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
-            .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
+  // // area_notworking: R1, R2 splits the province Riau, and doesn't work 
+  // var R1 =  ee.List(['Indragiri Hulu','Kuantan Singingi' ])
+  //           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals', 'Indragiri Hilir'));
+  // var R2  =  ee.List(['Rokan Hilir','Bengkalis', 'Dumai'])//,'Dumai','Siak'])
+  //           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Rokan Hulu' ));
+  // var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
+  //           .iterate(addprovinces, Indonesia_1.filterMetadata('NAME_2', 'equals','Pekan Baru' ));
   
-  var ROA  =  Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat');
+  var ROA  =  Indonesia_1.filterMetadata('NAME_1', 'equals', value);
   
   
   
       // area_working: works, and is a bigger area 
-  var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
-  var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat'); 
+  // var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
+  // var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat'); 
   
   
   var Malaysia = country_simple.filterMetadata('country_co', 'equals', "MY");
@@ -99,7 +93,7 @@ var imageSelect = ui.Select({
   
   
       // define totalarea 
-  var totalarea = ee.FeatureCollection(R3);
+  var totalarea = ee.FeatureCollection(ROA);
   
   var totalarea_raster = ee.FeatureCollection([totalarea.first().set('ID_0',3)])
   .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
@@ -107,9 +101,9 @@ var imageSelect = ui.Select({
   var totalarea_geometry = totalarea.geometry();
   
   
-  // Map.addLayer(totalarea,{name:'totalarea'})
+  Map.addLayer(totalarea,{name:'totalarea'})
   Map.addLayer(totalarea_raster)
-  // Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
+  Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
   //Import Hansen Global Data set 
   var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
   lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
