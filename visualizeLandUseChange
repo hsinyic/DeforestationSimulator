@@ -3,10 +3,17 @@ var crop = ee.ImageCollection("USGS/NLCD"),
     collection2 = ee.ImageCollection("MODIS/006/MYD13A1"),
     collection3 = ee.ImageCollection("LANDSAT/LC08/C01/T1_TOA"),
     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
-    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015");
+    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+    geometry = /* color: #d63000 */ee.Geometry.Polygon(
+        [[[-91.699803029223, 39.5598737759322],
+          [-92.007420216723, 31.67759240702587],
+          [-79.966404591723, 31.640186688923322],
+          [-78.823826466723, 40.50201462753847]]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // define totalarea 
-var totalarea = country_simple.filterMetadata('country_co', 'equals', "US");
+// var totalarea = country_simple.filterMetadata('country_co', 'equals', "US");
+
+var totalarea = geometry;
 var totalarea_raster = totalarea.set("raster_conver",1).reduceToImage({properties: ['raster_convert'],reducer: ee.Reducer.first()}); 
 var totalarea_outline = totalarea.geometry();
 //Import Hansen Global Data set 
