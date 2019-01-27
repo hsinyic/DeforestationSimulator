@@ -344,7 +344,7 @@ var imageSelect = ui.Select({
     t= ee.Number(t).subtract(2000);
     var img = ee.Image(Gunarso_final.get(t));
     var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
-      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#ff7c7c', ]}, year);
+      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#ff7c7c' ]}, year);
       Map.layers().set(5, layer);
   };
   
@@ -389,8 +389,7 @@ print(imageSelect);
     }
   }));
   
-  var color_list = ee.List(['#d1ee6c', '#51612e', '#d51483'])
-  
+  var color_list = ee.List(['#7290ff', '#fffcb9', '#ff7c7c'])
   var class_names = ee.List(['other use', 'forest', 'agriculture']);
   var entry;
   for (var x = 0; x<3; x++){
