@@ -36,15 +36,21 @@ Map.addLayer(crop2001
 Map.addLayer(crop_only(crop2001),{min: 0, max: 1,
     palette:[ '#d1ee6c','#f7f7f7']})
 
+var crop2006= crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2006');
 
+Map.addLayer(crop2006
+, {min: 1, max: 95,
+    palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD2006');
+Map.addLayer(crop_only(crop2006),{min: 0, max: 1,
+    palette:[ '#d1ee6c','#f7f7f7']})
 
-// Map.addLayer(crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2006')
-// , {min: 1, max: 95,
-//     palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD2006');
+var crop2011 = crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2011')
+Map.addLayer(crop2011
+, {min: 1, max: 95,
+    palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD2011');
+Map.addLayer(crop_only(crop2011),{min: 0, max: 1,
+    palette:[ '#d1ee6c','#f7f7f7']})
 
-// Map.addLayer(crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2011')
-// , {min: 1, max: 95,
-//     palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD2011');
 
 // remove the Alaska Band 
 // define OP92, OP01, OP06, OP11; 0 for noncrop and 1 for cropland  
