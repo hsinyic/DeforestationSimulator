@@ -364,7 +364,6 @@ var imageSelect = ui.Select({
     });
   Map.add(slider.setValue(2005));
 
-  Map.unlisten(printclass)
 
 
 
