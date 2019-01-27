@@ -57,7 +57,6 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
 
 
 
-
 var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
