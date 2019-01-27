@@ -158,6 +158,7 @@ var buffer = function(Designated, Target,source, years ){
 var Hansen_update = buffer(Designated92, Target92,source90, years90); 
 lossYear = Hansen_update;
 
+
 Hansen_update = buffer(Designated01, Target01,source00, years00); 
 lossYear = Hansen_update; 
 Hansen_update = buffer(Designated06, Target06,source05, years05); 
