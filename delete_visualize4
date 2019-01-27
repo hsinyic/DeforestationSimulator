@@ -325,20 +325,107 @@ var imageSelect = ui.Select({
     var final_yearmap = blank.where(totalarea_raster.neq(0), yearmap);
     return ee.Image(final_yearmap);
   };
-  var Gunarso = yr.map(annual);
+  var Gunarso_final = yr.map(annual);
   
   
   var printclass2 = function(t){
     var year = t.toString();
     t= ee.Number(t).subtract(2000); 
-    var img = ee.Image(Gunarso.get(t)); 
+    var img = ee.Image(Gunarso_final.get(t)); 
     Map.addLayer(img.selfMask(), {min: 0, max: 5,
       palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
   };
   
 
-
-
+  
+  var printclass = function(t){
+    var year = t.toString();
+    t= ee.Number(t).subtract(2000);
+    var img = ee.Image(Gunarso.get(t));
+    var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
+      palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
+      Map.layers().set(0, layer);
+  };
+  
+  
+  
+  var slider = ui.Slider();
+  slider.setMax(2010);
+  slider.setMin(1990);
+  slider.setStep(1);
+  
+  slider.setValue(2005);  // Set a default value.
+  slider.onChange(printclass);
+  slider.style().set(
+    {
+    width: '300px',
+    padding: '10px',
+    position: 'bottom-right'
+      
+    });
+  Map.add(slider.setValue(2005));
+  
+  
+  
+  var legend = ui.Panel({style: {position: 'bottom-left'}});
+  legend.add(ui.Label({
+    value: "land use class",
+    style: {
+      fontWeight: 'bold',
+      fontSize: '18px',
+      margin: '0 0 4px 0',
+      padding: '0px'
+    }
+  }));
+  
+  var color_list = ee.List(['#d1ee6c', '#51612e', '#d51483'])
+  
+  var class_names = ee.List(['other use', 'forest', 'agriculture']);
+  var entry;
+  for (var x = 0; x<3; x++){
+    entry = [
+      ui.Label({style:{color:color_list.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
+      ui.Label({
+        value: class_names.get(x).getInfo(),
+        style: {
+          margin: '0 0 4px 4px'
+        }
+      })
+    ];
+    legend.add(ui.Panel(entry, ui.Panel.Layout.Flow('horizontal')))
+  }
+  
+  Map.add(legend);
+  
+  var legend2 = ui.Panel({style: {position: 'middle-left'}});
+  legend2.add(ui.Label({
+    value: "cropland map",
+    style: {
+      fontWeight: 'bold',
+      fontSize: '18px',
+      margin: '0 0 4px 0',
+      padding: '0px'
+    }
+  }));
+  
+  var color_list2 = ee.List(['#966969', '#c38888','#ffb3b3','#ffd6d6' ])
+  
+  var class_names2 = ee.List(['2010', '2005', '2000', '1990']);
+  var entry2;
+  for (var x = 0; x<4; x++){
+    entry2 = [
+      ui.Label({style:{color:color_list2.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
+      ui.Label({
+        value: class_names2.get(x).getInfo(),
+        style: {
+          margin: '0 0 4px 4px'
+        }
+      })
+    ];
+    legend2.add(ui.Panel(entry2, ui.Panel.Layout.Flow('horizontal')))
+  }
+  
+  Map.add(legend2);
 
   }
 });
@@ -350,91 +437,3 @@ print(imageSelect);
 
 
 
-var printclass = function(t){
-  var year = t.toString();
-  t= ee.Number(t).subtract(2000);
-  var img = ee.Image(Gunarso.get(t));
-  var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
-    palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
-    Map.layers().set(0, layer);
-};
-
-
-
-var slider = ui.Slider();
-slider.setMax(2010);
-slider.setMin(1990);
-slider.setStep(1);
-
-slider.setValue(2005);  // Set a default value.
-slider.onChange(printclass);
-slider.style().set(
-  {
-  width: '300px',
-  padding: '10px',
-  position: 'bottom-right'
-    
-  });
-Map.add(slider.setValue(2005));
-
-
-
-var legend = ui.Panel({style: {position: 'bottom-left'}});
-legend.add(ui.Label({
-  value: "land use class",
-  style: {
-    fontWeight: 'bold',
-    fontSize: '18px',
-    margin: '0 0 4px 0',
-    padding: '0px'
-  }
-}));
-
-var color_list = ee.List(['#d1ee6c', '#51612e', '#d51483'])
-
-var class_names = ee.List(['other use', 'forest', 'agriculture']);
-var entry;
-for (var x = 0; x<3; x++){
-  entry = [
-    ui.Label({style:{color:color_list.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
-    ui.Label({
-      value: class_names.get(x).getInfo(),
-      style: {
-        margin: '0 0 4px 4px'
-      }
-    })
-  ];
-  legend.add(ui.Panel(entry, ui.Panel.Layout.Flow('horizontal')))
-}
-
-Map.add(legend);
-
-var legend2 = ui.Panel({style: {position: 'middle-left'}});
-legend2.add(ui.Label({
-  value: "cropland map",
-  style: {
-    fontWeight: 'bold',
-    fontSize: '18px',
-    margin: '0 0 4px 0',
-    padding: '0px'
-  }
-}));
-
-var color_list2 = ee.List(['#966969', '#c38888','#ffb3b3','#ffd6d6' ])
-
-var class_names2 = ee.List(['2010', '2005', '2000', '1990']);
-var entry2;
-for (var x = 0; x<4; x++){
-  entry2 = [
-    ui.Label({style:{color:color_list2.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
-    ui.Label({
-      value: class_names2.get(x).getInfo(),
-      style: {
-        margin: '0 0 4px 4px'
-      }
-    })
-  ];
-  legend2.add(ui.Panel(entry2, ui.Panel.Layout.Flow('horizontal')))
-}
-
-Map.add(legend2);
