@@ -61,12 +61,13 @@ var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
     {label: 'Sumatera Barat', value: 'Sumatera Barat'},
-    {label: 'Sumatera Barat', value: 'Sumatera Barat'},
+    {label: 'Bengkulu', value: 'Bengkulu'},
     {label: 'Aceh', value: 'Aceh'},
     {label: 'Jawa', value: 'Jawa'},
     {label: 'Banten', value: 'Banten'},
     {label: 'Jawa', value: 'Jawa'},
-    {label: 'Barat', value: 'Barat'}
+    {label: 'Barat', value: 'Barat'},
+    {label: 'Sulawesi Tengah', value: 'Sulawesi Tengah'}
     ],
   onChange: function(value) {
   // Define Region of Interest  
@@ -105,7 +106,7 @@ var imageSelect = ui.Select({
   var totalarea_outline = totalarea.geometry().bounds();
 
   
-  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#cbd6c1' ]}, 'area footprint')
+  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#242424' ]}, 'area footprint')
   // Map.addLayer(totalarea_raster)
   // Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
   //Import Hansen Global Data set 
