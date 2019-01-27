@@ -57,7 +57,6 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
 
 
 
-var ROAselectUser = ee.String('Jambi')
 var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
@@ -98,8 +97,7 @@ var imageSelect = ui.Select({
   var totalarea_raster = ee.FeatureCollection(totalarea)
   .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.mean()}); // for Indonesia_1
   var totalarea_outline = totalarea.geometry().bounds();
-  var totalarea_geometry = totalarea.geometry();
-  
+
   
   Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, 'area footprint')
   // Map.addLayer(totalarea_raster)
