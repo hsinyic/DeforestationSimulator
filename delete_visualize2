@@ -94,9 +94,9 @@ var totalarea_outline = totalarea.geometry().bounds();
 var totalarea_geometry = totalarea.geometry();
 
 
-Map.addLayer(totalarea,{name:'totalarea'})
-Map.addLayer(totalarea_raster,{name:'totalarea_raster'})
-Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
+// Map.addLayer(totalarea,{name:'totalarea'})
+// Map.addLayer(totalarea_raster,{name:'totalarea_raster'})
+// Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
 //Import Hansen Global Data set 
 var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
 lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
