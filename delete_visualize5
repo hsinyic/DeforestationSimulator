@@ -411,8 +411,6 @@ var imageSelect = ui.Select({
     
     
     
-    
-
 
   }
 })
