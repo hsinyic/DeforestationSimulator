@@ -57,6 +57,7 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
 
 
 
+
 var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
@@ -66,8 +67,9 @@ var imageSelect = ui.Select({
     {label: 'Jawa', value: 'Jawa'},
     {label: 'Banten', value: 'Banten'},
     {label: 'Jawa', value: 'Jawa'},
-    {label: 'Barat', value: 'Barat'},
-    {label: 'Sulawesi Tengah', value: 'Sulawesi Tengah'}
+    {label: 'Kalimantan Barat', value: 'Kalimantan Barat'},
+    {label: 'Kalimantan Tengah', value: 'Kalimantan Tengah'},
+    {label: 'Kalimantan Timur', value: 'Kalimantan Timur'}
     ],
   onChange: function(value) {
   // Define Region of Interest  
@@ -374,7 +376,7 @@ var imageSelect = ui.Select({
 });
 
 // Set a place holder.
-imageSelect.setPlaceholder('Choose a location...');
+imageSelect.setPlaceholder('Selected Sample location...');
 print(imageSelect);
 
 
