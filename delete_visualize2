@@ -16,9 +16,21 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     country_detailed = ee.FeatureCollection("USDOS/LSIB/2013");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Map.setCenter(102.59729699055572,-0.4124334747334486, 8.5)
-
-// Map.setCenter(108.831,3.89, 6.5)
+// var ma00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M00"),
+//     ma05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M05"),
+//     ma10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M10"),
+//     ma90 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M90"),
+//     in90 = ee.FeatureCollection("ft:1uapqckPRK25yVUFpULpdj2T0Y528VisRUSNIWhOL"),
+//     in00 = ee.FeatureCollection("ft:1oNZXmk6ETcE9UBhaLLs7WRRImV6AcdTchYPfIj0f"),
+//     in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
+//     in10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In10"),
+//     gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+//     Pen90 = ee.FeatureCollection("ft:1K7c9xfnLUFeZtjEOJOGj8YCzuTwdbSSSULfrvABW"),
+//     Pen00 = ee.FeatureCollection("ft:1OOZFXx64egEda93Q8LfBUIJ6n_Ecl97XsHk5hfvc"),
+//     Pen05 = ee.FeatureCollection("ft:1gizVspGHIjdwL9P-piLzYV-_DXJ7AvuIky2IBBQ_"),
+//     Pen10 = ee.FeatureCollection("ft:1s1sLCzufbyP4TdfqOysEo8w5eclnFbEQ8IqLYHlm"),
+//     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
+//     country_detailed = ee.FeatureCollection("USDOS/LSIB/2013");
 
 
 
