@@ -371,6 +371,9 @@ var imageSelect = ui.Select({
 
 // Set a place holder.
 imageSelect.setPlaceholder('Selected Sample location...');
+
+imageSelect.setValue('Jambi');
+
 print(imageSelect);
 
 
