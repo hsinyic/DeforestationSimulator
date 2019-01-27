@@ -261,7 +261,6 @@ var imageSelect = ui.Select({
     
     Hansen_update = buffer(Designated05, Target05,source05, years05); 
     lossYear = Hansen_update; 
-    
     // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
     
     
