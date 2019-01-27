@@ -64,8 +64,7 @@ var R3  =  ee.List(['Siak', 'Kampar', 'Pelalawan'])
 var Malaysia = country_simple.filterMetadata('country_co', 'equals', "MY");
 var Indonesia = country_simple.filterMetadata('country_co', 'equals', "ID");
 var PapuaNewGuinea = country_simple.filterMetadata('country_co', 'equals', "PP");
-var MIP = country_simple.filterMetadata('country_co', 'equals', ["PP", "ID","MY"] );
-
+var MIP = country_simple.filter(ee.Filter.inList('country_co', ['PP', 'ID', 'MY']))
 Map.addLayer(MIP)
 
 
@@ -114,15 +113,45 @@ Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b
 Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990");
 
 Export.image.toAsset({
-  image: OP90,
-  description: "OP90_Malaysia",
+  image: OP90.clip(MIP),
+  description: "OP90",
   scale: 30,
-  region: Malaysia.geometry().bounds(),
+  region: MIP.geometry().bounds(),
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: OP00.clip(MIP),
+  description: "OP00",
+  scale: 30,
+  region: MIP.geometry().bounds(),
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: OP05.clip(MIP),
+  description: "OP05",
+  scale: 30,
+  region: MIP.geometry().bounds(),
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: OP10.clip(MIP),
+  description: "OP10",
+  scale: 30,
+  region: MIP.geometry().bounds(),
   maxPixels: 1e13
 });
 
 
-
+Export.image.toAsset({
+  image: OP10.clip(MIP),
+  description: "OP10_test",
+  scale: 1000,
+  region: MIP.geometry().bounds(),
+  maxPixels: 1e13
+});
 
 
  
