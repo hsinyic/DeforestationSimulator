@@ -377,8 +377,6 @@ Map.add(slider.setValue(2005));
 
 
 
-
-
 var legend = ui.Panel({style: {position: 'bottom-left'}});
 legend.add(ui.Label({
   value: "land use class",
@@ -424,7 +422,7 @@ var color_list2 = ee.List(['#966969', '#c38888','#ffb3b3','#ffd6d6' ])
 
 var class_names2 = ee.List(['2010', '2005', '2000', '1990']);
 var entry2;
-for (var x = 0; x<3; x++){
+for (var x = 0; x<4; x++){
   entry2 = [
     ui.Label({style:{color:color_list2.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
     ui.Label({
