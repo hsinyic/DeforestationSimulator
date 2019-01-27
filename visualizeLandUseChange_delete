@@ -103,7 +103,7 @@ var Designated06 = blank.where(
 // Map.addLayer(Designated06, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'TEST');
 
 
-var Target92 = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
+var Target92 = ee.List([0, 0.11, 0.22, 0.33, 0.44, 0.55, 0.66, 0.77, 0.88, 1.0]); 
 var Target01 = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
 var Target06 = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
 
@@ -119,6 +119,12 @@ Map.addLayer(source05, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'sourc
 var years90 = ee.List.sequence(1991, 2000,1);
 var years00 = ee.List.sequence(2001, 2005,1);
 var years05  = ee.List.sequence(2006, 2010,1);
+
+
+var years91 = ee.List.sequence(1992, 2001,1);
+var years01 = ee.List.sequence(2002, 2005,1);
+var years06  = ee.List.sequence(2006, 2010,1);
+
 
 var buffer = function(Designated, Target,source, years ){
   var offset = ee.Number(years.get(0)).subtract(1);
