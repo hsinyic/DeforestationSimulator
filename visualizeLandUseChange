@@ -6,30 +6,37 @@ var crop = ee.ImageCollection("USGS/NLCD"),
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var totalarea_outline = country_simple.filterMetadata('country_co', 'equals', "US").geometry();
 var blank = ee.Image(0).rename(['blank']).clip(totalarea_outline);
+var crop_only = function(imageCollect){
+  var imagery = ee.Image(imageCollect.reduce(ee.Reducer.first()));
+// var crop_test = ee.Image(imageCollect.first());
+  var crop_binary = blank.where(imagery.eq(82), 1);
+  return(ee.Image(crop_binary));
+}
+
 
 var crop1992=crop.select(0).filterMetadata('system:index', 'equals', 'NLCD1992');
 
-Map.addLayer(crop_only(crop1992)
+Map.addLayer(crop1992
 , {min: 1, max: 95,
     palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD1992');
 
-
-
-var crop_only = function(imageCollect){
-  var crop_test = ee.Image(imageCollect.reduce(ee.Reducer.first()));
-  var OP92 = blank.where(crop_test.eq(82), 1);
-  return(OP92);
-}
-
-// var crop_test = ee.Image(crop.select(0).filterMetadata('system:index', 'equals', 'NLCD1992').first());
-
-print('crop_test',crop_test)
-Map.addLayer(OP92,{min: 0, max: 1,
+Map.addLayer(crop_only(crop1992),{min: 0, max: 1,
     palette:[ '#d1ee6c','#f7f7f7']})
 
-// Map.addLayer(crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2001')
-// , {min: 1, max: 95,
-//     palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD2001');
+
+
+var crop2001=crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2001');
+
+
+
+
+Map.addLayer(crop2001
+, {min: 1, max: 95,
+    palette:[ '#ffffff', '#d1ee6c', 'ff510f','#fff832','#4cff62','#dcdcdc' , '#d51483', '#f7f7f7' ]}, 'NLCD2001');
+Map.addLayer(crop_only(crop2001),{min: 0, max: 1,
+    palette:[ '#d1ee6c','#f7f7f7']})
+
+
 
 // Map.addLayer(crop.select(0).filterMetadata('system:index', 'equals', 'NLCD2006')
 // , {min: 1, max: 95,
@@ -43,17 +50,3 @@ Map.addLayer(OP92,{min: 0, max: 1,
 // define OP92, OP01, OP06, OP11; 0 for noncrop and 1 for cropland  
 // 9 years, 5 years, 5 years 
 
-print(collection2);
-collection2 = collection2.filterDate('2004-01-01', '2010-10-31');
-print(collection2);
-
-
-collection3=collection3
-    .filter(ee.Filter.eq('WRS_PATH', 44))
-    .filterDate('2014-03-01', '2014-08-01');
-print(collection3);
-collection3=collection3
-    .filter(ee.Filter.eq('WRS_PATH', 44))
-    .filter(ee.Filter.eq('WRS_ROW', 34))
-    .filterDate('2014-03-01', '2014-08-01');
-print('collection3: ', collection3);
