@@ -411,7 +411,7 @@ Map.add(legend);
 
 var legend2 = ui.Panel({style: {position: 'middle-left'}});
 legend2.add(ui.Label({
-  value: "land use class",
+  value: "cropland map",
   style: {
     fontWeight: 'bold',
     fontSize: '18px',
@@ -426,7 +426,7 @@ var class_names2 = ee.List(['2010', '2005', '2000', '1990']);
 var entry2;
 for (var x = 0; x<3; x++){
   entry2 = [
-    ui.Label({style:{color:color_list.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
+    ui.Label({style:{color:color_list2.get(x).getInfo(), margin: '0 0 4px 0'}, value: '██'}),
     ui.Label({
       value: class_names2.get(x).getInfo(),
       style: {
