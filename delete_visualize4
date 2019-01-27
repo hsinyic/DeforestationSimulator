@@ -95,15 +95,15 @@ var imageSelect = ui.Select({
       // define totalarea 
   var totalarea = ee.FeatureCollection(ROA);
   
-  var totalarea_raster = ee.FeatureCollection([totalarea.first().set('ID_0',3)])
+  var totalarea_raster = ee.FeatureCollection(totalarea)
   .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.mean()}); // for Indonesia_1
   var totalarea_outline = totalarea.geometry().bounds();
   var totalarea_geometry = totalarea.geometry();
   
   
-  Map.addLayer(totalarea,{name:'totalarea'})
-  Map.addLayer(totalarea_raster)
-  Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
+  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, 'area footprint')
+  // Map.addLayer(totalarea_raster)
+  // Map.addLayer(totalarea_outline,{totalarea_outline:'totalarea_outline'})
   //Import Hansen Global Data set 
   var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
   lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
