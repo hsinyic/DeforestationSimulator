@@ -96,17 +96,17 @@ var Designated06 = blank.where(
   (OP06.eq(0).and(OP11.eq(1)))
   .and(
     (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1);
-
-var Target00 = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
-var Target90 = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
-var Target05 = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
+    
+var Target92 = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
+var Target01 = ee.List([0, 0.2,0.4,0.6,0.8,1.0]);
+var Target06 = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
 
 var source90 = blank.where(totalarea_raster.neq(0),OP92); source90 = source90.updateMask(source90);
 var source00 = blank.where(totalarea_raster.neq(0),OP01); source00 = source00.updateMask(source00);
 var source05 = blank.where(totalarea_raster.neq(0),OP06); source05 = source05.updateMask(source05);
 
-var years00 = ee.List.sequence(2001, 2005,1);
 var years90 = ee.List.sequence(1991, 2000,1);
+var years00 = ee.List.sequence(2001, 2005,1);
 var years05  = ee.List.sequence(2006, 2010,1);
 
 var buffer = function(Designated, Target,source, years ){
@@ -144,11 +144,11 @@ var buffer = function(Designated, Target,source, years ){
   return map;
 };
 
-var Hansen_update = buffer(Designated92, Target90,source90, years90); 
+var Hansen_update = buffer(Designated92, Target92,source90, years90); 
 lossYear = Hansen_update;
-Hansen_update = buffer(Designated01, Target00,source00, years00); 
+Hansen_update = buffer(Designated01, Target01,source00, years00); 
 lossYear = Hansen_update; 
-Hansen_update = buffer(Designated06, Target05,source05, years05); 
+Hansen_update = buffer(Designated06, Target06,source05, years05); 
 lossYear = Hansen_update; 
 
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
