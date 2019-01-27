@@ -96,7 +96,7 @@ var imageSelect = ui.Select({
   var totalarea = ee.FeatureCollection(ROA);
   
   var totalarea_raster = ee.FeatureCollection([totalarea.first().set('ID_0',3)])
-  .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
+  .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.mean()}); // for Indonesia_1
   var totalarea_outline = totalarea.geometry().bounds();
   var totalarea_geometry = totalarea.geometry();
   
