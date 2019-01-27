@@ -47,7 +47,6 @@ var imageSelect = ui.Select({
     
     // Define Region of Interest  
     var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
-    print(Indonesia_1);
     var addprovinces = function(name, prev){
       name = ee.String(name);
       prev = ee.FeatureCollection(prev);
@@ -381,7 +380,7 @@ var imageSelect = ui.Select({
       t= ee.Number(t).subtract(2000);
       var img = ee.Image(Gunarso.get(t));
       var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
-        palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
+        palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#ff7c7c'  ]}, year);
         Map.layers().set(0, layer);
     };
     
@@ -428,7 +427,9 @@ legend.add(ui.Label({
   }
 }));
 
-var color_list = ee.List(['#d1ee6c', '#51612e', '#d51483'])
+// var color_list = ee.List(['#d1ee6c', '#51612e', '#d51483'])
+  var color_list = ee.List(['#7290ff', '#fffcb9', '#ff7c7c'])
+
 
 var class_names = ee.List(['other use', 'forest', 'agriculture']);
 var entry;
