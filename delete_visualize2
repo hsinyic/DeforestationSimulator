@@ -88,7 +88,7 @@ var MIP = country_simple.filter(ee.Filter.inList('country_co', ['PP', 'ID', 'MY'
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(R1);
+var totalarea = ee.FeatureCollection(Malaysia);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -213,6 +213,10 @@ var Target05 = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
 var source90 = blank.where(totalarea_raster.neq(0),OP90); source90 = source90.updateMask(source90);
 var source00 = blank.where(totalarea_raster.neq(0),OP00); source00 = source00.updateMask(source00);
 var source05 = blank.where(totalarea_raster.neq(0),OP05); source05 = source05.updateMask(source05);
+Map.addLayer(source90, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source90');
+Map.addLayer(source00, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source00');
+Map.addLayer(source05, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'source05');
+
 
 var years00 = ee.List.sequence(2001, 2005,1);
 var years90 = ee.List.sequence(1991, 2000,1);
