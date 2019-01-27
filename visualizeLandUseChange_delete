@@ -116,12 +116,12 @@ Map.addLayer(source06, {min: 0, max: 1, palette: ['#fff832','#4cff62' ]}, 'sourc
 
 
 
-var years90 = ee.List.sequence(1991, 2000,1);
-var years00 = ee.List.sequence(2001, 2005,1);
-var years05  = ee.List.sequence(2006, 2010,1);
+// var years92 = ee.List.sequence(1991, 2000,1);
+// var years01 = ee.List.sequence(2001, 2005,1);
+// var years06  = ee.List.sequence(2006, 2010,1);
 
 
-var years91 = ee.List.sequence(1992, 2001,1);
+var years92 = ee.List.sequence(1992, 2001,1);
 var years01 = ee.List.sequence(2002, 2005,1);
 var years06  = ee.List.sequence(2006, 2010,1);
 
@@ -161,15 +161,15 @@ var buffer = function(Designated, Target,source, years ){
   return map;
 };
 
-var Hansen_update = buffer(Designated92, Target92,source90, years90); 
+var Hansen_update = buffer(Designated92, Target92,source90, years92); 
 lossYear = Hansen_update;
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
 
 
 
-Hansen_update = buffer(Designated01, Target01,source01, years00); 
+Hansen_update = buffer(Designated01, Target01,source01, years01); 
 lossYear = Hansen_update; 
-Hansen_update = buffer(Designated06, Target06,source06, years05); 
+Hansen_update = buffer(Designated06, Target06,source06, years06); 
 lossYear = Hansen_update; 
 
 Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#dcdcdc' ]}, 'simulated year of forest clearing');
