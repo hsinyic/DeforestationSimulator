@@ -14,9 +14,7 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
     Pen10 = ee.FeatureCollection("ft:1s1sLCzufbyP4TdfqOysEo8w5eclnFbEQ8IqLYHlm"),
     in10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In10"),
     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
-    country_detailed = ee.FeatureCollection("USDOS/LSIB/2013"),
-    image8 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP10"),
-    image10 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP90");
+    country_detailed = ee.FeatureCollection("USDOS/LSIB/2013");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Map.setCenter(102.59729699055572,-0.4124334747334486, 8.5)
 
@@ -77,7 +75,7 @@ var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Bar
 
 
     // define totalarea 
-var totalarea = ee.FeatureCollection(Malaysia);
+var totalarea = ee.FeatureCollection(MIP);
 var totalarea_raster = totalarea.reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.first()}); // for Indonesia_1
 var totalarea_outline = totalarea.geometry().bounds();
 
@@ -115,10 +113,6 @@ Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c3888
 Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000");
 Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990");
 
-Map.addLayer(image8.updateMask(image8), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Test1");
-
-Map.addLayer(image10.updateMask(image10), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Test1");
-
 
 Export.image.toAsset({
   image: OP90.clip(MIP),
@@ -152,14 +146,6 @@ Export.image.toAsset({
   maxPixels: 1e13
 });
 
-
-Export.image.toAsset({
-  image: OP10.clip(MIP),
-  description: "OP10_test",
-  scale: 100,
-  region: MIP.geometry().bounds(),
-  maxPixels: 1e13
-});
 
 
  
