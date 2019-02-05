@@ -124,10 +124,10 @@ var OP10 = ee.Image(layer10.iterate(concatenate, blank)).rename(['OP10']);
 OP00 = OP00.where(OP90.eq(1), 1);
 OP05 = OP05.where(OP00.eq(1), 1);
 OP10 = OP10.where(OP05.eq(1), 1);
-Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Oil Palm 2010");
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Oil Palm 2005");
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000");
-Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990");
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Cropland 2010");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Cropland 2005");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Cropland 2000");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Cropland 1990");
 
 
 // Export.image.toAsset({
