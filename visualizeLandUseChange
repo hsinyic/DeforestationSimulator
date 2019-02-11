@@ -328,7 +328,7 @@ var imageSelect = ui.Select({
 // Set a place holder.
 imageSelect.setPlaceholder('Selected Sample location...');
 imageSelect.setValue('Jambi');
-print(imageSelect);
+// print(imageSelect);
 
 
 
@@ -401,5 +401,9 @@ var inspector = ui.Panel({
 inspector.add(imageSelect);
 
 
+
+inspector.add(ui.Label('maps might take some time to load'));
+
+imageSelect.style().set('textAlign', 'center');
 
 
