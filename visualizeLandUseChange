@@ -397,7 +397,7 @@ var inspector = ui.Panel({
 });
 
 inspector.add(imageSelect);
-inspector.add(ui.Label('Choose a region in Indonesia'));
+inspector.add(ui.Label('Choose a region in Indonesia -- see deforestation and cropland expansion from 1990-2010'));
 imageSelect.style().set('textAlign', 'center');
 Map.add(inspector);
 
