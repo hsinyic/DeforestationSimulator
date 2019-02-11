@@ -406,4 +406,6 @@ inspector.add(ui.Label('maps might take some time to load'));
 
 imageSelect.style().set('textAlign', 'center');
 
+Map.add(inspector);
+
 
