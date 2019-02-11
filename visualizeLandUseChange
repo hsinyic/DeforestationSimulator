@@ -57,6 +57,7 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1f
 
 
 
+
 var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
@@ -93,7 +94,9 @@ var imageSelect = ui.Select({
   lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
   var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
   var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea_outline);
-  
+  // var blank = ee.Image([0]).rename(['blank']).clip(totalarea.geometry());
+
+
   
   
   
@@ -228,7 +231,10 @@ var imageSelect = ui.Select({
 
   
 
-
+Map.addLayer(year_1990, {min: 0, max: 6,
+      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]},
+      "year_1990");
+      
 
 
 
@@ -236,9 +242,9 @@ var imageSelect = ui.Select({
   // #Step4 : Land use classifications,  2000 to 2010 
   // #########################
   var Gunarso_intermediate = ee.Image([lossYear,year_1990, blank, OP00, OP05, OP10, OP90]);
-  var yr = ee.List.sequence(2000, 2010, 1);
+  var yr = ee.List.sequence(1990, 2010, 1);
   var annual = function(t){
-    t= ee.Number(t);
+    t= ee.Number(t); // t= 1990; now 
     var executeOP_OP = Gunarso_intermediate.expression(
     'lossYear==t && OP90 == 1 ? OPR\
       :lossYear==t && OP90 == 0 ? OP\
