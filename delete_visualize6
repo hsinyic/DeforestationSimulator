@@ -229,8 +229,90 @@ var imageSelect = ui.Select({
         'treecover2000': Gunarso.select('treecover2000')
       }
   ).rename(['year_2000']);
+
   
+  // #########################a
+  // #Step4 : Land use classifications,  1990-2000 
+  // #########################
+  var year_1990 = Gunarso.expression(
+  '(OP90 ==1)? OP\
+    :((OP90==0) && treecover2000>=30)? F\
+      :((OP90==0)&& treecover2000<30)? NF\
+        :OTH',
+      {  
+        'OP': Gunarso.select('blank').add(OP_color),
+        'F': Gunarso.select('blank').add(F_color),
+        'NF': Gunarso.select('blank').add(NF_color),
+        'OTH': Gunarso.select('blank').add(OTH_color),
+        'OP00': Gunarso.select('OP00'),
+        'treecover2000': Gunarso.select('treecover2000')
+      }
+  ).rename(['year_1990']);
+  var Gunarso_intermediate = ee.Image([lossYear,year_1990, blank, OP00, OP05, OP10, OP90]);
+  var yr = ee.List.sequence(1990, 2000, 1);
+  var annual = function(t){
+    t= ee.Number(t);
+    var executeOP_OP = Gunarso_intermediate.expression(
+    'lossYear==t && OP90 == 1 ? OPR\
+      :lossYear==t && OP90 == 0 ? OP\
+      :(lossYear>t || lossYear<t) ? OP\
+      : OTH',
+        {  
+          'OP': Gunarso_intermediate.select('blank').add(OP_color),
+          'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
+          'lossYear': Gunarso_intermediate.select('lossyear'),
+          'OP90': Gunarso_intermediate.select('OP90'),
+          'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+          't': t,
+        }
+    );
   
+    var executeNOP_OP = Gunarso_intermediate.expression(
+      'lossYear>t ? basemap\
+          : lossYear<=t? OP\
+            :OTH',
+        {  
+          'F': Gunarso_intermediate.select('blank').add(F_color),
+          'OP': Gunarso_intermediate.select('blank').add(OP_color),
+          'NF': Gunarso_intermediate.select('blank').add(NF_color),
+          'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+          'lossYear': Gunarso_intermediate.select('lossyear'),
+          'basemap': Gunarso_intermediate.select('year_1990'),
+          't': t,
+          'NF_color': NF_color,
+          'F_color': F_color
+        }
+    );
+    var executeNOP_NOP = Gunarso_intermediate.expression(
+    ' basemap==F_color && (lossYear>t || lossYear==2099)? F\
+      :basemap==F_color && (lossYear<=t && lossYear<2099)? NF\
+            :basemap==NF_color ? NF\
+              :OTH',
+        {  
+          'F': Gunarso_intermediate.select('blank').add(F_color),
+          'NF': Gunarso_intermediate.select('blank').add(NF_color),
+          'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
+          'lossYear': Gunarso_intermediate.select('lossyear'),
+          'basemap': Gunarso_intermediate.select('year_1990'),
+          't': t,
+          'NF_color': NF_color,
+          'F_color': F_color
+        }
+    );
+    var yearmap = blank
+    .where(OP90.eq(1).and(OP00.eq(1)),executeOP_OP)
+    .where(OP90.eq(0).and(OP00.eq(1)),executeNOP_OP)
+    .where(OP90.eq(0).and(OP00.eq(0)),executeNOP_NOP);
+    
+    var final_yearmap = blank.where(totalarea_raster.neq(0), yearmap);
+    return ee.Image(final_yearmap);
+  };
+  var Gunarso_final90 = yr.map(annual);
+
+
+
+
+
   // #########################a
   // #Step4 : Land use classifications,  2000 to 2010 
   // #########################
