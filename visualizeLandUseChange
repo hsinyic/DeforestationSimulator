@@ -15,7 +15,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen90 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Pen90_pseudo"),
     Pen00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Pen00_pseudo"),
     in90 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo90_pseudo"),
-    geometry = /* color: #d63000 */ee.Geometry.MultiPoint();
+    geometry = /* color: #fffcb9 */ee.Geometry.MultiPoint(),
+    geometry2 = /* color: #ff9d9d */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var addCat = function(feature){
   feature = ee.Feature(feature);
@@ -311,9 +312,15 @@ var imageSelect = ui.Select({
     t= ee.Number(t).subtract(2000);
     var img = ee.Image(Gunarso_final.get(t));
     var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
-      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#ff7c7c' ]}, year);
+      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '#7290ff' ]}, year);
       Map.layers().set(20, layer);
   };
+  //   var NF_color = ee.Number(1);
+  // var F_color = ee.Number(2);
+  // var OPReplant_color = ee.Number(3); 
+  // var OP_color = ee.Number(4); 
+  // var NOP_color = ee.Number(5);
+  // var OTH_color = ee.Number(6);
   
   var slider = ui.Slider();
   slider.setMax(2010);
