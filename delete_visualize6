@@ -1,10 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
-    in90 = ee.FeatureCollection("ft:1uapqckPRK25yVUFpULpdj2T0Y528VisRUSNIWhOL"),
-    gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
-    in00 = ee.FeatureCollection("ft:1oNZXmk6ETcE9UBhaLLs7WRRImV6AcdTchYPfIj0f"),
-    in10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In10"),
     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     country_detailed = ee.FeatureCollection("USDOS/LSIB/2013"),
     OP00 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP00"),
@@ -12,18 +8,38 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
     OP10 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP10"),
     OP90 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP90"),
     geometry = /* color: #98ff00 */ee.Geometry.MultiPoint(),
-    table = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M05");
+    Indo00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo00");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
+var convert_to_image = function(feature){
+  feature = ee.FeatureCollection(feature);
+  return feature.reduceToImage({properties: ['cat'],reducer: ee.Reducer.first()});
+};
+var concatenate = function(map, prev){
+  map = ee.Image(map);
+  prev = ee.Image(prev);
+  return ee.Image(prev.where(map.eq(1),1));
+};
+var layer90 = ee.List([in90]).map(convert_to_image);
+var layer00 = ee.List([in00]).map(convert_to_image);
+var layer05 = ee.List([in05]).map(convert_to_image);
+var layer10 = ee.List([in10]).map(convert_to_image);
+var OP90 = ee.Image(layer90.iterate(concatenate, blank)).rename(['OP90']);
+var OP00 = ee.Image(layer00.iterate(concatenate, blank)).rename(['OP00']);
+var OP05 = ee.Image(layer05.iterate(concatenate, blank)).rename(['OP05']);
+var OP10 = ee.Image(layer10.iterate(concatenate, blank)).rename(['OP10']);
+OP00 = OP00.where(OP90.eq(1), 1);
+OP05 = OP05.where(OP00.eq(1), 1);
+OP10 = OP10.where(OP05.eq(1), 1);
 
 
-var test = ee.FeatureCollection(table);
-Map.addLayer(table);
+var test = ee.FeatureCollection(Indo00);
+Map.addLayer(Indo00);
 
-  Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Oil Palm 2010");
-  Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Oil Palm 2005");
-  Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000");
-  Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990");
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Oil Palm 2010");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Oil Palm 2005");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990");
 
 
 
