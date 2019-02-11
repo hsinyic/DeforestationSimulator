@@ -311,8 +311,8 @@ var imageSelect = ui.Select({
     var year = t.toString();
     t= ee.Number(t).subtract(2000);
     var img = ee.Image(Gunarso_final.get(t));
-    var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 5,
-      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '#7290ff' ]}, year);
+    var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
+      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
       Map.layers().set(20, layer);
   };
   //   var NF_color = ee.Number(1);
