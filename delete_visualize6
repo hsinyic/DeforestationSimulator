@@ -11,12 +11,14 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
     OP05 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP05"),
     OP10 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP10"),
     OP90 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP90"),
-    geometry = /* color: #98ff00 */ee.Geometry.MultiPoint();
+    geometry = /* color: #98ff00 */ee.Geometry.MultiPoint(),
+    table = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/M05");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
 
-
+var test = ee.FeatureCollection(table);
+Map.addLayer(table);
 
   Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Oil Palm 2010");
   Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Oil Palm 2005");
