@@ -397,7 +397,7 @@ var inspector = ui.Panel({
 });
 
 inspector.add(imageSelect);
-inspector.add(ui.Label('maps might take some time to load'));
+inspector.add(ui.Label('Choose a region in Indonesia'));
 imageSelect.style().set('textAlign', 'center');
 Map.add(inspector);
 
