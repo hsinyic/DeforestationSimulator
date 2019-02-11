@@ -56,13 +56,6 @@ Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1f
 
 
 
-
-
-
-
-
-
-
 var imageSelect = ui.Select({
   items: [
     {label: 'Jambi', value: 'Jambi'},
@@ -161,9 +154,8 @@ var imageSelect = ui.Select({
   var source00 = OP00; source00 = source00.updateMask(source00);
   var source05 = OP05; source05 = source05.updateMask(source05);
   
-
-  var years00 = ee.List.sequence(2001, 2005,1);
   var years90 = ee.List.sequence(1991, 2000,1);
+  var years00 = ee.List.sequence(2001, 2005,1);
   var years05  = ee.List.sequence(2006, 2010,1);
   
   var buffer = function(Designated, Target,source, years ){
@@ -203,17 +195,10 @@ var imageSelect = ui.Select({
   
   var Hansen_update = buffer(Designated90, Target90,source90, years90); 
   lossYear = Hansen_update;
-  // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing1');
-  
-  
   Hansen_update = buffer(Designated00, Target00,source00, years00); 
   lossYear = Hansen_update; 
-  // Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#2bbed6', '#0f00ff' ,'#71286b']}, 'simulated year of forest clearing2');
-  
-  
   Hansen_update = buffer(Designated05, Target05,source05, years05); 
   lossYear = Hansen_update; 
-  
   Map.addLayer(lossYear.updateMask(lossYear.neq(2099)), {min: 1990, max: 2010, palette: ['ff510f','#fff832','#4cff62','#0f00ff' ]}, 'simulated year of forest clearing');
   
   
@@ -401,8 +386,7 @@ print(imageSelect);
     }
   }));
   
-  var color_list2 = ee.List(['#966969', '#c38888','#ffb3b3','#ffd6d6' ])
-  
+  var color_list2 = ee.List(['#6d0096', '#7f00ff','#ee7eff','#eab1ff' ])
   var class_names2 = ee.List(['2010', '2005', '2000', '1990']);
   var entry2;
   for (var x = 0; x<4; x++){
