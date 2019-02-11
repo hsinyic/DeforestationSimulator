@@ -14,9 +14,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Pen10_pseudo"),
     Pen90 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Pen90_pseudo"),
     Pen00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Pen00_pseudo"),
-    in90 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo90_pseudo"),
-    geometry = /* color: #fffcb9 */ee.Geometry.MultiPoint(),
-    geometry2 = /* color: #ff9d9d */ee.Geometry.MultiPoint();
+    in90 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo90_pseudo");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.setCenter(102.3211, -1.3017, 8);
 var addCat = function(feature){
@@ -78,7 +76,7 @@ var imageSelect = ui.Select({
     var totalarea_raster = ee.FeatureCollection(totalarea)
     .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.mean()}); // for Indonesia_1
     var totalarea_outline = totalarea.geometry().bounds();
-    // Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#d6d6d6' ]}, 'area footprint')
+    Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#d6d6d6' ]}, 'area footprint')
     var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
     lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
     var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
@@ -406,6 +404,6 @@ inspector.add(ui.Label('maps might take some time to load'));
 
 imageSelect.style().set('textAlign', 'center');
 
-ui.Map.add(inspector);
+Map.add(inspector);
 
 
