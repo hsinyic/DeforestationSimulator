@@ -313,6 +313,9 @@ t=2002; p0= printclass(t, Gunarso);
 t=2001; p0= printclass(t, Gunarso);
 t=2000; p0= printclass(t, Gunarso);
 
+t=1999; p0= printclass(t, Gunarso);
+
+
 
 
 
