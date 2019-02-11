@@ -14,7 +14,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     Pen10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Pen10_pseudo"),
     Pen90 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Pen90_pseudo"),
     Pen00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Pen00_pseudo"),
-    in90 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo90_pseudo");
+    in90 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo90_pseudo"),
+    geometry = /* color: #d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var addCat = function(feature){
   feature = ee.Feature(feature);
@@ -98,7 +99,7 @@ var imageSelect = ui.Select({
   var totalarea_outline = totalarea.geometry().bounds();
 
   
-  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#baa9ff' ]}, 'area footprint')
+  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#d6d6d6' ]}, 'area footprint')
   var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
   lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
   var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
