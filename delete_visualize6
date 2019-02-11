@@ -322,7 +322,7 @@ var imageSelect = ui.Select({
   
   var slider = ui.Slider();
   slider.setMax(2010);
-  slider.setMin(1990);
+  slider.setMin(2000);
   slider.setStep(1);
   
   slider.setValue(2005);  // Set a default value.
