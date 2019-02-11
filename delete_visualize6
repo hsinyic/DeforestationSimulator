@@ -8,7 +8,9 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     OP10 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP10"),
     OP90 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP90"),
     geometry = /* color: #98ff00 */ee.Geometry.MultiPoint(),
-    Indo00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo00");
+    Indo05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo05_pseudo"),
+    Indo10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo10_pseudo"),
+    Indo00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo00_pseudo");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var convert_to_image = function(feature){
@@ -20,10 +22,10 @@ var concatenate = function(map, prev){
   prev = ee.Image(prev);
   return ee.Image(prev.where(map.eq(1),1));
 };
-var layer90 = ee.List([in90]).map(convert_to_image);
-var layer00 = ee.List([in00]).map(convert_to_image);
-var layer05 = ee.List([in05]).map(convert_to_image);
-var layer10 = ee.List([in10]).map(convert_to_image);
+var layer90 = ee.List([Pen90, in90]).map(convert_to_image);
+var layer00 = ee.List([Pen00, in00]).map(convert_to_image);
+var layer05 = ee.List([Pen05, in05]).map(convert_to_image);
+var layer10 = ee.List([Pen10, in10]).map(convert_to_image);
 var OP90 = ee.Image(layer90.iterate(concatenate, blank)).rename(['OP90']);
 var OP00 = ee.Image(layer00.iterate(concatenate, blank)).rename(['OP00']);
 var OP05 = ee.Image(layer05.iterate(concatenate, blank)).rename(['OP05']);
@@ -31,6 +33,11 @@ var OP10 = ee.Image(layer10.iterate(concatenate, blank)).rename(['OP10']);
 OP00 = OP00.where(OP90.eq(1), 1);
 OP05 = OP05.where(OP00.eq(1), 1);
 OP10 = OP10.where(OP05.eq(1), 1);
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '0000FF' ]}, "OP10");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '0000FF' ]}, "OP05");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '0000FF' ]}, "OP00");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '0000FF' ]}, "OP90");
+
 
 
 var test = ee.FeatureCollection(Indo00);
