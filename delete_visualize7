@@ -197,7 +197,7 @@ var imageSelect = ui.Select({
   
   
   // ########
-  // # 2) Create year_2000 land use clasfficiation  
+  // # 2) Create year_1990 land use clasfficiation  
   // ########
   
   var Gunarso = ee.Image([lossYear,OP90, OP00, OP05,OP10, treecover2000,blank]);
@@ -209,8 +209,8 @@ var imageSelect = ui.Select({
   var NOP_color = ee.Number(5);
   var OTH_color = ee.Number(6);
   
-  // Create year_2000 classified layer of OP, F, NF  
-  var year_2000 = Gunarso.expression(
+  // Create year_1990 classified layer of OP, F, NF  
+  var year_1990 = Gunarso.expression(
   '(OP00 ==1)? OP\
     :((OP00==0) && treecover2000>=30)? F\
       :((OP00==0)&& treecover2000<30)? NF\
@@ -223,7 +223,7 @@ var imageSelect = ui.Select({
         'OP00': Gunarso.select('OP00'),
         'treecover2000': Gunarso.select('treecover2000')
       }
-  ).rename(['year_2000']);
+  ).rename(['year_1990']);
 
   
 
@@ -234,7 +234,7 @@ var imageSelect = ui.Select({
   // #########################a
   // #Step4 : Land use classifications,  2000 to 2010 
   // #########################
-  var Gunarso_intermediate = ee.Image([lossYear,year_2000, blank, OP00, OP05, OP10, OP90]);
+  var Gunarso_intermediate = ee.Image([lossYear,year_1990, blank, OP00, OP05, OP10, OP90]);
   var yr = ee.List.sequence(2000, 2010, 1);
   var annual = function(t){
     t= ee.Number(t);
@@ -263,7 +263,7 @@ var imageSelect = ui.Select({
           'NF': Gunarso_intermediate.select('blank').add(NF_color),
           'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
           'lossYear': Gunarso_intermediate.select('lossyear'),
-          'basemap': Gunarso_intermediate.select('year_2000'),
+          'basemap': Gunarso_intermediate.select('year_1990'),
           't': t,
           'NF_color': NF_color,
           'F_color': F_color
@@ -279,7 +279,7 @@ var imageSelect = ui.Select({
           'NF': Gunarso_intermediate.select('blank').add(NF_color),
           'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
           'lossYear': Gunarso_intermediate.select('lossyear'),
-          'basemap': Gunarso_intermediate.select('year_2000'),
+          'basemap': Gunarso_intermediate.select('year_1990'),
           't': t,
           'NF_color': NF_color,
           'F_color': F_color
