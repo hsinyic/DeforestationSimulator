@@ -18,6 +18,11 @@ var in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/In50"),
 
 
 
+  Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Oil Palm 2010");
+  Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Oil Palm 2005");
+  Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000");
+  Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990");
+
 
 
 
@@ -72,10 +77,6 @@ var imageSelect = ui.Select({
   var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea_outline);
   
   
-  Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#966969' ]}, "Oil Palm 2010");
-  Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#c38888' ]}, "Oil Palm 2005");
-  Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffb3b3' ]}, "Oil Palm 2000");
-  Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#ffd6d6' ]}, "Oil Palm 1990");
   
   
    
