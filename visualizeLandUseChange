@@ -130,7 +130,7 @@ var imageSelect = ui.Select({
   // # 1) 1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
   // ########
   // Set scale for buffering (e.g.,reduceRegion percentile operation)
-  var scale = ee.Number(100); 
+  var scale = ee.Number(500); 
   
   var Designated90 = blank.where(  OP90.eq(0).and(OP00.eq(1)), 1); 
   var Designated00 = blank.where(  (OP00.eq(0).and(OP05.eq(1)))
