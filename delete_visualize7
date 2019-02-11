@@ -286,9 +286,9 @@ var imageSelect = ui.Select({
         }
     );
     var yearmap = blank
-    .where(OP00.eq(1).and(OP10.eq(1)),executeOP_OP)
-    .where(OP00.eq(0).and(OP10.eq(1)),executeNOP_OP)
-    .where(OP00.eq(0).and(OP10.eq(0)),executeNOP_NOP);
+    .where(OP90.eq(1).and(OP10.eq(1)),executeOP_OP)
+    .where(OP90.eq(0).and(OP10.eq(1)),executeNOP_OP)
+    .where(OP90.eq(0).and(OP10.eq(0)),executeNOP_NOP);
     
     var final_yearmap = blank.where(totalarea_raster.neq(0), yearmap);
     return ee.Image(final_yearmap);
