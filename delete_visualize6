@@ -52,7 +52,7 @@ OP10 = OP10.where(OP05.eq(1), 1);
 Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#6d0096' ]}, "Cropland 2010");
 Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#7f00ff' ]}, "Cropland 2005");
 Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ee7eff' ]}, "Cropland 2000");
-Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1ff' ]}, "Cropland 1990");
+// Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1ff' ]}, "Cropland 1990");
 
 
 
