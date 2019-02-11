@@ -115,8 +115,8 @@ var imageSelect = ui.Select({
   //Final assembling 
   var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
   lossYear = lossYear_final; 
-  Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
-      palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
+  // Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+  //     palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
   
   
   
@@ -130,7 +130,7 @@ var imageSelect = ui.Select({
   // # 1) 1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
   // ########
   // Set scale for buffering (e.g.,reduceRegion percentile operation)
-  var scale = ee.Number(500); 
+  var scale = ee.Number(100); 
   
   var Designated90 = blank.where(  OP90.eq(0).and(OP00.eq(1)), 1); 
   var Designated00 = blank.where(  (OP00.eq(0).and(OP05.eq(1)))
