@@ -136,9 +136,8 @@ var imageSelect = ui.Select({
   // Set scale for buffering (e.g.,reduceRegion percentile operation)
   var scale = ee.Number(500); 
   
-  var Designated90 = blank.where(OP90.eq(0).and(OP00.eq(1)), 1); 
-  var Designated00 = blank.where(
-    (OP00.eq(0).and(OP05.eq(1)))
+  var Designated90 = blank.where(  OP90.eq(0).and(OP00.eq(1)), 1); 
+  var Designated00 = blank.where(  (OP00.eq(0).and(OP05.eq(1)))
     .and(
       (lossYear.lte(2000)).or(lossYear.gt(2005)).or(lossYear.eq(99))), 1);
   var Designated05 = blank.where(
@@ -160,7 +159,7 @@ var imageSelect = ui.Select({
   
   var buffer = function(Designated, Target,source, years ){
     var offset = ee.Number(years.get(0)).subtract(1);
-    var cumulativeCost = ee.Image([1]).clip(totalarea_outline).cumulativeCost({source: source,maxDistance: 100 * 30 });
+    var cumulativeCost = ee.Image([1]).clip(totalarea_outline).cumulativeCost({source: source,maxDistance: 100 * 300 });
     var costmap = blank.where(Designated.eq(1), cumulativeCost);
     costmap = costmap.updateMask(costmap);
     var mincostmapping = function(t){
