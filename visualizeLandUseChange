@@ -362,7 +362,7 @@ for (var x = 0; x<3; x++){
 
 Map.add(legend);
 
-var legend2 = ui.Panel({style: {position: 'middle-left'}});
+var legend2 = ui.Panel({style: {position: 'top-left'}});
 legend2.add(ui.Label({
   value: "cropland map",
   style: {
