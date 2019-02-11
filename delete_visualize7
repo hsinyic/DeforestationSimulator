@@ -220,7 +220,7 @@ var imageSelect = ui.Select({
         'F': Gunarso.select('blank').add(F_color),
         'NF': Gunarso.select('blank').add(NF_color),
         'OTH': Gunarso.select('blank').add(OTH_color),
-        'OP00': Gunarso.select('OP00'),
+        'OP90': Gunarso.select('OP90'),
         'treecover2000': Gunarso.select('treecover2000')
       }
   ).rename(['year_1990']);
