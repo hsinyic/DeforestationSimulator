@@ -77,13 +77,11 @@ var imageSelect = ui.Select({
     var totalarea_raster = ee.FeatureCollection(totalarea)
     .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.mean()}); // for Indonesia_1
     var totalarea_outline = totalarea.geometry().bounds();
-
-  
-  Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#d6d6d6' ]}, 'area footprint')
-  var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
-  lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
-  var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
-  var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea_outline);
+    Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#d6d6d6' ]}, 'area footprint')
+    var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
+    lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
+    var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
+    var blank = lossYear.multiply(0).rename(['blank']).clip(totalarea_outline);
 
 
   
