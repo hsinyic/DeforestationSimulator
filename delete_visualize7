@@ -211,9 +211,9 @@ var imageSelect = ui.Select({
   
   // Create year_1990 classified layer of OP, F, NF  
   var year_1990 = Gunarso.expression(
-  '(OP00 ==1)? OP\
-    :((OP00==0) && treecover2000>=30)? F\
-      :((OP00==0)&& treecover2000<30)? NF\
+  '(OP90 ==1)? OP\
+    :((OP90==0) && treecover2000>=30)? F\
+      :((OP90==0)&& treecover2000<30)? NF\
         :OTH',
       {  
         'OP': Gunarso.select('blank').add(OP_color),
@@ -317,7 +317,7 @@ var imageSelect = ui.Select({
   
   var slider = ui.Slider();
   slider.setMax(2010);
-  slider.setMin(2000);
+  slider.setMin(1990);
   slider.setStep(1);
   
   slider.setValue(2005);  // Set a default value.
