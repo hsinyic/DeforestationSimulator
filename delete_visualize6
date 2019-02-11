@@ -80,7 +80,7 @@ var imageSelect = ui.Select({
   
   
   
-      // area_working: works, and is a bigger area 
+  // area_working: works, and is a bigger area 
   // var Jambi = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Jambi'); 
   // var Sumatra_Barat = Indonesia_1.filterMetadata('NAME_1', 'equals', 'Sumatera Barat'); 
   
