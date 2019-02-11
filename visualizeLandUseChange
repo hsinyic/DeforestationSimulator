@@ -18,7 +18,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     geometry = /* color: #fffcb9 */ee.Geometry.MultiPoint(),
     geometry2 = /* color: #ff9d9d */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.setCenter(102.3211, -1.3017, 10);
+Map.setCenter(102.3211, -1.3017, 8);
 var addCat = function(feature){
   feature = ee.Feature(feature);
   return feature.set('cat', 1);
