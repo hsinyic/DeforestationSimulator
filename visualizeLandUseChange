@@ -296,35 +296,32 @@ var imageSelect = ui.Select({
   // printclass2(2009);
   
   
+  var printclass = function(t){
+    var year = t.toString();
+    t= ee.Number(t).subtract(1990);
+    var img = ee.Image(Gunarso_final.get(t));
+    var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
+      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
+      Map.layers().set(20, layer);
+  };
 
+  var slider = ui.Slider();
+  slider.setMax(2010);
+  slider.setMin(1990);
+  slider.setStep(1);
+  
+  slider.setValue(2004);  // Set a default value.
+  slider.onChange(printclass);
+  slider.style().set(
+    {
+    width: '300px',
+    padding: '10px',
+    position: 'bottom-right'
+      
+    });
+  Map.add(slider.setValue(2005));
   }
 });
-
-var slider = ui.Slider();
-slider.setMax(2010);
-slider.setMin(1990);
-slider.setStep(1);
-  
-var printclass = function(t){
-  var year = t.toString();
-  t= ee.Number(t).subtract(1990);
-  var img = ee.Image(Gunarso_final.get(t));
-  var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
-    palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
-    Map.layers().set(20, layer);
-};
-
-slider.setValue(2004);  // Set a default value.
-slider.onChange(printclass);
-slider.style().set(
-  {
-  width: '300px',
-  padding: '10px',
-  position: 'bottom-right'
-    
-  });
-Map.add(slider.setValue(2005));
-
 
 // Set a place holder.
 imageSelect.setPlaceholder('Selected Sample location...');
