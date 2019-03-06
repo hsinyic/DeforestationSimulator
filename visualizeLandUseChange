@@ -280,15 +280,15 @@ var imageSelect = ui.Select({
   };
   var Gunarso_final = yr.map(annual);
   
-  var printclass = function(t){
-    var year = t.toString();
-    t= ee.Number(t).subtract(1990);
-    var img = ee.Image(Gunarso_final.get(t));
-    var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
-      palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
-      Map.layers().set(20, layer);
-    Map.unlisten(printclass);
-  };
+  // var printclass = function(t){
+  //   var year = t.toString();
+  //   t= ee.Number(t).subtract(1990);
+  //   var img = ee.Image(Gunarso_final.get(t));
+  //   var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
+  //     palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
+  //     Map.layers().set(20, layer);
+  //   Map.unlisten(printclass);
+  // };
 
 
   var slider = ui.Slider({
@@ -299,7 +299,8 @@ var imageSelect = ui.Select({
     var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
       palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
       Map.layers().set(20, layer);
-      Map.unlisten(printclass);
+      Map.unlisten(slider);
+
     }
   })
   slider.setMax(2010);
