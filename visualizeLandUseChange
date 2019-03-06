@@ -70,13 +70,12 @@ var imageSelect = ui.Select({
     {label: 'Sumatera Selatan', value: 'Sumatera Selatan'}
     ],
   onChange: function(value) {
-    // define totalarea
     var ROA  =  Indonesia_1.filterMetadata('NAME_1', 'equals', value);
     var totalarea = ee.FeatureCollection(ROA);
     var totalarea_raster = ee.FeatureCollection(totalarea)
-    .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.mean()}); // for Indonesia_1
+    .reduceToImage({properties: ['ID_0'],reducer: ee.Reducer.mean()}); 
     var totalarea_outline = totalarea.geometry().bounds();
-    Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#d6d6d6' ]}, 'area footprint')
+    // Map.addLayer(totalarea_raster,{min: 0, max: 1,palette:[ '#f7f7f7', '#d6d6d6' ]}, 'area footprint')
     var lossYear = gfcImage.select(['lossyear']).clip(totalarea_outline);
     lossYear = lossYear.where(lossYear.eq(0), 99).add(2000);
     var treecover2000 = gfcImage.select(['treecover2000']).clip(totalarea_outline);
@@ -285,17 +284,6 @@ var imageSelect = ui.Select({
   };
   var Gunarso_final = yr.map(annual);
   
-  
-  // var printclass2 = function(t){
-  //   var year = t.toString();
-  //   t= ee.Number(t).subtract(2000); 
-  //   var img = ee.Image(Gunarso_final.get(t)); 
-  //   Map.addLayer(img.selfMask(), {min: 0, max: 5,
-  //     palette:[ '#ffffff', '#d1ee6c', '#51612e',  '#51612e', '#d51483', '#f7f7f7', ]}, year);
-  // };
-  // printclass2(2009);
-  
-  
   var printclass = function(t){
     var year = t.toString();
     t= ee.Number(t).subtract(1990);
@@ -303,6 +291,7 @@ var imageSelect = ui.Select({
     var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
       palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
       Map.layers().set(20, layer);
+    Map.unlisten(printclass);
   };
 
   var slider = ui.Slider();
@@ -320,13 +309,11 @@ var imageSelect = ui.Select({
       
     });
   Map.add(slider.setValue(2005));
+  
   }
 });
 
-// Set a place holder.
 imageSelect.setPlaceholder('Selected Sample location...');
-imageSelect.setValue('Jambi');
-// print(imageSelect);
 
 
 
