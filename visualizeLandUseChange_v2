@@ -278,6 +278,8 @@ var imageSelect = ui.Select({
     var img = ee.Image(Gunarso_final.get(t));
     var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
       palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
+      
+      
       Map.layers().set(0, layer);
       // Map.unlisten(slider);
 
