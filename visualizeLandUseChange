@@ -49,10 +49,6 @@ var OP10 = ee.Image(layer10.iterate(concatenate, blank)).rename(['OP10']);
 OP00 = OP00.where(OP90.eq(1), 1);
 OP05 = OP05.where(OP00.eq(1), 1);
 OP10 = OP10.where(OP05.eq(1), 1);
-Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#6d0096' ]}, "Cropland 2010");
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#7f00ff' ]}, "Cropland 2005");
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ee7eff' ]}, "Cropland 2000");
-Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1ff' ]}, "Cropland 1990");
 
 
 
@@ -298,8 +294,8 @@ var imageSelect = ui.Select({
     var img = ee.Image(Gunarso_final.get(t));
     var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
       palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
-      Map.layers().set(20, layer);
-      Map.unlisten(slider);
+      Map.layers().set(0, layer);
+      // Map.unlisten(slider);
 
     }
   })
@@ -307,8 +303,6 @@ var imageSelect = ui.Select({
   slider.setMin(1990);
   slider.setStep(1);
   
-  slider.setValue(2004);  // Set a default value.
-  // slider.onChange(printclass);
   slider.style().set(
     {
     width: '300px',
@@ -321,7 +315,8 @@ var imageSelect = ui.Select({
   }
 });
 
-imageSelect.setPlaceholder('Selected Sample location...');
+imageSelect.setValue('Jambi');
+
 
 
 
@@ -395,5 +390,10 @@ inspector.add(imageSelect);
 inspector.add(ui.Label('Choose a region in Indonesia -- see deforestation and cropland expansion from 1990-2010'));
 imageSelect.style().set('textAlign', 'center');
 Map.add(inspector);
+Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#6d0096' ]}, "Cropland 2010");
+Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#7f00ff' ]}, "Cropland 2005");
+Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ee7eff' ]}, "Cropland 2000");
+Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1ff' ]}, "Cropland 1990");
+
 
 
