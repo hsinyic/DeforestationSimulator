@@ -3,10 +3,6 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2015"),
     countries = ee.FeatureCollection("ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw"),
     country_simple = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017"),
     country_detailed = ee.FeatureCollection("USDOS/LSIB/2013"),
-    OP00 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP00"),
-    OP05 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP05"),
-    OP10 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP10"),
-    OP90 = ee.Image("users/6GP6PM63OKTGEO6YIDC6BKJF/OP/OP90"),
     in05 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo05_pseudo"),
     in10 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo10_pseudo"),
     in00 = ee.FeatureCollection("users/6GP6PM63OKTGEO6YIDC6BKJF/Indo00_pseudo"),
@@ -32,16 +28,11 @@ var concatenate = function(map, prev){
   return ee.Image(prev.where(map.eq(1),1));
 };
 
-
 var layer90 = ee.List([Pen90.map(addCat), in90.map(addCat)]).map(convert_to_image);
 var layer00 = ee.List([Pen00.map(addCat), in00.map(addCat)]).map(convert_to_image);
 var layer05 = ee.List([Pen05.map(addCat), in05.map(addCat)]).map(convert_to_image);
 var layer10 = ee.List([Pen10.map(addCat), in10.map(addCat)]).map(convert_to_image);
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
-var Malaysia = country_simple.filterMetadata('country_co', 'equals', "MY");
-var Indonesia = country_simple.filterMetadata('country_co', 'equals', "ID");
-var PapuaNewGuinea = country_simple.filterMetadata('country_co', 'equals', "PP");
-var MIP = country_simple.filter(ee.Filter.inList('country_co', ['PP', 'ID', 'MY']))
 var blank = ee.Image([0]).clip(Indonesia)
 var OP90 = ee.Image(layer90.iterate(concatenate, blank)).rename(['OP90']);
 var OP00 = ee.Image(layer00.iterate(concatenate, blank)).rename(['OP00']);
