@@ -28,12 +28,14 @@ var concatenate = function(map, prev){
   return ee.Image(prev.where(map.eq(1),1));
 };
 
+
 var layer90 = ee.List([Pen90.map(addCat), in90.map(addCat)]).map(convert_to_image);
 var layer00 = ee.List([Pen00.map(addCat), in00.map(addCat)]).map(convert_to_image);
 var layer05 = ee.List([Pen05.map(addCat), in05.map(addCat)]).map(convert_to_image);
 var layer10 = ee.List([Pen10.map(addCat), in10.map(addCat)]).map(convert_to_image);
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
-var blank = ee.Image([0]).clip(Indonesia)
+var MIP = country_simple.filter(ee.Filter.inList('country_co', ['PP', 'ID', 'MY']))
+var blank = ee.Image([0]).clip(Indonesia_1)
 var OP90 = ee.Image(layer90.iterate(concatenate, blank)).rename(['OP90']);
 var OP00 = ee.Image(layer00.iterate(concatenate, blank)).rename(['OP00']);
 var OP05 = ee.Image(layer05.iterate(concatenate, blank)).rename(['OP05']);
