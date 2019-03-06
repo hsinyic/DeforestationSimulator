@@ -34,15 +34,14 @@ var layer00 = ee.List([Pen00.map(addCat), in00.map(addCat)]).map(convert_to_imag
 var layer05 = ee.List([Pen05.map(addCat), in05.map(addCat)]).map(convert_to_image);
 var layer10 = ee.List([Pen10.map(addCat), in10.map(addCat)]).map(convert_to_image);
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
-var MIP = country_simple.filter(ee.Filter.inList('country_co', ['PP', 'ID', 'MY']))
 var blank = ee.Image([0]).clip(Indonesia_1)
-var OP90 = ee.Image(layer90.iterate(concatenate, blank)).rename(['OP90']);
-var OP00 = ee.Image(layer00.iterate(concatenate, blank)).rename(['OP00']);
-var OP05 = ee.Image(layer05.iterate(concatenate, blank)).rename(['OP05']);
-var OP10 = ee.Image(layer10.iterate(concatenate, blank)).rename(['OP10']);
-OP00 = OP00.where(OP90.eq(1), 1);
-OP05 = OP05.where(OP00.eq(1), 1);
-OP10 = OP10.where(OP05.eq(1), 1);
+var CROP90 = ee.Image(layer90.iterate(concatenate, blank)).rename(['CROP90']);
+var CROP00 = ee.Image(layer00.iterate(concatenate, blank)).rename(['CROP00']);
+var CROP05 = ee.Image(layer05.iterate(concatenate, blank)).rename(['CROP05']);
+var CROP10 = ee.Image(layer10.iterate(concatenate, blank)).rename(['CROP10']);
+CROP00 = CROP00.where(CROP90.eq(1), 1);
+CROP05 = CROP05.where(CROP00.eq(1), 1);
+CROP10 = CROP10.where(CROP05.eq(1), 1);
 
 
 
@@ -80,20 +79,20 @@ var imageSelect = ui.Select({
   // ########
   // # Load Hansen of lossYear, perform speckle filtering and majority sampling 
   // ########
-  var binary_pre = blank.where(OP90.eq(1).and(OP10.eq(1)), 1).where((OP90.eq(0)).and(OP10.eq(1)),2 );
+  var binary_pre = blank.where(CROP90.eq(1).and(CROP10.eq(1)), 1).where((CROP90.eq(0)).and(CROP10.eq(1)),2 );
   var binary = blank.where(totalarea_raster.neq(0),binary_pre).clip(totalarea_outline);
   //Expansion
   var lossYear_expand = lossYear.neq(2099); // make it binary 
   lossYear_expand = lossYear_expand.where(lossYear_expand.connectedPixelCount(128).lte(64), 0); 
   lossYear_expand = lossYear.where(lossYear_expand.neq(1), 2099);
   //Replant 
-  var lossYear_replant = ee.Image([2099]).clip(totalarea_outline).where(lossYear.neq(2099).updateMask(OP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
+  var lossYear_replant = ee.Image([2099]).clip(totalarea_outline).where(lossYear.neq(2099).updateMask(CROP10.neq(0)), lossYear.divide(2).ceil().multiply(2).toInt());
   lossYear_replant =lossYear_replant.min(lossYear_replant.focal_mode(10, 'square'));
   lossYear_replant= lossYear_replant.where(lossYear_replant.connectedPixelCount(256).lte(16), 2099);
   //Final assembling 
   var lossYear_final = lossYear.where(binary.eq(1), lossYear_replant).where(binary.eq(2),lossYear_expand);
   lossYear = lossYear_final; 
-  // Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(OP10.neq(0)), {min: 2000, max: 2014,
+  // Map.addLayer(lossYear_final.updateMask(lossYear_final.neq(2099)).updateMask(CROP10.neq(0)), {min: 2000, max: 2014,
   //     palette:[ 'ff510f','#fff832','#4cff62','0000FF']}, 'lossYear final');
   
   
@@ -106,12 +105,12 @@ var imageSelect = ui.Select({
   // Set scale for buffering (e.g.,reduceRegion percentile operation)
   var scale = ee.Number(500); 
   
-  var Designated90 = blank.where(  OP90.eq(0).and(OP00.eq(1)), 1); 
-  var Designated00 = blank.where(  (OP00.eq(0).and(OP05.eq(1)))
+  var Designated90 = blank.where(  CROP90.eq(0).and(CROP00.eq(1)), 1); 
+  var Designated00 = blank.where(  (CROP00.eq(0).and(CROP05.eq(1)))
     .and(
       (lossYear.lte(2000)).or(lossYear.gt(2005)).or(lossYear.eq(99))), 1);
   var Designated05 = blank.where(
-    (OP05.eq(0).and(OP10.eq(1)))
+    (CROP05.eq(0).and(CROP10.eq(1)))
     .and(
       (lossYear.lte(2005)).or(lossYear.gt(2010)).or(lossYear.eq(99))), 1);
   
@@ -119,9 +118,9 @@ var imageSelect = ui.Select({
   var Target90 = ee.List([0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]); 
   var Target05 = ee.List([0,0.2,0.4,0.6,0.8,1.0]);
   
-  var source90 = OP90; source90 = source90.updateMask(source90);
-  var source00 = OP00; source00 = source00.updateMask(source00);
-  var source05 = OP05; source05 = source05.updateMask(source05);
+  var source90 = CROP90; source90 = source90.updateMask(source90);
+  var source00 = CROP00; source00 = source00.updateMask(source00);
+  var source05 = CROP05; source05 = source05.updateMask(source05);
   
   var years90 = ee.List.sequence(1991, 2000,1);
   var years00 = ee.List.sequence(2001, 2005,1);
@@ -175,7 +174,7 @@ var imageSelect = ui.Select({
   // # 2) Create year_1990 land use clasfficiation  
   // ########
   
-  var Gunarso = ee.Image([lossYear,OP90, OP00, OP05,OP10, treecover2000,blank]);
+  var Gunarso = ee.Image([lossYear,CROP90, CROP00, CROP05,CROP10, treecover2000,blank]);
   // code NF, F, OPR, OP into numbers 
   var NF_color = ee.Number(1);
   var F_color = ee.Number(2);
@@ -186,16 +185,16 @@ var imageSelect = ui.Select({
   
   // Create year_1990 classified layer of OP, F, NF  
   var year_1990 = Gunarso.expression(
-  '(OP90 ==1)? OP\
-    :((OP90==0) && treecover2000>=30)? F\
-      :((OP90==0)&& treecover2000<30)? NF\
+  '(CROP90 ==1)? OP\
+    :((CROP90==0) && treecover2000>=30)? F\
+      :((CROP90==0)&& treecover2000<30)? NF\
         :OTH',
       {  
         'OP': Gunarso.select('blank').add(OP_color),
         'F': Gunarso.select('blank').add(F_color),
         'NF': Gunarso.select('blank').add(NF_color),
         'OTH': Gunarso.select('blank').add(OTH_color),
-        'OP90': Gunarso.select('OP90'),
+        'CROP90': Gunarso.select('CROP90'),
         'treecover2000': Gunarso.select('treecover2000')
       }
   ).rename(['year_1990']);
@@ -209,20 +208,20 @@ var imageSelect = ui.Select({
   // #########################a
   // #3) : Land use classifications,  2000 to 2010 
   // #########################
-  var Gunarso_intermediate = ee.Image([lossYear,year_1990, blank, OP00, OP05, OP10, OP90]);
+  var Gunarso_intermediate = ee.Image([lossYear,year_1990, blank, CROP00, CROP05, CROP10, CROP90]);
   var yr = ee.List.sequence(1990, 2010, 1);
   var annual = function(t){
     t= ee.Number(t); // t= 1990; now 
     var executeOP_OP = Gunarso_intermediate.expression(
-    'lossYear==t && OP90 == 1 ? OPR\
-      :lossYear==t && OP90 == 0 ? OP\
+    'lossYear==t && CROP90 == 1 ? OPR\
+      :lossYear==t && CROP90 == 0 ? OP\
       :(lossYear>t || lossYear<t) ? OP\
       : OP',
         {  
           'OP': Gunarso_intermediate.select('blank').add(OP_color),
           'OPR': Gunarso_intermediate.select('blank').add(OPReplant_color),
           'lossYear': Gunarso_intermediate.select('lossyear'),
-          'OP90': Gunarso_intermediate.select('OP90'),
+          'CROP90': Gunarso_intermediate.select('CROP90'),
           'OTH': Gunarso_intermediate.select('blank').add(OTH_color),
           't': t,
         }
@@ -261,24 +260,15 @@ var imageSelect = ui.Select({
         }
     );
     var yearmap = blank
-    .where(OP90.eq(1).and(OP10.eq(1)),executeOP_OP)
-    .where(OP90.eq(0).and(OP10.eq(1)),executeNOP_OP)
-    .where(OP90.eq(0).and(OP10.eq(0)),executeNOP_NOP);
+    .where(CROP90.eq(1).and(CROP10.eq(1)),executeOP_OP)
+    .where(CROP90.eq(0).and(CROP10.eq(1)),executeNOP_OP)
+    .where(CROP90.eq(0).and(CROP10.eq(0)),executeNOP_NOP);
     
     var final_yearmap = blank.where(totalarea_raster.neq(0), yearmap);
     return ee.Image(final_yearmap);
   };
   var Gunarso_final = yr.map(annual);
   
-  // var printclass = function(t){
-  //   var year = t.toString();
-  //   t= ee.Number(t).subtract(1990);
-  //   var img = ee.Image(Gunarso_final.get(t));
-  //   var layer = ui.Map.Layer(img.selfMask(), {min: 0, max: 6,
-  //     palette:[ '#7290ff', '#7290ff', '#fffcb9',  '#ff9d9d', '#ff9d9d', '#7290ff', '7290ff' ]}, year);
-  //     Map.layers().set(20, layer);
-  //   Map.unlisten(printclass);
-  // };
 
 
   var slider = ui.Slider({
@@ -384,10 +374,10 @@ inspector.add(imageSelect);
 inspector.add(ui.Label('Choose a region in Indonesia -- see deforestation and cropland expansion from 1990-2010'));
 imageSelect.style().set('textAlign', 'center');
 Map.add(inspector);
-Map.addLayer(OP10.updateMask(OP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#6d0096' ]}, "Cropland 2010");
-Map.addLayer(OP05.updateMask(OP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#7f00ff' ]}, "Cropland 2005");
-Map.addLayer(OP00.updateMask(OP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ee7eff' ]}, "Cropland 2000");
-Map.addLayer(OP90.updateMask(OP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1ff' ]}, "Cropland 1990");
+Map.addLayer(CROP10.updateMask(CROP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#6d0096' ]}, "Cropland 2010",0,1);
+Map.addLayer(CROP05.updateMask(CROP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#7f00ff' ]}, "Cropland 2005",0,1);
+Map.addLayer(CROP00.updateMask(CROP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ee7eff' ]}, "Cropland 2000",0,1);
+Map.addLayer(CROP90.updateMask(CROP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1ff' ]}, "Cropland 1990",0,1);
 
 
 
