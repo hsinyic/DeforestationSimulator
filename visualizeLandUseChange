@@ -108,11 +108,7 @@ var imageSelect = ui.Select({
   
   
   
-  // ############
-  // # Step 3: Preliminary data processing 
-  // # 1) Buffer by field treatment 
-  // # 2) Create 2000 Basemap  
-  // ############
+
   
   // ########
   // # 1) 1990 to 2000 Buffer by field, 2000 to 2005 Buffer by field,2005 to 2010 Buffer by field 
@@ -221,7 +217,7 @@ var imageSelect = ui.Select({
 
 
   // #########################a
-  // #Step4 : Land use classifications,  2000 to 2010 
+  // #3) : Land use classifications,  2000 to 2010 
   // #########################
   var Gunarso_intermediate = ee.Image([lossYear,year_1990, blank, OP00, OP05, OP10, OP90]);
   var yr = ee.List.sequence(1990, 2010, 1);
