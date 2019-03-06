@@ -374,10 +374,10 @@ inspector.add(imageSelect);
 inspector.add(ui.Label('Choose a region in Indonesia -- see deforestation and cropland expansion from 1990-2010'));
 imageSelect.style().set('textAlign', 'center');
 Map.add(inspector);
-Map.addLayer(CROP10.updateMask(CROP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#6d0096' ]}, "Cropland 2010",0,1);
-Map.addLayer(CROP05.updateMask(CROP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#7f00ff' ]}, "Cropland 2005",0,1);
-Map.addLayer(CROP00.updateMask(CROP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ee7eff' ]}, "Cropland 2000",0,1);
-Map.addLayer(CROP90.updateMask(CROP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1ff' ]}, "Cropland 1990",0,1);
+Map.addLayer(CROP10.updateMask(CROP10), {min: 0, max: 1,palette:[ '#f7f7f7', '#6d0096' ]}, "Cropland 2010",1,.5);
+Map.addLayer(CROP05.updateMask(CROP05), {min: 0, max: 1,palette:[ '#f7f7f7', '#7f00ff' ]}, "Cropland 2005",1,.5);
+Map.addLayer(CROP00.updateMask(CROP00), {min: 0, max: 1,palette:[ '#f7f7f7', '#ee7eff' ]}, "Cropland 2000",1,.5);
+Map.addLayer(CROP90.updateMask(CROP90), {min: 0, max: 1,palette:[ '#f7f7f7', '#eab1ff' ]}, "Cropland 1990",1,.5);
 
 
 
