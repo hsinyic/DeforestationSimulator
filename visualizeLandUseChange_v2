@@ -34,7 +34,7 @@ var layer00 = ee.List([Pen00.map(addCat), in00.map(addCat)]).map(convert_to_imag
 var layer05 = ee.List([Pen05.map(addCat), in05.map(addCat)]).map(convert_to_image);
 var layer10 = ee.List([Pen10.map(addCat), in10.map(addCat)]).map(convert_to_image);
 var Indonesia_1 = ee.FeatureCollection('ft:1BIvH58CL17YCBkZe4Nmb3m27Ngcl2f-w-oB8zWzk', 'geometry');
-var blank = ee.Image([0]).clip(Indonesia_1)
+var blank = ee.Image([0]).clip(Indonesia_1);
 var CROP90 = ee.Image(layer90.iterate(concatenate, blank)).rename(['CROP90']);
 var CROP00 = ee.Image(layer00.iterate(concatenate, blank)).rename(['CROP00']);
 var CROP05 = ee.Image(layer05.iterate(concatenate, blank)).rename(['CROP05']);
@@ -303,12 +303,6 @@ var imageSelect = ui.Select({
 
 imageSelect.setValue('Jambi');
 
-
-
-
-
-
-  
 var legend = ui.Panel({style: {position: 'bottom-left'}});
 legend.add(ui.Label({
   value: "land use class",
