@@ -1,5 +1,5 @@
 # DeforestationSimulator
-Backend algorithm development for spatial simulation of deforestation / oil and gas extraction mapping 
+Backend algorithm development for spatial simulation of deforestation / oil and gas extraction mapping based on entirely on Google Earth Engine JavaScript library. Computation is optimized to avoid local computation. 
 
 
 # Methodology for deforestation simulation 
